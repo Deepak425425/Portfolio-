@@ -288,7 +288,7 @@ export default function Home() {
               PhotoLoom
             </div>
             <div className="flex items-center gap-8">
-              <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="hidden md:block text-[10px] tracking-widest uppercase text-zinc-500 hover:text-black transition-colors font-sans">
+              <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="hidden md:block font-bold tracking-[0.3em] text-sm md:text-base uppercase text-zinc-500 hover:text-black transition-colors font-sans">
                 graflystudio.com
               </a>
               <button className="flex flex-col gap-[6px] p-2 hover:opacity-60 transition-opacity" aria-label="Menu">
