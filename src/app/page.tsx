@@ -8,18 +8,25 @@ function FlipDigit({ val }: { val: string }) {
   const [displayedValue, setDisplayedValue] = useState(val);
   const [nextValue, setNextValue] = useState(val);
   const [isFlipping, setIsFlipping] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (val !== displayedValue && !isFlipping) {
       setNextValue(val);
       setIsFlipping(true);
+      
+      timeoutRef.current = setTimeout(() => {
+        setDisplayedValue(val);
+        setIsFlipping(false);
+      }, 500); // Matches CSS animation duration
     }
   }, [val, displayedValue, isFlipping]);
 
-  const handleAnimationEnd = () => {
-    setDisplayedValue(nextValue);
-    setIsFlipping(false);
-  };
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   return (
     <div className="relative w-8 h-12 sm:w-14 sm:h-20 md:w-20 md:h-28 lg:w-28 lg:h-40 bg-[#111] rounded-md sm:rounded-lg shadow-xl perspective-[1200px] text-white text-2xl sm:text-5xl md:text-6xl lg:text-8xl font-sans font-bold flex items-center justify-center select-none">
@@ -38,7 +45,6 @@ function FlipDigit({ val }: { val: string }) {
       {isFlipping && (
         <div 
           className="absolute top-0 left-0 w-full h-1/2 origin-bottom animate-flip-card transform-style-3d z-10"
-          onAnimationEnd={handleAnimationEnd}
         >
           {/* Front of flipper (Top half, old digit) */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden bg-[#181818] rounded-t-lg flex items-end justify-center backface-hidden shadow-[inset_0_-1px_0_rgba(0,0,0,1)]">
@@ -102,13 +108,14 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
+    
+    const calculateTimeLeft = () => {
+      const now = Date.now();
       const distance = LAUNCH_DATE - now;
 
       if (distance < 0) {
-        clearInterval(timer);
-        return;
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return true;
       }
 
       setTimeLeft({
@@ -117,6 +124,15 @@ export default function Home() {
         minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((distance % (1000 * 60)) / 1000),
       });
+      return false;
+    };
+
+    const isFinished = calculateTimeLeft();
+    if (isFinished) return;
+
+    const timer = setInterval(() => {
+      const finished = calculateTimeLeft();
+      if (finished) clearInterval(timer);
     }, 1000);
 
     return () => clearInterval(timer);
