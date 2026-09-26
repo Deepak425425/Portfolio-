@@ -101,6 +101,10 @@ export default function Home() {
   const cursorLerpedPos = useRef({ x: 0, y: 0 });
   const cursorRef = useRef<HTMLDivElement>(null);
 
+  // Refs for scroll rotation
+  const scrollTarget = useRef(0);
+  const scrollCurrent = useRef(0);
+
   useEffect(() => {
     setMounted(true);
     
@@ -199,11 +203,16 @@ export default function Home() {
       }
     };
 
+    const handleWheel = (e: WheelEvent) => {
+      scrollTarget.current += e.deltaY;
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseleave", handleMouseLeave);
     window.addEventListener("mouseenter", handleMouseEnter);
     window.addEventListener("mouseover", handleMouseOverInteractive);
     window.addEventListener("mouseout", handleMouseOutInteractive);
+    window.addEventListener("wheel", handleWheel, { passive: true });
 
     let animationFrameId: number;
 
@@ -216,6 +225,9 @@ export default function Home() {
       cursorLerpedPos.current.x += (cursorPos.current.x - cursorLerpedPos.current.x) * 0.2;
       cursorLerpedPos.current.y += (cursorPos.current.y - cursorLerpedPos.current.y) * 0.2;
 
+      // Smooth interpolation for scroll rotation
+      scrollCurrent.current += (scrollTarget.current - scrollCurrent.current) * 0.05;
+
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate3d(${cursorLerpedPos.current.x}px, ${cursorLerpedPos.current.y}px, 0) translate(-50%, -50%)`;
       }
@@ -224,23 +236,36 @@ export default function Home() {
       const moveX = currentPos.current.x * 4;
       const moveY = currentPos.current.y * 4;
       
+      // Dynamic Shadow Depth
+      // Calculate distance from center (approx 0 to 1) for dynamic blur and opacity
+      const dist = Math.min(1, Math.sqrt(currentPos.current.x * currentPos.current.x + currentPos.current.y * currentPos.current.y));
+      
       // Shadow moves opposite to create physical depth
-      const shadowX = -currentPos.current.x * 12;
-      const shadowY = -currentPos.current.y * 12;
+      const shadowX = -currentPos.current.x * 18;
+      const shadowY = -currentPos.current.y * 18;
+      
+      // Dynamic properties for realistic physical depth
+      const shadowBlur = 50 + (dist * 20); // Blurs more as it 'stretches'
+      const shadowSpread = -12 - (dist * 2); // Spreads slightly thinner
+      const shadowOpacity = 0.25 - (dist * 0.08); // Becomes slightly more transparent
 
       if (panelRef.current) {
         panelRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        // Match shadow-2xl base (0 25px 50px -12px rgba(0,0,0,0.25)) and add dynamic shift
-        panelRef.current.style.boxShadow = `${shadowX}px ${25 + shadowY}px 50px -12px rgba(0,0,0,0.25)`;
+        panelRef.current.style.boxShadow = `${shadowX}px ${25 + shadowY}px ${shadowBlur}px ${shadowSpread}px rgba(0,0,0,${shadowOpacity.toFixed(3)})`;
       }
 
       // Background shapes move slightly away from cursor for parallax
       const bgMoveX = -currentPos.current.x * 8;
       const bgMoveY = -currentPos.current.y * 8;
       
-      if (bg1Ref.current) bg1Ref.current.style.transform = `translate(${bgMoveX}px, ${bgMoveY}px)`;
-      if (bg2Ref.current) bg2Ref.current.style.transform = `translate(${bgMoveX * 1.2}px, ${bgMoveY * 1.2}px)`;
-      if (bg3Ref.current) bg3Ref.current.style.transform = `translate(${bgMoveX * 0.8}px, ${bgMoveY * 0.8}px)`;
+      // Calculate rotation from accumulated scroll
+      const rot1 = scrollCurrent.current * 0.05;
+      const rot2 = scrollCurrent.current * -0.03;
+      const rot3 = scrollCurrent.current * 0.04;
+      
+      if (bg1Ref.current) bg1Ref.current.style.transform = `translate(${bgMoveX}px, ${bgMoveY}px) rotate(${rot1}deg)`;
+      if (bg2Ref.current) bg2Ref.current.style.transform = `translate(${bgMoveX * 1.2}px, ${bgMoveY * 1.2}px) rotate(${rot2}deg)`;
+      if (bg3Ref.current) bg3Ref.current.style.transform = `translate(${bgMoveX * 0.8}px, ${bgMoveY * 0.8}px) rotate(${rot3}deg)`;
 
       animationFrameId = requestAnimationFrame(render);
     };
@@ -253,6 +278,7 @@ export default function Home() {
       window.removeEventListener("mouseenter", handleMouseEnter);
       window.removeEventListener("mouseover", handleMouseOverInteractive);
       window.removeEventListener("mouseout", handleMouseOutInteractive);
+      window.removeEventListener("wheel", handleWheel);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -286,12 +312,12 @@ export default function Home() {
           className="w-full max-w-[1400px] bg-white shadow-2xl flex flex-col relative overflow-hidden min-h-[85svh] lg:min-h-0 lg:h-full will-change-transform transition-shadow rounded-sm"
         >
           {/* Header */}
-          <header className="w-full p-6 sm:p-8 md:px-12 lg:px-16 lg:py-10 flex flex-col sm:flex-row justify-between items-center z-20 gap-6">
+          <header className="w-full p-5 sm:p-8 md:px-12 lg:px-16 lg:py-10 flex flex-row justify-between items-center z-20">
             <div className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
               PhotoLoom
             </div>
             <div className="flex items-center gap-8">
-              <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="hidden md:block text-[10px] tracking-widest uppercase text-zinc-500 hover:text-black transition-colors font-sans">
+              <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="hidden md:block font-extrabold tracking-[0.3em] text-[15px] md:text-[17px] uppercase text-zinc-500 hover:text-black transition-colors font-sans">
                 graflystudio.com
               </a>
               <button className="flex flex-col gap-[6px] p-2 hover:opacity-60 transition-opacity" aria-label="Menu">
@@ -316,29 +342,29 @@ export default function Home() {
             </div>
 
             {/* Oversized Typography overlay effect */}
-            <div className="w-full flex justify-center items-center my-6 md:my-8 lg:my-10 pointer-events-none z-10 relative">
-              <h1 className="font-sans text-[15vw] md:text-[140px] lg:text-[180px] leading-none text-[#f5f5f5] uppercase tracking-tighter select-none font-bold whitespace-nowrap">
+            <div className="w-full flex justify-center items-center my-6 md:my-8 lg:my-10 pointer-events-none z-10 relative overflow-hidden">
+              <h1 className="font-sans text-[12vw] sm:text-[15vw] md:text-[140px] lg:text-[180px] leading-none text-[#f5f5f5] uppercase tracking-tighter select-none font-bold whitespace-nowrap">
                 Coming Soon
               </h1>
             </div>
 
             {/* Subtext */}
-            <div className="z-30 mt-[-1.5rem] md:mt-[-3rem] space-y-4 md:space-y-6 max-w-2xl px-6">
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-black font-medium leading-tight">
+            <div className="z-30 mt-[-1.0rem] sm:mt-[-1.5rem] md:mt-[-3rem] space-y-3 sm:space-y-4 md:space-y-6 max-w-2xl px-4 sm:px-6">
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-black font-medium leading-tight px-2">
                 We&apos;re creating something new.
               </h2>
-              <p className="text-sm md:text-base text-zinc-500 font-sans tracking-wide font-light max-w-md mx-auto">
+              <p className="text-xs sm:text-sm md:text-base text-zinc-500 font-sans tracking-wide font-light max-w-md mx-auto px-4">
                 AI-powered visual production for modern brands.
               </p>
             </div>
           </div>
           
           {/* Main Card Footer Attribution */}
-          <div className="w-full p-6 sm:p-8 md:px-12 lg:px-16 flex flex-col sm:flex-row justify-between items-center text-center gap-4 z-20 mt-auto">
-            <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-sans">
+          <div className="w-full p-5 sm:p-8 md:px-12 lg:px-16 flex flex-col sm:flex-row justify-between items-center text-center gap-4 z-20 mt-auto">
+            <p className="text-[8px] sm:text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-sans">
               &copy; 2026 PhotoLoom
             </p>
-            <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-sans">
+            <p className="text-[8px] sm:text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-sans">
               A creative venture by Grafly Studio
             </p>
           </div>
