@@ -100,6 +100,10 @@ export default function Home() {
   const cursorLerpedPos = useRef({ x: 0, y: 0 });
   const cursorRef = useRef<HTMLDivElement>(null);
 
+  // Refs for scroll rotation
+  const scrollTarget = useRef(0);
+  const scrollCurrent = useRef(0);
+
   useEffect(() => {
     setMounted(true);
     const timer = setInterval(() => {
@@ -188,11 +192,16 @@ export default function Home() {
       }
     };
 
+    const handleWheel = (e: WheelEvent) => {
+      scrollTarget.current += e.deltaY;
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseleave", handleMouseLeave);
     window.addEventListener("mouseenter", handleMouseEnter);
     window.addEventListener("mouseover", handleMouseOverInteractive);
     window.addEventListener("mouseout", handleMouseOutInteractive);
+    window.addEventListener("wheel", handleWheel, { passive: true });
 
     let animationFrameId: number;
 
@@ -204,6 +213,9 @@ export default function Home() {
       // Smooth interpolation (lerp) for cursor
       cursorLerpedPos.current.x += (cursorPos.current.x - cursorLerpedPos.current.x) * 0.2;
       cursorLerpedPos.current.y += (cursorPos.current.y - cursorLerpedPos.current.y) * 0.2;
+
+      // Smooth interpolation for scroll rotation
+      scrollCurrent.current += (scrollTarget.current - scrollCurrent.current) * 0.05;
 
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate3d(${cursorLerpedPos.current.x}px, ${cursorLerpedPos.current.y}px, 0) translate(-50%, -50%)`;
@@ -235,9 +247,14 @@ export default function Home() {
       const bgMoveX = -currentPos.current.x * 8;
       const bgMoveY = -currentPos.current.y * 8;
       
-      if (bg1Ref.current) bg1Ref.current.style.transform = `translate(${bgMoveX}px, ${bgMoveY}px)`;
-      if (bg2Ref.current) bg2Ref.current.style.transform = `translate(${bgMoveX * 1.2}px, ${bgMoveY * 1.2}px)`;
-      if (bg3Ref.current) bg3Ref.current.style.transform = `translate(${bgMoveX * 0.8}px, ${bgMoveY * 0.8}px)`;
+      // Calculate rotation from accumulated scroll
+      const rot1 = scrollCurrent.current * 0.05;
+      const rot2 = scrollCurrent.current * -0.03;
+      const rot3 = scrollCurrent.current * 0.04;
+      
+      if (bg1Ref.current) bg1Ref.current.style.transform = `translate(${bgMoveX}px, ${bgMoveY}px) rotate(${rot1}deg)`;
+      if (bg2Ref.current) bg2Ref.current.style.transform = `translate(${bgMoveX * 1.2}px, ${bgMoveY * 1.2}px) rotate(${rot2}deg)`;
+      if (bg3Ref.current) bg3Ref.current.style.transform = `translate(${bgMoveX * 0.8}px, ${bgMoveY * 0.8}px) rotate(${rot3}deg)`;
 
       animationFrameId = requestAnimationFrame(render);
     };
@@ -250,6 +267,7 @@ export default function Home() {
       window.removeEventListener("mouseenter", handleMouseEnter);
       window.removeEventListener("mouseover", handleMouseOverInteractive);
       window.removeEventListener("mouseout", handleMouseOutInteractive);
+      window.removeEventListener("wheel", handleWheel);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
