@@ -8,28 +8,23 @@ function FlipDigit({ val }: { val: string }) {
   const [displayedValue, setDisplayedValue] = useState(val);
   const [nextValue, setNextValue] = useState(val);
   const [isFlipping, setIsFlipping] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (val !== displayedValue && !isFlipping) {
+    if (val !== displayedValue) {
       setNextValue(val);
       setIsFlipping(true);
       
-      timeoutRef.current = setTimeout(() => {
+      const timeout = setTimeout(() => {
         setDisplayedValue(val);
         setIsFlipping(false);
       }, 500); // Matches CSS animation duration
+      
+      return () => clearTimeout(timeout);
     }
-  }, [val, displayedValue, isFlipping]);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
+  }, [val, displayedValue]);
 
   return (
-    <div className="relative w-10 h-14 sm:w-14 sm:h-20 md:w-20 md:h-28 lg:w-28 lg:h-40 bg-[#111] rounded-lg shadow-xl perspective-[1200px] text-white text-3xl sm:text-5xl md:text-6xl lg:text-8xl font-sans font-bold flex items-center justify-center select-none">
+    <div className="relative w-6 h-10 sm:w-14 sm:h-20 md:w-20 md:h-28 lg:w-28 lg:h-40 bg-[#111] rounded-md sm:rounded-lg shadow-xl perspective-[1200px] text-white text-xl sm:text-5xl md:text-6xl lg:text-8xl font-sans font-bold flex items-center justify-center select-none">
       
       {/* Top half static (Next value - hidden initially by flipper) */}
       <div className="absolute top-0 left-0 w-full h-1/2 overflow-hidden bg-[#181818] rounded-t-lg flex items-end justify-center">
@@ -78,7 +73,7 @@ function FlipGroup({ value, label }: { value: string; label: string }) {
           <FlipDigit key={index} val={char} />
         ))}
       </div>
-      <span className="text-[9px] sm:text-[10px] md:text-xs text-zinc-500 tracking-[0.25em] uppercase font-medium">{label}</span>
+      <span className="text-[8px] sm:text-[10px] md:text-xs text-zinc-500 tracking-[0.1em] sm:tracking-[0.25em] uppercase font-medium">{label}</span>
     </div>
   );
 }
@@ -310,16 +305,14 @@ export default function Home() {
           <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-16 text-center z-20 relative py-8">
             
             {/* Countdown */}
-            <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 z-30 transition-opacity duration-1000" style={{ opacity: mounted ? 1 : 0 }}>
+            <div className="flex items-center justify-center gap-1 sm:gap-4 md:gap-6 lg:gap-8 z-30 transition-opacity duration-1000 w-full px-1" style={{ opacity: mounted ? 1 : 0 }}>
               <FlipGroup value={formatNumber(timeLeft.days)} label="Days" />
-              <span className="text-xl sm:text-3xl md:text-5xl text-zinc-300 font-light pb-6 sm:pb-8 md:pb-10">:</span>
+              <span className="text-base sm:text-3xl md:text-5xl text-zinc-300 font-light pb-4 sm:pb-8 md:pb-10">:</span>
               <FlipGroup value={formatNumber(timeLeft.hours)} label="Hours" />
-              <span className="text-xl sm:text-3xl md:text-5xl text-zinc-300 font-light pb-6 sm:pb-8 md:pb-10">:</span>
+              <span className="text-base sm:text-3xl md:text-5xl text-zinc-300 font-light pb-4 sm:pb-8 md:pb-10">:</span>
               <FlipGroup value={formatNumber(timeLeft.minutes)} label="Min" />
-              <span className="text-xl sm:text-3xl md:text-5xl text-zinc-300 font-light pb-6 sm:pb-8 md:pb-10 hidden sm:block">:</span>
-              <div className="hidden sm:block">
-                <FlipGroup value={formatNumber(timeLeft.seconds)} label="Sec" />
-              </div>
+              <span className="text-base sm:text-3xl md:text-5xl text-zinc-300 font-light pb-4 sm:pb-8 md:pb-10">:</span>
+              <FlipGroup value={formatNumber(timeLeft.seconds)} label="Sec" />
             </div>
 
             {/* Oversized Typography overlay effect */}
