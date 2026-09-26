@@ -22,7 +22,7 @@ function FlipDigit({ val }: { val: string }) {
   };
 
   return (
-    <div className="relative w-10 h-14 sm:w-14 sm:h-20 md:w-20 md:h-28 lg:w-28 lg:h-40 bg-[#111] rounded-lg shadow-xl perspective-[1200px] text-white text-3xl sm:text-5xl md:text-6xl lg:text-8xl font-sans font-bold flex items-center justify-center select-none">
+    <div className="relative w-8 h-12 sm:w-14 sm:h-20 md:w-20 md:h-28 lg:w-28 lg:h-40 bg-[#111] rounded-md sm:rounded-lg shadow-xl perspective-[1200px] text-white text-2xl sm:text-5xl md:text-6xl lg:text-8xl font-sans font-bold flex items-center justify-center select-none">
       
       {/* Top half static (Next value - hidden initially by flipper) */}
       <div className="absolute top-0 left-0 w-full h-1/2 overflow-hidden bg-[#181818] rounded-t-lg flex items-end justify-center">
@@ -283,7 +283,7 @@ export default function Home() {
           className="w-full max-w-[1400px] bg-white shadow-2xl flex flex-col relative overflow-hidden min-h-[85svh] lg:min-h-0 lg:h-full will-change-transform transition-shadow rounded-sm"
         >
           {/* Header */}
-          <header className="w-full p-6 sm:p-8 md:px-12 lg:px-16 lg:py-10 flex flex-col sm:flex-row justify-between items-center z-20 gap-6">
+          <header className="w-full p-5 sm:p-8 md:px-12 lg:px-16 lg:py-10 flex flex-row justify-between items-center z-20">
             <div className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
               PhotoLoom
             </div>
@@ -302,42 +302,42 @@ export default function Home() {
           <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-16 text-center z-20 relative py-8">
             
             {/* Countdown */}
-            <div className="flex items-center justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 z-30 transition-opacity duration-1000" style={{ opacity: mounted ? 1 : 0 }}>
+            <div className="flex items-center justify-center gap-1.5 sm:gap-4 md:gap-6 lg:gap-8 z-30 transition-opacity duration-1000 w-full px-2" style={{ opacity: mounted ? 1 : 0 }}>
               <FlipGroup value={formatNumber(timeLeft.days)} label="Days" />
-              <span className="text-xl sm:text-3xl md:text-5xl text-zinc-300 font-light pb-6 sm:pb-8 md:pb-10">:</span>
+              <span className="text-lg sm:text-3xl md:text-5xl text-zinc-300 font-light pb-5 sm:pb-8 md:pb-10">:</span>
               <FlipGroup value={formatNumber(timeLeft.hours)} label="Hours" />
-              <span className="text-xl sm:text-3xl md:text-5xl text-zinc-300 font-light pb-6 sm:pb-8 md:pb-10">:</span>
+              <span className="text-lg sm:text-3xl md:text-5xl text-zinc-300 font-light pb-5 sm:pb-8 md:pb-10">:</span>
               <FlipGroup value={formatNumber(timeLeft.minutes)} label="Min" />
-              <span className="text-xl sm:text-3xl md:text-5xl text-zinc-300 font-light pb-6 sm:pb-8 md:pb-10 hidden sm:block">:</span>
+              <span className="text-lg sm:text-3xl md:text-5xl text-zinc-300 font-light pb-5 sm:pb-8 md:pb-10 hidden sm:block">:</span>
               <div className="hidden sm:block">
                 <FlipGroup value={formatNumber(timeLeft.seconds)} label="Sec" />
               </div>
             </div>
 
             {/* Oversized Typography overlay effect */}
-            <div className="w-full flex justify-center items-center my-6 md:my-8 lg:my-10 pointer-events-none z-10 relative">
-              <h1 className="font-sans text-[15vw] md:text-[140px] lg:text-[180px] leading-none text-[#f5f5f5] uppercase tracking-tighter select-none font-bold whitespace-nowrap">
+            <div className="w-full flex justify-center items-center my-6 md:my-8 lg:my-10 pointer-events-none z-10 relative overflow-hidden">
+              <h1 className="font-sans text-[12vw] sm:text-[15vw] md:text-[140px] lg:text-[180px] leading-none text-[#f5f5f5] uppercase tracking-tighter select-none font-bold whitespace-nowrap">
                 Coming Soon
               </h1>
             </div>
 
             {/* Subtext */}
-            <div className="z-30 mt-[-1.5rem] md:mt-[-3rem] space-y-4 md:space-y-6 max-w-2xl px-6">
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-black font-medium leading-tight">
+            <div className="z-30 mt-[-1.0rem] sm:mt-[-1.5rem] md:mt-[-3rem] space-y-3 sm:space-y-4 md:space-y-6 max-w-2xl px-4 sm:px-6">
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-black font-medium leading-tight px-2">
                 We&apos;re creating something new.
               </h2>
-              <p className="text-sm md:text-base text-zinc-500 font-sans tracking-wide font-light max-w-md mx-auto">
+              <p className="text-xs sm:text-sm md:text-base text-zinc-500 font-sans tracking-wide font-light max-w-md mx-auto px-4">
                 AI-powered visual production for modern brands.
               </p>
             </div>
           </div>
           
           {/* Main Card Footer Attribution */}
-          <div className="w-full p-6 sm:p-8 md:px-12 lg:px-16 flex flex-col sm:flex-row justify-between items-center text-center gap-4 z-20 mt-auto">
-            <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-sans">
+          <div className="w-full p-5 sm:p-8 md:px-12 lg:px-16 flex flex-col sm:flex-row justify-between items-center text-center gap-3 sm:gap-4 z-20 mt-auto">
+            <p className="text-[9px] sm:text-[10px] text-zinc-400 tracking-[0.15em] sm:tracking-[0.2em] uppercase font-sans">
               &copy; 2026 PhotoLoom
             </p>
-            <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-sans">
+            <p className="text-[9px] sm:text-[10px] text-zinc-400 tracking-[0.15em] sm:tracking-[0.2em] uppercase font-sans">
               A creative venture by Grafly Studio
             </p>
           </div>
