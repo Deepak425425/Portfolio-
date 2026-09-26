@@ -213,14 +213,22 @@ export default function Home() {
       const moveX = currentPos.current.x * 4;
       const moveY = currentPos.current.y * 4;
       
+      // Dynamic Shadow Depth
+      // Calculate distance from center (approx 0 to 1) for dynamic blur and opacity
+      const dist = Math.min(1, Math.sqrt(currentPos.current.x * currentPos.current.x + currentPos.current.y * currentPos.current.y));
+      
       // Shadow moves opposite to create physical depth
-      const shadowX = -currentPos.current.x * 12;
-      const shadowY = -currentPos.current.y * 12;
+      const shadowX = -currentPos.current.x * 18;
+      const shadowY = -currentPos.current.y * 18;
+      
+      // Dynamic properties for realistic physical depth
+      const shadowBlur = 50 + (dist * 20); // Blurs more as it 'stretches'
+      const shadowSpread = -12 - (dist * 2); // Spreads slightly thinner
+      const shadowOpacity = 0.25 - (dist * 0.08); // Becomes slightly more transparent
 
       if (panelRef.current) {
         panelRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        // Match shadow-2xl base (0 25px 50px -12px rgba(0,0,0,0.25)) and add dynamic shift
-        panelRef.current.style.boxShadow = `${shadowX}px ${25 + shadowY}px 50px -12px rgba(0,0,0,0.25)`;
+        panelRef.current.style.boxShadow = `${shadowX}px ${25 + shadowY}px ${shadowBlur}px ${shadowSpread}px rgba(0,0,0,${shadowOpacity.toFixed(3)})`;
       }
 
       // Background shapes move slightly away from cursor for parallax
