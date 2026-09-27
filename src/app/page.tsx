@@ -89,8 +89,9 @@ export default function Home() {
   useEffect(() => {
     const updateScrollRange = () => {
       if (trackRef.current) {
-        const maxScroll = trackRef.current.scrollWidth - window.innerWidth;
-        setScrollRange(maxScroll > 0 ? maxScroll : 0);
+        const trackWidth = trackRef.current.getBoundingClientRect().width;
+        const maxScroll = trackWidth - window.innerWidth;
+        setScrollRange(Math.max(0, maxScroll));
       }
     };
     updateScrollRange();
