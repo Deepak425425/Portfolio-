@@ -44,9 +44,22 @@ export default function ContactPage() {
         <div className="w-full lg:w-1/2 p-6 md:p-12 lg:p-24 flex flex-col justify-center bg-white border-r border-zinc-200">
           <div className="max-w-xl mx-auto lg:mx-0 w-full">
             <h1 className="font-serif text-5xl md:text-6xl mb-6">Start a project.</h1>
-            <p className="text-sm text-zinc-500 font-light mb-16 leading-relaxed">
+            <p className="text-sm text-zinc-500 font-light mb-12 leading-relaxed">
               Tell us what you are building. Our creative team will review your requirements and reach out to discuss visual direction, timelines, and next steps.
             </p>
+
+            <div className="flex flex-col sm:flex-row gap-8 mb-16 pb-12 border-b border-zinc-100">
+              <div>
+                <h4 className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400 mb-2">Direct Contact</h4>
+                <p className="text-sm font-medium">Deepak Kumawat</p>
+                <a href="mailto:deepak@graflystudio.com" className="text-sm text-zinc-500 hover:text-black transition-colors block mt-1">deepak@graflystudio.com</a>
+              </div>
+              <div>
+                <h4 className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400 mb-2">Socials & Direct Line</h4>
+                <a href="https://wa.me/916378083205" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 hover:text-black transition-colors block">WhatsApp (+91 63780 83205)</a>
+                <a href="https://www.linkedin.com/in/deepak-kumawat-grafly" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 hover:text-black transition-colors block mt-1">LinkedIn</a>
+              </div>
+            </div>
 
             {isSuccess ? (
               <div className="bg-zinc-50 border border-zinc-200 p-8 md:p-12 text-center animate-fade-in">
