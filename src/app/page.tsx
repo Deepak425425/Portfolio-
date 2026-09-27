@@ -81,10 +81,34 @@ export default function Home() {
   const navBorder = useTransform(scrollY, [0, 100], ["rgba(228,228,231,0)", "rgba(228,228,231,1)"]);
   const navPadding = useTransform(scrollY, [0, 100], ["2rem", "1.25rem"]);
 
-  // Horizontal Scroll ref
+  // Horizontal Scroll refs and state
   const horizontalRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: horizontalProgress } = useScroll({ target: horizontalRef });
-  const horizontalX = useTransform(horizontalProgress, [0, 1], ["0%", "-65%"]);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [scrollRange, setScrollRange] = useState(0);
+
+  useEffect(() => {
+    const updateScrollRange = () => {
+      if (trackRef.current) {
+        const maxScroll = trackRef.current.scrollWidth - window.innerWidth;
+        setScrollRange(maxScroll > 0 ? maxScroll : 0);
+      }
+    };
+    updateScrollRange();
+    // setTimeout to ensure images/fonts are loaded and measured correctly
+    const timeoutId = setTimeout(updateScrollRange, 100);
+    window.addEventListener("resize", updateScrollRange);
+    return () => {
+      window.removeEventListener("resize", updateScrollRange);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  const { scrollYProgress: horizontalProgress } = useScroll({ 
+    target: horizontalRef,
+    offset: ["start start", "end end"]
+  });
+  
+  const horizontalX = useTransform(horizontalProgress, [0, 1], [0, -scrollRange]);
 
   // How It Works Sticky scroll ref
   const howItWorksRef = useRef<HTMLDivElement>(null);
@@ -396,12 +420,16 @@ export default function Home() {
       </section>
 
       {/* 5. HORIZONTAL SCROLL CAMPAIGN WORLDS */}
-      <section ref={horizontalRef} className="relative h-[300vh] bg-zinc-50 hidden md:block border-y border-zinc-200">
+      <section 
+        ref={horizontalRef} 
+        style={{ height: scrollRange > 0 ? `calc(100vh + ${scrollRange}px)` : '300vh' }}
+        className="relative bg-zinc-50 hidden md:block border-y border-zinc-200"
+      >
         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden w-full">
           <div className="px-12 lg:px-24 mb-16">
              <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl">Campaign Worlds.</h2>
           </div>
-          <motion.div style={{ x: horizontalX }} className="flex gap-8 lg:gap-16 px-12 lg:px-24 w-max">
+          <motion.div ref={trackRef} style={{ x: horizontalX }} className="flex gap-8 lg:gap-16 pl-12 lg:pl-24 w-max">
             {horizontalItems.map((item, i) => (
               <div key={i} data-cursor="view" className="relative w-[60vw] lg:w-[40vw] h-[60vh] flex-shrink-0 group overflow-hidden">
                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 1, ease: "easeOut" }}>
@@ -415,6 +443,8 @@ export default function Home() {
                 </div>
               </div>
             ))}
+            {/* Right padding spacer to ensure scrollWidth includes final visual padding */}
+            <div className="w-12 lg:w-24 flex-shrink-0" />
           </motion.div>
         </div>
       </section>
