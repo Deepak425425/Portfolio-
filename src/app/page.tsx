@@ -85,23 +85,14 @@ export default function Home() {
   const shouldReduceMotion = useReducedMotion();
 
   // Mouse Parallax Transforms
-  const p1x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [-15, 15]);
-  const p1y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-15, 15]);
+  const p1x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [-10, 10]);
+  const p1y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-10, 10]);
   
-  const p2x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [25, -25]);
-  const p2y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [25, -25]);
+  const p2x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [20, -20]);
+  const p2y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [20, -20]);
   
-  const p3x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [-35, 35]);
-  const p3y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-35, 35]);
-
-  const p4x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [20, -20]);
-  const p4y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [20, -20]);
-
-  const p5x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [-10, 10]);
-  const p5y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-10, 10]);
-
-  const pPanelX = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? ["-50%", "-50%"] : ["-48%", "-52%"]);
-  const pPanelY = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-10, 10]);
+  const p3x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [-25, 25]);
+  const p3y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-25, 25]);
   
   // Navigation styling
   const navBg = useTransform(scrollY, [0, 100], ["rgba(255,255,255,0)", "rgba(255,255,255,0.95)"]);
@@ -285,19 +276,19 @@ export default function Home() {
         </div>
       </motion.header>
 
-      {/* 1. HERO SECTION - EDITORIAL COMPOSITION */}
-      <section className="relative min-h-[100svh] w-full flex flex-col items-center justify-center overflow-hidden bg-[#F9F8F6] pt-32 pb-24 z-10">
+      {/* 1. HERO SECTION - REFINED EDITORIAL COMPOSITION */}
+      <section className="relative min-h-[100svh] w-full flex flex-col items-center justify-start overflow-hidden bg-[#F9F8F6] pt-40 pb-24 z-10">
         
-        <div className="relative w-full max-w-[1600px] h-full flex flex-col items-center justify-center px-6 z-10">
+        <div className="relative w-full max-w-[1400px] flex flex-col items-center justify-start px-6 z-10">
           
-          {/* Main Content (Centered) */}
-          <div className="relative z-20 flex flex-col items-center text-center mt-12 md:mt-24 w-full">
+          {/* Main Content (Top/Centered) */}
+          <div className="relative z-30 flex flex-col items-center text-center w-full">
              {/* Headline */}
              <motion.h1 
-               initial={{ opacity: 0, y: 40 }}
+               initial={{ opacity: 0, y: 30 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-               className="font-serif text-5xl md:text-7xl lg:text-[6.5rem] leading-[1.05] text-black tracking-tight max-w-5xl mx-auto"
+               className="font-serif text-5xl md:text-7xl lg:text-[7.5rem] leading-[1.05] text-black tracking-tight max-w-5xl mx-auto"
              >
                 Premium AI Visuals <br className="hidden md:block"/> for Modern Brands.
              </motion.h1>
@@ -317,9 +308,9 @@ export default function Home() {
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 1, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-               className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12 w-full"
+               className="flex flex-col sm:flex-row items-center justify-center gap-8 mt-12 w-full"
              >
-                <MagneticButton href="/contact" className="inline-flex px-10 py-5 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors shadow-2xl w-full sm:w-auto justify-center text-center">
+                <MagneticButton href="/contact" className="inline-flex px-10 py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors shadow-xl w-full sm:w-auto justify-center text-center">
                   Start A Project
                 </MagneticButton>
                 <Link href="/work" className="text-[10px] uppercase tracking-widest font-bold text-black border-b border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors w-full sm:w-auto text-center">
@@ -328,120 +319,74 @@ export default function Home() {
              </motion.div>
           </div>
 
-          {/* FLOATING VISUAL SYSTEM (Desktop/Tablet) */}
-          <div className="absolute inset-0 z-10 pointer-events-none hidden md:block">
+          {/* Editorial Visual Layout (Bottom) */}
+          <div className="relative mt-20 w-full flex justify-center items-end pb-12">
             
-            {/* 1. Top Left: Medium Jewellery */}
-            <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -90]) }} className="absolute top-[8%] left-[5%] lg:left-[10%] w-[18vw] max-w-[240px] z-10 pointer-events-none">
+            {/* Primary Hero Image (Center) */}
+            <motion.div 
+              style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -60]) }}
+              className="relative z-20 w-[90%] md:w-full max-w-[500px] xl:max-w-[640px] aspect-[4/5] shadow-2xl group pointer-events-auto"
+            >
               <motion.div 
-                initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                style={{ x: p1x, y: p1y }}
-                className="w-full aspect-[4/5] overflow-hidden shadow-2xl group pointer-events-auto bg-zinc-200" data-cursor="view"
+                initial={{ opacity: 0, clipPath: "inset(5% 5% 5% 5%)" }} 
+                animate={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }} 
+                transition={{ duration: 1.5, delay: 1, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full h-full relative overflow-hidden bg-zinc-200"
+                data-cursor="view"
               >
-                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.03 }} transition={{ duration: 0.8, ease: "easeOut" }} style={{ x: p1x, y: p1y }}>
+                   <Image src="/work/fashion.jpg" alt="Fashion Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
+                 </motion.div>
+              </motion.div>
+            </motion.div>
+
+            {/* Secondary Visual 1 (Left, smaller, overlapping slightly behind) */}
+            <motion.div 
+              style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -90]) }}
+              className="absolute left-[2%] md:left-[10%] lg:left-[15%] bottom-[10%] z-10 w-[30vw] md:w-[20vw] max-w-[260px] aspect-square shadow-xl group pointer-events-auto hidden sm:block"
+            >
+               <motion.div 
+                 initial={{ opacity: 0, x: -30 }} 
+                 animate={{ opacity: 1, x: 0 }} 
+                 transition={{ duration: 1.2, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
+                 className="w-full h-full relative overflow-hidden bg-zinc-200"
+                 data-cursor="view"
+               >
+                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }} style={{ x: p2x, y: p2y }}>
                    <Image src="/work/jewellery.jpg" alt="Jewellery Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 0vw, 25vw" />
                  </motion.div>
-              </motion.div>
+               </motion.div>
             </motion.div>
 
-            {/* 2. Top Right: Large Fashion */}
-            <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -140]) }} className="absolute top-[3%] right-[2%] lg:right-[6%] w-[22vw] max-w-[300px] z-20 pointer-events-none">
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1.5, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                style={{ x: p2x, y: p2y }}
-                className="w-full aspect-[3/4] overflow-hidden shadow-2xl group pointer-events-auto bg-zinc-200" data-cursor="view"
-              >
-                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                   <Image src="/work/fashion.jpg" alt="Fashion Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 0vw, 30vw" />
+            {/* Secondary Visual 2 (Right, smallest, overlapping slightly in front) */}
+            <motion.div 
+              style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -120]) }}
+              className="absolute right-[2%] md:right-[12%] lg:right-[18%] top-[10%] z-30 w-[25vw] md:w-[14vw] max-w-[180px] aspect-[3/4] shadow-lg group pointer-events-auto hidden sm:block"
+            >
+               <motion.div 
+                 initial={{ opacity: 0, x: 30 }} 
+                 animate={{ opacity: 1, x: 0 }} 
+                 transition={{ duration: 1.2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
+                 className="w-full h-full relative overflow-hidden bg-zinc-200"
+                 data-cursor="view"
+               >
+                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }} style={{ x: p3x, y: p3y }}>
+                   <Image src="/images/luxury.jpg" alt="Beauty Campaign" fill className="object-cover object-[center_30%]" priority sizes="(max-width: 768px) 0vw, 20vw" />
                  </motion.div>
-              </motion.div>
+               </motion.div>
             </motion.div>
 
-            {/* 3. Middle Left: Cropped Beauty/Product */}
-            <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -50]) }} className="absolute top-[45%] left-[1%] lg:left-[4%] w-[12vw] max-w-[160px] z-30 pointer-events-none">
-              <motion.div 
-                initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.2, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                style={{ x: p3x, y: p3y }}
-                className="w-full aspect-square overflow-hidden shadow-xl group pointer-events-auto bg-zinc-200" data-cursor="view"
-              >
-                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                   <Image src="/images/luxury.jpg" alt="Beauty Campaign" fill className="object-cover object-[center_30%]" priority sizes="(max-width: 768px) 0vw, 15vw" />
-                 </motion.div>
-              </motion.div>
-            </motion.div>
-
-            {/* 4. Bottom Right: Medium Product */}
-            <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -110]) }} className="absolute bottom-[-2%] right-[10%] lg:right-[15%] w-[16vw] max-w-[220px] z-20 pointer-events-none">
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1.5, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
-                style={{ x: p4x, y: p4y }}
-                className="w-full aspect-[4/5] overflow-hidden shadow-2xl group pointer-events-auto bg-zinc-200" data-cursor="view"
-              >
-                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                   <Image src="/work/product.jpg" alt="Product Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 0vw, 20vw" />
-                 </motion.div>
-              </motion.div>
+            {/* Subtle Metadata element instead of large panel */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1.8 }}
+              className="absolute bottom-0 right-[5%] lg:right-[10%] z-10 hidden md:flex flex-col text-right gap-1"
+            >
+               <span className="text-[8px] uppercase tracking-[0.3em] text-zinc-400">PhotoLoom</span>
+               <span className="text-[9px] uppercase tracking-[0.1em] text-black font-semibold">Art Direction &<br/>Visual Production</span>
             </motion.div>
             
-            {/* 5. Lower Left Background overlapping */}
-            <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -70]) }} className="absolute bottom-[5%] left-[18%] w-[14vw] max-w-[180px] z-0 pointer-events-none">
-              <motion.div 
-                initial={{ opacity: 0 }} animate={{ opacity: 0.7 }} transition={{ duration: 2, delay: 1.3 }}
-                style={{ x: p5x, y: p5y }}
-                className="w-full aspect-[4/5] overflow-hidden shadow-md opacity-70 mix-blend-multiply pointer-events-none bg-zinc-200"
-              >
-                 <Image src="/work/campaign.jpg" alt="Atmospheric visual" fill className="object-cover filter grayscale opacity-60" sizes="(max-width: 768px) 0vw, 20vw" />
-              </motion.div>
-            </motion.div>
-
-          </div>
-
-          {/* CENTRAL CREATIVE PANEL */}
-          <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -40]) }} className="absolute bottom-[8%] md:bottom-[12%] left-1/2 z-30 pointer-events-none hidden sm:block">
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-              style={{ x: pPanelX, y: pPanelY }}
-              className="flex flex-col gap-3 bg-white/90 backdrop-blur-xl p-5 pr-14 shadow-[0_30px_60px_rgba(0,0,0,0.08)] border border-purple-500/10 rounded-sm pointer-events-auto"
-            >
-               <div className="flex items-center gap-3">
-                 <div className="w-1.5 h-1.5 rounded-full bg-purple-600 animate-pulse"></div>
-                 <span className="text-[9px] uppercase tracking-widest font-bold text-zinc-800">Generating campaign visual...</span>
-               </div>
-               <div className="flex gap-5 mt-2 border-t border-zinc-100 pt-3">
-                 <div className="flex flex-col gap-1">
-                   <span className="text-[7px] uppercase tracking-[0.2em] text-zinc-400">Direction</span>
-                   <span className="text-[9px] uppercase tracking-[0.1em] text-black font-semibold">Editorial</span>
-                 </div>
-                 <div className="flex flex-col gap-1 border-l border-zinc-100 pl-4">
-                   <span className="text-[7px] uppercase tracking-[0.2em] text-zinc-400">Subject</span>
-                   <span className="text-[9px] uppercase tracking-[0.1em] text-black font-semibold">Luxury Product</span>
-                 </div>
-                 <div className="flex flex-col gap-1 border-l border-zinc-100 pl-4">
-                   <span className="text-[7px] uppercase tracking-[0.2em] text-zinc-400">Status</span>
-                   <span className="text-[9px] uppercase tracking-[0.1em] text-purple-600 font-semibold">Rendering</span>
-                 </div>
-               </div>
-            </motion.div>
-          </motion.div>
-          
-          {/* Mobile Specific Floating Images */}
-          <div className="absolute inset-0 z-0 pointer-events-none md:hidden overflow-hidden">
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }} animate={{ opacity: 0.25, y: 0 }} transition={{ duration: 2, delay: 0.5 }}
-              style={{ y: useTransform(smoothScrollY, [0, 800], [0, -40]) }}
-              className="absolute top-[10%] right-[-15%] w-[50vw] aspect-[3/4] overflow-hidden mix-blend-multiply filter grayscale"
-            >
-               <Image src="/work/fashion.jpg" alt="Fashion" fill className="object-cover" sizes="50vw" />
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 0.4, y: 0 }} transition={{ duration: 2, delay: 0.8 }}
-              style={{ y: useTransform(smoothScrollY, [0, 800], [0, -60]) }}
-              className="absolute bottom-[15%] left-[-10%] w-[40vw] aspect-[4/5] overflow-hidden mix-blend-multiply"
-            >
-               <Image src="/work/jewellery.jpg" alt="Jewellery" fill className="object-cover" sizes="40vw" />
-            </motion.div>
           </div>
 
         </div>
