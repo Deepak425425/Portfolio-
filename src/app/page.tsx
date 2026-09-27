@@ -86,6 +86,10 @@ export default function Home() {
   const { scrollYProgress: horizontalProgress } = useScroll({ target: horizontalRef });
   const horizontalX = useTransform(horizontalProgress, [0, 1], ["0%", "-65%"]);
 
+  // How It Works Sticky scroll ref
+  const howItWorksRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: howItWorksProgress } = useScroll({ target: howItWorksRef, offset: ["start center", "end center"] });
+
   useEffect(() => {
     setMounted(true);
     
@@ -346,34 +350,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. HOW IT WORKS */}
-      <section className="relative w-full z-10 py-24 md:py-32 px-6 md:px-12 lg:px-24 bg-white">
-        <motion.div 
-          initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={revealVariants}
-          className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24"
-        >
-          <div className="w-full lg:w-1/3">
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6">How It Works.</h2>
-            <p className="text-sm text-zinc-500 font-light max-w-sm leading-relaxed">The production process engineered for volume, speed, and premium quality.</p>
+      {/* 4. HOW IT WORKS (Sticky Storytelling) */}
+      <section ref={howItWorksRef} className="relative w-full z-10 bg-white">
+        <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row relative">
+          
+          <div className="w-full lg:w-1/2 h-[50vh] lg:h-[100vh] sticky top-0 overflow-hidden bg-zinc-200">
+             <motion.div
+               style={{ 
+                 scale: useTransform(howItWorksProgress, [0, 1], [1.1, 1]), 
+                 opacity: useTransform(howItWorksProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
+               }}
+               className="w-full h-full relative"
+             >
+               <Image src="/images/luxury.jpg" alt="Production Process" fill className="object-cover" />
+             </motion.div>
           </div>
-          <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-16">
-            {[
-              { t: 'Brief', d: 'Understand the product, brand and objective.' },
-              { t: 'Concept', d: 'Develop the visual direction and creative treatment.' },
-              { t: 'Production', d: 'Create the imagery, motion and campaign assets.' },
-              { t: 'Refinement', d: 'Art-direct, composite, retouch and polish every output.' },
-              { t: 'Delivery', d: 'Deliver production-ready assets for campaigns, eCommerce and social.' }
-            ].map((step, i) => (
-              <div key={i} className="flex gap-6 items-start border-b border-zinc-200 pb-8 hover:border-black transition-colors group">
-                <span className="text-[10px] tracking-[0.2em] font-bold text-zinc-300 mt-1 group-hover:text-black transition-colors">0{i+1}</span>
-                <div>
-                  <h4 className="font-serif text-xl md:text-2xl mb-3">{step.t}</h4>
-                  <p className="text-xs text-zinc-500 font-light leading-relaxed">{step.d}</p>
-                </div>
-              </div>
-            ))}
+
+          <div className="w-full lg:w-1/2 flex flex-col py-24 md:py-48 px-6 md:px-12 lg:px-24">
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-24 sticky top-32 bg-white/90 backdrop-blur-sm py-4 z-10">How It Works.</h2>
+            
+            <div className="flex flex-col gap-32 pb-48">
+              {[
+                { t: 'Brief', d: 'Understand the product, brand and objective. We define the constraints and explore visual territories.' },
+                { t: 'Direction', d: 'Develop the visual direction and creative treatment. Lighting logic, color theory, and mood are established.' },
+                { t: 'Production', d: 'Create the imagery, motion and campaign assets utilizing AI generation guided by human art direction.' },
+                { t: 'Refinement', d: 'Meticulously composite, retouch and polish every output to ensure production-grade realism.' },
+                { t: 'Delivery', d: 'Deliver final assets perfectly optimized for campaigns, eCommerce grids, and social channels.' }
+              ].map((step, i) => (
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0.2 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ margin: "-40% 0px -40% 0px" }}
+                  transition={{ duration: 0.5 }}
+                  className="flex flex-col gap-4"
+                >
+                  <span className="text-[10px] tracking-[0.2em] font-bold text-zinc-400">0{i+1}</span>
+                  <h4 className="font-serif text-3xl md:text-4xl">{step.t}</h4>
+                  <p className="text-sm text-zinc-500 font-light leading-relaxed max-w-sm">{step.d}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* 5. HORIZONTAL SCROLL CAMPAIGN WORLDS */}
@@ -424,9 +443,14 @@ export default function Home() {
           className="max-w-[1400px] mx-auto"
         >
           <div className="overflow-hidden mb-24 max-w-4xl">
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-7xl leading-tight">
-              Beyond traditional <br/>
-              <span className="italic text-zinc-500 font-light">production limits.</span>
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-7xl leading-tight uppercase">
+              {["AI is the tool.", "Direction is the", "difference."].map((line, i) => (
+                <span key={i} className="block overflow-hidden pb-2">
+                  <motion.span custom={i} variants={lineRevealVariants} initial="hidden" whileInView="visible" viewport={{ once: true }} className="block">
+                    {line}
+                  </motion.span>
+                </span>
+              ))}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
@@ -479,7 +503,8 @@ export default function Home() {
               <motion.img 
                 src="/work/campaign.jpg" 
                 alt="Automotive concept" 
-                className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105" 
+                style={{ scale: useTransform(smoothScrollY, [0, 4000], [1.15, 1]) }}
+                className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.03]" 
               />
             </div>
           </motion.div>
