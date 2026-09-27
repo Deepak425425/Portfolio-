@@ -235,7 +235,7 @@ export default function Home() {
 
       {/* 1. HERO SECTION */}
       <section className="relative min-h-[100svh] flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-10 w-full z-10 pt-20">
-        <div ref={panelRef} className="w-full max-w-[1400px] bg-white shadow-2xl flex flex-col relative overflow-hidden min-h-[85svh] lg:h-[85vh] will-change-transform rounded-sm border border-zinc-100">
+        <div ref={panelRef} className="w-full max-w-[1400px] bg-white shadow-2xl flex flex-col relative overflow-hidden min-h-[85svh] will-change-transform rounded-sm border border-zinc-100">
           
           <header className="absolute top-0 left-0 w-full p-5 sm:p-8 md:px-12 lg:px-16 flex flex-row justify-between items-center z-30">
             <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
@@ -252,39 +252,41 @@ export default function Home() {
             </div>
           </header>
 
-          <div className="flex-1 flex flex-col lg:flex-row items-center justify-between px-6 md:px-16 pt-24 pb-12 z-20 h-full">
-            <div className="w-full lg:w-1/2 flex flex-col justify-center h-full gap-8 md:gap-12 lg:pr-12 text-left">
-              <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[1.1] text-black tracking-tight">
+          <div className="flex-1 flex flex-col lg:flex-row items-stretch justify-between pt-24 lg:pt-0 z-20 h-full w-full">
+            <div className="w-full lg:w-1/2 flex flex-col justify-center h-full gap-8 md:gap-10 px-6 md:px-12 lg:pl-16 lg:pr-12 py-8 lg:py-24 text-left">
+              <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-[1.1] text-black tracking-tight mt-4 lg:mt-0">
                 AI Visual <br/> Production <br/> <span className="italic text-zinc-400 font-light">for Modern Brands.</span>
               </h1>
               <p className="font-sans text-sm md:text-base text-zinc-500 max-w-md leading-relaxed font-light">
                 Cinematic imagery, campaigns and visual systems created with AI for modern brands.
               </p>
               
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-4">
-                <Link href="/contact" className="px-8 py-4 bg-black text-white text-xs uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mt-2">
+                <Link href="/contact" className="px-8 py-4 bg-black text-white text-xs uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors text-center w-full sm:w-auto">
                   Start A Project
                 </Link>
-                <Link href="/work" className="text-xs uppercase tracking-widest font-bold text-black border-b border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors">
+                <Link href="/work" className="text-xs uppercase tracking-widest font-bold text-black border-b border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors text-center w-full sm:w-auto">
                   View Work
                 </Link>
               </div>
 
               {/* Keep existing countdown */}
-              <div className="mt-8 pt-8 border-t border-zinc-100 flex items-center justify-start gap-2 sm:gap-4 w-full" style={{ opacity: mounted ? 1 : 0 }}>
-                <div className="flex flex-col gap-1 mr-4">
+              <div className="mt-8 pt-8 border-t border-zinc-100 flex flex-wrap items-center justify-start gap-2 sm:gap-4 w-full" style={{ opacity: mounted ? 1 : 0 }}>
+                <div className="flex flex-col gap-1 mr-2 sm:mr-4 mb-2 sm:mb-0 w-full sm:w-auto">
                   <span className="text-[9px] uppercase tracking-widest font-bold text-black">V.1 Launching</span>
                   <span className="text-xs font-serif italic text-zinc-400">Join the waitlist</span>
                 </div>
-                <FlipGroup value={formatNumber(timeLeft.days)} label="Days" />
-                <span className="text-lg text-zinc-300 font-light pb-4">:</span>
-                <FlipGroup value={formatNumber(timeLeft.hours)} label="Hrs" />
-                <span className="text-lg text-zinc-300 font-light pb-4">:</span>
-                <FlipGroup value={formatNumber(timeLeft.minutes)} label="Min" />
+                <div className="flex items-center gap-2 sm:gap-4">
+                  <FlipGroup value={formatNumber(timeLeft.days)} label="Days" />
+                  <span className="text-lg text-zinc-300 font-light pb-4">:</span>
+                  <FlipGroup value={formatNumber(timeLeft.hours)} label="Hrs" />
+                  <span className="text-lg text-zinc-300 font-light pb-4">:</span>
+                  <FlipGroup value={formatNumber(timeLeft.minutes)} label="Min" />
+                </div>
               </div>
             </div>
 
-            <div className="w-full lg:w-1/2 h-[50vh] lg:h-full mt-12 lg:mt-0 relative overflow-hidden bg-zinc-50 rounded-sm">
+            <div className="w-full lg:w-1/2 h-[50vh] sm:h-[60vh] lg:h-auto min-h-[400px] relative overflow-hidden bg-zinc-50">
               <Image src="/images/luxury.jpg" alt="Luxury visual" fill className="object-cover object-center filter grayscale hover:grayscale-0 transition-all duration-1000 scale-105 hover:scale-100" />
             </div>
           </div>
@@ -372,12 +374,18 @@ export default function Home() {
              <Link href="/work" className="hidden md:block text-xs uppercase tracking-widest font-bold border-b border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors">View All</Link>
            </div>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
-             {[1,2,3,4].map((i) => (
-               <div key={i} className={`flex flex-col gap-4 ${i%2===0 ? 'md:mt-24' : ''}`}>
-                 <div className="w-full aspect-[4/5] bg-zinc-100 flex items-center justify-center relative overflow-hidden group">
-                   <div className="absolute inset-0 bg-zinc-200 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"></div>
-                   <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400 relative z-10">Project in Development</span>
+             {[
+               { src: '/work/fashion.jpg', label: 'Editorial Fashion', aspect: 'aspect-[3/4]', offset: false },
+               { src: '/work/jewellery.jpg', label: 'Product Rendering', aspect: 'aspect-[4/5]', offset: true },
+               { src: '/work/campaign.jpg', label: 'Campaign Visuals', aspect: 'aspect-[4/3]', offset: false },
+               { src: '/work/product.jpg', label: 'Cosmetic Advertising', aspect: 'aspect-square', offset: true }
+             ].map((work, i) => (
+               <div key={i} className={`flex flex-col gap-4 ${work.offset ? 'md:mt-32' : ''}`}>
+                 <div className={`w-full ${work.aspect} bg-zinc-100 flex items-center justify-center relative overflow-hidden group`}>
+                   <Image src={work.src} alt={work.label} fill className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105" />
+                   <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10"></div>
                  </div>
+                 <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400 mt-2">{work.label}</span>
                </div>
              ))}
            </div>
