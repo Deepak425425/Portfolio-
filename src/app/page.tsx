@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform, AnimatePresence, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence, useSpring, useReducedMotion } from "framer-motion";
 
 const LAUNCH_DATE = new Date("2026-11-26T00:00:00").getTime();
 
@@ -110,6 +110,34 @@ export default function Home() {
   });
   
   const horizontalX = useTransform(horizontalProgress, [0, 1], [0, -scrollRange]);
+
+  const shouldReduceMotion = useReducedMotion();
+
+  // Decorative Graphic Transforms (Desktop)
+  const graphic1X = useTransform(horizontalProgress, [0, 0.6], shouldReduceMotion ? ["5vw", "5vw"] : ["-100vw", "100vw"]);
+  const graphic1Rotate = useTransform(horizontalProgress, [0, 0.6], shouldReduceMotion ? [-5, -5] : [-12, 12]);
+  const graphic1Scale = useTransform(horizontalProgress, [0, 0.3, 0.6], shouldReduceMotion ? [0.9, 0.9, 0.9] : [0.85, 1, 1.15]);
+  const graphic1Opacity = useTransform(horizontalProgress, [0, 0.3, 0.6], shouldReduceMotion ? [0, 0.4, 0] : [0.4, 0.4, 0.4]);
+  
+  const graphic2X = useTransform(horizontalProgress, [0.4, 1], shouldReduceMotion ? ["60vw", "60vw"] : ["100vw", "-100vw"]);
+  const graphic2Rotate = useTransform(horizontalProgress, [0.4, 1], shouldReduceMotion ? [5, 5] : [12, -12]);
+  const graphic2Scale = useTransform(horizontalProgress, [0.4, 0.7, 1], shouldReduceMotion ? [0.9, 0.9, 0.9] : [0.85, 1, 1.15]);
+  const graphic2Opacity = useTransform(horizontalProgress, [0.4, 0.7, 1], shouldReduceMotion ? [0, 0.4, 0] : [0.4, 0.4, 0.4]);
+
+  // Mobile Campaign Worlds Ref and Transforms
+  const mobileCampaignRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: mobileCampaignProgress } = useScroll({
+    target: mobileCampaignRef,
+    offset: ["start center", "end center"]
+  });
+  
+  const mobileGraphic1X = useTransform(mobileCampaignProgress, [0, 0.6], shouldReduceMotion ? ["10vw", "10vw"] : ["-100vw", "100vw"]);
+  const mobileGraphic1Rotate = useTransform(mobileCampaignProgress, [0, 0.6], shouldReduceMotion ? [-5, -5] : [-8, 8]);
+  const mobileGraphic1Opacity = useTransform(mobileCampaignProgress, [0, 0.3, 0.6], shouldReduceMotion ? [0, 0.2, 0] : [0.2, 0.2, 0.2]);
+
+  const mobileGraphic2X = useTransform(mobileCampaignProgress, [0.4, 1], shouldReduceMotion ? ["50vw", "50vw"] : ["100vw", "-100vw"]);
+  const mobileGraphic2Rotate = useTransform(mobileCampaignProgress, [0.4, 1], shouldReduceMotion ? [5, 5] : [8, -8]);
+  const mobileGraphic2Opacity = useTransform(mobileCampaignProgress, [0.4, 0.7, 1], shouldReduceMotion ? [0, 0.2, 0] : [0.2, 0.2, 0.2]);
 
   // How It Works Sticky scroll ref
   const howItWorksRef = useRef<HTMLDivElement>(null);
@@ -423,13 +451,28 @@ export default function Home() {
         style={{ height: scrollRange > 0 ? `calc(100vh + ${scrollRange}px)` : '300vh' }}
         className="relative bg-zinc-50 hidden md:block border-y border-zinc-200"
       >
-        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden w-full">
-          <div className="px-12 lg:px-24 mb-16">
-             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl">Campaign Worlds.</h2>
+        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden w-full relative z-0">
+          
+          {/* DECORATIVE HALFTONE GRAPHICS */}
+          <motion.div 
+            className="absolute top-1/2 -translate-y-1/2 left-0 w-[50vw] xl:w-[40vw] z-[-1] pointer-events-none mix-blend-multiply will-change-transform"
+            style={{ x: graphic1X, rotate: graphic1Rotate, scale: graphic1Scale, opacity: graphic1Opacity }}
+          >
+            <Image src="/campaign-worlds/Asset 6.png" alt="" width={1200} height={1200} className="w-full h-auto object-contain" />
+          </motion.div>
+          <motion.div 
+            className="absolute top-1/2 -translate-y-1/2 left-0 w-[50vw] xl:w-[40vw] z-[-1] pointer-events-none mix-blend-multiply will-change-transform"
+            style={{ x: graphic2X, rotate: graphic2Rotate, scale: graphic2Scale, opacity: graphic2Opacity }}
+          >
+            <Image src="/campaign-worlds/Asset 6.png" alt="" width={1200} height={1200} className="w-full h-auto object-contain" />
+          </motion.div>
+
+          <div className="px-12 lg:px-24 mb-16 z-10 relative pointer-events-none">
+             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl pointer-events-auto w-fit">Campaign Worlds.</h2>
           </div>
-          <motion.div ref={trackRef} style={{ x: horizontalX }} className="flex gap-8 lg:gap-16 pl-12 lg:pl-24 w-max">
+          <motion.div ref={trackRef} style={{ x: horizontalX }} className="flex gap-8 lg:gap-16 pl-12 lg:pl-24 w-max z-10 relative">
             {horizontalItems.map((item, i) => (
-              <div key={i} data-cursor="view" className="relative w-[80vw] lg:w-[60vw] h-[60vh] flex-shrink-0 group overflow-hidden">
+              <div key={i} data-cursor="view" className="relative w-[80vw] lg:w-[60vw] h-[60vh] flex-shrink-0 group overflow-hidden bg-zinc-200">
                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 1, ease: "easeOut" }}>
                   <Image src={item.img} alt={item.cat} fill className="object-cover" />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500"></div>
@@ -448,11 +491,26 @@ export default function Home() {
       </section>
 
       {/* Mobile alternative for Campaign Worlds */}
-      <section className="py-24 px-6 bg-zinc-50 md:hidden border-y border-zinc-200">
-         <h2 className="font-serif text-4xl mb-12">Campaign Worlds.</h2>
-         <div className="flex flex-col gap-8">
+      <section ref={mobileCampaignRef} className="py-24 px-6 bg-zinc-50 md:hidden border-y border-zinc-200 relative overflow-hidden z-0">
+         
+         {/* MOBILE DECORATIVE HALFTONE GRAPHICS */}
+         <motion.div 
+           className="absolute top-1/4 left-0 w-[80vw] z-[-1] pointer-events-none mix-blend-multiply will-change-transform"
+           style={{ x: mobileGraphic1X, rotate: mobileGraphic1Rotate, opacity: mobileGraphic1Opacity }}
+         >
+           <Image src="/campaign-worlds/Asset 6.png" alt="" width={600} height={600} className="w-full h-auto object-contain" />
+         </motion.div>
+         <motion.div 
+           className="absolute top-3/4 left-0 w-[80vw] z-[-1] pointer-events-none mix-blend-multiply will-change-transform"
+           style={{ x: mobileGraphic2X, rotate: mobileGraphic2Rotate, opacity: mobileGraphic2Opacity }}
+         >
+           <Image src="/campaign-worlds/Asset 6.png" alt="" width={600} height={600} className="w-full h-auto object-contain" />
+         </motion.div>
+
+         <h2 className="font-serif text-4xl mb-12 relative z-10">Campaign Worlds.</h2>
+         <div className="flex flex-col gap-8 relative z-10">
            {horizontalItems.map((item, i) => (
-              <div key={i} className="relative w-full h-[60vh] overflow-hidden">
+              <div key={i} className="relative w-full h-[60vh] overflow-hidden bg-zinc-200">
                 <Image src={item.img} alt={item.cat} fill className="object-cover" />
                 <div className="absolute bottom-6 left-6 z-20">
                   <span className="text-[10px] text-white tracking-widest uppercase font-bold bg-black/40 px-4 py-2 backdrop-blur-sm">
