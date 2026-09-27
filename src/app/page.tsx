@@ -453,18 +453,18 @@ export default function Home() {
       >
         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden w-full relative z-0">
           
-          {/* DECORATIVE HALFTONE GRAPHICS */}
+          {/* DECORATIVE HALFTONE GRAPHICS (DEBUG VISIBILITY) */}
           <motion.div 
-            className="absolute top-1/2 -translate-y-1/2 left-0 w-[50vw] xl:w-[40vw] z-[-1] pointer-events-none mix-blend-multiply will-change-transform"
+            className="absolute top-1/2 -translate-y-1/2 left-0 w-[50vw] xl:w-[40vw] z-[20] pointer-events-none will-change-transform"
             style={{ x: graphic1X, rotate: graphic1Rotate, scale: graphic1Scale, opacity: graphic1Opacity }}
           >
-            <Image src="/campaign-worlds/Asset 6.png" alt="" width={1200} height={1200} className="w-full h-auto object-contain" />
+            <Image src="/campaign-worlds/asset-6.png" alt="" width={1200} height={1200} className="w-full h-auto object-contain" />
           </motion.div>
           <motion.div 
-            className="absolute top-1/2 -translate-y-1/2 left-0 w-[50vw] xl:w-[40vw] z-[-1] pointer-events-none mix-blend-multiply will-change-transform"
+            className="absolute top-1/2 -translate-y-1/2 left-0 w-[50vw] xl:w-[40vw] z-[20] pointer-events-none will-change-transform"
             style={{ x: graphic2X, rotate: graphic2Rotate, scale: graphic2Scale, opacity: graphic2Opacity }}
           >
-            <Image src="/campaign-worlds/Asset 6.png" alt="" width={1200} height={1200} className="w-full h-auto object-contain" />
+            <Image src="/campaign-worlds/asset-6.png" alt="" width={1200} height={1200} className="w-full h-auto object-contain" />
           </motion.div>
 
           <div className="px-12 lg:px-24 mb-16 z-10 relative pointer-events-none">
@@ -493,18 +493,18 @@ export default function Home() {
       {/* Mobile alternative for Campaign Worlds */}
       <section ref={mobileCampaignRef} className="py-24 px-6 bg-zinc-50 md:hidden border-y border-zinc-200 relative overflow-hidden z-0">
          
-         {/* MOBILE DECORATIVE HALFTONE GRAPHICS */}
+         {/* MOBILE DECORATIVE HALFTONE GRAPHICS (DEBUG VISIBILITY) */}
          <motion.div 
-           className="absolute top-1/4 left-0 w-[80vw] z-[-1] pointer-events-none mix-blend-multiply will-change-transform"
+           className="absolute top-1/4 left-0 w-[80vw] z-[20] pointer-events-none will-change-transform"
            style={{ x: mobileGraphic1X, rotate: mobileGraphic1Rotate, opacity: mobileGraphic1Opacity }}
          >
-           <Image src="/campaign-worlds/Asset 6.png" alt="" width={600} height={600} className="w-full h-auto object-contain" />
+           <Image src="/campaign-worlds/asset-6.png" alt="" width={600} height={600} className="w-full h-auto object-contain" />
          </motion.div>
          <motion.div 
-           className="absolute top-3/4 left-0 w-[80vw] z-[-1] pointer-events-none mix-blend-multiply will-change-transform"
+           className="absolute top-3/4 left-0 w-[80vw] z-[20] pointer-events-none will-change-transform"
            style={{ x: mobileGraphic2X, rotate: mobileGraphic2Rotate, opacity: mobileGraphic2Opacity }}
          >
-           <Image src="/campaign-worlds/Asset 6.png" alt="" width={600} height={600} className="w-full h-auto object-contain" />
+           <Image src="/campaign-worlds/asset-6.png" alt="" width={600} height={600} className="w-full h-auto object-contain" />
          </motion.div>
 
          <h2 className="font-serif text-4xl mb-12 relative z-10">Campaign Worlds.</h2>
