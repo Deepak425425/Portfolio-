@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useScroll, useTransform, AnimatePresence, useSpring, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence, useSpring, useReducedMotion, useMotionValue } from "framer-motion";
 
 const LAUNCH_DATE = new Date("2026-11-26T00:00:00").getTime();
 
@@ -76,6 +76,33 @@ export default function Home() {
   const { scrollY, scrollYProgress } = useScroll();
   const smoothScrollY = useSpring(scrollY, { damping: 20, stiffness: 100, mass: 0.5 });
   
+  // Mouse tracking for parallax
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const smoothMouseX = useSpring(mouseX, { damping: 50, stiffness: 400 });
+  const smoothMouseY = useSpring(mouseY, { damping: 50, stiffness: 400 });
+
+  const shouldReduceMotion = useReducedMotion();
+
+  // Mouse Parallax Transforms
+  const p1x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [-15, 15]);
+  const p1y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-15, 15]);
+  
+  const p2x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [25, -25]);
+  const p2y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [25, -25]);
+  
+  const p3x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [-35, 35]);
+  const p3y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-35, 35]);
+
+  const p4x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [20, -20]);
+  const p4y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [20, -20]);
+
+  const p5x = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? [0, 0] : [-10, 10]);
+  const p5y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-10, 10]);
+
+  const pPanelX = useTransform(smoothMouseX, [-1, 1], shouldReduceMotion ? ["-50%", "-50%"] : ["-48%", "-52%"]);
+  const pPanelY = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-10, 10]);
+  
   // Navigation styling
   const navBg = useTransform(scrollY, [0, 100], ["rgba(255,255,255,0)", "rgba(255,255,255,0.95)"]);
   const navBorder = useTransform(scrollY, [0, 100], ["rgba(228,228,231,0)", "rgba(228,228,231,1)"]);
@@ -111,34 +138,6 @@ export default function Home() {
   
   const horizontalX = useTransform(horizontalProgress, [0, 1], [0, -scrollRange]);
 
-  const shouldReduceMotion = useReducedMotion();
-
-  // Decorative Graphic Transforms (Desktop)
-  const graphic1X = useTransform(horizontalProgress, [0, 0.6], shouldReduceMotion ? ["5vw", "5vw"] : ["-100vw", "100vw"]);
-  const graphic1Rotate = useTransform(horizontalProgress, [0, 0.6], shouldReduceMotion ? [-5, -5] : [-12, 12]);
-  const graphic1Scale = useTransform(horizontalProgress, [0, 0.3, 0.6], shouldReduceMotion ? [0.9, 0.9, 0.9] : [0.85, 1, 1.15]);
-  const graphic1Opacity = useTransform(horizontalProgress, [0, 0.3, 0.6], shouldReduceMotion ? [0, 0.4, 0] : [0.4, 0.4, 0.4]);
-  
-  const graphic2X = useTransform(horizontalProgress, [0.4, 1], shouldReduceMotion ? ["60vw", "60vw"] : ["100vw", "-100vw"]);
-  const graphic2Rotate = useTransform(horizontalProgress, [0.4, 1], shouldReduceMotion ? [5, 5] : [12, -12]);
-  const graphic2Scale = useTransform(horizontalProgress, [0.4, 0.7, 1], shouldReduceMotion ? [0.9, 0.9, 0.9] : [0.85, 1, 1.15]);
-  const graphic2Opacity = useTransform(horizontalProgress, [0.4, 0.7, 1], shouldReduceMotion ? [0, 0.4, 0] : [0.4, 0.4, 0.4]);
-
-  // Mobile Campaign Worlds Ref and Transforms
-  const mobileCampaignRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: mobileCampaignProgress } = useScroll({
-    target: mobileCampaignRef,
-    offset: ["start center", "end center"]
-  });
-  
-  const mobileGraphic1X = useTransform(mobileCampaignProgress, [0, 0.6], shouldReduceMotion ? ["10vw", "10vw"] : ["-100vw", "100vw"]);
-  const mobileGraphic1Rotate = useTransform(mobileCampaignProgress, [0, 0.6], shouldReduceMotion ? [-5, -5] : [-8, 8]);
-  const mobileGraphic1Opacity = useTransform(mobileCampaignProgress, [0, 0.3, 0.6], shouldReduceMotion ? [0, 0.2, 0] : [0.2, 0.2, 0.2]);
-
-  const mobileGraphic2X = useTransform(mobileCampaignProgress, [0.4, 1], shouldReduceMotion ? ["50vw", "50vw"] : ["100vw", "-100vw"]);
-  const mobileGraphic2Rotate = useTransform(mobileCampaignProgress, [0.4, 1], shouldReduceMotion ? [5, 5] : [8, -8]);
-  const mobileGraphic2Opacity = useTransform(mobileCampaignProgress, [0.4, 0.7, 1], shouldReduceMotion ? [0, 0.2, 0] : [0.2, 0.2, 0.2]);
-
   // How It Works Sticky scroll ref
   const howItWorksRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: howItWorksProgress } = useScroll({ target: howItWorksRef, offset: ["start center", "end center"] });
@@ -156,6 +155,12 @@ export default function Home() {
     const handleMouseMove = (e: MouseEvent) => {
       cursorPos.current.x = e.clientX;
       cursorPos.current.y = e.clientY;
+
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = (e.clientY / window.innerHeight) * 2 - 1;
+      mouseX.set(nx);
+      mouseY.set(ny);
+
       if (cursorRef.current && cursorRef.current.style.opacity === '0') {
         cursorRef.current.style.opacity = '1';
         cursorLerpedPos.current.x = e.clientX;
@@ -280,55 +285,165 @@ export default function Home() {
         </div>
       </motion.header>
 
-      {/* 1. HERO SECTION */}
-      <section className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 md:px-12 lg:px-24 w-full z-10 pt-32 pb-16">
-        <div className="w-full max-w-[1400px] flex flex-col lg:flex-row items-center justify-between gap-16 h-full">
+      {/* 1. HERO SECTION - EDITORIAL COMPOSITION */}
+      <section className="relative min-h-[100svh] w-full flex flex-col items-center justify-center overflow-hidden bg-[#F9F8F6] pt-32 pb-24 z-10">
+        
+        <div className="relative w-full max-w-[1600px] h-full flex flex-col items-center justify-center px-6 z-10">
           
-          <div className="w-full lg:w-1/2 flex flex-col justify-center gap-10">
-            <motion.h1 
-              initial="hidden" animate="visible" 
-              className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] leading-[1.05] text-black tracking-tight"
-            >
-              {["Premium AI", "Visuals for", "Modern Brands."].map((line, i) => (
-                <span key={i} className="block overflow-hidden pb-2">
-                  <motion.span custom={i} variants={lineRevealVariants} className={`block ${i === 2 ? 'italic text-zinc-400 font-light' : ''}`}>
-                    {line}
-                  </motion.span>
-                </span>
-              ))}
-            </motion.h1>
+          {/* Main Content (Centered) */}
+          <div className="relative z-20 flex flex-col items-center text-center mt-12 md:mt-24 w-full">
+             {/* Headline */}
+             <motion.h1 
+               initial={{ opacity: 0, y: 40 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+               className="font-serif text-5xl md:text-7xl lg:text-[6.5rem] leading-[1.05] text-black tracking-tight max-w-5xl mx-auto"
+             >
+                Premium AI Visuals <br className="hidden md:block"/> for Modern Brands.
+             </motion.h1>
+
+             {/* Supporting Text */}
+             <motion.p 
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+               className="font-sans text-sm md:text-base text-zinc-600 mt-8 max-w-lg mx-auto font-light leading-relaxed"
+             >
+                Product imagery, cinematic campaigns and motion content — directed for brands that care how they look.
+             </motion.p>
+
+             {/* CTAs */}
+             <motion.div 
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 1, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+               className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12 w-full"
+             >
+                <MagneticButton href="/contact" className="inline-flex px-10 py-5 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors shadow-2xl w-full sm:w-auto justify-center text-center">
+                  Start A Project
+                </MagneticButton>
+                <Link href="/work" className="text-[10px] uppercase tracking-widest font-bold text-black border-b border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors w-full sm:w-auto text-center">
+                  View Selected Work
+                </Link>
+             </motion.div>
+          </div>
+
+          {/* FLOATING VISUAL SYSTEM (Desktop/Tablet) */}
+          <div className="absolute inset-0 z-10 pointer-events-none hidden md:block">
             
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 1 }}
-              className="space-y-4 max-w-lg"
-            >
-              <h3 className="font-serif text-xl md:text-2xl text-black leading-tight">High-end product imagery, cinematic commercials, and campaign-ready content.</h3>
-              <p className="font-sans text-sm md:text-base text-zinc-500 leading-relaxed font-light">
-                PhotoLoom helps modern brands turn products into premium visual campaigns without traditional production limitations.
-              </p>
+            {/* 1. Top Left: Medium Jewellery */}
+            <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -90]) }} className="absolute top-[8%] left-[5%] lg:left-[10%] w-[18vw] max-w-[240px] z-10 pointer-events-none">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                style={{ x: p1x, y: p1y }}
+                className="w-full aspect-[4/5] overflow-hidden shadow-2xl group pointer-events-auto bg-zinc-200" data-cursor="view"
+              >
+                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                   <Image src="/work/jewellery.jpg" alt="Jewellery Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 0vw, 25vw" />
+                 </motion.div>
+              </motion.div>
+            </motion.div>
+
+            {/* 2. Top Right: Large Fashion */}
+            <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -140]) }} className="absolute top-[3%] right-[2%] lg:right-[6%] w-[22vw] max-w-[300px] z-20 pointer-events-none">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95, y: -20 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1.5, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                style={{ x: p2x, y: p2y }}
+                className="w-full aspect-[3/4] overflow-hidden shadow-2xl group pointer-events-auto bg-zinc-200" data-cursor="view"
+              >
+                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                   <Image src="/work/fashion.jpg" alt="Fashion Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 0vw, 30vw" />
+                 </motion.div>
+              </motion.div>
+            </motion.div>
+
+            {/* 3. Middle Left: Cropped Beauty/Product */}
+            <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -50]) }} className="absolute top-[45%] left-[1%] lg:left-[4%] w-[12vw] max-w-[160px] z-30 pointer-events-none">
+              <motion.div 
+                initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.2, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                style={{ x: p3x, y: p3y }}
+                className="w-full aspect-square overflow-hidden shadow-xl group pointer-events-auto bg-zinc-200" data-cursor="view"
+              >
+                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                   <Image src="/images/luxury.jpg" alt="Beauty Campaign" fill className="object-cover object-[center_30%]" priority sizes="(max-width: 768px) 0vw, 15vw" />
+                 </motion.div>
+              </motion.div>
+            </motion.div>
+
+            {/* 4. Bottom Right: Medium Product */}
+            <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -110]) }} className="absolute bottom-[-2%] right-[10%] lg:right-[15%] w-[16vw] max-w-[220px] z-20 pointer-events-none">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ duration: 1.5, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                style={{ x: p4x, y: p4y }}
+                className="w-full aspect-[4/5] overflow-hidden shadow-2xl group pointer-events-auto bg-zinc-200" data-cursor="view"
+              >
+                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                   <Image src="/work/product.jpg" alt="Product Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 0vw, 20vw" />
+                 </motion.div>
+              </motion.div>
             </motion.div>
             
+            {/* 5. Lower Left Background overlapping */}
+            <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -70]) }} className="absolute bottom-[5%] left-[18%] w-[14vw] max-w-[180px] z-0 pointer-events-none">
+              <motion.div 
+                initial={{ opacity: 0 }} animate={{ opacity: 0.7 }} transition={{ duration: 2, delay: 1.3 }}
+                style={{ x: p5x, y: p5y }}
+                className="w-full aspect-[4/5] overflow-hidden shadow-md opacity-70 mix-blend-multiply pointer-events-none bg-zinc-200"
+              >
+                 <Image src="/work/campaign.jpg" alt="Atmospheric visual" fill className="object-cover filter grayscale opacity-60" sizes="(max-width: 768px) 0vw, 20vw" />
+              </motion.div>
+            </motion.div>
+
+          </div>
+
+          {/* CENTRAL CREATIVE PANEL */}
+          <motion.div style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -40]) }} className="absolute bottom-[8%] md:bottom-[12%] left-1/2 z-30 pointer-events-none hidden sm:block">
             <motion.div 
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 0.8 }}
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-6"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
+              style={{ x: pPanelX, y: pPanelY }}
+              className="flex flex-col gap-3 bg-white/90 backdrop-blur-xl p-5 pr-14 shadow-[0_30px_60px_rgba(0,0,0,0.08)] border border-purple-500/10 rounded-sm pointer-events-auto"
             >
-              <MagneticButton href="/contact" className="inline-flex px-10 py-5 bg-black text-white text-xs uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors w-full sm:w-auto text-center justify-center">
-                Start A Project
-              </MagneticButton>
-              <Link href="/work" className="text-xs uppercase tracking-widest font-bold text-black border-b border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors w-full sm:w-auto text-center">
-                View Selected Work
-              </Link>
+               <div className="flex items-center gap-3">
+                 <div className="w-1.5 h-1.5 rounded-full bg-purple-600 animate-pulse"></div>
+                 <span className="text-[9px] uppercase tracking-widest font-bold text-zinc-800">Generating campaign visual...</span>
+               </div>
+               <div className="flex gap-5 mt-2 border-t border-zinc-100 pt-3">
+                 <div className="flex flex-col gap-1">
+                   <span className="text-[7px] uppercase tracking-[0.2em] text-zinc-400">Direction</span>
+                   <span className="text-[9px] uppercase tracking-[0.1em] text-black font-semibold">Editorial</span>
+                 </div>
+                 <div className="flex flex-col gap-1 border-l border-zinc-100 pl-4">
+                   <span className="text-[7px] uppercase tracking-[0.2em] text-zinc-400">Subject</span>
+                   <span className="text-[9px] uppercase tracking-[0.1em] text-black font-semibold">Luxury Product</span>
+                 </div>
+                 <div className="flex flex-col gap-1 border-l border-zinc-100 pl-4">
+                   <span className="text-[7px] uppercase tracking-[0.2em] text-zinc-400">Status</span>
+                   <span className="text-[9px] uppercase tracking-[0.1em] text-purple-600 font-semibold">Rendering</span>
+                 </div>
+               </div>
+            </motion.div>
+          </motion.div>
+          
+          {/* Mobile Specific Floating Images */}
+          <div className="absolute inset-0 z-0 pointer-events-none md:hidden overflow-hidden">
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }} animate={{ opacity: 0.25, y: 0 }} transition={{ duration: 2, delay: 0.5 }}
+              style={{ y: useTransform(smoothScrollY, [0, 800], [0, -40]) }}
+              className="absolute top-[10%] right-[-15%] w-[50vw] aspect-[3/4] overflow-hidden mix-blend-multiply filter grayscale"
+            >
+               <Image src="/work/fashion.jpg" alt="Fashion" fill className="object-cover" sizes="50vw" />
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 0.4, y: 0 }} transition={{ duration: 2, delay: 0.8 }}
+              style={{ y: useTransform(smoothScrollY, [0, 800], [0, -60]) }}
+              className="absolute bottom-[15%] left-[-10%] w-[40vw] aspect-[4/5] overflow-hidden mix-blend-multiply"
+            >
+               <Image src="/work/jewellery.jpg" alt="Jewellery" fill className="object-cover" sizes="40vw" />
             </motion.div>
           </div>
 
-          <div className="w-full lg:w-1/2 h-[50vh] sm:h-[60vh] lg:h-[80vh] relative overflow-hidden bg-zinc-200">
-            <motion.div
-              initial="hidden" animate="visible" variants={imageRevealVariants}
-              className="w-full h-full relative"
-            >
-              <Image priority src="/images/luxury.jpg" alt="Luxury visual" fill className="object-cover object-center" />
-            </motion.div>
-          </div>
         </div>
       </section>
 
@@ -451,28 +566,13 @@ export default function Home() {
         style={{ height: scrollRange > 0 ? `calc(100vh + ${scrollRange}px)` : '300vh' }}
         className="relative bg-zinc-50 hidden md:block border-y border-zinc-200"
       >
-        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden w-full relative z-0">
-          
-          {/* DECORATIVE HALFTONE GRAPHICS (DEBUG VISIBILITY) */}
-          <motion.div 
-            className="absolute top-1/2 -translate-y-1/2 left-0 w-[50vw] xl:w-[40vw] z-[20] pointer-events-none will-change-transform"
-            style={{ x: graphic1X, rotate: graphic1Rotate, scale: graphic1Scale, opacity: graphic1Opacity }}
-          >
-            <Image src="/campaign-worlds/asset-6.png" alt="" width={1200} height={1200} className="w-full h-auto object-contain" />
-          </motion.div>
-          <motion.div 
-            className="absolute top-1/2 -translate-y-1/2 left-0 w-[50vw] xl:w-[40vw] z-[20] pointer-events-none will-change-transform"
-            style={{ x: graphic2X, rotate: graphic2Rotate, scale: graphic2Scale, opacity: graphic2Opacity }}
-          >
-            <Image src="/campaign-worlds/asset-6.png" alt="" width={1200} height={1200} className="w-full h-auto object-contain" />
-          </motion.div>
-
-          <div className="px-12 lg:px-24 mb-16 z-10 relative pointer-events-none">
-             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl pointer-events-auto w-fit">Campaign Worlds.</h2>
+        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden w-full">
+          <div className="px-12 lg:px-24 mb-16">
+             <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl">Campaign Worlds.</h2>
           </div>
-          <motion.div ref={trackRef} style={{ x: horizontalX }} className="flex gap-8 lg:gap-16 pl-12 lg:pl-24 w-max z-10 relative">
+          <motion.div ref={trackRef} style={{ x: horizontalX }} className="flex gap-8 lg:gap-16 pl-12 lg:pl-24 w-max">
             {horizontalItems.map((item, i) => (
-              <div key={i} data-cursor="view" className="relative w-[80vw] lg:w-[60vw] h-[60vh] flex-shrink-0 group overflow-hidden bg-zinc-200">
+              <div key={i} data-cursor="view" className="relative w-[80vw] lg:w-[60vw] h-[60vh] flex-shrink-0 group overflow-hidden">
                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 1, ease: "easeOut" }}>
                   <Image src={item.img} alt={item.cat} fill className="object-cover" />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500"></div>
@@ -491,26 +591,11 @@ export default function Home() {
       </section>
 
       {/* Mobile alternative for Campaign Worlds */}
-      <section ref={mobileCampaignRef} className="py-24 px-6 bg-zinc-50 md:hidden border-y border-zinc-200 relative overflow-hidden z-0">
-         
-         {/* MOBILE DECORATIVE HALFTONE GRAPHICS (DEBUG VISIBILITY) */}
-         <motion.div 
-           className="absolute top-1/4 left-0 w-[80vw] z-[20] pointer-events-none will-change-transform"
-           style={{ x: mobileGraphic1X, rotate: mobileGraphic1Rotate, opacity: mobileGraphic1Opacity }}
-         >
-           <Image src="/campaign-worlds/asset-6.png" alt="" width={600} height={600} className="w-full h-auto object-contain" />
-         </motion.div>
-         <motion.div 
-           className="absolute top-3/4 left-0 w-[80vw] z-[20] pointer-events-none will-change-transform"
-           style={{ x: mobileGraphic2X, rotate: mobileGraphic2Rotate, opacity: mobileGraphic2Opacity }}
-         >
-           <Image src="/campaign-worlds/asset-6.png" alt="" width={600} height={600} className="w-full h-auto object-contain" />
-         </motion.div>
-
-         <h2 className="font-serif text-4xl mb-12 relative z-10">Campaign Worlds.</h2>
-         <div className="flex flex-col gap-8 relative z-10">
+      <section className="py-24 px-6 bg-zinc-50 md:hidden border-y border-zinc-200">
+         <h2 className="font-serif text-4xl mb-12">Campaign Worlds.</h2>
+         <div className="flex flex-col gap-8">
            {horizontalItems.map((item, i) => (
-              <div key={i} className="relative w-full h-[60vh] overflow-hidden bg-zinc-200">
+              <div key={i} className="relative w-full h-[60vh] overflow-hidden">
                 <Image src={item.img} alt={item.cat} fill className="object-cover" />
                 <div className="absolute bottom-6 left-6 z-20">
                   <span className="text-[10px] text-white tracking-widest uppercase font-bold bg-black/40 px-4 py-2 backdrop-blur-sm">
