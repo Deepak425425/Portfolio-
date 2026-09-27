@@ -210,10 +210,7 @@ export default function Home() {
 
   const horizontalItems = [
     { cat: "Jewellery", img: "/work/jewellery.jpg" },
-    { cat: "Fashion", img: "/work/fashion.jpg" },
-    { cat: "Beauty", img: "/work/product.jpg" },
-    { cat: "Automotive", img: "/work/campaign.jpg" },
-    { cat: "Lifestyle", img: "/images/cinematic.jpg" }
+    { cat: "Fashion", img: "/work/fashion.jpg" }
   ];
 
   const faqs = [
@@ -432,7 +429,7 @@ export default function Home() {
           </div>
           <motion.div ref={trackRef} style={{ x: horizontalX }} className="flex gap-8 lg:gap-16 pl-12 lg:pl-24 w-max">
             {horizontalItems.map((item, i) => (
-              <div key={i} data-cursor="view" className="relative w-[60vw] lg:w-[40vw] h-[60vh] flex-shrink-0 group overflow-hidden">
+              <div key={i} data-cursor="view" className="relative w-[80vw] lg:w-[60vw] h-[60vh] flex-shrink-0 group overflow-hidden">
                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 1, ease: "easeOut" }}>
                   <Image src={item.img} alt={item.cat} fill className="object-cover" />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500"></div>
