@@ -359,13 +359,23 @@ export default function Home() {
           </div>
           
           {/* Main Card Footer Attribution */}
-          <div className="w-full p-5 sm:p-8 md:px-12 lg:px-16 flex flex-col sm:flex-row justify-between items-center text-center gap-3 sm:gap-4 z-20 mt-auto">
-            <p className="text-[9px] sm:text-[10px] text-zinc-400 tracking-[0.15em] sm:tracking-[0.2em] uppercase font-sans">
-              &copy; 2026 PhotoLoom
-            </p>
-            <p className="text-[9px] sm:text-[10px] text-zinc-400 tracking-[0.15em] sm:tracking-[0.2em] uppercase font-sans">
-              A creative venture by Grafly Studio
-            </p>
+          <div className="w-full p-5 sm:p-8 md:px-12 lg:px-16 flex flex-col items-center justify-between gap-6 z-20 mt-auto border-t border-zinc-100/10 pt-8">
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-8 text-[8px] sm:text-[9px] tracking-[0.2em] uppercase font-sans text-zinc-400">
+              <a href="/about" className="hover:text-black transition-colors">About</a>
+              <a href="/services" className="hover:text-black transition-colors">Services</a>
+              <a href="/work" className="hover:text-black transition-colors">Work</a>
+              <a href="/contact" className="hover:text-black transition-colors">Contact</a>
+              <a href="/privacy-policy" className="hover:text-black transition-colors">Privacy Policy</a>
+              <a href="/terms-and-conditions" className="hover:text-black transition-colors">Terms & Conditions</a>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 text-center">
+              <p className="text-[9px] sm:text-[10px] text-zinc-400 tracking-[0.15em] sm:tracking-[0.2em] uppercase font-sans">
+                &copy; 2026 PhotoLoom
+              </p>
+              <p className="text-[9px] sm:text-[10px] text-zinc-400 tracking-[0.15em] sm:tracking-[0.2em] uppercase font-sans">
+                A creative venture by Grafly Studio
+              </p>
+            </div>
           </div>
         </div>
       </main>
