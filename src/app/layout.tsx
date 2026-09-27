@@ -13,8 +13,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "PhotoLoom - AI Visual Creative Studio",
-  description: "PhotoLoom is crafting a new standard for AI-powered visual creation.",
+  title: "PhotoLoom — Premium AI Visuals for Modern D2C Brands",
+  description: "PhotoLoom creates premium AI product imagery, cinematic commercial content, advertising creatives and visual campaigns for modern brands.",
 };
 
 export default function RootLayout({

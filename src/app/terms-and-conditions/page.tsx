@@ -1,62 +1,111 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 
-export default function TermsAndConditions() {
+export const metadata: Metadata = {
+  title: "Terms & Conditions — PhotoLoom",
+  description: "PhotoLoom terms of service and usage conditions.",
+};
+
+export default function TermsPage() {
   return (
-    <div className="relative min-h-[100svh] bg-background flex flex-col p-4 sm:p-6 md:p-8 lg:p-10">
-      <main className="flex-1 max-w-[1400px] w-full mx-auto bg-white shadow-2xl flex flex-col relative overflow-hidden min-h-[85svh] rounded-sm">
-        
-        <header className="w-full p-5 sm:p-8 md:px-12 lg:px-16 lg:py-10 flex flex-row justify-between items-center z-20">
-          <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-            PhotoLoom
+    <div className="min-h-screen bg-white flex flex-col font-sans text-black selection:bg-black selection:text-white">
+      {/* HEADER */}
+      <header className="w-full p-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-30 bg-white border-b border-zinc-200">
+        <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
+          PhotoLoom
+        </Link>
+        <div className="flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
+            <Link href="/work" className="hover:text-black transition-colors">Work</Link>
+            <Link href="/services" className="hover:text-black transition-colors">Services</Link>
+            <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
+            <Link href="/about" className="hover:text-black transition-colors">About</Link>
+          </nav>
+          <Link href="/contact" className="px-5 py-3 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
+            Contact
           </Link>
-          <div className="flex items-center gap-8">
-            <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="hidden md:block font-extrabold tracking-[0.3em] text-[15px] md:text-[17px] uppercase text-zinc-500 hover:text-black transition-colors font-sans">
-              graflystudio.com
-            </a>
-          </div>
-        </header>
+        </div>
+      </header>
 
-        <div className="flex-1 flex flex-col px-6 md:px-16 lg:px-32 py-12 md:py-16 z-20 relative text-left">
-          <h1 className="font-serif text-3xl md:text-4xl text-black mb-12">Terms & Conditions</h1>
-          <div className="max-w-3xl space-y-8 font-sans text-sm text-zinc-600 leading-relaxed">
-            <section>
-              <h2 className="text-black font-semibold uppercase tracking-wider text-[10px] mb-3">1. Acceptance of Terms</h2>
-              <p>By accessing and using the PhotoLoom website, you accept and agree to be bound by the terms and provision of this agreement.</p>
-            </section>
-            <section>
-              <h2 className="text-black font-semibold uppercase tracking-wider text-[10px] mb-3">2. Intellectual Property</h2>
-              <p>The website and its original content, features, and functionality are owned by PhotoLoom (a venture by Grafly Studio) and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.</p>
-            </section>
-            <section>
-              <h2 className="text-black font-semibold uppercase tracking-wider text-[10px] mb-3">3. Use License</h2>
-              <p>Permission is granted to temporarily view the materials (information or software) on PhotoLoom's website for personal, non-commercial transitory viewing only.</p>
-            </section>
-            <section>
-              <h2 className="text-black font-semibold uppercase tracking-wider text-[10px] mb-3">4. Disclaimer</h2>
-              <p>The materials on PhotoLoom's website are provided on an 'as is' basis. PhotoLoom makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
-            </section>
-          </div>
+      {/* CONTENT */}
+      <main className="flex-1 w-full flex flex-col py-24 md:py-32 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto">
+        <div className="mb-16 border-b border-zinc-200 pb-12">
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6">Terms & Conditions</h1>
+          <p className="text-sm text-zinc-500 font-light">Last updated: [DATE_PLACEHOLDER]</p>
         </div>
 
-        <div className="w-full p-5 sm:p-8 md:px-12 lg:px-16 flex flex-col items-center justify-between gap-6 z-20 mt-auto border-t border-zinc-100">
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-[8px] sm:text-[10px] tracking-[0.2em] uppercase font-sans text-zinc-500">
-            <Link href="/about" className="hover:text-black transition-colors">About</Link>
-            <Link href="/services" className="hover:text-black transition-colors">Services</Link>
-            <Link href="/work" className="hover:text-black transition-colors">Work</Link>
-            <Link href="/contact" className="hover:text-black transition-colors">Contact</Link>
-            <Link href="/privacy-policy" className="hover:text-black transition-colors">Privacy Policy</Link>
-            <Link href="/terms-and-conditions" className="hover:text-black transition-colors">Terms & Conditions</Link>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 text-center">
-            <p className="text-[9px] sm:text-[10px] text-zinc-400 tracking-[0.15em] sm:tracking-[0.2em] uppercase font-sans">
-              &copy; 2026 PhotoLoom
-            </p>
-            <p className="text-[9px] sm:text-[10px] text-zinc-400 tracking-[0.15em] sm:tracking-[0.2em] uppercase font-sans">
-              A creative venture by Grafly Studio
-            </p>
-          </div>
+        <div className="prose prose-zinc prose-p:font-light prose-p:text-zinc-600 max-w-none">
+          <p>
+            {/* TODO: Legal Review Required - Replace placeholders with actual business entities before publishing */}
+            Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using the PhotoLoom website operated by [COMPANY_NAME_PLACEHOLDER].
+          </p>
+
+          <h3 className="font-serif text-2xl mt-12 mb-4">1. Acceptance of Terms</h3>
+          <p>
+            By accessing or using our website and services, you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the service.
+          </p>
+
+          <h3 className="font-serif text-2xl mt-12 mb-4">2. Creative Services and AI Production</h3>
+          <p>
+            PhotoLoom provides AI-assisted visual production and creative direction services. Deliverables, revisions, and project timelines are subject to the specific Statement of Work (SOW) or project agreement established between PhotoLoom and the client prior to project commencement.
+          </p>
+          <ul className="list-disc pl-5 space-y-2 mt-4 font-light text-zinc-600 text-sm">
+            <li>Visual outputs are generated using artificial intelligence guided by human art direction.</li>
+            <li>Due to the nature of generative AI, exact pixel-for-pixel replication of references is not guaranteed unless specified in composite retouching phases.</li>
+            <li>Pricing listed on the website is indicative; final pricing is determined by the project scope.</li>
+          </ul>
+
+          <h3 className="font-serif text-2xl mt-12 mb-4">3. Intellectual Property Rights</h3>
+          <p>
+            Upon full payment of the agreed project fees, clients receive commercial usage rights to the final delivered visual assets as outlined in their specific contract. PhotoLoom retains the right to display the created assets in our portfolio, case studies, and marketing materials unless a Non-Disclosure Agreement (NDA) is signed prior to commencement.
+          </p>
+
+          <h3 className="font-serif text-2xl mt-12 mb-4">4. Limitation of Liability</h3>
+          <p>
+            In no event shall PhotoLoom, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
+          </p>
+
+          <h3 className="font-serif text-2xl mt-12 mb-4">5. Governing Law</h3>
+          <p>
+            These Terms shall be governed and construed in accordance with the laws of [JURISDICTION_PLACEHOLDER], without regard to its conflict of law provisions.
+          </p>
+          
+          <h3 className="font-serif text-2xl mt-12 mb-4">6. Contact Us</h3>
+          <p>
+            If you have any questions about these Terms, please contact us at:
+            <br/><br/>
+            <strong>PhotoLoom</strong><br/>
+            Email: [EMAIL_PLACEHOLDER]<br/>
+            Address: [ADDRESS_PLACEHOLDER]
+          </p>
         </div>
       </main>
+
+      {/* FOOTER */}
+      <footer className="w-full bg-white border-t border-zinc-200 mt-auto">
+        <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
+            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">PhotoLoom</h3>
+            <div className="flex flex-wrap gap-x-8 gap-y-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
+              <Link href="/about" className="hover:text-black transition-colors">About</Link>
+              <Link href="/services" className="hover:text-black transition-colors">Services</Link>
+              <Link href="/work" className="hover:text-black transition-colors">Work</Link>
+              <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
+              <Link href="/contact" className="hover:text-black transition-colors">Contact</Link>
+              <Link href="/privacy-policy" className="hover:text-black transition-colors">Privacy Policy</Link>
+              <Link href="/terms-and-conditions" className="text-black transition-colors">Terms & Conditions</Link>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">
+            <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
+              &copy; 2026 PhotoLoom
+            </p>
+            <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
+              A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
