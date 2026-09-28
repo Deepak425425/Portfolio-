@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Services — PhotoLoom",
-  description: "AI-powered visual production, commercial reels, and creative direction.",
+  description: "Premium e-commerce visual production and creative direction.",
 };
 
 const services = [
@@ -17,11 +17,11 @@ const services = [
     image: "/work/jewellery.jpg"
   },
   {
-    id: "ai-commercial-reels",
-    title: "AI Commercial Reels",
-    description: "Cinematic short-form product films and advertising visuals.",
-    details: "Motion brings product narratives to life. We create high-end, short-form commercial video assets using advanced AI video synthesis and motion graphics, delivering cinematic sequences that feel like they were shot on premium cinema cameras.",
-    deliverables: ["15s-30s Commercial Reels", "Social Media Video Ads", "Cinematic Product Teasers", "Motion Backgrounds"],
+    id: "lifestyle-product-imagery",
+    title: "Lifestyle Product Imagery",
+    "description": "Editorial and lifestyle scenes for e-commerce products.",
+    "details": "We place your products in aspirational, photorealistic environments that tell a brand story. From sun-drenched interiors to high-end architectural spaces, we create contextual imagery without the need for location scouting or physical sets.",
+    "deliverables": ["Editorial E-commerce Images", "Social Media Lifestyle Shots", "Contextual Lookbooks", "Banner & Hero Imagery"],
     image: "/work/campaign.jpg"
   },
   {
