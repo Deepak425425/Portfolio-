@@ -20,6 +20,7 @@ export default function PricingPage() {
             <Link href="/work" className="hover:text-black transition-colors">Work</Link>
             <Link href="/services" className="hover:text-black transition-colors">Services</Link>
             <Link href="/pricing" className="text-black transition-colors">Pricing</Link>
+            <Link href="/tools" className="hover:text-black transition-colors">Tools</Link>
             <Link href="/about" className="hover:text-black transition-colors">About</Link>
           </nav>
           <Link href="/contact" className="px-5 py-3 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
