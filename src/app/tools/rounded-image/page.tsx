@@ -1,25 +1,26 @@
 "use client";
+
 import React, { useState } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
-import UploadDropzone from "@/components/tools/UploadDropzone";
+import BulkProcessor, { ImgFile } from "@/components/tools/BulkProcessor";
 
 export default function RoundedPage() {
-  const [img, setImg] = useState<any>(null);
-  const [radius, setRadius] = useState(50); // percentage
+  const [radius, setRadius] = useState(50); // percentage 0-50
 
-  const generate = async () => {
-    if(!img) return;
+  const processImage = async (imgData: ImgFile): Promise<{ blob: Blob, name: string } | null> => {
     const image = new Image();
-    image.src = img.url;
-    await new Promise(r=>image.onload=r);
+    image.src = imgData.url;
+    await new Promise(r => { image.onload = r; image.onerror = r; });
     
     const canvas = document.createElement("canvas");
-    canvas.width = image.width; canvas.height = image.height;
+    canvas.width = image.width; 
+    canvas.height = image.height;
     const ctx = canvas.getContext("2d");
     
-    if(ctx){
+    if (ctx) {
         const minDim = Math.min(canvas.width, canvas.height);
-        const r = (minDim / 2) * (radius/100);
+        // radius slider is 0-50%. Max radius is half the min dimension.
+        const r = (minDim / 2) * (radius / 50); 
         
         ctx.beginPath();
         ctx.moveTo(r, 0);
@@ -33,32 +34,48 @@ export default function RoundedPage() {
         ctx.quadraticCurveTo(0, 0, r, 0);
         ctx.closePath();
         
+        // Clip to rounded path
         ctx.clip();
+        
+        // Draw image inside the clipped path (leaving corners transparent)
         ctx.drawImage(image, 0, 0);
     }
-    const a = document.createElement("a");
-    a.href = canvas.toDataURL("image/png"); // Must be PNG for transparency
-    a.download = "rounded.png";
-    a.click();
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => {
+        resolve({
+          blob: blob!,
+          name: `${imgData.name}-rounded.png`
+        });
+      }, "image/png"); // Must be PNG for transparency
+    });
   };
 
   return (
-    <ToolLayout title="Rounded Image" description="Apply transparent rounded corners to images.">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-8">
-          {!img ? <UploadDropzone onUpload={f => setImg({url: URL.createObjectURL(f[0])})} multiple={false} /> : 
-            <div className="bg-zinc-200 p-8 flex justify-center items-center h-[60vh] bg-[url('https://transparenttextures.com/patterns/cubes.png')]">
-               <img src={img.url} style={{ borderRadius: `${radius}%` }} className="max-h-[50vh] object-contain shadow-2xl" />
+    <ToolLayout title="Rounded Image" description="Apply transparent rounded corners to images in bulk.">
+      <BulkProcessor
+        onProcess={processImage}
+        renderControls={() => (
+          <div className="flex flex-col gap-4">
+            <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 border-b border-zinc-100 pb-2">Corner Radius</h3>
+            <input type="range" min="0" max="50" value={radius} onChange={e=>setRadius(Number(e.target.value))} className="w-full accent-black" />
+            <div className="flex justify-between text-xs font-mono">
+               <span>Square</span>
+               <span>Circle/Pill</span>
             </div>
-          }
-        </div>
-        <div className="lg:col-span-4 bg-white p-6 border flex flex-col gap-4">
-          <input type="range" min="0" max="50" value={radius} onChange={e=>setRadius(Number(e.target.value))} className="w-full accent-black" />
-          <p className="text-xs text-center">Corner Radius: {radius}%</p>
-          <p className="text-[10px] text-zinc-500 text-center">Exports as PNG to preserve transparency.</p>
-          {img && <button onClick={generate} className="bg-black text-white p-4 font-bold mt-4">Export PNG</button>}
-        </div>
-      </div>
+            <p className="text-[9px] text-zinc-400 mt-2 bg-zinc-50 p-2 border border-zinc-100 italic">Images will be exported as transparent PNGs to preserve the rounded corners.</p>
+          </div>
+        )}
+        renderPreview={(currentImg) => (
+          currentImg ? (
+            <div className="w-full h-full p-8 flex justify-center items-center bg-[url('https://transparenttextures.com/patterns/cubes.png')]">
+               <img src={currentImg.url} style={{ borderRadius: `${radius}%` }} className="max-h-[50vh] object-contain shadow-2xl" />
+            </div>
+          ) : (
+            <div className="text-zinc-400 text-sm">Upload an image to apply rounded corners</div>
+          )
+        )}
+      />
     </ToolLayout>
   );
 }

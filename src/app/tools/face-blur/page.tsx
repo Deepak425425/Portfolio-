@@ -4,7 +4,8 @@ import React, { useState, useRef, useEffect, MouseEvent as ReactMouseEvent } fro
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import JSZip from "jszip";
-import { FaceDetector, FilesetResolver, Detection } from "@mediapipe/tasks-vision";
+// Dynamically loaded via import() when needed to prevent Next.js SSR crashes
+// import { FaceDetector, FilesetResolver, Detection } from "@mediapipe/tasks-vision";
 
 interface ImgFile {
   id: string;
@@ -199,6 +200,8 @@ export default function FaceBlurPage() {
     if (!currentImg || !imgRef.current) return;
     setIsDetecting(true);
     try {
+      const { FilesetResolver, FaceDetector } = await import("@mediapipe/tasks-vision");
+      
       const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
       );
@@ -212,7 +215,7 @@ export default function FaceBlurPage() {
       
       const detections = faceDetector.detect(imgRef.current);
       
-      const newBoxes: Box[] = detections.detections.map((d: Detection) => {
+      const newBoxes: Box[] = detections.detections.map((d: any) => {
         const bb = d.boundingBox;
         if (!bb) return null;
         // Expand bounding box slightly for better facial coverage

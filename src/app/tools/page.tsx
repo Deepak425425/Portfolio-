@@ -1,160 +1,148 @@
 "use client";
 
+import React, { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 
-const categories = [
-  {
-    name: "IMAGE",
-    tools: [
-      { id: "resize", name: "Image Resizer", description: "Resize images individually or in bulk.", href: "/tools/resize", status: "Active" },
-      { id: "crop", name: "Image Cropper", description: "Crop images with standard presets.", href: "/tools/crop", status: "Active" },
-      { id: "compressor", name: "Image Compressor", description: "Compress images while controlling quality.", href: "/tools/compressor", status: "Active" },
-      { id: "convert", name: "Format Converter", description: "Convert JPG, PNG and WebP.", href: "/tools/convert", status: "Active" },
-      { id: "rotate-flip", name: "Rotate & Flip", description: "Rotate and flip images in bulk.", href: "/tools/rotate-flip", status: "Active" },
-      { id: "watermark", name: "Watermark", description: "Add text or logo watermarks to images.", href: "/tools/watermark", status: "Active" },
-      { id: "blur", name: "Image Blur", description: "Apply blur to images or specific regions.", href: "/tools/blur", status: "Active" },
-      { id: "face-blur", name: "Face Blur", description: "Automatically detect and blur faces.", href: "/tools/face-blur", status: "Active" },
-      { id: "pixelate", name: "Pixelate Image", description: "Pixelate full images or regions.", href: "/tools/pixelate", status: "Active" },
-      { id: "filters", name: "Image Filters", description: "Apply grayscale, sepia, invert, and other filters.", href: "/tools/filters", status: "Active" }
-    ]
-  },
-  {
-    name: "LAYOUT",
-    tools: [
-      { id: "grid-cutter", name: "Grid Cutter", description: "Split one image into multiple equal grid panels.", href: "/tools/grid-cutter", status: "Active" },
-      { id: "split", name: "Image Splitter", description: "Split images into multiple sections.", href: "/tools/split", status: "Active" },
-      { id: "canvas", name: "Image Padding", description: "Increase canvas size and add padding/backgrounds.", href: "/tools/canvas", status: "Active" },
-      { id: "border", name: "Image Border", description: "Add solid borders and rounded corners.", href: "/tools/border", status: "Active" },
-      { id: "rounded-image", name: "Rounded Image", description: "Create transparent rounded images.", href: "/tools/rounded-image", status: "Active" },
-      { id: "collage", name: "Collage Maker", description: "Create beautiful image collages.", href: "/tools/collage", status: "Active" },
-      { id: "pdf-contact-sheet", name: "Contact Sheet", description: "Create a PDF from multiple images.", href: "/tools/pdf-contact-sheet", status: "Active" }
-    ]
-  },
-  {
-    name: "EXPORT",
-    tools: [
-      { id: "image-to-pdf", name: "Image → PDF", description: "Convert multiple images into a single PDF.", href: "/tools/pdf-contact-sheet", status: "Active" },
-      { id: "favicon", name: "Favicon Generator", description: "Generate complete favicon packages.", href: "/tools/favicon", status: "Active" },
-      { id: "social-resizer", name: "Social Media Resizer", description: "Resize for Instagram, YouTube, X, and more.", href: "/tools/social-resizer", status: "Active" },
-      { id: "passport-photo", name: "Passport Photo", description: "Create printable passport photo sheets.", href: "/tools/passport-photo", status: "Active" },
-      { id: "background-remover", name: "Background Remover", description: "Remove image backgrounds locally using AI.", href: "/tools/background-remover", status: "Active" }
-    ]
-  },
-  {
-    name: "COLOR",
-    tools: [
-      { id: "color-picker", name: "Color Picker", description: "Extract HEX, RGB, HSL values directly from images.", href: "/tools/color-picker", status: "Active" },
-      { id: "color-palette", name: "Color Palette", description: "Extract dominant color palettes.", href: "/tools/color-palette", status: "Active" }
-    ]
-  },
-  {
-    name: "BULK & UTILITY",
-    tools: [
-      { id: "rename", name: "Bulk Rename", description: "Rename multiple images sequentially.", href: "/tools/rename", status: "Active" },
-      { id: "metadata-remover", name: "Metadata Remover", description: "Strip EXIF data for privacy.", href: "/tools/metadata-remover", status: "Active" }
-    ]
-  },
-  {
-    name: "CREATIVE",
-    tools: [
-      { id: "meme", name: "Meme Generator", description: "Add impact text to images.", href: "/tools/meme", status: "Active" },
-      { id: "before-after", name: "Before / After", description: "Generate comparison sliders.", href: "/tools/before-after", status: "Active" }
-    ]
-  }
+const toolsData = [
+  // OPTIMIZE
+  { id: "compressor", name: "Image Compressor", desc: "Reduce file sizes aggressively.", cat: "OPTIMIZE", tags: ["compress", "size", "kb", "mb", "reduce", "optimize"], link: "/tools/compressor", visual: "100KB → 42KB" },
+  { id: "resize", name: "Image Resizer", desc: "Scale images to exact dimensions.", cat: "OPTIMIZE", tags: ["resize", "scale", "dimensions", "width", "height"], link: "/tools/resize", visual: "2000 → 1080" },
+  { id: "convert", name: "Image Converter", desc: "Convert formats (JPG, PNG, WebP).", cat: "OPTIMIZE", tags: ["convert", "format", "jpg", "png", "webp", "jpeg"], link: "/tools/convert", visual: "JPG → WEBP" },
+  { id: "metadata-remover", name: "Metadata Remover", desc: "Strip EXIF data from photos.", cat: "OPTIMIZE", tags: ["exif", "metadata", "gps", "camera", "privacy"], link: "/tools/metadata-remover", visual: "EXIF ✕" },
+  
+  // EDIT
+  { id: "crop", name: "Image Cropper", desc: "Crop and reframe photos.", cat: "EDIT", tags: ["crop", "trim", "cut"], link: "/tools/crop", visual: "Crop" },
+  { id: "rotate-flip", name: "Rotate & Flip", desc: "Quickly rotate or mirror images.", cat: "EDIT", tags: ["rotate", "flip", "mirror", "turn"], link: "/tools/rotate-flip", visual: "↺ ⇄" },
+  { id: "blur", name: "Image Blur", desc: "Apply gaussian blur effects.", cat: "EDIT", tags: ["blur", "soften", "gaussian"], link: "/tools/blur", visual: "Blur" },
+  { id: "pixelate", name: "Pixelate Image", desc: "Create 8-bit style pixelation.", cat: "EDIT", tags: ["pixelate", "censor", "8bit", "retro"], link: "/tools/pixelate", visual: "■□■" },
+  { id: "filters", name: "Image Filters", desc: "Apply color adjustments & filters.", cat: "EDIT", tags: ["filter", "color", "adjust", "contrast", "brightness", "saturation"], link: "/tools/filters", visual: "✦✧✦" },
+  { id: "border", name: "Image Border", desc: "Add colored borders to images.", cat: "EDIT", tags: ["border", "frame", "outline"], link: "/tools/border", visual: "□" },
+  { id: "rounded-image", name: "Rounded Image", desc: "Export with transparent curved corners.", cat: "EDIT", tags: ["round", "corners", "radius", "circle"], link: "/tools/rounded-image", visual: "╭╮\n╰╯" },
+  { id: "canvas", name: "Canvas / Padding", desc: "Add surrounding padding/margins.", cat: "EDIT", tags: ["padding", "margin", "canvas", "expand"], link: "/tools/canvas", visual: "⛶" },
+
+  // CREATE
+  { id: "collage", name: "Collage Maker", desc: "Combine multiple images into one.", cat: "CREATE", tags: ["collage", "combine", "join", "merge", "layout"], link: "/tools/collage", visual: "⊞" },
+  { id: "grid-cutter", name: "Grid Cutter", desc: "Slice an image into an Instagram grid.", cat: "CREATE", tags: ["grid", "slice", "cut", "split", "instagram", "tiles"], link: "/tools/grid-cutter", visual: "▦" },
+  { id: "before-after", name: "Before & After", desc: "Create vertical comparison sliders.", cat: "CREATE", tags: ["compare", "before", "after", "slider"], link: "/tools/before-after", visual: "◧◨" },
+  { id: "meme", name: "Meme Generator", desc: "Add classic impact font text.", cat: "CREATE", tags: ["meme", "text", "caption", "funny"], link: "/tools/meme", visual: "T" },
+  { id: "pdf-contact-sheet", name: "Contact Sheet", desc: "Generate multi-image PDF galleries.", cat: "CREATE", tags: ["contact", "sheet", "gallery", "pdf", "print"], link: "/tools/pdf-contact-sheet", visual: "▤" },
+
+  // PROTECT
+  { id: "watermark", name: "Watermark", desc: "Apply repeated watermark patterns.", cat: "PROTECT", tags: ["watermark", "protect", "logo", "text", "stamp", "brand"], link: "/tools/watermark", visual: "©" },
+  { id: "face-blur", name: "Face Blur", desc: "Auto-detect and blur faces.", cat: "PROTECT", tags: ["face", "blur", "censor", "privacy", "hide", "ai"], link: "/tools/face-blur", visual: "👤" },
+
+  // TRANSFORM
+  { id: "background-remover", name: "Background Remover", desc: "Isolate subjects instantly.", cat: "TRANSFORM", tags: ["background", "remove", "transparent", "cutout", "ai", "subject"], link: "/tools/background-remover", visual: "✂" },
+  { id: "social-resizer", name: "Social Media Resizer", desc: "Format for Instagram, YouTube, etc.", cat: "TRANSFORM", tags: ["social", "instagram", "youtube", "tiktok", "resize", "aspect"], link: "/tools/social-resizer", visual: "📱" },
+  { id: "passport-photo", name: "Passport Photo", desc: "Format to standard ID dimensions.", cat: "TRANSFORM", tags: ["passport", "id", "photo", "visa", "print"], link: "/tools/passport-photo", visual: "🪪" },
+  { id: "favicon", name: "Favicon Generator", desc: "Create .ico and webapp icons.", cat: "TRANSFORM", tags: ["favicon", "icon", "website", "ico"], link: "/tools/favicon", visual: "◆" },
+  { id: "color-palette", name: "Color Palette", desc: "Extract dominant hex colors.", cat: "TRANSFORM", tags: ["color", "palette", "hex", "rgb", "swatch", "theme"], link: "/tools/color-palette", visual: "🎨" },
+  { id: "color-picker", name: "Color Picker", desc: "Sample specific pixels.", cat: "TRANSFORM", tags: ["color", "picker", "eyedropper", "sample"], link: "/tools/color-picker", visual: "💉" }
 ];
 
-export default function ToolsPage() {
+export default function ToolsLandingPage() {
+  const [search, setSearch] = useState("");
+
+  const filteredTools = toolsData.filter(t => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    return t.name.toLowerCase().includes(q) || 
+           t.desc.toLowerCase().includes(q) || 
+           t.tags.some(tag => tag.includes(q));
+  });
+
+  const categories = ["OPTIMIZE", "EDIT", "CREATE", "PROTECT", "TRANSFORM"];
+
   return (
-    <div className="min-h-screen bg-zinc-50 flex flex-col font-sans text-black selection:bg-black selection:text-white">
-      {/* HEADER */}
-      <header className="w-full p-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-30 bg-white border-b border-zinc-200">
-        <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          GROTON AI STUDIO
-        </Link>
-        <div className="flex items-center gap-8">
-          <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
-            <Link href="/work" className="hover:text-black transition-colors">Work</Link>
-            <Link href="/services" className="hover:text-black transition-colors">Services</Link>
-            <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
-            <Link href="/tools" className="text-black transition-colors">Tools</Link>
-            <Link href="/about" className="hover:text-black transition-colors">About</Link>
-          </nav>
-          <Link href="/contact" className="px-5 py-3 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
-            Contact
-          </Link>
-        </div>
-      </header>
-
-      {/* CONTENT */}
-      <main className="flex-1 w-full flex flex-col items-center pt-24 md:pt-32 pb-24 px-6 md:px-12 lg:px-24 bg-zinc-50">
-        <div className="w-full max-w-[1400px] flex flex-col items-start justify-start">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl tracking-tight text-black mb-6">TOOLS</h1>
-            <p className="font-sans font-light text-zinc-500 text-base md:text-lg max-w-lg mb-16">
-              A comprehensive suite of browser-based image utilities for faster creative production.
-            </p>
-          </motion.div>
-
-          <div className="w-full flex flex-col gap-16">
-            {categories.map((category, catIdx) => (
-              <div key={category.name} className="flex flex-col gap-6">
-                <h2 className="text-[11px] tracking-[0.2em] uppercase font-bold text-zinc-400 border-b border-zinc-200 pb-2">
-                  {category.name}
-                </h2>
-                <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
-                  {category.tools.map((tool, index) => {
-                    const isActive = tool.status === "Active";
-                    return (
-                      <motion.div
-                        key={tool.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.05 * index, ease: [0.16, 1, 0.3, 1] }}
-                      >
-                        <Link 
-                          href={isActive ? tool.href : "#"} 
-                          className={`group relative flex flex-col w-full h-full p-8 md:p-10 border transition-all duration-500 ${
-                            isActive 
-                              ? "bg-white border-zinc-200 hover:border-black hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] cursor-pointer" 
-                              : "bg-transparent border-zinc-200/50 cursor-default"
-                          }`}
-                        >
-                          <div className="flex flex-row justify-between items-start mb-10">
-                            <h3 className={`font-serif text-2xl md:text-3xl tracking-tight transition-colors ${isActive ? "text-black" : "text-zinc-400"}`}>
-                              {tool.name}
-                            </h3>
-                            {!isActive && (
-                              <span className="text-[9px] uppercase tracking-widest font-bold text-zinc-400 bg-zinc-100 px-3 py-1 rounded-sm">
-                                Coming Soon
-                              </span>
-                            )}
-                            {isActive && (
-                              <span className="text-black opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                </svg>
-                              </span>
-                            )}
-                          </div>
-                          <p className={`font-sans font-light text-sm md:text-base leading-relaxed ${isActive ? "text-zinc-500" : "text-zinc-400"}`}>
-                            {tool.description}
-                          </p>
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+    <main className="min-h-screen flex flex-col bg-background text-foreground font-sans">
+      <Navigation />
+      
+      <div className="flex-1 w-full max-w-[1400px] mx-auto px-4 md:px-8 py-16 md:py-24">
+        
+        {/* HERO SECTION */}
+        <div className="flex flex-col items-start gap-4 mb-16 max-w-3xl">
+          <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-accent">GROTON AI / TOOLS</span>
+          <h1 className="text-4xl md:text-6xl font-serif tracking-tight leading-tight">Image tools, without the busywork.</h1>
+          <p className="text-lg text-sec-text mt-2 font-light">Fast, browser-based tools for converting, resizing, compressing, organizing and preparing images.</p>
+          
+          <div className="flex flex-wrap gap-4 mt-6">
+            <a href="#explore" className="bg-accent text-white px-8 py-4 text-xs uppercase tracking-widest font-bold hover:bg-accent-dark transition-colors">
+              Explore Tools
+            </a>
+            <div className="relative group">
+              <input 
+                type="text" 
+                placeholder="Search tools... (e.g. 'compress')"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="bg-white border border-border-color px-6 py-4 text-sm w-[300px] focus:outline-none focus:border-accent transition-colors shadow-sm"
+              />
+            </div>
           </div>
+        </div>
+
+        {/* TOOLS GRID */}
+        <div id="explore" className="flex flex-col gap-24">
+          
+          {categories.map(cat => {
+            const catTools = filteredTools.filter(t => t.cat === cat);
+            if (catTools.length === 0) return null;
+
+            return (
+              <section key={cat} className="flex flex-col gap-8">
+                <h2 className="text-[11px] uppercase tracking-[0.2em] font-bold text-sec-text border-b border-border-color pb-4">{cat}</h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {catTools.map(tool => (
+                    <Link 
+                      key={tool.id} 
+                      href={tool.link}
+                      className="group bg-white border border-border-color p-6 flex flex-col gap-6 hover:border-accent hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                    >
+                      {/* Visual Preview Box */}
+                      <div className="w-full h-24 bg-background border border-border-color/50 flex items-center justify-center overflow-hidden">
+                        <div className="text-accent font-mono text-sm tracking-widest font-bold transition-transform duration-300 group-hover:scale-110 whitespace-pre text-center">
+                          {tool.visual}
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col gap-2 relative">
+                        <div className="flex justify-between items-start">
+                          <h3 className="font-bold text-base tracking-tight">{tool.name}</h3>
+                          <span className="text-accent opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1 duration-300">↗</span>
+                        </div>
+                        <p className="text-[12px] text-sec-text leading-relaxed">{tool.desc}</p>
+                        
+                        <div className="mt-4 pt-4 border-t border-border-color/30 flex gap-2 overflow-x-auto no-scrollbar">
+                           {tool.tags.slice(0, 3).map(tag => (
+                             <span key={tag} className="text-[9px] uppercase tracking-wider text-sec-text bg-background px-2 py-1 border border-border-color/50 rounded-sm">
+                               {tag}
+                             </span>
+                           ))}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+
+          {filteredTools.length === 0 && (
+            <div className="py-24 text-center flex flex-col items-center justify-center gap-4">
+               <span className="text-4xl">🔍</span>
+               <h3 className="text-xl font-serif">No tools found for "{search}"</h3>
+               <p className="text-sec-text text-sm">Try searching for keywords like "resize", "pdf", or "watermark".</p>
+               <button onClick={() => setSearch("")} className="mt-4 border border-border-color px-6 py-2 text-xs uppercase tracking-widest font-bold hover:bg-zinc-50">Clear Search</button>
+            </div>
+          )}
 
         </div>
-      </main>
-    </div>
+
+      </div>
+      <Footer />
+    </main>
   );
 }
