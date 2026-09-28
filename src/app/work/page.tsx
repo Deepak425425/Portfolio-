@@ -5,12 +5,12 @@ import Link from "next/link";
 import Image from "next/image";
 
 const portfolioItems = [
-  { id: 1, title: "Automotive Concept", category: "Campaign", image: "/work/campaign.jpg", aspect: "aspect-[4/3]" },
-  { id: 2, title: "Modern Elegance", category: "Fashion", image: "/work/fashion.jpg", aspect: "aspect-[3/4]" },
-  { id: 3, title: "Precision Craft", category: "Jewellery", image: "/work/jewellery.jpg", aspect: "aspect-[4/5]" },
-  { id: 4, title: "Skin Deep", category: "Beauty", image: "/work/product.jpg", aspect: "aspect-square" },
-  { id: 5, title: "Volume Study", category: "Product", image: "/images/luxury.jpg", aspect: "aspect-[16/9]" },
-  { id: 6, title: "Cinematic Atmosphere", category: "Lifestyle", image: "/images/cinematic.jpg", aspect: "aspect-[3/4]" },
+  { id: 1, title: "Automotive Concept", category: "Campaign", image: "/campaign-worlds/8ba03716f09635d4a54c4dfbd7ca2687.jpg", aspect: "aspect-[4/3]" },
+  { id: 2, title: "Modern Elegance", category: "Fashion", image: "/campaign-worlds/24f5f63a08c1fa2434bdb5edfe06e4bb.jpg", aspect: "aspect-[3/4]" },
+  { id: 3, title: "Precision Craft", category: "Jewellery", image: "/campaign-worlds/c85eebec43abf0ea972f6a8fcd15371d.jpg", aspect: "aspect-[4/5]" },
+  { id: 4, title: "Skin Deep", category: "Beauty", image: "/campaign-worlds/f8bc3ba5d07efbee4c99ce1f6c028602.jpg", aspect: "aspect-square" },
+  { id: 5, title: "Volume Study", category: "Product", image: "/campaign-worlds/5548c29a92a965abad9325b905a07cdd.jpg", aspect: "aspect-[16/9]" },
+  { id: 6, title: "Cinematic Atmosphere", category: "Lifestyle", image: "/campaign-worlds/96162aabb92e6fedb4c4918e9b746219.jpg", aspect: "aspect-[3/4]" },
 ];
 
 const categories = ["All", "Jewellery", "Fashion", "Beauty", "Lifestyle", "Product", "Campaign"];
@@ -27,7 +27,7 @@ export default function WorkPage() {
       {/* HEADER */}
       <header className="w-full p-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-30 bg-white border-b border-zinc-200">
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          PhotoLoom
+          GROTON AI STUDIO
         </Link>
         <div className="flex items-center gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
@@ -95,7 +95,7 @@ export default function WorkPage() {
       <footer className="w-full bg-white border-t border-zinc-200 mt-auto">
         <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">PhotoLoom</h3>
+            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">GROTON AI STUDIO</h3>
             <div className="flex flex-wrap gap-x-8 gap-y-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
               <Link href="/about" className="hover:text-black transition-colors">About</Link>
               <Link href="/services" className="hover:text-black transition-colors">Services</Link>
@@ -108,7 +108,7 @@ export default function WorkPage() {
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              &copy; 2026 PhotoLoom
+              &copy; 2026 GROTON AI STUDIO
             </p>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
               A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>

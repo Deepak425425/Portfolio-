@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — PhotoLoom",
-  description: "PhotoLoom privacy policy and data usage terms.",
+  title: "Privacy Policy — GROTON AI STUDIO",
+  description: "GROTON privacy policy and data usage terms.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -12,7 +12,7 @@ export default function PrivacyPolicyPage() {
       {/* HEADER */}
       <header className="w-full p-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-30 bg-white border-b border-zinc-200">
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          PhotoLoom
+          GROTON AI STUDIO
         </Link>
         <div className="flex items-center gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
@@ -37,7 +37,7 @@ export default function PrivacyPolicyPage() {
         <div className="prose prose-zinc prose-p:font-light prose-p:text-zinc-600 max-w-none">
           <p>
             {/* TODO: Legal Review Required - Replace placeholders with actual business entities before publishing */}
-            At PhotoLoom ("we", "our", or "us"), we are committed to protecting your privacy. This Privacy Policy explains how your personal information is collected, used, and disclosed by PhotoLoom.
+            At GROTON ("we", "our", or "us"), we are committed to protecting your privacy. This Privacy Policy explains how your personal information is collected, used, and disclosed by GROTON.
           </p>
 
           <h3 className="font-serif text-2xl mt-12 mb-4">1. Information We Collect</h3>
@@ -83,7 +83,7 @@ export default function PrivacyPolicyPage() {
           <p>
             If you have any questions about this Privacy Policy, please contact us at:
             <br/><br/>
-            <strong>PhotoLoom</strong><br/>
+            <strong>GROTON AI STUDIO</strong><br/>
             Email: [EMAIL_PLACEHOLDER]<br/>
             Address: [ADDRESS_PLACEHOLDER]
           </p>
@@ -94,7 +94,7 @@ export default function PrivacyPolicyPage() {
       <footer className="w-full bg-white border-t border-zinc-200 mt-auto">
         <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">PhotoLoom</h3>
+            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">GROTON AI STUDIO</h3>
             <div className="flex flex-wrap gap-x-8 gap-y-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
               <Link href="/about" className="hover:text-black transition-colors">About</Link>
               <Link href="/services" className="hover:text-black transition-colors">Services</Link>
@@ -107,7 +107,7 @@ export default function PrivacyPolicyPage() {
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              &copy; 2026 PhotoLoom
+              &copy; 2026 GROTON AI STUDIO
             </p>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
               A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>

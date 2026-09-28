@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Services — PhotoLoom",
+  title: "Services — GROTON AI STUDIO",
   description: "Premium e-commerce visual production and creative direction.",
 };
 
@@ -14,7 +14,7 @@ const services = [
     description: "Premium product visuals designed for eCommerce, campaigns and brand communication.",
     details: "We ingest your physical products or existing photography and synthesize them into high-fidelity, photorealistic environments. By controlling lighting, materials, and composition algorithmically, we bypass the logistical constraints of physical sets while maintaining absolute realism.",
     deliverables: ["Hero Campaign Imagery", "E-commerce Product Shots", "Lookbook Variations", "High-Resolution Composites"],
-    image: "/work/jewellery.jpg"
+    image: "/campaign-worlds/c85eebec43abf0ea972f6a8fcd15371d.jpg"
   },
   {
     id: "lifestyle-product-imagery",
@@ -22,7 +22,7 @@ const services = [
     "description": "Editorial and lifestyle scenes for e-commerce products.",
     "details": "We place your products in aspirational, photorealistic environments that tell a brand story. From sun-drenched interiors to high-end architectural spaces, we create contextual imagery without the need for location scouting or physical sets.",
     "deliverables": ["Editorial E-commerce Images", "Social Media Lifestyle Shots", "Contextual Lookbooks", "Banner & Hero Imagery"],
-    image: "/work/campaign.jpg"
+    image: "/campaign-worlds/8ba03716f09635d4a54c4dfbd7ca2687.jpg"
   },
   {
     id: "advertising-creatives",
@@ -30,7 +30,7 @@ const services = [
     description: "Performance-focused visual concepts for paid social and digital campaigns.",
     details: "Data-driven creative for digital advertising. We generate vast variations of visual concepts, allowing brands to test multiple visual angles, environments, and compositions for paid acquisition campaigns without blowing out the production budget.",
     deliverables: ["Paid Social Variations", "Display Ad Composites", "A/B Testing Visual Sets", "Performance Layouts"],
-    image: "/work/product.jpg"
+    image: "/campaign-worlds/f8bc3ba5d07efbee4c99ce1f6c028602.jpg"
   },
   {
     id: "social-media-content",
@@ -38,7 +38,7 @@ const services = [
     description: "High-quality visual systems for consistent brand communication.",
     details: "Maintaining a premium social feed requires volume without sacrificing art direction. We build visual systems and generate batches of cohesive, on-brand imagery to fuel your organic social media strategy for months at a time.",
     deliverables: ["Monthly Content Batches", "Grid Layout Planning", "Editorial Lifestyle Imagery", "Consistent Brand Aesthetics"],
-    image: "/work/fashion.jpg"
+    image: "/campaign-worlds/24f5f63a08c1fa2434bdb5edfe06e4bb.jpg"
   },
   {
     id: "creative-direction",
@@ -46,7 +46,7 @@ const services = [
     description: "Concept development, visual direction, art direction and campaign thinking.",
     details: "AI is a tool; art direction is the differentiator. Our creative directors work with you to establish the visual language, lighting logic, color theory, and conceptual framework before a single pixel is generated.",
     deliverables: ["Visual Identity Systems", "Campaign Concepts", "Lighting & Texture Boards", "Production Briefs"],
-    image: "/images/luxury.jpg"
+    image: "/campaign-worlds/5548c29a92a965abad9325b905a07cdd.jpg"
   }
 ];
 
@@ -56,7 +56,7 @@ export default function ServicesPage() {
       {/* HEADER */}
       <header className="w-full p-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-30 bg-white border-b border-zinc-200">
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          PhotoLoom
+          GROTON AI STUDIO
         </Link>
         <div className="flex items-center gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
@@ -119,7 +119,7 @@ export default function ServicesPage() {
       <footer className="w-full bg-white border-t border-zinc-200 mt-auto">
         <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">PhotoLoom</h3>
+            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">GROTON AI STUDIO</h3>
             <div className="flex flex-wrap gap-x-8 gap-y-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
               <Link href="/about" className="hover:text-black transition-colors">About</Link>
               <Link href="/services" className="text-black transition-colors">Services</Link>
@@ -132,7 +132,7 @@ export default function ServicesPage() {
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              &copy; 2026 PhotoLoom
+              &copy; 2026 GROTON AI STUDIO
             </p>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
               A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>
