@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions — PhotoLoom",
-  description: "PhotoLoom terms of service and usage conditions.",
+  title: "Terms & Conditions — GROTON AI STUDIO",
+  description: "GROTON terms of service and usage conditions.",
 };
 
 export default function TermsPage() {
@@ -12,7 +12,7 @@ export default function TermsPage() {
       {/* HEADER */}
       <header className="w-full p-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-30 bg-white border-b border-zinc-200">
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          PhotoLoom
+          GROTON AI STUDIO
         </Link>
         <div className="flex items-center gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
@@ -37,7 +37,7 @@ export default function TermsPage() {
         <div className="prose prose-zinc prose-p:font-light prose-p:text-zinc-600 max-w-none">
           <p>
             {/* TODO: Legal Review Required - Replace placeholders with actual business entities before publishing */}
-            Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using the PhotoLoom website operated by [COMPANY_NAME_PLACEHOLDER].
+            Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using the GROTON website operated by GROTON AI STUDIO.
           </p>
 
           <h3 className="font-serif text-2xl mt-12 mb-4">1. Acceptance of Terms</h3>
@@ -47,7 +47,7 @@ export default function TermsPage() {
 
           <h3 className="font-serif text-2xl mt-12 mb-4">2. Creative Services and AI Production</h3>
           <p>
-            PhotoLoom provides AI-assisted visual production and creative direction services. Deliverables, revisions, and project timelines are subject to the specific Statement of Work (SOW) or project agreement established between PhotoLoom and the client prior to project commencement.
+            GROTON provides AI-assisted visual production and creative direction services. Deliverables, revisions, and project timelines are subject to the specific Statement of Work (SOW) or project agreement established between GROTON and the client prior to project commencement.
           </p>
           <ul className="list-disc pl-5 space-y-2 mt-4 font-light text-zinc-600 text-sm">
             <li>Visual outputs are generated using artificial intelligence guided by human art direction.</li>
@@ -57,12 +57,12 @@ export default function TermsPage() {
 
           <h3 className="font-serif text-2xl mt-12 mb-4">3. Intellectual Property Rights</h3>
           <p>
-            Upon full payment of the agreed project fees, clients receive commercial usage rights to the final delivered visual assets as outlined in their specific contract. PhotoLoom retains the right to display the created assets in our portfolio, case studies, and marketing materials unless a Non-Disclosure Agreement (NDA) is signed prior to commencement.
+            Upon full payment of the agreed project fees, clients receive commercial usage rights to the final delivered visual assets as outlined in their specific contract. GROTON retains the right to display the created assets in our portfolio, case studies, and marketing materials unless a Non-Disclosure Agreement (NDA) is signed prior to commencement.
           </p>
 
           <h3 className="font-serif text-2xl mt-12 mb-4">4. Limitation of Liability</h3>
           <p>
-            In no event shall PhotoLoom, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
+            In no event shall GROTON, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
           </p>
 
           <h3 className="font-serif text-2xl mt-12 mb-4">5. Governing Law</h3>
@@ -74,7 +74,7 @@ export default function TermsPage() {
           <p>
             If you have any questions about these Terms, please contact us at:
             <br/><br/>
-            <strong>PhotoLoom</strong><br/>
+            <strong>GROTON AI STUDIO</strong><br/>
             Email: [EMAIL_PLACEHOLDER]<br/>
             Address: [ADDRESS_PLACEHOLDER]
           </p>
@@ -85,7 +85,7 @@ export default function TermsPage() {
       <footer className="w-full bg-white border-t border-zinc-200 mt-auto">
         <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">PhotoLoom</h3>
+            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">GROTON AI STUDIO</h3>
             <div className="flex flex-wrap gap-x-8 gap-y-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
               <Link href="/about" className="hover:text-black transition-colors">About</Link>
               <Link href="/services" className="hover:text-black transition-colors">Services</Link>
@@ -98,7 +98,7 @@ export default function TermsPage() {
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              &copy; 2026 PhotoLoom
+              &copy; 2026 GROTON AI STUDIO
             </p>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
               A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>

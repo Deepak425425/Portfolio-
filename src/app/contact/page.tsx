@@ -23,7 +23,7 @@ export default function ContactPage() {
       {/* HEADER */}
       <header className="w-full p-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-30 bg-white border-b border-zinc-200">
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          PhotoLoom
+          GROTON AI STUDIO
         </Link>
         <div className="flex items-center gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
@@ -154,7 +154,7 @@ export default function ContactPage() {
         </div>
 
         <div className="hidden lg:block lg:w-1/2 relative bg-zinc-100">
-          <Image src="/images/luxury.jpg" alt="PhotoLoom Studio" fill className="object-cover object-center" />
+          <Image src="/campaign-worlds/5548c29a92a965abad9325b905a07cdd.jpg" alt="GROTON AI STUDIO" fill className="object-cover object-center" />
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="absolute bottom-16 left-16 max-w-sm">
             <h3 className="font-serif text-3xl text-white mb-4">"The visual standard for modern brands."</h3>
@@ -166,7 +166,7 @@ export default function ContactPage() {
       <footer className="w-full bg-white border-t border-zinc-200">
         <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">PhotoLoom</h3>
+            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">GROTON AI STUDIO</h3>
             <div className="flex flex-wrap gap-x-8 gap-y-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
               <Link href="/about" className="hover:text-black transition-colors">About</Link>
               <Link href="/services" className="hover:text-black transition-colors">Services</Link>
@@ -179,7 +179,7 @@ export default function ContactPage() {
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              &copy; 2026 PhotoLoom
+              &copy; 2026 GROTON AI STUDIO
             </p>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
               A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>

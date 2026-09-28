@@ -182,7 +182,7 @@ export default function Home() {
         className="fixed top-0 left-0 w-full px-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-50 transition-all backdrop-blur-md"
       >
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          PhotoLoom
+          GROTON AI STUDIO
         </Link>
         <div className="flex items-center gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
@@ -300,7 +300,7 @@ export default function Home() {
               transition={{ duration: 1, delay: 1.8 }}
               className="absolute bottom-0 right-[5%] lg:right-[10%] z-10 hidden md:flex flex-col text-right gap-1"
             >
-               <span className="text-[8px] uppercase tracking-[0.3em] text-zinc-400">PhotoLoom</span>
+               <span className="text-[8px] uppercase tracking-[0.3em] text-zinc-400">GROTON</span>
                <span className="text-[9px] uppercase tracking-[0.1em] text-black font-semibold">Art Direction &<br/>E-Commerce Visuals</span>
             </motion.div>
             
@@ -308,7 +308,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. WHAT PHOTOLOOM CREATES */}
+      {/* 2. WHAT GROTON CREATES */}
       <section className="relative w-full z-10 bg-white py-32 px-6 border-t border-zinc-200">
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24">
           <div className="flex flex-col justify-center">
@@ -567,7 +567,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 9. WHY PHOTOLOOM */}
+      {/* 9. WHY GROTON */}
       <section className="relative w-full z-10 bg-white py-32 px-6 border-t border-zinc-200">
         <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24">
           <div className="w-full lg:w-1/3">
@@ -600,7 +600,7 @@ export default function Home() {
       <footer className="w-full bg-white border-t border-zinc-200 mt-auto">
         <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">PhotoLoom</h3>
+            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">GROTON AI STUDIO</h3>
             <div className="flex flex-wrap gap-x-8 gap-y-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
               <Link href="/about" className="hover:text-black transition-colors">About</Link>
               <Link href="/services" className="hover:text-black transition-colors">Services</Link>
@@ -613,7 +613,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              &copy; 2026 PhotoLoom
+              &copy; 2026 GROTON AI STUDIO
             </p>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
               A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>
