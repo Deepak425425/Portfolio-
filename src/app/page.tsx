@@ -10,6 +10,8 @@ const revealVariants: any = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
 };
 
+const MotionLink = motion.create(Link);
+
 const MagneticButton = ({ children, href, className }: { children: React.ReactNode, href: string, className?: string }) => {
   const ref = useRef<HTMLAnchorElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -26,18 +28,17 @@ const MagneticButton = ({ children, href, className }: { children: React.ReactNo
   const reset = () => setPosition({ x: 0, y: 0 });
 
   return (
-    <Link href={href} passHref legacyBehavior>
-      <motion.a 
-        ref={ref} 
-        onMouseMove={handleMouse} 
-        onMouseLeave={reset} 
-        animate={{ x: position.x, y: position.y }} 
-        transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-        className={className}
-      >
-        {children}
-      </motion.a>
-    </Link>
+    <MotionLink 
+      href={href}
+      ref={ref} 
+      onMouseMove={handleMouse} 
+      onMouseLeave={reset} 
+      animate={{ x: position.x, y: position.y }} 
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      className={className}
+    >
+      {children}
+    </MotionLink>
   );
 };
 
@@ -198,7 +199,7 @@ export default function Home() {
       </motion.header>
 
       {/* 1. HERO SECTION - E-COMMERCE VISUAL PRODUCTION */}
-      <section className="relative min-h-[100svh] w-full flex flex-col items-center justify-start overflow-hidden bg-[#F9F8F6] pt-40 pb-24 z-10">
+      <section className="relative min-h-[100svh] w-full flex flex-col items-center justify-start bg-[#F9F8F6] pt-40 pb-24 z-20">
         
         <div className="relative w-full max-w-[1400px] flex flex-col items-center justify-start px-6 z-10">
           
@@ -238,12 +239,12 @@ export default function Home() {
           </div>
 
           {/* Hero Visual Layout - Using Actual Assets */}
-          <div className="relative mt-20 w-full flex justify-center items-end pb-12">
+          <div className="relative mt-20 w-full flex justify-center items-end pb-32 lg:pb-48">
             
             {/* Primary - Activewear Model */}
             <motion.div 
               style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -60]) }}
-              className="relative z-20 w-[90%] md:w-full max-w-[500px] xl:max-w-[640px] aspect-[4/5] shadow-2xl group pointer-events-auto"
+              className="relative z-10 w-[90%] md:w-full max-w-[500px] xl:max-w-[640px] aspect-[4/5] shadow-[0_30px_90px_-20px_rgba(0,0,0,0.1)] group pointer-events-auto mt-8"
             >
               <motion.div 
                 initial={{ opacity: 0, clipPath: "inset(5% 5% 5% 5%)" }} 
@@ -261,7 +262,7 @@ export default function Home() {
             {/* Secondary 1 - Sneakers */}
             <motion.div 
               style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -90]) }}
-              className="absolute left-[2%] md:left-[10%] lg:left-[15%] bottom-[10%] z-10 w-[30vw] md:w-[20vw] max-w-[260px] aspect-square shadow-xl group pointer-events-auto hidden sm:block"
+              className="absolute left-[2%] md:left-[5%] lg:left-[10%] bottom-16 lg:bottom-24 z-20 w-[35vw] md:w-[25vw] max-w-[300px] aspect-square shadow-[-20px_40px_80px_-20px_rgba(0,0,0,0.25)] group pointer-events-auto hidden sm:block"
             >
                <motion.div 
                  initial={{ opacity: 0, x: -30 }} 
@@ -279,7 +280,7 @@ export default function Home() {
             {/* Secondary 2 - Purifiers/Product */}
             <motion.div 
               style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -120]) }}
-              className="absolute right-[2%] md:right-[12%] lg:right-[18%] top-[10%] z-30 w-[25vw] md:w-[14vw] max-w-[180px] aspect-[3/4] shadow-lg group pointer-events-auto hidden sm:block"
+              className="absolute right-[5%] md:right-[12%] lg:right-[16%] top-12 md:top-20 lg:top-32 z-30 w-[30vw] md:w-[18vw] max-w-[220px] aspect-[3/4] shadow-[20px_40px_80px_-20px_rgba(0,0,0,0.25)] group pointer-events-auto hidden sm:block"
             >
                <motion.div 
                  initial={{ opacity: 0, x: 30 }} 

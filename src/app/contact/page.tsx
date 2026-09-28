@@ -101,8 +101,8 @@ export default function ContactPage() {
                 <div className="flex flex-col gap-2">
                   <label htmlFor="type" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600">Project Type</label>
                   <div className="relative">
-                    <select required id="type" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
-                      <option value="" disabled selected>Select a service...</option>
+                    <select required id="type" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
+                      <option value="" disabled>Select a service...</option>
                       <option value="Product Images">Product Images</option>
                       <option value="Commercial Reels">Commercial Reels</option>
                       <option value="Ad Creatives">Ad Creatives</option>
@@ -119,8 +119,8 @@ export default function ContactPage() {
                 <div className="flex flex-col gap-2">
                   <label htmlFor="budget" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600">Budget Range</label>
                   <div className="relative">
-                    <select required id="budget" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
-                      <option value="" disabled selected>Select a range...</option>
+                    <select required id="budget" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
+                      <option value="" disabled>Select a range...</option>
                       <option value="2.5L-5L">₹2.5L – ₹5L</option>
                       <option value="5L-12L">₹5L – ₹12L</option>
                       <option value="12L+">₹12L+</option>
