@@ -325,7 +325,7 @@ export default function CollageMakerPage() {
 
           {/* CENTER: Live Preview */}
           <div className="flex-1 bg-zinc-200 border border-zinc-200 relative overflow-hidden flex items-center justify-center p-8"
-               onMouseUp={handlePanEnd} onMouseLeave={handlePanEnd}>
+               onPointerUp={handlePanEnd} onPointerLeave={handlePanEnd}>
             
             {/* The scaled preview wrapper */}
             <div 
@@ -346,8 +346,8 @@ export default function CollageMakerPage() {
                   <div 
                     className={`relative w-full overflow-hidden border transition-colors cursor-grab active:cursor-grabbing ${selectedId === img.id ? 'border-[#8B7CFF] shadow-[0_0_0_2px_rgba(59,130,246,0.5)] z-10' : 'border-transparent'}`}
                     style={{ aspectRatio: ratioValues[ratioStr] }}
-                    onMouseDown={e => handlePanStart(e, img)}
-                    onMouseMove={e => handlePanMove(e, img)}
+                    onPointerDown={e => handlePanStart(e, img)}
+                    onPointerMove={e => handlePanMove(e, img)}
                     onClick={(e) => { e.stopPropagation(); setSelectedId(img.id); }}
                   >
                     <img 

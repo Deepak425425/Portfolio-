@@ -97,3 +97,105 @@ body {
 .animate-flip-lighten {
   animation: flip-lighten 0.5s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
 }
+
+
+/* =========================================
+   MOBILE ONLY FIXES - GROTON AI TOOLS
+   ========================================= */
+@media (max-width: 1023px) {
+  
+  /* 1. Stack desktop columns vertically on small screens */
+  .tool-mobile-fix .grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Prevent overriding small inner toolbars if they use grid */
+  .tool-mobile-fix nav .grid, .tool-mobile-fix footer .grid {
+    grid-template-columns: unset !important;
+  }
+
+  /* Specific tool layouts using flex that didn't wrap */
+  .tool-mobile-fix .divide-x {
+    flex-direction: column !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+  .tool-mobile-fix .divide-x > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-left: none !important;
+    border-bottom: 1px solid white !important;
+  }
+  
+  /* Override w-1/2 or fixed widths inside tools on mobile */
+  .tool-mobile-fix .w-1\/2, 
+  .tool-mobile-fix [class*="w-[3"], 
+  .tool-mobile-fix [class*="w-[4"], 
+  .tool-mobile-fix [class*="w-[5"], 
+  .tool-mobile-fix [class*="w-[8"] {
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
+  /* 2. Make upload areas fit the viewport */
+  .tool-mobile-fix .border-dashed {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-height: 40vh !important;
+    height: auto !important;
+    padding: 2rem 1rem !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 3. Make previews fit the phone width without unwanted cropping */
+  .tool-mobile-fix canvas, 
+  .tool-mobile-fix img, 
+  .tool-mobile-fix video {
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* 4, 5, 6. Make sliders and crop/zoom/drag interactions work with touch */
+  /* Prevent browser default scrolling when dragging on sliders/canvases */
+  .tool-mobile-fix input[type="range"], 
+  .tool-mobile-fix canvas, 
+  .tool-mobile-fix .draggable, 
+  .tool-mobile-fix [onPointerDown] {
+    touch-action: none !important; 
+  }
+
+  /* 7. Make canvas dimensions responsive ONLY on mobile */
+  .tool-mobile-fix .relative > canvas, 
+  .tool-mobile-fix .absolute > canvas {
+    max-width: 100vw !important;
+    width: 100% !important;
+  }
+
+  /* 8. Prevent horizontal page overflow ONLY on mobile */
+  .tool-mobile-fix {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+  }
+
+  .tool-mobile-fix main {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  /* 9. Make export/download buttons usable on mobile */
+  .tool-mobile-fix button {
+    white-space: normal !important;
+    min-height: 44px !important; /* Apple minimum touch target */
+    height: auto !important;
+  }
+  
+  /* 13. Disable desktop custom cursor on touch devices */
+  .custom-cursor {
+    display: none !important;
+  }
+  * {
+    cursor: auto !important;
+  }
+}

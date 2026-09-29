@@ -194,7 +194,7 @@ export default function ImageComparePage() {
         <div 
           ref={sliderRef}
           className="relative w-full h-full min-h-[500px] bg-zinc-100 overflow-hidden cursor-ew-resize select-none"
-          onMouseDown={() => setIsDragging(true)}
+          onPointerDown={() => setIsDragging(true)}
           onTouchStart={() => setIsDragging(true)}
         >
           {/* AFTER */}

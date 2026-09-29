@@ -379,9 +379,9 @@ export default function WatermarkPage() {
 
               <div className="absolute top-4 left-4 flex gap-2 z-30">
                 <button 
-                  onMouseDown={() => setPreviewBefore(true)}
-                  onMouseUp={() => setPreviewBefore(false)}
-                  onMouseLeave={() => setPreviewBefore(false)}
+                  onPointerDown={() => setPreviewBefore(true)}
+                  onPointerUp={() => setPreviewBefore(false)}
+                  onPointerLeave={() => setPreviewBefore(false)}
                   onTouchStart={() => setPreviewBefore(true)}
                   onTouchEnd={() => setPreviewBefore(false)}
                   className="bg-white/90 px-4 py-2 text-[10px] uppercase tracking-widest font-bold shadow cursor-pointer select-none border border-zinc-200 hover:bg-white"
@@ -393,7 +393,7 @@ export default function WatermarkPage() {
               {/* Pan overlay */}
               <div 
                 className="absolute inset-0 z-10 cursor-move"
-                onMouseDown={(e) => {
+                onPointerDown={(e) => {
                   const startX = e.clientX;
                   const startY = e.clientY;
                   const initOffsetX = offsetX;
