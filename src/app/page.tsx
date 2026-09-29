@@ -217,58 +217,55 @@ export default function Home() {
                   data-cursor="view"
                 >
                    <motion.div className="w-full h-full relative" whileHover={{ scale: 1.03 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                     <Image src="/campaign-worlds/groton-3.jpg" alt="Activewear Model Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
+                     <Image src="/campaign-worlds/download (22).jpeg" alt="Activewear Model Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
                    </motion.div>
                 </motion.div>
               </motion.div>
             </motion.div>
 
-            {/* Secondary 1 - Sneakers */}
-            <motion.div 
-              style={{ x: p2x, y: p2y }}
-              className="absolute left-[2%] md:left-[5%] lg:left-[10%] bottom-16 lg:bottom-24 z-20 w-[35vw] md:w-[25vw] max-w-[300px] aspect-square hidden sm:block"
-            >
-               <motion.div
-                 style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -90]) }}
-                 className="w-full h-full shadow-[-20px_40px_80px_-20px_rgba(0,0,0,0.25)] group pointer-events-auto"
-               >
-                 <motion.div 
-                   initial={{ opacity: 0, x: -30 }} 
-                   animate={{ opacity: 1, x: 0 }} 
-                   transition={{ duration: 1.2, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
-                   className="w-full h-full relative overflow-hidden bg-zinc-200"
-                   data-cursor="view"
-                 >
-                   <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                     <Image src="/campaign-worlds/groton-13.jpg" alt="Yellow Sneakers E-commerce" fill className="object-cover" priority sizes="(max-width: 768px) 0vw, 25vw" />
-                   </motion.div>
-                 </motion.div>
-               </motion.div>
-            </motion.div>
+            {/* Secondary 1 - Top Left (Shoes) */}
+            <FloatingHeroCard 
+              src="/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg"
+              alt="Floating Asset 1 - Shoes"
+              className="left-[2%] md:left-[5%] lg:left-[8%] top-12 lg:top-24"
+              px={p2x} py={p2y}
+              scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -100])}
+              initial={{ opacity: 0, x: -30 }}
+              delay={1.2}
+            />
 
-            {/* Secondary 2 - Purifiers/Product */}
-            <motion.div 
-              style={{ x: p3x, y: p3y }}
-              className="absolute right-[5%] md:right-[12%] lg:right-[16%] top-12 md:top-20 lg:top-32 z-30 w-[30vw] md:w-[18vw] max-w-[220px] aspect-[3/4] hidden sm:block"
-            >
-               <motion.div
-                 style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -120]) }}
-                 className="w-full h-full shadow-[20px_40px_80px_-20px_rgba(0,0,0,0.25)] group pointer-events-auto"
-               >
-                 <motion.div 
-                   initial={{ opacity: 0, x: 30 }} 
-                   animate={{ opacity: 1, x: 0 }} 
-                   transition={{ duration: 1.2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                   className="w-full h-full relative overflow-hidden bg-zinc-200"
-                   data-cursor="view"
-                 >
-                   <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                     <Image src="/campaign-worlds/groton-10.jpg" alt="Colorful Product Campaign" fill className="object-cover object-center" priority sizes="(max-width: 768px) 0vw, 20vw" />
-                   </motion.div>
-                 </motion.div>
-               </motion.div>
-            </motion.div>
+            {/* Secondary 2 - Bottom Left (T-shirt) */}
+            <FloatingHeroCard 
+              src="/campaign-worlds/Create_vertical_e-commerce_produ…_2K_20260929162058.jpg"
+              alt="Floating Asset 2 - T-shirt"
+              className="left-[2%] md:left-[8%] lg:left-[12%] bottom-16 lg:bottom-24"
+              px={p3x} py={p3y}
+              scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -60])}
+              initial={{ opacity: 0, y: 30 }}
+              delay={1.4}
+            />
 
+            {/* Secondary 3 - Top Right (Sunglasses) */}
+            <FloatingHeroCard 
+              src="/campaign-worlds/Sunglasses_product_photography_2K_20260929162056.jpg"
+              alt="Floating Asset 3 - Sunglasses"
+              className="right-[2%] md:right-[5%] lg:right-[8%] top-16 lg:top-32"
+              px={p3x} py={p3y}
+              scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -120])}
+              initial={{ opacity: 0, x: 30 }}
+              delay={1.3}
+            />
+
+            {/* Secondary 4 - Bottom Right (Jacket + Pants) */}
+            <FloatingHeroCard 
+              src="/campaign-worlds/Jacket_and_pants_fashion_display_2K_20260929162053.jpg"
+              alt="Floating Asset 4 - Jacket"
+              className="right-[2%] md:right-[8%] lg:right-[12%] bottom-12 lg:bottom-20"
+              px={p2x} py={p2y}
+              scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -80])}
+              initial={{ opacity: 0, y: 30 }}
+              delay={1.5}
+            />
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -280,6 +277,21 @@ export default function Home() {
             </motion.div>
             
           </div>
+            {/* Mobile Stacked Cards */}
+            <div className="w-full grid grid-cols-2 gap-4 px-6 pb-20 z-20 md:hidden relative">
+               <div className="aspect-[3/4] relative bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)]">
+                 <Image src="/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg" alt="Shoes" fill className="object-contain p-4" />
+               </div>
+               <div className="aspect-[3/4] relative bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)]">
+                 <Image src="/campaign-worlds/Create_vertical_e-commerce_produ…_2K_20260929162058.jpg" alt="T-shirt" fill className="object-contain p-4" />
+               </div>
+               <div className="aspect-[3/4] relative bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)]">
+                 <Image src="/campaign-worlds/Sunglasses_product_photography_2K_20260929162056.jpg" alt="Sunglasses" fill className="object-contain p-4" />
+               </div>
+               <div className="aspect-[3/4] relative bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)]">
+                 <Image src="/campaign-worlds/Jacket_and_pants_fashion_display_2K_20260929162053.jpg" alt="Jacket" fill className="object-contain p-4" />
+               </div>
+            </div>
         </div>
       </section>
 
@@ -296,7 +308,7 @@ export default function Home() {
             </p>
             <div className="grid grid-cols-2 gap-4">
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-                 <Image src="/campaign-worlds/groton-10.jpg" alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src="/campaign-worlds/LOGO DESIGN _ IDENTITY DESIGN _ ЛОГОТИП.jpeg" alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product Imagery</span></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
@@ -590,6 +602,18 @@ export default function Home() {
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
               &copy; 2026 GROTON AI STUDIO
             </p>
+            <div className="flex items-center gap-6">
+              <a href="https://www.instagram.com/d99p4k/" target="_blank" rel="noopener noreferrer" className="text-inherit opacity-60 hover:opacity-100 transition-all duration-300 hover:-translate-y-1" aria-label="Instagram">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
+                </svg>
+              </a>
+              <a href="https://in.linkedin.com/in/deepak-kumawat-grafly" target="_blank" rel="noopener noreferrer" className="text-inherit opacity-60 hover:opacity-100 hover:text-[#0a66c2] transition-all duration-300 hover:-translate-y-1" aria-label="LinkedIn">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fillRule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clipRule="evenodd" />
+                </svg>
+              </a>
+            </div>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
               A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>
             </p>
@@ -597,5 +621,41 @@ export default function Home() {
         </div>
       </footer>
     </div>
+  );
+}
+
+
+interface FloatingCardProps {
+  src: string;
+  alt: string;
+  className: string;
+  px: any;
+  py: any;
+  scrollYTransform: any;
+  initial: any;
+  delay: number;
+}
+
+function FloatingHeroCard({ src, alt, className, px, py, scrollYTransform, initial, delay }: FloatingCardProps) {
+  return (
+    <motion.div 
+      style={{ x: px, y: py }}
+      className={`absolute z-20 w-[22vw] md:w-[18vw] lg:w-[14vw] max-w-[220px] aspect-[3/4] hidden md:block ${className}`}
+    >
+       <motion.div
+         style={{ y: scrollYTransform }}
+         className="w-full h-full shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] group pointer-events-auto"
+       >
+         <motion.div 
+           initial={initial} 
+           animate={{ opacity: 1, x: 0, y: 0 }} 
+           transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
+           className="w-full h-full relative overflow-hidden bg-white rounded-xl"
+           data-cursor="view"
+         >
+           <Image src={src} alt={alt} fill className="object-contain p-4 pointer-events-none" priority sizes="(max-width: 768px) 0vw, 20vw" />
+         </motion.div>
+       </motion.div>
+    </motion.div>
   );
 }
