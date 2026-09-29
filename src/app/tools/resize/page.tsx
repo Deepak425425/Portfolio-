@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import JSZip from "jszip";
+import { getGrotonExportFilename } from "@/utils/export";
 
 interface ImgFile {
   id: string;
@@ -224,7 +225,7 @@ export default function ResizePage() {
       const res = await processImage(images[i]);
       const a = document.createElement("a");
       a.href = res.url;
-      a.download = res.name;
+      a.download = getGrotonExportFilename(res.name);
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -239,12 +240,12 @@ export default function ResizePage() {
     for (let i = 0; i < images.length; i++) {
       const res = await processImage(images[i]);
       const idx = res.url.indexOf("base64,") + 7;
-      zip.file(res.name, res.url.substring(idx), {base64: true});
+      zip.file(getGrotonExportFilename(res.name), res.url.substring(idx), {base64: true});
     }
     const content = await zip.generateAsync({type: "blob"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(content);
-    a.download = `resized_images.zip`;
+    a.download = getGrotonExportFilename(`resized_images.zip`);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

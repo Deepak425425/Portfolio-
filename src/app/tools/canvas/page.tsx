@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
+import { getGrotonExportFilename } from "@/utils/export";
 
 export default function CanvasPage() {
   const [img, setImg] = useState<any>(null);
@@ -26,7 +27,7 @@ export default function CanvasPage() {
     }
     const a = document.createElement("a");
     a.href = canvas.toDataURL("image/jpeg");
-    a.download = "padded.jpg";
+    a.download = getGrotonExportFilename("padded.jpg");
     a.click();
   };
 

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
+import { getGrotonExportFilename } from "@/utils/export";
 
 export default function SocialResizerPage() {
   const [img, setImg] = useState<any>(null);
@@ -39,7 +40,7 @@ export default function SocialResizerPage() {
     }
     const a = document.createElement("a");
     a.href = canvas.toDataURL("image/jpeg", 0.95);
-    a.download = target.name.replace(/ /g, '-') + ".jpg";
+    a.download = getGrotonExportFilename(target.name.replace(/ /g, '-') + ".jpg");
     a.click();
   };
 

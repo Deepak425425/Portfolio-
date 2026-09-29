@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, MouseEvent as ReactMouseEvent } fro
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import JSZip from "jszip";
+import { getGrotonExportFilename } from "@/utils/export";
 
 interface ImgData {
   id: string;
@@ -224,7 +225,7 @@ export default function CollageMakerPage() {
   const downloadFile = (dataUrl: string, filename: string) => {
     const a = document.createElement("a");
     a.href = dataUrl;
-    a.download = filename;
+    a.download = getGrotonExportFilename(filename);
     a.click();
   };
 
@@ -267,12 +268,12 @@ export default function CollageMakerPage() {
       const blob = await fetch(img.url).then(r => r.blob());
       const ext = img.file.name.split('.').pop() || 'jpg';
       const num = String(i + 1).padStart(2, '0');
-      zip.file(`${num}-${img.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.${ext}`, blob);
+      zip.file(getGrotonExportFilename(`${num}-${img.name.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.${ext}`), blob);
     }
     const content = await zip.generateAsync({ type: "blob" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(content);
-    a.download = "individual-images.zip";
+    a.download = getGrotonExportFilename("individual-images.zip");
     a.click();
     setIsProcessing(false);
   };

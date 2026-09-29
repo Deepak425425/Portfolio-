@@ -3,6 +3,7 @@ import React, { useState, useRef } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import JSZip from "jszip";
+import { getGrotonExportFilename } from "@/utils/export";
 
 export default function RotateFlipPage() {
   const [images, setImages] = useState<any[]>([]);
@@ -53,7 +54,7 @@ export default function RotateFlipPage() {
       const blob = await processImage(img);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = url; a.download = 'modified-' + img.name; a.click();
+      a.href = url; a.download = getGrotonExportFilename('modified-' + img.name); a.click();
     }
     setIsProcessing(false);
   };

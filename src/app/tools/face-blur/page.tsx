@@ -6,6 +6,7 @@ import UploadDropzone from "@/components/tools/UploadDropzone";
 import JSZip from "jszip";
 // Dynamically loaded via import() when needed to prevent Next.js SSR crashes
 // import { FaceDetector, FilesetResolver, Detection } from "@mediapipe/tasks-vision";
+import { getGrotonExportFilename } from "@/utils/export";
 
 interface ImgFile {
   id: string;
@@ -80,17 +81,20 @@ export default function FaceBlurPage() {
   }, [currentImg, previewIndex]);
 
   useEffect(() => {
-    renderDisplay();
+    if (imgRef.current && imgRef.current.width > 0 && imgRef.current.height > 0) {
+      renderDisplay();
+    }
   }, [boxes, blurMode, strength, currentBox]);
 
   const renderDisplay = () => {
     if (!imgRef.current || !displayCanvasRef.current) return;
     
+    const img = imgRef.current;
+    if (img.width <= 0 || img.height <= 0) return;
+    
     const canvas = displayCanvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    
-    const img = imgRef.current;
     
     // Scale for display
     const maxW = 800;
@@ -100,43 +104,61 @@ export default function FaceBlurPage() {
     
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     
-    // Process boxes for preview
     const applyEffect = (box: Box) => {
+      if (canvas.width <= 0 || canvas.height <= 0) return;
+
       const bx = box.x * ratio;
       const by = box.y * ratio;
       const bw = box.w * ratio;
       const bh = box.h * ratio;
       
-      if (bx < 0 || by < 0 || bw <= 0 || bh <= 0) return;
+      const safeX = Math.max(0, Math.min(Math.floor(bx), canvas.width - 1));
+      const safeY = Math.max(0, Math.min(Math.floor(by), canvas.height - 1));
+
+      const safeW = Math.min(
+          Math.max(1, Math.floor(bw)),
+          canvas.width - safeX
+      );
+
+      const safeH = Math.min(
+          Math.max(1, Math.floor(bh)),
+          canvas.height - safeY
+      );
+
+      if (safeW <= 0 || safeH <= 0 || safeX >= canvas.width || safeY >= canvas.height) return;
       
-      const region = ctx.getImageData(bx, by, bw, bh);
-      
-      if (blurMode === "pixelate") {
-        const pSize = Math.max(2, Math.floor(strength / 2));
-        for (let y = 0; y < bh; y += pSize) {
-          for (let x = 0; x < bw; x += pSize) {
-            const i = (y * Math.floor(bw) + x) * 4;
-            const r = region.data[i];
-            const g = region.data[i+1];
-            const b = region.data[i+2];
-            
-            ctx.fillStyle = `rgb(${r},${g},${b})`;
-            ctx.fillRect(bx + x, by + y, pSize, pSize);
+      try {
+        const region = ctx.getImageData(safeX, safeY, safeW, safeH);
+        
+        if (blurMode === "pixelate") {
+          const pSize = Math.max(2, Math.floor(strength / 2));
+          for (let y = 0; y < safeH; y += pSize) {
+            for (let x = 0; x < safeW; x += pSize) {
+              const i = (y * safeW + x) * 4;
+              const r = region.data[i];
+              const g = region.data[i+1];
+              const b = region.data[i+2];
+              
+              ctx.fillStyle = `rgb(${r},${g},${b})`;
+              ctx.fillRect(safeX + x, safeY + y, pSize, pSize);
+            }
           }
+        } else {
+          ctx.save();
+          ctx.filter = `blur(${strength / 2}px)`;
+          ctx.drawImage(canvas, safeX, safeY, safeW, safeH, safeX, safeY, safeW, safeH);
+          ctx.restore();
         }
-      } else {
-        ctx.save();
-        ctx.filter = `blur(${strength / 2}px)`;
-        ctx.drawImage(canvas, bx, by, bw, bh, bx, by, bw, bh);
-        ctx.restore();
+        
+        // Draw subtle bounds using original coordinates to accurately reflect user selection
+        ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(bx, by, bw, bh);
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.strokeRect(bx - 1, by - 1, bw + 2, bh + 2);
+      } catch (e) {
+        console.warn("Failed to apply face blur effect region", e);
       }
-      
-      // Draw subtle bounds
-      ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
-      ctx.lineWidth = 1;
-      ctx.strokeRect(bx, by, bw, bh);
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
-      ctx.strokeRect(bx - 1, by - 1, bw + 2, bh + 2);
     };
 
     currentBoxes.forEach(applyEffect);
@@ -300,7 +322,7 @@ export default function FaceBlurPage() {
         const res = await generateFinal(images[i]);
         const a = document.createElement("a");
         a.href = URL.createObjectURL(res.blob);
-        a.download = res.name;
+        a.download = getGrotonExportFilename(res.name);
         a.click();
         URL.revokeObjectURL(a.href);
         await new Promise(r => setTimeout(r, 200));
@@ -316,7 +338,7 @@ export default function FaceBlurPage() {
     for (let i = 0; i < images.length; i++) {
       if ((boxes[images[i].id] || []).length > 0) {
         const res = await generateFinal(images[i]);
-        zip.file(res.name, res.blob);
+        zip.file(getGrotonExportFilename(res.name), res.blob);
         count++;
       }
     }
@@ -324,7 +346,7 @@ export default function FaceBlurPage() {
       const content = await zip.generateAsync({type: "blob"});
       const a = document.createElement("a");
       a.href = URL.createObjectURL(content);
-      a.download = `blurred_images.zip`;
+      a.download = getGrotonExportFilename(`blurred_images.zip`);
       a.click();
       URL.revokeObjectURL(a.href);
     } else {

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import JSZip from "jszip";
+import { getGrotonExportFilename } from "@/utils/export";
 
 interface ImgFile {
   id: string;
@@ -141,7 +142,7 @@ export default function CompressorPage() {
       const res = await processSingle(images[i]);
       const a = document.createElement("a");
       a.href = URL.createObjectURL(res.blob);
-      a.download = res.name;
+      a.download = getGrotonExportFilename(res.name);
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -156,12 +157,12 @@ export default function CompressorPage() {
     const zip = new JSZip();
     for (let i = 0; i < images.length; i++) {
       const res = await processSingle(images[i]);
-      zip.file(res.name, res.blob);
+      zip.file(getGrotonExportFilename(res.name), res.blob);
     }
     const content = await zip.generateAsync({type: "blob"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(content);
-    a.download = `compressed_images.zip`;
+    a.download = getGrotonExportFilename(`compressed_images.zip`);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

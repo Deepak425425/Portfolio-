@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import JSZip from "jszip";
+import { getGrotonExportFilename } from "@/utils/export";
 
 export default function GridCutterPage() {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -122,7 +123,7 @@ export default function GridCutterPage() {
       setTimeout(() => {
         const a = document.createElement("a");
         a.href = panel.url;
-        a.download = panel.name;
+        a.download = getGrotonExportFilename(panel.name);
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -139,13 +140,13 @@ export default function GridCutterPage() {
     panels.forEach(panel => {
       const idx = panel.url.indexOf("base64,") + 7;
       const b64 = panel.url.substring(idx);
-      zip.file(panel.name, b64, {base64: true});
+      zip.file(getGrotonExportFilename(panel.name), b64, {base64: true});
     });
     
     const content = await zip.generateAsync({type: "blob"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(content);
-    a.download = `${imageName}_grid_${cols}x${rows}.zip`;
+    a.download = getGrotonExportFilename(`${imageName}_grid_${cols}x${rows}.zip`);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -185,7 +186,7 @@ export default function GridCutterPage() {
     
     const a = document.createElement("a");
     a.href = dataUrl;
-    a.download = `${imageName}_${seq}.${imageExt}`;
+    a.download = getGrotonExportFilename(`${imageName}_${seq}.${imageExt}`);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

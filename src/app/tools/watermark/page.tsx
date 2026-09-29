@@ -322,11 +322,9 @@ export default function WatermarkPage() {
            setSubjectCache({});
         }}
         renderPreview={(currentImg) => {
-          if (!currentImg) return null;
-
           // Eager extraction for Behind Subject mode
           useEffect(() => {
-            if (layerMode === "behind" && !subjectCache[currentImg.id] && !segmentationProgress) {
+            if (layerMode === "behind" && currentImg && !subjectCache[currentImg.id] && !segmentationProgress) {
               extractSubject(currentImg.url, currentImg.id);
             }
           }, [layerMode, currentImg, subjectCache, segmentationProgress]);
@@ -364,6 +362,8 @@ export default function WatermarkPage() {
                 update();
              }
           }, [currentImg, type, text, textColor, logoUrl, isPattern, size, opacity, rotation, hGap, vGap, offsetX, offsetY, previewBefore, layerMode, subjectCache]);
+
+          if (!currentImg) return null;
 
           return (
             <div className="w-full relative flex flex-col items-center justify-center p-8 min-h-[60vh] overflow-hidden" ref={wrapperRef}>

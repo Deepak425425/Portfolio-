@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import UploadDropzone from "./UploadDropzone";
 import JSZip from "jszip";
+import { getGrotonExportFilename } from "@/utils/export";
 
 export interface ImgFile {
   id: string;
@@ -106,7 +107,7 @@ export default function BulkProcessor({ onProcess, renderControls, renderPreview
       if (res) {
         const a = document.createElement("a");
         a.href = URL.createObjectURL(res.blob);
-        a.download = res.name;
+        a.download = getGrotonExportFilename(res.name);
         a.click();
         URL.revokeObjectURL(a.href);
       }
@@ -130,7 +131,7 @@ export default function BulkProcessor({ onProcess, renderControls, renderPreview
       try {
         const res = await onProcess(images[i]);
         if (res) {
-          zip.file(res.name, res.blob);
+          zip.file(getGrotonExportFilename(res.name), res.blob);
           successCount++;
         }
       } catch (e) {
@@ -144,7 +145,7 @@ export default function BulkProcessor({ onProcess, renderControls, renderPreview
       const content = await zip.generateAsync({ type: "blob" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(content);
-      a.download = `processed_images.zip`;
+      a.download = "groton-export.zip";
       a.click();
       URL.revokeObjectURL(a.href);
     } else {
@@ -156,6 +157,10 @@ export default function BulkProcessor({ onProcess, renderControls, renderPreview
   };
 
   const currentImg = images.length > 0 ? images[previewIndex] : null;
+
+  // IMPORTANT: Execute render props unconditionally to preserve React hook order
+  const previewContent = renderPreview(currentImg);
+  const controlsContent = renderControls(currentImg, isProcessing);
 
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
@@ -186,7 +191,7 @@ export default function BulkProcessor({ onProcess, renderControls, renderPreview
           <div className="flex flex-col gap-4">
             {/* Main Preview Area */}
             <div className="w-full bg-zinc-200 relative flex flex-col items-center justify-center border border-zinc-200 min-h-[60vh] overflow-hidden">
-              {renderPreview(currentImg)}
+              {previewContent}
             </div>
 
             {/* Bulk Thumbnails List */}
@@ -215,10 +220,10 @@ export default function BulkProcessor({ onProcess, renderControls, renderPreview
       </div>
 
       {/* RIGHT PANEL - CONTROLS */}
-      <div className="lg:col-span-4 flex flex-col h-full overflow-y-auto max-h-[85vh] pb-12 pr-2 gap-8">
+      <div className="lg:col-span-4 flex flex-col lg:h-full lg:overflow-y-auto lg:max-h-[85vh] pb-12 lg:pr-2 gap-8">
         <div className="bg-white p-6 md:p-8 border border-zinc-200 flex flex-col gap-6">
           
-          {renderControls(currentImg, isProcessing)}
+          {controlsContent}
 
           {images.length > 0 && (
             <div className="flex flex-col gap-3 mt-4 border-t border-zinc-100 pt-6">
