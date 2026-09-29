@@ -76,7 +76,7 @@ export default function RotateFlipPage() {
           <button onClick={()=>setRotation(r=>(r+90)%360)} className="border p-2">Rotate 90°</button>
           <button onClick={()=>setFlipH(!flipH)} className="border p-2">Flip Horizontal</button>
           <button onClick={()=>setFlipV(!flipV)} className="border p-2">Flip Vertical</button>
-          {images.length > 0 && <button disabled={isProcessing} onClick={downloadAll} className="bg-black text-white p-4 font-bold mt-4">Download All</button>}
+          {images.length > 0 && <button disabled={isProcessing} onClick={downloadAll} className="bg-[#111111] text-white p-4 font-bold mt-4">Download All</button>}
         </div>
       </div>
     </ToolLayout>

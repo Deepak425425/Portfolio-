@@ -143,7 +143,7 @@ export default function BackgroundRemoverPage() {
                  <div className="flex flex-col items-center gap-4">
                    <img src={currentImg.url} className="max-h-[60vh] object-contain opacity-40 blur-sm grayscale" />
                    <div className="absolute flex flex-col items-center bg-white/90 backdrop-blur px-6 py-4 shadow-xl border border-border-color">
-                     <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin mb-3"></div>
+                     <div className="w-8 h-8 border-2 border-[#111111] border-t-transparent rounded-full animate-spin mb-3"></div>
                      <span className="text-[10px] font-bold tracking-widest uppercase text-black">AI is extracting subject...</span>
                    </div>
                  </div>
@@ -180,8 +180,8 @@ export default function BackgroundRemoverPage() {
               <div className="flex flex-col gap-3">
                 <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text">Background</label>
                 <div className="grid grid-cols-2 gap-2">
-                  <button onClick={() => setBgType("transparent")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${bgType === "transparent" ? 'bg-black text-white border-black' : 'bg-transparent text-sec-text border-border-color hover:border-black'}`}>Transparent</button>
-                  <button onClick={() => setBgType("color")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${bgType === "color" ? 'bg-black text-white border-black' : 'bg-transparent text-sec-text border-border-color hover:border-black'}`}>Solid Color</button>
+                  <button onClick={() => setBgType("transparent")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${bgType === "transparent" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-sec-text border-border-color hover:border-[#111111]'}`}>Transparent</button>
+                  <button onClick={() => setBgType("color")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${bgType === "color" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-sec-text border-border-color hover:border-[#111111]'}`}>Solid Color</button>
                 </div>
                 
                 {bgType === "color" && (
@@ -198,22 +198,22 @@ export default function BackgroundRemoverPage() {
                  
                  <div className="flex flex-col gap-4">
                    <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-black flex items-center gap-2 cursor-pointer">
-                     <input type="checkbox" checked={shadow} onChange={e => setShadow(e.target.checked)} className="accent-black w-4 h-4" /> Drop Shadow
+                     <input type="checkbox" checked={shadow} onChange={e => setShadow(e.target.checked)} className="accent-[#8B7CFF] w-4 h-4" /> Drop Shadow
                    </label>
                    
                    {shadow && (
                      <div className="flex flex-col gap-3 pl-6 border-l-2 border-border-color">
                        <div className="flex flex-col gap-1">
                          <span className="text-[9px] uppercase tracking-widest text-sec-text">Blur ({shadowBlur}px)</span>
-                         <input type="range" min="0" max="100" value={shadowBlur} onChange={e => setShadowBlur(Number(e.target.value))} className="w-full accent-black" />
+                         <input type="range" min="0" max="100" value={shadowBlur} onChange={e => setShadowBlur(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                        </div>
                        <div className="flex flex-col gap-1">
                          <span className="text-[9px] uppercase tracking-widest text-sec-text">Offset Y ({shadowY}px)</span>
-                         <input type="range" min="-50" max="100" value={shadowY} onChange={e => setShadowY(Number(e.target.value))} className="w-full accent-black" />
+                         <input type="range" min="-50" max="100" value={shadowY} onChange={e => setShadowY(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                        </div>
                        <div className="flex flex-col gap-1">
                          <span className="text-[9px] uppercase tracking-widest text-sec-text">Opacity ({Math.round(shadowOpacity * 100)}%)</span>
-                         <input type="range" min="0" max="1" step="0.05" value={shadowOpacity} onChange={e => setShadowOpacity(Number(e.target.value))} className="w-full accent-black" />
+                         <input type="range" min="0" max="1" step="0.05" value={shadowOpacity} onChange={e => setShadowOpacity(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                        </div>
                      </div>
                    )}
@@ -221,7 +221,7 @@ export default function BackgroundRemoverPage() {
 
                  <div className="flex flex-col gap-4 mt-2">
                    <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-black flex items-center gap-2 cursor-pointer">
-                     <input type="checkbox" checked={reflection} onChange={e => setReflection(e.target.checked)} className="accent-black w-4 h-4" /> Floor Reflection
+                     <input type="checkbox" checked={reflection} onChange={e => setReflection(e.target.checked)} className="accent-[#8B7CFF] w-4 h-4" /> Floor Reflection
                    </label>
                  </div>
               </div>

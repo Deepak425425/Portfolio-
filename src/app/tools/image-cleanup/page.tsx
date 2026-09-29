@@ -370,17 +370,17 @@ export default function ImageCleanupPage() {
               onTouchStart={() => setIsComparing(true)}
             >
               <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
-                 <img src={resultUrl} className="max-w-full max-h-full object-contain pointer-events-none" />
+                 <img src={resultUrl} className="max-w-full max-h-[70vh] object-contain pointer-events-none" />
               </div>
               <div 
                 className="absolute inset-0 h-full overflow-hidden border-r-2 border-white pointer-events-none"
                 style={{ width: `${comparePos}%` }}
               >
                  <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center min-w-max" style={{ width: compareRef.current?.clientWidth || '100%' }}>
-                   <img src={imgUrl} className="max-w-full max-h-full object-contain pointer-events-none" />
+                   <img src={imgUrl} className="max-w-full max-h-[70vh] object-contain pointer-events-none" />
                  </div>
               </div>
-              <div className="absolute top-4 left-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 pointer-events-none z-10 shadow">Before</div>
+              <div className="absolute top-4 left-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 pointer-events-none z-10 shadow">Before</div>
               <div className="absolute top-4 right-4 bg-white text-black text-[10px] uppercase tracking-widest font-bold px-3 py-1 pointer-events-none z-10 shadow">After</div>
               <div className="absolute top-0 bottom-0 w-8 -ml-4 flex items-center justify-center z-20 pointer-events-none" style={{ left: `${comparePos}%` }}>
                  <div className="w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center">
@@ -394,7 +394,7 @@ export default function ImageCleanupPage() {
               className="w-full bg-zinc-200 relative flex flex-col items-center justify-center border border-zinc-200 min-h-[60vh] overflow-hidden"
               onWheel={handleWheel}
             >
-              <div className="absolute top-4 left-4 z-10 bg-black text-white text-[10px] uppercase tracking-widest px-3 py-1 font-bold shadow">
+              <div className="absolute top-4 left-4 z-10 bg-[#111111] text-white text-[10px] uppercase tracking-widest px-3 py-1 font-bold shadow">
                 Draw mask over unwanted objects
               </div>
 
@@ -435,12 +435,12 @@ export default function ImageCleanupPage() {
                 </div>
                 
                 <div className="flex flex-col gap-3">
-                  <button onClick={() => exportResult("jpg")} className="w-full py-4 border border-zinc-200 text-black text-[10px] uppercase tracking-widest font-bold hover:border-black transition-colors">Download JPG</button>
-                  <button onClick={() => exportResult("png")} className="w-full py-4 border border-zinc-200 text-black text-[10px] uppercase tracking-widest font-bold hover:border-black transition-colors">Download PNG</button>
-                  <button onClick={() => exportResult("webp")} className="w-full py-4 border border-zinc-200 text-black text-[10px] uppercase tracking-widest font-bold hover:border-black transition-colors">Download WebP</button>
+                  <button onClick={() => exportResult("jpg")} className="w-full py-4 border border-zinc-200 text-black text-[10px] uppercase tracking-widest font-bold hover:border-[#111111] transition-colors">Download JPG</button>
+                  <button onClick={() => exportResult("png")} className="w-full py-4 border border-zinc-200 text-black text-[10px] uppercase tracking-widest font-bold hover:border-[#111111] transition-colors">Download PNG</button>
+                  <button onClick={() => exportResult("webp")} className="w-full py-4 border border-zinc-200 text-black text-[10px] uppercase tracking-widest font-bold hover:border-[#111111] transition-colors">Download WebP</button>
                 </div>
 
-                <button onClick={resetAll} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors mt-8">Clean Another Area</button>
+                <button onClick={resetAll} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors mt-8">Clean Another Area</button>
              </div>
            ) : imgUrl ? (
              <div className="flex flex-col gap-6">
@@ -453,9 +453,9 @@ export default function ImageCleanupPage() {
                 <div className="flex flex-col gap-4 border-t border-zinc-100 pt-6">
                   <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">Active Tool</label>
                   <div className="grid grid-cols-3 gap-2">
-                    <button onClick={() => setActiveTool("draw")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "draw" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>Brush</button>
-                    <button onClick={() => setActiveTool("erase")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "erase" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>Erase</button>
-                    <button onClick={() => setActiveTool("pan")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "pan" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>Pan</button>
+                    <button onClick={() => setActiveTool("draw")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "draw" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>Brush</button>
+                    <button onClick={() => setActiveTool("erase")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "erase" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>Erase</button>
+                    <button onClick={() => setActiveTool("pan")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "pan" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>Pan</button>
                   </div>
                 </div>
 
@@ -464,14 +464,14 @@ export default function ImageCleanupPage() {
                     <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">Brush Size</label>
                     <span className="text-[10px] font-bold">{brushSize}px</span>
                   </div>
-                  <input type="range" min="2" max="150" value={brushSize} onChange={e => setBrushSize(Number(e.target.value))} className="w-full accent-black" />
+                  <input type="range" min="2" max="150" value={brushSize} onChange={e => setBrushSize(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                 </div>
 
                 <div className="flex flex-col gap-4 border-t border-zinc-100 pt-6">
                   <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">History</label>
                   <div className="grid grid-cols-2 gap-2">
-                    <button onClick={undo} disabled={historyIndex <= 0} className="py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors disabled:opacity-30 bg-transparent text-zinc-600 border-zinc-200 hover:border-black">Undo</button>
-                    <button onClick={redo} disabled={historyIndex >= history.length - 1} className="py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors disabled:opacity-30 bg-transparent text-zinc-600 border-zinc-200 hover:border-black">Redo</button>
+                    <button onClick={undo} disabled={historyIndex <= 0} className="py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors disabled:opacity-30 bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]">Undo</button>
+                    <button onClick={redo} disabled={historyIndex >= history.length - 1} className="py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors disabled:opacity-30 bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]">Redo</button>
                   </div>
                 </div>
 
@@ -482,7 +482,7 @@ export default function ImageCleanupPage() {
                       <span className="text-[10px] uppercase font-bold tracking-widest text-black relative z-10">Cleaning Image... {progress}%</span>
                     </div>
                   ) : (
-                    <button onClick={processCleanup} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
+                    <button onClick={processCleanup} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors">
                       Clean Image
                     </button>
                   )}

@@ -15,8 +15,37 @@ const playfair = Playfair_Display({
 import CustomCursor from "@/components/CustomCursor";
 
 export const metadata: Metadata = {
-  title: "GROTON AI STUDIO — Premium AI Visuals for Modern D2C Brands",
-  description: "GROTON creates premium AI product imagery, cinematic commercial content, advertising creatives and visual campaigns for modern brands.",
+  metadataBase: new URL('https://groton.in'),
+  title: {
+    template: '%s | GROTON AI',
+    default: 'GROTON AI — AI Visual Production for Modern Brands',
+  },
+  description: "GROTON AI creates premium AI-powered product imagery, e-commerce visuals, product-on-model images, campaign visuals and creative image tools for modern brands.",
+  openGraph: {
+    type: 'website',
+    siteName: 'GROTON AI',
+    locale: 'en_US',
+    title: 'GROTON AI — AI Visual Production for Modern Brands',
+    description: 'GROTON AI creates premium AI-powered product imagery, e-commerce visuals, product-on-model images, campaign visuals and creative image tools for modern brands.',
+    url: 'https://groton.in',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'GROTON AI — AI Visual Production for Modern Brands',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GROTON AI — AI Visual Production for Modern Brands',
+    description: 'GROTON AI creates premium AI-powered product imagery, e-commerce visuals, product-on-model images, campaign visuals and creative image tools for modern brands.',
+    images: ['/og-image.jpg'],
+  },
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export default function RootLayout({
@@ -27,6 +56,28 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-black selection:text-white">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "GROTON AI",
+              url: "https://groton.in"
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "GROTON AI",
+              url: "https://groton.in"
+            })
+          }}
+        />
         <CustomCursor />
         {children}
       </body>

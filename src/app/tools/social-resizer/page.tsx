@@ -51,16 +51,16 @@ export default function SocialResizerPage() {
           {!img ? <UploadDropzone onUpload={f => setImg({url: URL.createObjectURL(f[0])})} multiple={false} /> : 
             <div className="bg-zinc-200 p-8 flex justify-center items-center h-[60vh]">
                <div className="bg-white relative shadow" style={{ aspectRatio: target.w/target.h, maxHeight: '90%', maxWidth: '90%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                 <img src={img.url} className="max-w-full max-h-full object-contain" />
+                 <img src={img.url} className="max-w-full max-h-[70vh] object-contain" />
                </div>
             </div>
           }
         </div>
         <div className="lg:col-span-4 bg-white p-6 border flex flex-col gap-4">
           {presets.map(p => (
-            <button key={p.name} onClick={()=>setTarget(p)} className={`border p-3 text-xs ${target.name===p.name?'bg-black text-white':''}`}>{p.name} ({p.w}x{p.h})</button>
+            <button key={p.name} onClick={()=>setTarget(p)} className={`border p-3 text-xs ${target.name===p.name?'bg-[#111111] text-white':''}`}>{p.name} ({p.w}x{p.h})</button>
           ))}
-          {img && <button onClick={generate} className="bg-black text-white p-4 font-bold mt-4">Export JPG</button>}
+          {img && <button onClick={generate} className="bg-[#111111] text-white p-4 font-bold mt-4">Export JPG</button>}
         </div>
       </div>
     </ToolLayout>

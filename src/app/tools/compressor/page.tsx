@@ -193,20 +193,20 @@ export default function CompressorPage() {
               <div className="flex w-full h-[60vh] divide-x divide-white">
                 <div className="w-1/2 flex flex-col relative bg-[#F7F6F2] items-center justify-center p-8 group">
                   <span className="absolute top-4 left-4 bg-white text-black text-[10px] font-bold tracking-widest uppercase px-3 py-1 shadow-sm border border-border-color">Original</span>
-                  <img src={images[previewIndex].url} className="max-w-full max-h-full object-contain drop-shadow-md transition-transform group-hover:scale-[1.02] duration-500" />
-                  <div className="absolute bottom-4 left-4 bg-black/80 text-white text-[10px] uppercase font-bold tracking-widest px-3 py-1">{images[previewIndex].width} × {images[previewIndex].height}</div>
+                  <img src={images[previewIndex].url} className="max-w-full max-h-[70vh] object-contain drop-shadow-md transition-transform group-hover:scale-[1.02] duration-500" />
+                  <div className="absolute bottom-4 left-4 bg-[#111111]/80 text-white text-[10px] uppercase font-bold tracking-widest px-3 py-1">{images[previewIndex].width} × {images[previewIndex].height}</div>
                 </div>
                 <div className="w-1/2 flex flex-col relative bg-[#F7F6F2] items-center justify-center p-8 group">
                   <span className="absolute top-4 right-4 bg-[#8B7CFF] text-white text-[10px] font-bold tracking-widest uppercase px-3 py-1 shadow-sm">Compressed</span>
-                  {compressedUrl && <img src={compressedUrl} className="max-w-full max-h-full object-contain drop-shadow-md transition-transform group-hover:scale-[1.02] duration-500" />}
+                  {compressedUrl && <img src={compressedUrl} className="max-w-full max-h-[70vh] object-contain drop-shadow-md transition-transform group-hover:scale-[1.02] duration-500" />}
                 </div>
               </div>
               
               {images.length > 1 && (
                 <div className="w-full bg-white p-4 flex gap-2 overflow-x-auto border-t border-zinc-200">
                   {images.map((img, i) => (
-                    <button key={img.id} onClick={() => setPreviewIndex(i)} className={`relative h-16 w-16 shrink-0 border-2 transition-colors ${previewIndex === i ? 'border-black' : 'border-transparent opacity-50 hover:opacity-100'}`}>
-                      <img src={img.url} className="w-full h-full object-cover" />
+                    <button key={img.id} onClick={() => setPreviewIndex(i)} className={`relative h-16 w-16 shrink-0 border-2 transition-colors ${previewIndex === i ? 'border-[#111111]' : 'border-transparent opacity-50 hover:opacity-100'}`}>
+                      <img src={img.url} className="w-full h-full max-h-[70vh] object-cover" />
                     </button>
                   ))}
                 </div>
@@ -226,7 +226,7 @@ export default function CompressorPage() {
                   <button 
                     key={fmt}
                     onClick={() => setFormat(fmt)} 
-                    className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${format === fmt ? 'bg-black text-white border-black' : 'bg-transparent text-sec-text border-border-color hover:border-black'}`}
+                    className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${format === fmt ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-sec-text border-border-color hover:border-[#111111]'}`}
                   >
                     {fmt}
                   </button>
@@ -256,11 +256,11 @@ export default function CompressorPage() {
                     <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text flex justify-between">
                       <span>Target KB</span> <span>{targetKB} KB</span>
                     </label>
-                    <input type="range" min="50" max="5000" step="50" value={targetKB} onChange={e => setTargetKB(Number(e.target.value))} className="w-full accent-black" />
+                    <input type="range" min="50" max="5000" step="50" value={targetKB} onChange={e => setTargetKB(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                   </div>
                   <div className="grid grid-cols-4 gap-2">
                      {[100, 200, 500, 1000].map(val => (
-                       <button key={val} onClick={() => setTargetKB(val)} className={`py-1.5 text-[9px] font-bold tracking-wider border uppercase transition-colors ${targetKB === val ? 'bg-black text-white border-black' : 'bg-transparent text-sec-text border-border-color hover:border-black'}`}>
+                       <button key={val} onClick={() => setTargetKB(val)} className={`py-1.5 text-[9px] font-bold tracking-wider border uppercase transition-colors ${targetKB === val ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-sec-text border-border-color hover:border-[#111111]'}`}>
                          {val}KB
                        </button>
                      ))}
@@ -271,7 +271,7 @@ export default function CompressorPage() {
                  <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text flex justify-between">
                    <span>Quality</span> <span>{quality}%</span>
                  </label>
-                 <input type="range" min="10" max="100" value={quality} onChange={e => setQuality(Number(e.target.value))} className="w-full accent-black" />
+                 <input type="range" min="10" max="100" value={quality} onChange={e => setQuality(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                </div>
             ) : format === "png" && (
                <div className="p-4 bg-zinc-50 border border-zinc-100 text-xs text-sec-text text-center">
@@ -303,10 +303,10 @@ export default function CompressorPage() {
 
                 <div className="flex flex-col gap-3">
                   <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text text-center">{images.length} Image{images.length > 1 ? 's' : ''} Ready</span>
-                  <button disabled={isProcessing} onClick={downloadZip} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50">
+                  <button disabled={isProcessing} onClick={downloadZip} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:opacity-50">
                     {isProcessing ? 'Processing...' : 'Download ZIP'}
                   </button>
-                  <button disabled={isProcessing} onClick={downloadAll} className="w-full py-3 bg-transparent border border-black text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:opacity-50">
+                  <button disabled={isProcessing} onClick={downloadAll} className="w-full py-3 bg-transparent border border-[#111111] text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:opacity-50">
                     Download All
                   </button>
                 </div>

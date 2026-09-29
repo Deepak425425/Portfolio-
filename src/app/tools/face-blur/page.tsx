@@ -377,9 +377,9 @@ export default function FaceBlurPage() {
               {images.length > 1 && (
                 <div className="w-full bg-white p-4 flex gap-2 overflow-x-auto border-t border-zinc-200">
                   {images.map((img, i) => (
-                    <button key={img.id} onClick={() => setPreviewIndex(i)} className={`relative h-16 w-16 shrink-0 border-2 transition-colors ${previewIndex === i ? 'border-black' : 'border-transparent opacity-50 hover:opacity-100'}`}>
-                      <img src={img.url} className="w-full h-full object-cover" />
-                      {(boxes[img.id]?.length > 0) && <span className="absolute top-1 right-1 w-2 h-2 bg-black rounded-full shadow"></span>}
+                    <button key={img.id} onClick={() => setPreviewIndex(i)} className={`relative h-16 w-16 shrink-0 border-2 transition-colors ${previewIndex === i ? 'border-[#111111]' : 'border-transparent opacity-50 hover:opacity-100'}`}>
+                      <img src={img.url} className="w-full h-full max-h-[70vh] object-cover" />
+                      {(boxes[img.id]?.length > 0) && <span className="absolute top-1 right-1 w-2 h-2 bg-[#111111] rounded-full shadow"></span>}
                     </button>
                   ))}
                 </div>
@@ -402,8 +402,8 @@ export default function FaceBlurPage() {
             <div className="flex flex-col gap-2 mt-2">
               <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">Effect Type</label>
               <div className="grid grid-cols-2 gap-2">
-                <button onClick={() => setBlurMode("blur")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase ${blurMode === "blur" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black hover:text-black'}`}>Blur</button>
-                <button onClick={() => setBlurMode("pixelate")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase ${blurMode === "pixelate" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black hover:text-black'}`}>Pixelate</button>
+                <button onClick={() => setBlurMode("blur")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase ${blurMode === "blur" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111] hover:text-black'}`}>Blur</button>
+                <button onClick={() => setBlurMode("pixelate")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase ${blurMode === "pixelate" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111] hover:text-black'}`}>Pixelate</button>
               </div>
             </div>
 
@@ -411,7 +411,7 @@ export default function FaceBlurPage() {
               <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400 flex justify-between">
                 <span>Strength</span> <span>{strength}</span>
               </label>
-              <input type="range" min="1" max="100" value={strength} onChange={e => setStrength(Number(e.target.value))} className="w-full accent-black" />
+              <input type="range" min="1" max="100" value={strength} onChange={e => setStrength(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
             </div>
 
             <div className="h-px w-full bg-zinc-200 my-2"></div>
@@ -427,10 +427,10 @@ export default function FaceBlurPage() {
                   <button onClick={clearBoxes} className="w-full py-2 border border-zinc-300 text-zinc-600 text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors">
                     Clear Current Boxes
                   </button>
-                  <button disabled={isProcessing} onClick={downloadZip} className="w-full py-4 mt-2 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:bg-zinc-300">
+                  <button disabled={isProcessing} onClick={downloadZip} className="w-full py-4 mt-2 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:bg-zinc-300">
                     {isProcessing ? 'Processing...' : 'Download ZIP'}
                   </button>
-                  <button disabled={isProcessing} onClick={downloadAll} className="w-full py-4 bg-transparent border border-black text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:border-zinc-300">
+                  <button disabled={isProcessing} onClick={downloadAll} className="w-full py-4 bg-transparent border border-[#111111] text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:border-zinc-300">
                     Download All
                   </button>
                 </div>

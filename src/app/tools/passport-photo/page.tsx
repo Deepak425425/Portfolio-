@@ -455,8 +455,8 @@ export default function PassportPhotoMaker() {
                
                {/* PREVIEW TABS */}
                <div className="absolute top-4 left-4 flex gap-2 z-20">
-                 <button onClick={() => setActiveTab("photo")} className={`px-4 py-2 text-[10px] uppercase font-bold tracking-widest shadow-sm border ${activeTab === "photo" ? 'bg-black text-white border-black' : 'bg-white text-zinc-600 border-border-color'}`}>Photo Editor</button>
-                 <button onClick={() => setActiveTab("sheet")} className={`px-4 py-2 text-[10px] uppercase font-bold tracking-widest shadow-sm border ${activeTab === "sheet" ? 'bg-black text-white border-black' : 'bg-white text-zinc-600 border-border-color'}`}>Print Sheet Preview</button>
+                 <button onClick={() => setActiveTab("photo")} className={`px-4 py-2 text-[10px] uppercase font-bold tracking-widest shadow-sm border ${activeTab === "photo" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-white text-zinc-600 border-border-color'}`}>Photo Editor</button>
+                 <button onClick={() => setActiveTab("sheet")} className={`px-4 py-2 text-[10px] uppercase font-bold tracking-widest shadow-sm border ${activeTab === "sheet" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-white text-zinc-600 border-border-color'}`}>Print Sheet Preview</button>
                </div>
 
                {!currentImg ? (
@@ -491,7 +491,7 @@ export default function PassportPhotoMaker() {
                      const l = getSheetLayout();
                      if (l.totalPages > 1) {
                        return (
-                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white px-6 py-4 backdrop-blur shadow-2xl text-center pointer-events-none">
+                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#111111]/80 text-white px-6 py-4 backdrop-blur shadow-2xl text-center pointer-events-none">
                            <span className="block text-lg font-bold">Multi-Page Sheet</span>
                            <span className="block text-[10px] uppercase tracking-widest mt-2">{l.totalCopies} photos require {l.totalPages} pages.</span>
                          </div>
@@ -521,18 +521,18 @@ export default function PassportPhotoMaker() {
                 <div className="flex gap-4">
                   <div className="flex-1 flex flex-col gap-1">
                     <span className="text-[9px] text-sec-text uppercase tracking-widest">Width (mm)</span>
-                    <input type="number" value={photoW} onChange={e => setPhotoW(Number(e.target.value))} className="w-full border-b border-border-color py-1 bg-transparent font-bold text-center outline-none focus:border-black" />
+                    <input type="number" value={photoW} onChange={e => setPhotoW(Number(e.target.value))} className="w-full border-b border-border-color py-1 bg-transparent font-bold text-center outline-none focus:border-[#111111]" />
                   </div>
                   <div className="flex-1 flex flex-col gap-1">
                     <span className="text-[9px] text-sec-text uppercase tracking-widest">Height (mm)</span>
-                    <input type="number" value={photoH} onChange={e => setPhotoH(Number(e.target.value))} className="w-full border-b border-border-color py-1 bg-transparent font-bold text-center outline-none focus:border-black" />
+                    <input type="number" value={photoH} onChange={e => setPhotoH(Number(e.target.value))} className="w-full border-b border-border-color py-1 bg-transparent font-bold text-center outline-none focus:border-[#111111]" />
                   </div>
                 </div>
               )}
 
               {/* GUIDES TOGGLE */}
               <label className="text-[10px] uppercase tracking-widest font-bold text-black flex items-center gap-2 cursor-pointer mt-2 bg-zinc-50 p-2">
-                <input type="checkbox" checked={showGuides} onChange={e => setShowGuides(e.target.checked)} className="accent-black w-4 h-4" /> Show Face Guides
+                <input type="checkbox" checked={showGuides} onChange={e => setShowGuides(e.target.checked)} className="accent-[#8B7CFF] w-4 h-4" /> Show Face Guides
               </label>
             </div>
 
@@ -583,17 +583,17 @@ export default function PassportPhotoMaker() {
                   <span>Margins ({margins}mm)</span> <span>Gap ({gap}mm)</span>
                 </label>
                 <div className="flex gap-4">
-                  <input type="range" min="0" max="50" value={margins} onChange={e => setMargins(Number(e.target.value))} className="w-full accent-black" />
-                  <input type="range" min="0" max="20" value={gap} onChange={e => setGap(Number(e.target.value))} className="w-full accent-black" />
+                  <input type="range" min="0" max="50" value={margins} onChange={e => setMargins(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
+                  <input type="range" min="0" max="20" value={gap} onChange={e => setGap(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                 </div>
               </div>
 
               <div className="flex items-center justify-between mt-2">
                 <label className="text-[9px] uppercase tracking-widest font-bold text-zinc-600 flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={centerSheet} onChange={e => setCenterSheet(e.target.checked)} className="accent-black w-4 h-4" /> Center Grid on Page
+                  <input type="checkbox" checked={centerSheet} onChange={e => setCenterSheet(e.target.checked)} className="accent-[#8B7CFF] w-4 h-4" /> Center Grid on Page
                 </label>
                 <label className="text-[9px] uppercase tracking-widest font-bold text-zinc-600 flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={cutGuides} onChange={e => setCutGuides(e.target.checked)} className="accent-black w-4 h-4" /> Cut Guides
+                  <input type="checkbox" checked={cutGuides} onChange={e => setCutGuides(e.target.checked)} className="accent-[#8B7CFF] w-4 h-4" /> Cut Guides
                 </label>
               </div>
 
@@ -614,9 +614,9 @@ export default function PassportPhotoMaker() {
             <div className="flex flex-col gap-4 mt-2">
               <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 border-b border-zinc-100 pb-2">3. Output Quality</h3>
               <div className="grid grid-cols-3 gap-2">
-                <button onClick={() => setDpi(150)} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${dpi === 150 ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>150 DPI</button>
-                <button onClick={() => setDpi(300)} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${dpi === 300 ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>300 DPI</button>
-                <button onClick={() => setDpi(600)} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${dpi === 600 ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>600 DPI</button>
+                <button onClick={() => setDpi(150)} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${dpi === 150 ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>150 DPI</button>
+                <button onClick={() => setDpi(300)} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${dpi === 300 ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>300 DPI</button>
+                <button onClick={() => setDpi(600)} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${dpi === 600 ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>600 DPI</button>
               </div>
             </div>
           </>
@@ -624,12 +624,12 @@ export default function PassportPhotoMaker() {
         customExportButtons={(isProcessing, processSingle, processBulkZip, images, setProgress, setIsProcessing, mode) => (
           <div className="flex flex-col gap-2 w-full mt-4">
              {/* Always allow downloading the single parsed photo regardless of mode */}
-             <button disabled={isProcessing} onClick={processSingle} className="w-full py-3 border border-black text-black font-bold text-[10px] uppercase tracking-widest hover:bg-zinc-50 disabled:opacity-50">
+             <button disabled={isProcessing} onClick={processSingle} className="w-full py-3 border border-[#111111] text-black font-bold text-[10px] uppercase tracking-widest hover:bg-zinc-50 disabled:opacity-50">
                 Download Single Photo (JPG)
              </button>
              
              {/* Print Sheet Exports */}
-             <button disabled={isProcessing} onClick={() => exportPrintSheetJPG(images, setProgress, setIsProcessing)} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50 shadow-md">
+             <button disabled={isProcessing} onClick={() => exportPrintSheetJPG(images, setProgress, setIsProcessing)} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:opacity-50 shadow-md">
                 {isProcessing ? 'Generating Sheet...' : 'Export Print Sheet (JPG)'}
              </button>
 

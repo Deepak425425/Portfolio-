@@ -138,7 +138,7 @@ export default function ColorPickerPage() {
                   <span className="text-[9px] uppercase tracking-widest font-bold text-zinc-400">HEX</span>
                   <span className="font-mono text-sm font-bold uppercase">{colorHex}</span>
                 </div>
-                <button onClick={() => copyToClipboard(colorHex)} className="text-[10px] uppercase font-bold tracking-widest hover:text-blue-500">Copy</button>
+                <button onClick={() => copyToClipboard(colorHex)} className="text-[10px] uppercase font-bold tracking-widest hover:text-[#8B7CFF]">Copy</button>
               </div>
 
               <div className="flex justify-between items-center bg-zinc-50 border border-zinc-200 px-4 py-3">
@@ -146,7 +146,7 @@ export default function ColorPickerPage() {
                   <span className="text-[9px] uppercase tracking-widest font-bold text-zinc-400">RGB</span>
                   <span className="font-mono text-sm font-bold">{colorRgb}</span>
                 </div>
-                <button onClick={() => copyToClipboard(colorRgb)} className="text-[10px] uppercase font-bold tracking-widest hover:text-blue-500">Copy</button>
+                <button onClick={() => copyToClipboard(colorRgb)} className="text-[10px] uppercase font-bold tracking-widest hover:text-[#8B7CFF]">Copy</button>
               </div>
 
               <div className="flex justify-between items-center bg-zinc-50 border border-zinc-200 px-4 py-3">
@@ -154,7 +154,7 @@ export default function ColorPickerPage() {
                   <span className="text-[9px] uppercase tracking-widest font-bold text-zinc-400">HSL</span>
                   <span className="font-mono text-sm font-bold">{colorHsl}</span>
                 </div>
-                <button onClick={() => copyToClipboard(colorHsl)} className="text-[10px] uppercase font-bold tracking-widest hover:text-blue-500">Copy</button>
+                <button onClick={() => copyToClipboard(colorHsl)} className="text-[10px] uppercase font-bold tracking-widest hover:text-[#8B7CFF]">Copy</button>
               </div>
             </div>
 

@@ -46,7 +46,7 @@ export default function CanvasPage() {
         <div className="lg:col-span-4 bg-white p-6 border flex flex-col gap-4">
           <input type="number" value={pad} onChange={e=>setPad(Number(e.target.value))} className="border p-2" placeholder="Padding (px)" />
           <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="border p-2 w-full h-12" />
-          {img && <button onClick={generate} className="bg-black text-white p-4 font-bold">Export</button>}
+          {img && <button onClick={generate} className="bg-[#111111] text-white p-4 font-bold">Export</button>}
         </div>
       </div>
     </ToolLayout>

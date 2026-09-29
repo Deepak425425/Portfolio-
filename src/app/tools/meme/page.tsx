@@ -44,7 +44,7 @@ export default function MemePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8">
           {!img ? <UploadDropzone onUpload={f => setImg({url: URL.createObjectURL(f[0])})} multiple={false} /> : 
-            <div className="relative w-full bg-black flex justify-center p-8">
+            <div className="relative w-full bg-[#111111] flex justify-center p-8">
                <img src={img.url} className="max-h-[60vh] object-contain" />
                <div className="absolute top-12 w-full text-center text-white font-black text-4xl" style={{WebkitTextStroke:'2px black'}}>{top}</div>
                <div className="absolute bottom-12 w-full text-center text-white font-black text-4xl" style={{WebkitTextStroke:'2px black'}}>{bottom}</div>
@@ -54,7 +54,7 @@ export default function MemePage() {
         <div className="lg:col-span-4 bg-white p-6 border flex flex-col gap-4">
           <input value={top} onChange={e=>setTop(e.target.value)} className="border p-2" placeholder="Top Text" />
           <input value={bottom} onChange={e=>setBottom(e.target.value)} className="border p-2" placeholder="Bottom Text" />
-          {img && <button onClick={generate} className="bg-black text-white p-4 font-bold">Download Meme</button>}
+          {img && <button onClick={generate} className="bg-[#111111] text-white p-4 font-bold">Download Meme</button>}
         </div>
       </div>
     </ToolLayout>

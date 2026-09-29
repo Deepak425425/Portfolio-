@@ -45,9 +45,9 @@ export default function PixelatePage() {
           }
         </div>
         <div className="lg:col-span-4 bg-white p-6 border flex flex-col gap-4">
-          <input type="range" min="1" max="50" value={size} onChange={e=>setSize(Number(e.target.value))} className="w-full accent-black" />
+          <input type="range" min="1" max="50" value={size} onChange={e=>setSize(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
           <p className="text-xs text-center">Pixel Size: {size}% resolution downscale</p>
-          {img && <button onClick={generate} className="bg-black text-white p-4 font-bold mt-4">Export JPG</button>}
+          {img && <button onClick={generate} className="bg-[#111111] text-white p-4 font-bold mt-4">Export JPG</button>}
         </div>
       </div>
     </ToolLayout>

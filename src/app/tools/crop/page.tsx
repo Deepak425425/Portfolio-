@@ -137,7 +137,7 @@ export default function CropPage() {
                       <button 
                         key={ar.label} 
                         onClick={() => setAspectRatio(ar.value)} 
-                        className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${aspectRatio === ar.value ? 'bg-[#8B7CFF] text-white border-[#8B7CFF]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}
+                        className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${aspectRatio === ar.value ? 'bg-[#8B7CFF] text-white border-[#8B7CFF]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}
                       >
                          {ar.label}
                       </button>
@@ -165,14 +165,14 @@ export default function CropPage() {
                     <input type="range" min="-180" max="180" step="1" value={rotation} onChange={e => setRotation(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                     <div className="grid grid-cols-5 gap-1 mt-1">
                        {[-90, -45, 0, 45, 90].map(r => (
-                         <button key={r} onClick={() => setRotation(r)} className="py-2 text-[9px] font-bold border border-zinc-200 text-zinc-500 hover:border-black transition-colors">{r}°</button>
+                         <button key={r} onClick={() => setRotation(r)} className="py-2 text-[9px] font-bold border border-zinc-200 text-zinc-500 hover:border-[#111111] transition-colors">{r}°</button>
                        ))}
                     </div>
                  </div>
                  
                  <div className="flex gap-2 mt-2">
-                    <button onClick={() => setFlipH(!flipH)} className={`flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${flipH ? 'bg-[#8B7CFF] text-white border-[#8B7CFF]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>Flip H</button>
-                    <button onClick={() => setFlipV(!flipV)} className={`flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${flipV ? 'bg-[#8B7CFF] text-white border-[#8B7CFF]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>Flip V</button>
+                    <button onClick={() => setFlipH(!flipH)} className={`flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${flipH ? 'bg-[#8B7CFF] text-white border-[#8B7CFF]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>Flip H</button>
+                    <button onClick={() => setFlipV(!flipV)} className={`flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${flipV ? 'bg-[#8B7CFF] text-white border-[#8B7CFF]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>Flip V</button>
                  </div>
               </div>
 
@@ -189,13 +189,13 @@ export default function CropPage() {
                  <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 border-b border-zinc-100 pb-2">Export</h3>
                  
                  <div className="flex gap-2">
-                    <button onClick={() => exportImage("png")} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-black">PNG</button>
-                    <button onClick={() => exportImage("jpg")} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-black">JPG</button>
-                    <button onClick={() => exportImage("webp")} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-black">WEBP</button>
+                    <button onClick={() => exportImage("png")} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]">PNG</button>
+                    <button onClick={() => exportImage("jpg")} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]">JPG</button>
+                    <button onClick={() => exportImage("webp")} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]">WEBP</button>
                  </div>
 
                  <div className="flex flex-col gap-3 mt-2">
-                    <button onClick={() => exportImage("jpg")} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
+                    <button onClick={() => exportImage("jpg")} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors">
                       Download Image
                     </button>
                     <button onClick={resetAll} className="w-full py-3 bg-white text-zinc-400 text-[10px] uppercase tracking-widest font-bold hover:text-black transition-colors">

@@ -65,7 +65,7 @@ export default function FaviconPage() {
             <li>android-chrome-192x192.png</li>
             <li>android-chrome-512x512.png</li>
           </ul>
-          {img && <button onClick={generate} className="bg-black text-white p-4 font-bold mt-4">Download ZIP</button>}
+          {img && <button onClick={generate} className="bg-[#111111] text-white p-4 font-bold mt-4">Download ZIP</button>}
         </div>
       </div>
     </ToolLayout>

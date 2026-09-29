@@ -352,13 +352,13 @@ export default function WatermarkRemoverPage() {
               <div className="flex flex-col gap-4 border-b border-zinc-100 pb-6">
                  <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400">Editor</h3>
                  <div className="grid grid-cols-3 gap-2">
-                    <button onClick={() => setActiveTool("remove")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "remove" ? 'bg-[#8B7CFF] text-white border-[#8B7CFF]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>Remove</button>
-                    <button onClick={() => setActiveTool("restore")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "restore" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>Restore</button>
-                    <button onClick={() => setActiveTool("pan")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "pan" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>Pan</button>
+                    <button onClick={() => setActiveTool("remove")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "remove" ? 'bg-[#8B7CFF] text-white border-[#8B7CFF]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>Remove</button>
+                    <button onClick={() => setActiveTool("restore")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "restore" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>Restore</button>
+                    <button onClick={() => setActiveTool("pan")} className={`py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${activeTool === "pan" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>Pan</button>
                  </div>
                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    <button onClick={undo} disabled={historyIndex < 0} className="py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors disabled:opacity-30 bg-transparent text-zinc-600 border-zinc-200 hover:border-black">Undo Mask</button>
-                    <button onClick={redo} disabled={historyIndex >= maskHistory.length - 1} className="py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors disabled:opacity-30 bg-transparent text-zinc-600 border-zinc-200 hover:border-black">Redo Mask</button>
+                    <button onClick={undo} disabled={historyIndex < 0} className="py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors disabled:opacity-30 bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]">Undo Mask</button>
+                    <button onClick={redo} disabled={historyIndex >= maskHistory.length - 1} className="py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors disabled:opacity-30 bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]">Redo Mask</button>
                  </div>
               </div>
 
@@ -374,8 +374,8 @@ export default function WatermarkRemoverPage() {
                     <div className="flex items-center gap-4">
                        <input type="range" min="1" max="500" value={brushSize} onChange={e => setBrushSize(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                        <div className="flex gap-1">
-                          <button onClick={() => setBrushSize(s => Math.max(1, s - 10))} className="w-6 h-6 flex items-center justify-center border border-zinc-200 text-xs hover:border-black">-</button>
-                          <button onClick={() => setBrushSize(s => Math.min(500, s + 10))} className="w-6 h-6 flex items-center justify-center border border-zinc-200 text-xs hover:border-black">+</button>
+                          <button onClick={() => setBrushSize(s => Math.max(1, s - 10))} className="w-6 h-6 flex items-center justify-center border border-zinc-200 text-xs hover:border-[#111111]">-</button>
+                          <button onClick={() => setBrushSize(s => Math.min(500, s + 10))} className="w-6 h-6 flex items-center justify-center border border-zinc-200 text-xs hover:border-[#111111]">+</button>
                        </div>
                     </div>
                  </div>
@@ -403,10 +403,10 @@ export default function WatermarkRemoverPage() {
                  <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400">View Controls</h3>
                  <div className="grid grid-cols-4 gap-2">
                     {[0.25, 0.5, 1, 2].map(z => (
-                       <button key={z} onClick={() => {setZoom(z); setPan({x:0,y:0});}} className={`py-2 text-[10px] font-bold border ${zoom===z ? 'border-black text-black' : 'border-zinc-200 text-zinc-500 hover:border-black'}`}>{z*100}%</button>
+                       <button key={z} onClick={() => {setZoom(z); setPan({x:0,y:0});}} className={`py-2 text-[10px] font-bold border ${zoom===z ? 'border-[#111111] text-black' : 'border-zinc-200 text-zinc-500 hover:border-[#111111]'}`}>{z*100}%</button>
                     ))}
                  </div>
-                 <button onClick={() => setShowMask(!showMask)} className={`w-full py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${showMask ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>
+                 <button onClick={() => setShowMask(!showMask)} className={`w-full py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${showMask ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>
                     {showMask ? 'Hide Mask Overlay' : 'Show Mask Overlay'}
                  </button>
               </div>
@@ -416,9 +416,9 @@ export default function WatermarkRemoverPage() {
                  <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400">Export</h3>
                  
                  <div className="flex gap-2">
-                    <button onClick={() => exportImage("png")} disabled={isProcessing} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-black">PNG</button>
-                    <button onClick={() => exportImage("jpg")} disabled={isProcessing} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-black">JPG</button>
-                    <button onClick={() => exportImage("webp")} disabled={isProcessing} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-black">WEBP</button>
+                    <button onClick={() => exportImage("png")} disabled={isProcessing} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]">PNG</button>
+                    <button onClick={() => exportImage("jpg")} disabled={isProcessing} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]">JPG</button>
+                    <button onClick={() => exportImage("webp")} disabled={isProcessing} className="flex-1 py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]">WEBP</button>
                  </div>
 
                  <button onClick={resetAll} className="w-full mt-4 py-3 bg-white text-red-500 border border-zinc-200 text-[10px] uppercase tracking-widest font-bold hover:border-red-500 transition-colors">
