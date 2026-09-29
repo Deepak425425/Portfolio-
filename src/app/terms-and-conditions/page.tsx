@@ -76,8 +76,7 @@ export default function TermsPage() {
             If you have any questions about these Terms, please contact us at:
             <br/><br/>
             <strong>GROTON AI STUDIO</strong><br/>
-            Email: [EMAIL_PLACEHOLDER]<br/>
-            Address: [ADDRESS_PLACEHOLDER]
+            Email: deepak@graflystudio.com
           </p>
         </div>
       </main>
