@@ -104,10 +104,12 @@ export default function ContactPage() {
                   <div className="relative">
                     <select required id="type" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
                       <option value="" disabled>Select a service...</option>
-                      <option value="Product Images">Product Images</option>
-                      <option value="Commercial Reels">Commercial Reels</option>
-                      <option value="Ad Creatives">Ad Creatives</option>
-                      <option value="Social Content">Social Content</option>
+                      <option value="AI Product Images">AI Product Images</option>
+                      <option value="Product-on-Model">Product-on-Model</option>
+                      <option value="Lifestyle Product Imagery">Lifestyle Product Imagery</option>
+                      <option value="Campaign Visuals">Campaign Visuals</option>
+                      <option value="Catalog & Marketplace Imagery">Catalog & Marketplace Imagery</option>
+                      <option value="Social Media Content">Social Media Content</option>
                       <option value="Creative Direction">Creative Direction</option>
                       <option value="Other">Other</option>
                     </select>
@@ -122,9 +124,9 @@ export default function ContactPage() {
                   <div className="relative">
                     <select required id="budget" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
                       <option value="" disabled>Select a range...</option>
-                      <option value="2.5L-5L">₹2.5L – ₹5L</option>
-                      <option value="5L-12L">₹5L – ₹12L</option>
-                      <option value="12L+">₹12L+</option>
+                      <option value="Starter">Starter — 25 Images — ₹2,499+</option>
+                      <option value="Growth">Growth — 50 Images — ₹4,499+</option>
+                      <option value="Scale">Scale — 100 Images — ₹7,999+</option>
                       <option value="Custom">Custom / Not Sure</option>
                     </select>
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400">
@@ -155,7 +157,7 @@ export default function ContactPage() {
         </div>
 
         <div className="hidden lg:block lg:w-1/2 relative bg-zinc-100">
-          <Image src="/campaign-worlds/groton-7.jpg" alt="GROTON AI STUDIO" fill className="object-cover object-center" />
+          <Image src="/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg" alt="GROTON AI STUDIO" fill className="object-cover object-[center_15%]" />
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="absolute bottom-16 left-16 max-w-sm">
             <h3 className="font-serif text-3xl text-white mb-4">"The visual standard for modern brands."</h3>

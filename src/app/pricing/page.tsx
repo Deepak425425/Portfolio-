@@ -85,7 +85,7 @@ export default function PricingPage() {
           
           <div className="mt-16 text-center">
             <p className="text-[10px] text-zinc-400 tracking-[0.15em] uppercase font-bold max-w-3xl mx-auto leading-loose mb-12">
-              Pricing applies to standard e-commerce/product imagery.<br className="hidden md:block" /> Product-on-model, lifestyle, advanced compositing and campaign visuals are quoted separately.
+              Pricing applies to standard e-commerce/product imagery. Product-on-model, lifestyle, advanced compositing and campaign visuals are quoted separately.
             </p>
             <Link href="/contact" className="inline-block px-12 py-5 bg-black text-white text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-zinc-800 transition-colors">
               Start A Project

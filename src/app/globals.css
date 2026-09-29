@@ -199,3 +199,22 @@ body {
     cursor: auto !important;
   }
 }
+
+@layer utilities {
+  .premium-shadow {
+    /* Mobile base - lighter shadow */
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.06);
+  }
+  @media (min-width: 768px) {
+    .premium-shadow {
+      /* Tablet - medium shadow */
+      box-shadow: 0 15px 40px -15px rgba(0, 0, 0, 0.08);
+    }
+  }
+  @media (min-width: 1024px) {
+    .premium-shadow {
+      /* Desktop - matches hero */
+      box-shadow: 0 30px 90px -20px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
