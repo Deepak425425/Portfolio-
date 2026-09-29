@@ -155,7 +155,7 @@ export default function ContactPage() {
         </div>
 
         <div className="hidden lg:block lg:w-1/2 relative bg-zinc-100">
-          <Image src="/campaign-worlds/5548c29a92a965abad9325b905a07cdd.jpg" alt="GROTON AI STUDIO" fill className="object-cover object-center" />
+          <Image src="/campaign-worlds/groton-7.jpg" alt="GROTON AI STUDIO" fill className="object-cover object-center" />
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="absolute bottom-16 left-16 max-w-sm">
             <h3 className="font-serif text-3xl text-white mb-4">"The visual standard for modern brands."</h3>

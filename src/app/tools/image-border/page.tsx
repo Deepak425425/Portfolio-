@@ -653,6 +653,34 @@ export default function BorderStudioPage() {
 
          </div>
       </div>
-    </main>
+    
+      {/* SEO CONTENT BLOCK */}
+      <section id="seo-content-block" className="max-w-[1280px] mx-auto w-full px-6 md:px-8 py-16 md:py-24 mt-12 border-t border-zinc-200/50">
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 text-zinc-600">
+            <div className="flex flex-col gap-4 lg:col-span-2">
+               <h2 className="text-2xl font-serif text-[#111111]">Add Beautiful Borders & Frames to Images</h2>
+               <p className="text-sm leading-relaxed">Enhance your photos with classic frames, vintage Polaroid borders, and custom padding.</p>
+               <h3 className="text-sm font-bold uppercase tracking-widest text-[#111111] mt-6">How to use</h3>
+               <ol className="list-decimal list-inside text-sm flex flex-col gap-2">
+                  <li>Select your image.</li><li>Choose a border preset or manually adjust padding.</li><li>Select colors and corner radius.</li><li>Export your framed image.</li>
+               </ol>
+            </div>
+            <div className="flex flex-col gap-4">
+               <h3 className="text-sm font-bold uppercase tracking-widest text-[#111111]">Key Features</h3>
+               <ul className="list-disc list-inside text-sm flex flex-col gap-2">
+                  <li>9 unique presets</li><li>Custom corner rounding</li><li>Drop shadow engine</li><li>High-res export</li>
+               </ul>
+               <h3 className="text-sm font-bold uppercase tracking-widest text-[#111111] mt-6">Related Tools</h3>
+               <p className="text-sm flex flex-wrap gap-2 leading-relaxed">
+                  <a href="/tools/resize" className="text-[#8B7CFF] hover:underline">Image Resizer</a> • <a href="/tools/canvas" className="text-[#8B7CFF] hover:underline">Canvas Padding</a> • <a href="/tools/crop" className="text-[#8B7CFF] hover:underline">Image Cropper</a>
+               </p>
+            </div>
+         </div>
+         <div className="mt-12 text-xs text-zinc-400 max-w-3xl">
+            <strong>Supported Formats:</strong> JPG, PNG, WebP. 
+            All image processing is done securely. Groton AI is a suite of online image tools designed for e-commerce, creators, and visual production.
+         </div>
+      </section>
+</main>
   );
 }

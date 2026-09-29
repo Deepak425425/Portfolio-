@@ -41,7 +41,7 @@ export default function AboutPage() {
         </section>
 
         <section className="w-full h-[60vh] md:h-[80vh] relative">
-          <Image src="/campaign-worlds/d9e1c8fd5191c143b2ad5e29c1a15f37.jpg" alt="GROTON AI STUDIO aesthetic" fill className="object-cover object-center" />
+          <Image src="/campaign-worlds/groton-16.jpg" alt="GROTON AI STUDIO aesthetic" fill className="object-cover object-center" />
         </section>
 
         <section className="py-24 md:py-32 px-6 md:px-12 lg:px-24 bg-zinc-50 border-b border-zinc-200">

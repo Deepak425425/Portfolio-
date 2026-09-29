@@ -1,0 +1,166 @@
+### Current Metadata Audit
+
+File: about\page.tsx
+Title: About — GROTON AI STUDIO
+Desc: A modern visual production studio merging art direction with AI generation.
+---
+File: layout.tsx
+Title: GROTON AI — AI Visual Production for Modern Brands
+Desc: GROTON AI creates premium AI-powered product imagery, e-commerce visuals, product-on-model images, campaign visuals and creative image tools for modern brands.
+---
+File: pricing\page.tsx
+Title: Pricing — GROTON AI STUDIO
+Desc: Transparent, project-based pricing for premium AI visual production.
+---
+File: privacy-policy\page.tsx
+Title: Privacy Policy — GROTON AI STUDIO
+Desc: GROTON privacy policy and data usage terms.
+---
+File: services\page.tsx
+Title: Services — GROTON AI STUDIO
+Desc: Premium e-commerce visual production and creative direction.
+---
+File: terms-and-conditions\page.tsx
+Title: Terms & Conditions — GROTON AI STUDIO
+Desc: GROTON terms of service and usage conditions.
+---
+File: tools\background-remover\layout.tsx
+Title: Background Remover — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\before-after\layout.tsx
+Title: Before After — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\blur\layout.tsx
+Title: Blur — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\bulk-image-renamer\layout.tsx
+Title: Bulk Image Renamer — Rename Files Online
+Desc: Rename multiple images at once with custom patterns, numbering, and find-and-replace rules.
+---
+File: tools\canvas\layout.tsx
+Title: Canvas — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\cinematic-focus\layout.tsx
+Title: Cinematic Focus — Radial Blur & Focus Effects
+Desc: Create cinematic focus, film looks, editorial filters, analog textures and optical effects.
+---
+File: tools\collage\layout.tsx
+Title: Collage — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\color-palette\layout.tsx
+Title: Color Palette — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\color-picker\layout.tsx
+Title: Color Picker — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\compressor\layout.tsx
+Title: Compressor — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\convert\layout.tsx
+Title: Convert — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\crop\layout.tsx
+Title: Image Cropper — Crop Images Online
+Desc: Crop images precisely with custom aspect ratios, zoom, positioning and high-resolution export.
+---
+File: tools\face-blur\layout.tsx
+Title: Face Blur — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\favicon\layout.tsx
+Title: Favicon — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\filters\layout.tsx
+Title: Image Filters & Colour Grading
+Desc: Apply cinematic image effects, film looks, editorial filters and professional colour grading directly in your browser.
+---
+File: tools\grid-cutter\layout.tsx
+Title: Grid Cutter — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\image-border\layout.tsx
+Title: Image Border Maker — Add Frames to Images
+Desc: Add classic, vintage, Polaroid, double, film and custom borders to images with high-resolution export.
+---
+File: tools\image-cleanup\layout.tsx
+Title: Image Cleanup — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\image-compare\layout.tsx
+Title: Image Compare — Compare Two Images Online
+Desc: Compare images with before-and-after sliders, side-by-side views, zoom and high-resolution export.
+---
+File: tools\image-quality-checker\layout.tsx
+Title: Image Quality Checker — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\image-upscaler\layout.tsx
+Title: Image Upscaler — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\layout.tsx
+Title: GROTON AI Tools — Free Image Editing & Creative Tools
+Desc: Explore GROTON AI
+---
+File: tools\meme\layout.tsx
+Title: Meme — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\metadata-remover\layout.tsx
+Title: Metadata Remover — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\passport-photo\layout.tsx
+Title: Passport Photo Maker — Passport & ID Photos
+Desc: Create correctly sized passport, visa and ID photo sheets with crop, print layout and export controls.
+---
+File: tools\pdf-contact-sheet\layout.tsx
+Title: Pdf Contact Sheet — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\pixelate\layout.tsx
+Title: Pixelate — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\resize\layout.tsx
+Title: Image Resizer — Resize Images Online
+Desc: Resize images online with precise dimensions, aspect ratios and export controls using GROTON AI.
+---
+File: tools\rotate-flip\layout.tsx
+Title: Rotate Flip — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\rounded-image\layout.tsx
+Title: Rounded Image — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\social-resizer\layout.tsx
+Title: Social Resizer — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\split\layout.tsx
+Title: Split — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\watermark\layout.tsx
+Title: Watermark — Free Online Image Tool
+Desc: Use GROTON AI
+---
+File: tools\watermark-remover\layout.tsx
+Title: Watermark Remover — Content-Aware Object Removal
+Desc: Remove unwanted marks, objects, text and watermarks from images using intelligent browser-side inpainting.
+---
+File: work\page.tsx
+Title: Automotive Concept
+Desc: MISSING
+---
