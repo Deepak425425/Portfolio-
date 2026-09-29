@@ -275,21 +275,7 @@ export default function Home() {
             </motion.div>
             
           </div>
-            {/* Mobile Stacked Cards */}
-            <div className="w-full grid grid-cols-2 gap-4 px-6 pb-20 z-20 md:hidden relative">
-               <div className="aspect-[3/4] relative bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)]">
-                 <Image src="/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg" alt="Shoes" fill className="object-contain p-4" />
-               </div>
-               <div className="aspect-[3/4] relative bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)]">
-                 <Image src="/campaign-worlds/Create_vertical_e-commerce_produ…_2K_20260929162058.jpg" alt="T-shirt" fill className="object-contain p-4" />
-               </div>
-               <div className="aspect-[3/4] relative bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)]">
-                 <Image src="/campaign-worlds/Sunglasses_product_photography_2K_20260929162056.jpg" alt="Sunglasses" fill className="object-contain p-4" />
-               </div>
-               <div className="aspect-[3/4] relative bg-white rounded-xl shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)]">
-                 <Image src="/campaign-worlds/Jacket_and_pants_fashion_display_2K_20260929162053.jpg" alt="Jacket" fill className="object-contain p-4" />
-               </div>
-            </div>
+
         </div>
       </section>
 
