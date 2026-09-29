@@ -12,6 +12,8 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
+import CustomCursor from "@/components/CustomCursor";
+
 export const metadata: Metadata = {
   title: "GROTON AI STUDIO — Premium AI Visuals for Modern D2C Brands",
   description: "GROTON creates premium AI product imagery, cinematic commercial content, advertising creatives and visual campaigns for modern brands.",
@@ -25,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-black selection:text-white">
+        <CustomCursor />
         {children}
       </body>
     </html>

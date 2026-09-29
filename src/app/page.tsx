@@ -43,13 +43,8 @@ const MagneticButton = ({ children, href, className }: { children: React.ReactNo
 };
 
 export default function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-
-  // Custom Cursor state
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const cursorTextRef = useRef<HTMLSpanElement>(null);
-  const cursorPos = useRef({ x: 0, y: 0 });
-  const cursorLerpedPos = useRef({ x: 0, y: 0 });
 
   // Scroll Tracking
   const { scrollY } = useScroll();
@@ -80,102 +75,25 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
-    
-    // Custom cursor logic
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const isTouch = window.matchMedia("(pointer: coarse)").matches;
     if (mediaQuery.matches || isTouch) return;
     
-    if (cursorRef.current) cursorRef.current.style.display = 'flex';
-
     const handleMouseMove = (e: MouseEvent) => {
-      cursorPos.current.x = e.clientX;
-      cursorPos.current.y = e.clientY;
-
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
       mouseX.set(nx);
       mouseY.set(ny);
-
-      if (cursorRef.current && cursorRef.current.style.opacity === '0') {
-        cursorRef.current.style.opacity = '1';
-        cursorLerpedPos.current.x = e.clientX;
-        cursorLerpedPos.current.y = e.clientY;
-      }
-    };
-    
-    const handleMouseLeave = () => {
-      if (cursorRef.current) cursorRef.current.style.opacity = '0';
-    };
-
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!cursorRef.current || !cursorTextRef.current) return;
-
-      if (target.closest("[data-cursor='view']")) {
-        cursorRef.current.style.width = '80px';
-        cursorRef.current.style.height = '80px';
-        cursorRef.current.style.backgroundColor = 'white';
-        cursorRef.current.style.mixBlendMode = 'normal';
-        cursorRef.current.style.border = 'none';
-        cursorTextRef.current.innerText = 'VIEW';
-        cursorTextRef.current.style.color = 'black';
-        cursorTextRef.current.style.opacity = '1';
-      } else if (target.closest("a, button, [role='button']")) {
-        cursorRef.current.style.width = '60px';
-        cursorRef.current.style.height = '60px';
-        cursorRef.current.style.backgroundColor = 'rgba(0,0,0,0.05)';
-        cursorRef.current.style.mixBlendMode = 'difference';
-        cursorRef.current.style.border = '1px solid black';
-        cursorTextRef.current.style.opacity = '0';
-      }
-    };
-
-    const handleMouseOut = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!cursorRef.current || !cursorTextRef.current) return;
-      if (target.closest("a, button, [role='button'], [data-cursor='view']")) {
-        cursorRef.current.style.width = '30px';
-        cursorRef.current.style.height = '30px';
-        cursorRef.current.style.backgroundColor = 'transparent';
-        cursorRef.current.style.mixBlendMode = 'difference';
-        cursorRef.current.style.border = '1px solid black';
-        cursorTextRef.current.style.opacity = '0';
-      }
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseleave", handleMouseLeave);
-    window.addEventListener("mouseover", handleMouseOver);
-    window.addEventListener("mouseout", handleMouseOut);
-
-    let animationFrameId: number;
-    const render = () => {
-      cursorLerpedPos.current.x += (cursorPos.current.x - cursorLerpedPos.current.x) * 0.2;
-      cursorLerpedPos.current.y += (cursorPos.current.y - cursorLerpedPos.current.y) * 0.2;
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${cursorLerpedPos.current.x}px, ${cursorLerpedPos.current.y}px, 0) translate(-50%, -50%)`;
-      }
-      animationFrameId = requestAnimationFrame(render);
-    };
-    render();
-    
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseleave", handleMouseLeave);
-      window.removeEventListener("mouseover", handleMouseOver);
-      window.removeEventListener("mouseout", handleMouseOut);
-      cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
     <div className="relative bg-[#F9F8F6] overflow-x-hidden flex flex-col font-sans text-black selection:bg-black selection:text-white">
-      
-      {/* Custom Cursor */}
-      <div ref={cursorRef} className="fixed top-0 left-0 w-[30px] h-[30px] rounded-full border border-black z-[100] pointer-events-none transition-all duration-300 ease-out opacity-0 mix-blend-difference flex items-center justify-center" style={{ display: 'none', transform: 'translate(-50%, -50%)' }}>
-        <span ref={cursorTextRef} className="text-[8px] font-bold tracking-[0.2em] opacity-0 transition-opacity"></span>
-      </div>
 
       {/* NAVIGATION */}
       <motion.header 
@@ -185,7 +103,7 @@ export default function Home() {
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
           GROTON AI STUDIO
         </Link>
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4 lg:gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
             <Link href="/work" className="hover:text-black transition-colors">Work</Link>
             <Link href="/services" className="hover:text-black transition-colors">Services</Link>
@@ -193,11 +111,43 @@ export default function Home() {
             <Link href="/tools" className="hover:text-black transition-colors">Tools</Link>
             <Link href="/about" className="hover:text-black transition-colors">About</Link>
           </nav>
-          <MagneticButton href="/contact" className="hidden md:inline-flex px-6 py-3 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
+          <MagneticButton href="/contact" className="hidden lg:inline-flex px-6 py-3 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
             Contact
           </MagneticButton>
+          
+          <button 
+            className="lg:hidden p-2 text-black focus:outline-none z-50"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               {mobileMenuOpen ? (
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+               ) : (
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+               )}
+            </svg>
+          </button>
         </div>
       </motion.header>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-white flex flex-col pt-24 px-6 pb-6 lg:hidden overflow-y-auto">
+           <nav className="flex flex-col gap-6 text-lg font-bold tracking-[0.2em] uppercase text-zinc-500 mt-8">
+              <Link href="/" onClick={() => setMobileMenuOpen(false)} className="hover:text-black transition-colors text-black">Home</Link>
+              <Link href="/work" onClick={() => setMobileMenuOpen(false)} className="hover:text-black transition-colors">Work</Link>
+              <Link href="/services" onClick={() => setMobileMenuOpen(false)} className="hover:text-black transition-colors">Services</Link>
+              <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className="hover:text-black transition-colors">Pricing</Link>
+              <Link href="/tools" onClick={() => setMobileMenuOpen(false)} className="hover:text-black transition-colors">Tools</Link>
+              <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="hover:text-black transition-colors">About</Link>
+           </nav>
+           <div className="mt-auto pt-12">
+             <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="block w-full text-center px-5 py-4 bg-black text-white text-xs uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
+               Contact Us
+             </Link>
+           </div>
+        </div>
+      )}
 
       {/* 1. HERO SECTION - E-COMMERCE VISUAL PRODUCTION */}
       <section className="relative min-h-[100svh] w-full flex flex-col items-center justify-start bg-[#F9F8F6] pt-40 pb-24 z-20">
@@ -210,7 +160,7 @@ export default function Home() {
                initial={{ opacity: 0, y: 30 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-               className="font-serif text-5xl md:text-7xl lg:text-[7.5rem] leading-[1.05] text-black tracking-tight max-w-5xl mx-auto"
+               className="font-serif text-[2.5rem] leading-[1.1] sm:text-5xl md:text-7xl lg:text-[7.5rem] md:leading-[1.05] text-black tracking-tight max-w-5xl mx-auto"
              >
                 Product visuals that <br className="hidden md:block"/> make brands look better.
              </motion.h1>
@@ -603,14 +553,14 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
             <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">GROTON AI STUDIO</h3>
-            <div className="flex flex-wrap gap-x-8 gap-y-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
-              <Link href="/about" className="hover:text-black transition-colors">About</Link>
-              <Link href="/services" className="hover:text-black transition-colors">Services</Link>
-              <Link href="/work" className="hover:text-black transition-colors">Work</Link>
-              <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
-              <Link href="/contact" className="hover:text-black transition-colors">Contact</Link>
-              <Link href="/privacy-policy" className="hover:text-black transition-colors">Privacy Policy</Link>
-              <Link href="/terms-and-conditions" className="hover:text-black transition-colors">Terms & Conditions</Link>
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 md:gap-x-8 text-[11px] md:text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
+              <Link href="/about" className="hover:text-black transition-colors py-1 md:py-0">About</Link>
+              <Link href="/services" className="hover:text-black transition-colors py-1 md:py-0">Services</Link>
+              <Link href="/work" className="hover:text-black transition-colors py-1 md:py-0">Work</Link>
+              <Link href="/pricing" className="hover:text-black transition-colors py-1 md:py-0">Pricing</Link>
+              <Link href="/contact" className="hover:text-black transition-colors py-1 md:py-0">Contact</Link>
+              <Link href="/privacy-policy" className="hover:text-black transition-colors py-1 md:py-0">Privacy Policy</Link>
+              <Link href="/terms-and-conditions" className="hover:text-black transition-colors py-1 md:py-0">Terms & Conditions</Link>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import { jsPDF } from "jspdf";
+import { getGrotonExportFilename } from "@/utils/export";
 
 interface ImgFile {
   id: string;
@@ -150,8 +151,7 @@ export default function PDFContactSheetPage() {
         }
         pageNum++;
       }
-      
-      doc.save('contact-sheet.pdf');
+      doc.save(getGrotonExportFilename('contact-sheet.pdf'));
     } catch (e) {
       console.error(e);
     }

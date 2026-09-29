@@ -11,8 +11,10 @@ const toolsData = [
   { id: "resize", name: "Image Resizer", desc: "Scale images to exact dimensions.", cat: "OPTIMIZE", tags: ["resize", "scale", "dimensions", "width", "height"], link: "/tools/resize", visual: "2000 → 1080" },
   { id: "convert", name: "Image Converter", desc: "Convert formats (JPG, PNG, WebP).", cat: "OPTIMIZE", tags: ["convert", "format", "jpg", "png", "webp", "jpeg"], link: "/tools/convert", visual: "JPG → WEBP" },
   { id: "metadata-remover", name: "Metadata Remover", desc: "Strip EXIF data from photos.", cat: "OPTIMIZE", tags: ["exif", "metadata", "gps", "camera", "privacy"], link: "/tools/metadata-remover", visual: "EXIF ✕" },
+  { id: "image-quality-checker", name: "Image Quality Checker", desc: "Analyze images for web & print suitability.", cat: "OPTIMIZE", tags: ["quality", "check", "analyze", "print", "web", "report"], link: "/tools/image-quality-checker", visual: "✓ Resolution\n✓ Format\n⚠ Print Quality" },
   
   // EDIT
+  { id: "image-cleanup", name: "Image Cleanup", desc: "Remove unwanted elements & dust.", cat: "EDIT", tags: ["cleanup", "remove", "erase", "dust", "spot", "heal"], link: "/tools/image-cleanup", visual: "✨" },
   { id: "crop", name: "Image Cropper", desc: "Crop and reframe photos.", cat: "EDIT", tags: ["crop", "trim", "cut"], link: "/tools/crop", visual: "Crop" },
   { id: "rotate-flip", name: "Rotate & Flip", desc: "Quickly rotate or mirror images.", cat: "EDIT", tags: ["rotate", "flip", "mirror", "turn"], link: "/tools/rotate-flip", visual: "↺ ⇄" },
   { id: "blur", name: "Image Blur", desc: "Apply gaussian blur effects.", cat: "EDIT", tags: ["blur", "soften", "gaussian"], link: "/tools/blur", visual: "Blur" },
@@ -26,8 +28,12 @@ const toolsData = [
   { id: "collage", name: "Collage Maker", desc: "Combine multiple images into one.", cat: "CREATE", tags: ["collage", "combine", "join", "merge", "layout"], link: "/tools/collage", visual: "⊞" },
   { id: "grid-cutter", name: "Grid Cutter", desc: "Slice an image into an Instagram grid.", cat: "CREATE", tags: ["grid", "slice", "cut", "split", "instagram", "tiles"], link: "/tools/grid-cutter", visual: "▦" },
   { id: "before-after", name: "Before & After", desc: "Create vertical comparison sliders.", cat: "CREATE", tags: ["compare", "before", "after", "slider"], link: "/tools/before-after", visual: "◧◨" },
+  { id: "image-compare", name: "Image Compare", desc: "Compare two images visually.", cat: "CREATE", tags: ["compare", "before", "after", "difference", "slider"], link: "/tools/image-compare", visual: "BEFORE | AFTER" },
   { id: "meme", name: "Meme Generator", desc: "Add classic impact font text.", cat: "CREATE", tags: ["meme", "text", "caption", "funny"], link: "/tools/meme", visual: "T" },
   { id: "pdf-contact-sheet", name: "Contact Sheet", desc: "Generate multi-image PDF galleries.", cat: "CREATE", tags: ["contact", "sheet", "gallery", "pdf", "print"], link: "/tools/pdf-contact-sheet", visual: "▤" },
+
+  // ORGANIZE
+  { id: "bulk-image-renamer", name: "Bulk Image Renamer", desc: "Rename hundreds of images quickly with powerful batch naming controls.", cat: "ORGANIZE", tags: ["rename", "batch", "bulk", "organize", "files", "names"], link: "/tools/bulk-image-renamer", visual: "IMG_4821.jpg\n↓\nProduct-001.jpg" },
 
   // PROTECT
   { id: "watermark", name: "Watermark", desc: "Apply repeated watermark patterns.", cat: "PROTECT", tags: ["watermark", "protect", "logo", "text", "stamp", "brand"], link: "/tools/watermark", visual: "©" },
@@ -35,6 +41,7 @@ const toolsData = [
 
   // TRANSFORM
   { id: "background-remover", name: "Background Remover", desc: "Isolate subjects instantly.", cat: "TRANSFORM", tags: ["background", "remove", "transparent", "cutout", "ai", "subject"], link: "/tools/background-remover", visual: "✂" },
+  { id: "image-upscaler", name: "Image Upscaler", desc: "Increase image resolution preserving quality.", cat: "TRANSFORM", tags: ["upscale", "enhance", "resolution", "enlarge", "zoom"], link: "/tools/image-upscaler", visual: "1200×800\n↓\n2400×1600" },
   { id: "social-resizer", name: "Social Media Resizer", desc: "Format for Instagram, YouTube, etc.", cat: "TRANSFORM", tags: ["social", "instagram", "youtube", "tiktok", "resize", "aspect"], link: "/tools/social-resizer", visual: "📱" },
   { id: "passport-photo", name: "Passport Photo", desc: "Format to standard ID dimensions.", cat: "TRANSFORM", tags: ["passport", "id", "photo", "visa", "print"], link: "/tools/passport-photo", visual: "🪪" },
   { id: "favicon", name: "Favicon Generator", desc: "Create .ico and webapp icons.", cat: "TRANSFORM", tags: ["favicon", "icon", "website", "ico"], link: "/tools/favicon", visual: "◆" },
@@ -53,7 +60,7 @@ export default function ToolsLandingPage() {
            t.tags.some(tag => tag.includes(q));
   });
 
-  const categories = ["OPTIMIZE", "EDIT", "CREATE", "PROTECT", "TRANSFORM"];
+  const categories = ["OPTIMIZE", "EDIT", "CREATE", "ORGANIZE", "PROTECT", "TRANSFORM"];
 
   return (
     <main className="min-h-screen flex flex-col bg-background text-foreground font-sans">

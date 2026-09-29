@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import JSZip from "jszip";
+import { getGrotonExportFilename } from "@/utils/export";
 
 interface ImgFile {
   id: string;
@@ -70,7 +71,7 @@ export default function MetadataRemoverPage() {
       const res = results[i];
       const a = document.createElement("a");
       a.href = res.url;
-      a.download = res.name;
+      a.download = getGrotonExportFilename(res.name);
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -83,12 +84,12 @@ export default function MetadataRemoverPage() {
     const zip = new JSZip();
     for (const res of results) {
       const blob = await fetch(res.url).then(r => r.blob());
-      zip.file(res.name, blob);
+      zip.file(getGrotonExportFilename(res.name), blob);
     }
     const content = await zip.generateAsync({type: "blob"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(content);
-    a.download = `cleaned_images.zip`;
+    a.download = getGrotonExportFilename(`cleaned_images.zip`);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

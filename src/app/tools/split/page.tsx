@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import JSZip from "jszip";
+import { getGrotonExportFilename } from "@/utils/export";
 
 export default function SplitPage() {
   const [img, setImg] = useState<any>(null);
@@ -25,13 +26,13 @@ export default function SplitPage() {
         const ctx = canvas.getContext("2d");
         ctx?.drawImage(image, c*w, r*h, w, h, 0, 0, w, h);
         const blob = await new Promise<Blob>(res => canvas.toBlob(b => res(b!), "image/jpeg"));
-        zip.file(`slice-${r}-${c}.jpg`, blob);
+        zip.file(getGrotonExportFilename(`slice-${r}-${c}.jpg`), blob);
       }
     }
     const content = await zip.generateAsync({type:"blob"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(content);
-    a.download = "split-images.zip";
+    a.download = getGrotonExportFilename("split-images.zip");
     a.click();
   };
 

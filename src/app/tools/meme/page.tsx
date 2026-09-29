@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
+import { getGrotonExportFilename } from "@/utils/export";
 
 export default function MemePage() {
   const [img, setImg] = useState<any>(null);
@@ -34,7 +35,7 @@ export default function MemePage() {
     
     const a = document.createElement("a");
     a.href = canvas.toDataURL("image/jpeg");
-    a.download = "meme.jpg";
+    a.download = getGrotonExportFilename("meme.jpg");
     a.click();
   };
 

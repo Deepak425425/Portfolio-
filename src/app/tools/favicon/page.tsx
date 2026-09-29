@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import JSZip from "jszip";
+import { getGrotonExportFilename } from "@/utils/export";
 
 export default function FaviconPage() {
   const [img, setImg] = useState<any>(null);
@@ -30,17 +31,17 @@ export default function FaviconPage() {
         ctx?.drawImage(image, (size-drawW)/2, (size-drawH)/2, drawW, drawH);
         
         const blob = await new Promise<Blob>(res => canvas.toBlob(b => res(b!), "image/png"));
-        zip.file(`favicon-${size}x${size}.png`, blob);
+        zip.file(getGrotonExportFilename(`favicon-${size}x${size}.png`), blob);
         
         if (size === 32) {
-            zip.file(`favicon.ico`, blob); // Simple copy, not true .ico encode but works for modern browsers
+            zip.file(getGrotonExportFilename(`favicon.ico`), blob); // Simple copy, not true .ico encode but works for modern browsers
         }
     }
     
     const content = await zip.generateAsync({type:"blob"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(content);
-    a.download = "favicon-package.zip";
+    a.download = getGrotonExportFilename("favicon-package.zip");
     a.click();
   };
 
