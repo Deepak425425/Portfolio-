@@ -10,7 +10,7 @@ const FEATURED_TOOLS = [
   { id: "filters", name: "Image Filters & Grade", desc: "Professional creative filters and colour grading studio.", link: "/tools/filters", visual: "✦" },
   { id: "image-compare", name: "Image Compare", desc: "Compare two images visually with side-by-side or slider tools.", link: "/tools/image-compare", visual: "◧" },
   { id: "collage", name: "Collage Maker", desc: "Professional grid layout builder with precise constraints.", link: "/tools/collage", visual: "⊞" },
-  { id: "border", name: "Image Border", desc: "Add refined frames, shadows, and borders to images.", link: "/tools/border", visual: "□" },
+  { id: "border", name: "Image Border", desc: "Add refined frames, shadows, and borders to images.", link: "/tools/image-border", visual: "□" },
 ];
 
 const UTILITY_TOOLS = [

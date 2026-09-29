@@ -373,7 +373,7 @@ export default function BorderStudioPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F7F6F2] text-[#242631] font-sans flex flex-col overflow-hidden">
+    <main className="h-screen w-screen bg-[#F7F6F2] text-[#242631] font-sans flex flex-col overflow-hidden">
       {/* AMBIENT GRADIENTS */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#DCD7FF] opacity-30 blur-[120px] rounded-full"></div>
@@ -465,13 +465,15 @@ export default function BorderStudioPage() {
                   </div>
                </div>
             ) : (
-               <div className="flex-1 neu-inset rounded-3xl relative overflow-hidden flex flex-col items-center justify-center p-8">
+               <div className="flex-1 neu-inset rounded-3xl relative overflow-hidden flex flex-col items-center justify-center p-4">
                   <div className="absolute top-6 left-6 flex flex-col gap-1 z-20 pointer-events-none opacity-50">
                      <span className="text-[10px] font-bold tracking-widest uppercase">{fileName}</span>
                      <span className="text-[9px] font-mono tracking-widest">{fileDetails.width} × {fileDetails.height} px • {fileDetails.size}</span>
                   </div>
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none p-8 md:p-16">
-                     <canvas ref={previewCanvasRef} className="max-w-full max-h-[70vh] object-contain filter drop-shadow-sm transition-transform" />
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden p-6 md:p-12">
+                     <div className="relative flex items-center justify-center w-full h-full">
+                        <canvas ref={previewCanvasRef} className="max-w-full max-h-full object-contain filter drop-shadow-sm transition-transform" />
+                     </div>
                   </div>
                   {isProcessing && (
                     <div className="absolute inset-0 bg-[#F7F6F2]/80 backdrop-blur-sm z-50 flex flex-col gap-4 items-center justify-center rounded-3xl">
