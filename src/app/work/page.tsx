@@ -5,12 +5,12 @@ import Link from "next/link";
 import Image from "next/image";
 
 const portfolioItems = [
-  { id: 1, title: "Automotive Concept", category: "Campaign", image: "/campaign-worlds/8ba03716f09635d4a54c4dfbd7ca2687.jpg", aspect: "aspect-[4/3]" },
-  { id: 2, title: "Modern Elegance", category: "Fashion", image: "/campaign-worlds/24f5f63a08c1fa2434bdb5edfe06e4bb.jpg", aspect: "aspect-[3/4]" },
-  { id: 3, title: "Precision Craft", category: "Jewellery", image: "/campaign-worlds/c85eebec43abf0ea972f6a8fcd15371d.jpg", aspect: "aspect-[4/5]" },
-  { id: 4, title: "Skin Deep", category: "Beauty", image: "/campaign-worlds/f8bc3ba5d07efbee4c99ce1f6c028602.jpg", aspect: "aspect-square" },
-  { id: 5, title: "Volume Study", category: "Product", image: "/campaign-worlds/5548c29a92a965abad9325b905a07cdd.jpg", aspect: "aspect-[16/9]" },
-  { id: 6, title: "Cinematic Atmosphere", category: "Lifestyle", image: "/campaign-worlds/96162aabb92e6fedb4c4918e9b746219.jpg", aspect: "aspect-[3/4]" },
+  { id: 1, title: "Automotive Concept", category: "Campaign", image: "/campaign-worlds/groton-10.jpg", aspect: "aspect-[4/3]" },
+  { id: 2, title: "Modern Elegance", category: "Fashion", image: "/campaign-worlds/groton-3.jpg", aspect: "aspect-[3/4]" },
+  { id: 3, title: "Precision Craft", category: "Jewellery", image: "/campaign-worlds/groton-14.jpg", aspect: "aspect-[4/5]" },
+  { id: 4, title: "Skin Deep", category: "Beauty", image: "/campaign-worlds/groton-17.jpg", aspect: "aspect-square" },
+  { id: 5, title: "Volume Study", category: "Product", image: "/campaign-worlds/groton-7.jpg", aspect: "aspect-[16/9]" },
+  { id: 6, title: "Cinematic Atmosphere", category: "Lifestyle", image: "/campaign-worlds/groton-11.jpg", aspect: "aspect-[3/4]" },
 ];
 
 const categories = ["All", "Jewellery", "Fashion", "Beauty", "Lifestyle", "Product", "Campaign"];

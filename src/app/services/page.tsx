@@ -14,7 +14,7 @@ const services = [
     description: "Premium product visuals designed for eCommerce, campaigns and brand communication.",
     details: "We ingest your physical products or existing photography and synthesize them into high-fidelity, photorealistic environments. By controlling lighting, materials, and composition algorithmically, we bypass the logistical constraints of physical sets while maintaining absolute realism.",
     deliverables: ["Hero Campaign Imagery", "E-commerce Product Shots", "Lookbook Variations", "High-Resolution Composites"],
-    image: "/campaign-worlds/c85eebec43abf0ea972f6a8fcd15371d.jpg"
+    image: "/campaign-worlds/groton-14.jpg"
   },
   {
     id: "lifestyle-product-imagery",
@@ -22,7 +22,7 @@ const services = [
     "description": "Editorial and lifestyle scenes for e-commerce products.",
     "details": "We place your products in aspirational, photorealistic environments that tell a brand story. From sun-drenched interiors to high-end architectural spaces, we create contextual imagery without the need for location scouting or physical sets.",
     "deliverables": ["Editorial E-commerce Images", "Social Media Lifestyle Shots", "Contextual Lookbooks", "Banner & Hero Imagery"],
-    image: "/campaign-worlds/8ba03716f09635d4a54c4dfbd7ca2687.jpg"
+    image: "/campaign-worlds/groton-10.jpg"
   },
   {
     id: "advertising-creatives",
@@ -30,7 +30,7 @@ const services = [
     description: "Performance-focused visual concepts for paid social and digital campaigns.",
     details: "Data-driven creative for digital advertising. We generate vast variations of visual concepts, allowing brands to test multiple visual angles, environments, and compositions for paid acquisition campaigns without blowing out the production budget.",
     deliverables: ["Paid Social Variations", "Display Ad Composites", "A/B Testing Visual Sets", "Performance Layouts"],
-    image: "/campaign-worlds/f8bc3ba5d07efbee4c99ce1f6c028602.jpg"
+    image: "/campaign-worlds/groton-17.jpg"
   },
   {
     id: "social-media-content",
@@ -38,7 +38,7 @@ const services = [
     description: "High-quality visual systems for consistent brand communication.",
     details: "Maintaining a premium social feed requires volume without sacrificing art direction. We build visual systems and generate batches of cohesive, on-brand imagery to fuel your organic social media strategy for months at a time.",
     deliverables: ["Monthly Content Batches", "Grid Layout Planning", "Editorial Lifestyle Imagery", "Consistent Brand Aesthetics"],
-    image: "/campaign-worlds/24f5f63a08c1fa2434bdb5edfe06e4bb.jpg"
+    image: "/campaign-worlds/groton-3.jpg"
   },
   {
     id: "creative-direction",
@@ -46,7 +46,7 @@ const services = [
     description: "Concept development, visual direction, art direction and campaign thinking.",
     details: "AI is a tool; art direction is the differentiator. Our creative directors work with you to establish the visual language, lighting logic, color theory, and conceptual framework before a single pixel is generated.",
     deliverables: ["Visual Identity Systems", "Campaign Concepts", "Lighting & Texture Boards", "Production Briefs"],
-    image: "/campaign-worlds/5548c29a92a965abad9325b905a07cdd.jpg"
+    image: "/campaign-worlds/groton-7.jpg"
   }
 ];
 

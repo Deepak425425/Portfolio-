@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "GROTON AI Tools — Free Image Editing & Creative Tools",
-  description: "Explore GROTON AI's browser-based image tools for resizing, cropping, compression, color palettes, collages, passport photos, borders, filters, image comparison and more.",
+  title: "Groton Image Tools — Free Online Image Editors",
+  description: "Explore free online image tools by Groton. Resize, crop, compress, convert, add borders, extract colors, apply filters and prepare product images directly in your browser.",
   alternates: {
-    canonical: "/tools",
+    canonical: "https://groton.in/tools",
+  },
+  openGraph: {
+    title: "Groton Image Tools — Free Online Image Editors",
+    description: "Explore free online image tools by Groton. Resize, crop, compress, convert, add borders, extract colors, apply filters and prepare product images directly in your browser.",
+    url: "https://groton.in/tools",
+    type: "website",
   },
 };
 

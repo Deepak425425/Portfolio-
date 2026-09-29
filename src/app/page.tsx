@@ -85,10 +85,18 @@ export default function Home() {
       mouseX.set(nx);
       mouseY.set(ny);
     };
+    
+    const handleMouseLeave = () => {
+      mouseX.set(0);
+      mouseY.set(0);
+    };
 
     window.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseleave", handleMouseLeave);
+    
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [mouseX, mouseY]);
 
@@ -194,54 +202,69 @@ export default function Home() {
             
             {/* Primary - Activewear Model */}
             <motion.div 
-              style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -60]) }}
-              className="relative z-10 w-[90%] md:w-full max-w-[500px] xl:max-w-[640px] aspect-[4/5] shadow-[0_30px_90px_-20px_rgba(0,0,0,0.1)] group pointer-events-auto mt-8"
+              style={{ x: p1x, y: p1y }}
+              className="relative z-10 w-[90%] md:w-full max-w-[500px] xl:max-w-[640px] aspect-[4/5] mt-8"
             >
-              <motion.div 
-                initial={{ opacity: 0, clipPath: "inset(5% 5% 5% 5%)" }} 
-                animate={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }} 
-                transition={{ duration: 1.5, delay: 1, ease: [0.16, 1, 0.3, 1] }}
-                className="w-full h-full relative overflow-hidden bg-zinc-200"
-                data-cursor="view"
+              <motion.div
+                style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -60]) }}
+                className="w-full h-full shadow-[0_30px_90px_-20px_rgba(0,0,0,0.1)] group pointer-events-auto"
               >
-                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.03 }} transition={{ duration: 0.8, ease: "easeOut" }} style={{ x: p1x, y: p1y }}>
-                   <Image src="/campaign-worlds/24f5f63a08c1fa2434bdb5edfe06e4bb.jpg" alt="Activewear Model Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
-                 </motion.div>
+                <motion.div 
+                  initial={{ opacity: 0, clipPath: "inset(5% 5% 5% 5%)" }} 
+                  animate={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }} 
+                  transition={{ duration: 1.5, delay: 1, ease: [0.16, 1, 0.3, 1] }}
+                  className="w-full h-full relative overflow-hidden bg-zinc-200"
+                  data-cursor="view"
+                >
+                   <motion.div className="w-full h-full relative" whileHover={{ scale: 1.03 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                     <Image src="/campaign-worlds/groton-3.jpg" alt="Activewear Model Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
+                   </motion.div>
+                </motion.div>
               </motion.div>
             </motion.div>
 
             {/* Secondary 1 - Sneakers */}
             <motion.div 
-              style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -90]) }}
-              className="absolute left-[2%] md:left-[5%] lg:left-[10%] bottom-16 lg:bottom-24 z-20 w-[35vw] md:w-[25vw] max-w-[300px] aspect-square shadow-[-20px_40px_80px_-20px_rgba(0,0,0,0.25)] group pointer-events-auto hidden sm:block"
+              style={{ x: p2x, y: p2y }}
+              className="absolute left-[2%] md:left-[5%] lg:left-[10%] bottom-16 lg:bottom-24 z-20 w-[35vw] md:w-[25vw] max-w-[300px] aspect-square hidden sm:block"
             >
-               <motion.div 
-                 initial={{ opacity: 0, x: -30 }} 
-                 animate={{ opacity: 1, x: 0 }} 
-                 transition={{ duration: 1.2, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
-                 className="w-full h-full relative overflow-hidden bg-zinc-200"
-                 data-cursor="view"
+               <motion.div
+                 style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -90]) }}
+                 className="w-full h-full shadow-[-20px_40px_80px_-20px_rgba(0,0,0,0.25)] group pointer-events-auto"
                >
-                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }} style={{ x: p2x, y: p2y }}>
-                   <Image src="/campaign-worlds/990d5aeb63b8b4ecc01f0e17d877fc6c.jpg" alt="Yellow Sneakers E-commerce" fill className="object-cover" priority sizes="(max-width: 768px) 0vw, 25vw" />
+                 <motion.div 
+                   initial={{ opacity: 0, x: -30 }} 
+                   animate={{ opacity: 1, x: 0 }} 
+                   transition={{ duration: 1.2, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
+                   className="w-full h-full relative overflow-hidden bg-zinc-200"
+                   data-cursor="view"
+                 >
+                   <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                     <Image src="/campaign-worlds/groton-13.jpg" alt="Yellow Sneakers E-commerce" fill className="object-cover" priority sizes="(max-width: 768px) 0vw, 25vw" />
+                   </motion.div>
                  </motion.div>
                </motion.div>
             </motion.div>
 
             {/* Secondary 2 - Purifiers/Product */}
             <motion.div 
-              style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -120]) }}
-              className="absolute right-[5%] md:right-[12%] lg:right-[16%] top-12 md:top-20 lg:top-32 z-30 w-[30vw] md:w-[18vw] max-w-[220px] aspect-[3/4] shadow-[20px_40px_80px_-20px_rgba(0,0,0,0.25)] group pointer-events-auto hidden sm:block"
+              style={{ x: p3x, y: p3y }}
+              className="absolute right-[5%] md:right-[12%] lg:right-[16%] top-12 md:top-20 lg:top-32 z-30 w-[30vw] md:w-[18vw] max-w-[220px] aspect-[3/4] hidden sm:block"
             >
-               <motion.div 
-                 initial={{ opacity: 0, x: 30 }} 
-                 animate={{ opacity: 1, x: 0 }} 
-                 transition={{ duration: 1.2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                 className="w-full h-full relative overflow-hidden bg-zinc-200"
-                 data-cursor="view"
+               <motion.div
+                 style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -120]) }}
+                 className="w-full h-full shadow-[20px_40px_80px_-20px_rgba(0,0,0,0.25)] group pointer-events-auto"
                >
-                 <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }} style={{ x: p3x, y: p3y }}>
-                   <Image src="/campaign-worlds/8ba03716f09635d4a54c4dfbd7ca2687.jpg" alt="Colorful Product Campaign" fill className="object-cover object-center" priority sizes="(max-width: 768px) 0vw, 20vw" />
+                 <motion.div 
+                   initial={{ opacity: 0, x: 30 }} 
+                   animate={{ opacity: 1, x: 0 }} 
+                   transition={{ duration: 1.2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
+                   className="w-full h-full relative overflow-hidden bg-zinc-200"
+                   data-cursor="view"
+                 >
+                   <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                     <Image src="/campaign-worlds/groton-10.jpg" alt="Colorful Product Campaign" fill className="object-cover object-center" priority sizes="(max-width: 768px) 0vw, 20vw" />
+                   </motion.div>
                  </motion.div>
                </motion.div>
             </motion.div>
@@ -273,19 +296,19 @@ export default function Home() {
             </p>
             <div className="grid grid-cols-2 gap-4">
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-                 <Image src="/campaign-worlds/8ba03716f09635d4a54c4dfbd7ca2687.jpg" alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src="/campaign-worlds/groton-10.jpg" alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product Imagery</span></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-                 <Image src="/campaign-worlds/88ed8c348d74c49b9c906f032986a937.jpg" alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src="/campaign-worlds/groton-9.jpg" alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product-on-Model</span></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-                 <Image src="/campaign-worlds/04b99ee05dbfbbb23eab1576a0fcf6f4.jpg" alt="Fashion E-commerce" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src="/campaign-worlds/groton-1.jpg" alt="Fashion E-commerce" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Fashion Apparel</span></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-                 <Image src="/campaign-worlds/96162aabb92e6fedb4c4918e9b746219.jpg" alt="Lifestyle Products" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src="/campaign-worlds/groton-11.jpg" alt="Lifestyle Products" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Lifestyle</span></div>
                </div>
             </div>
@@ -321,19 +344,19 @@ export default function Home() {
         <div className="max-w-[1600px] mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             <div className="col-span-2 md:col-span-2 row-span-2 aspect-[4/5] relative bg-zinc-200 group overflow-hidden" data-cursor="view">
-              <Image src="/campaign-worlds/41bffbbcab612a0661fbefdfaf50e872.jpg" alt="Sherpa Hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="50vw" />
+              <Image src="/campaign-worlds/groton-4.jpg" alt="Sherpa Hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="50vw" />
             </div>
             <div className="col-span-1 aspect-square relative bg-zinc-200 group overflow-hidden" data-cursor="view">
-              <Image src="/campaign-worlds/0a1b3678298467ff8b2caf425bbd7853.jpg" alt="Pink Jacket" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+              <Image src="/campaign-worlds/groton-2.jpg" alt="Pink Jacket" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
             <div className="col-span-1 aspect-[3/4] relative bg-zinc-200 group overflow-hidden" data-cursor="view">
-              <Image src="/campaign-worlds/9658700553cbc9f4432fc4c327023f8f.jpg" alt="Pink Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+              <Image src="/campaign-worlds/groton-12.jpg" alt="Pink Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
             <div className="col-span-1 aspect-[4/5] relative bg-zinc-200 group overflow-hidden" data-cursor="view">
-              <Image src="/campaign-worlds/51c544e78767b419a857af993f1814ab.jpg" alt="Pendant Lights" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+              <Image src="/campaign-worlds/groton-6.jpg" alt="Pendant Lights" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
             <div className="col-span-1 aspect-square relative bg-zinc-200 group overflow-hidden" data-cursor="view">
-              <Image src="/campaign-worlds/45258c05db236072e9efbed40ba5e79e.jpg" alt="Sandals" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+              <Image src="/campaign-worlds/groton-5.jpg" alt="Sandals" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
           </div>
         </div>
@@ -350,7 +373,7 @@ export default function Home() {
           <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
             <div className="flex flex-col items-center gap-6 w-full md:w-1/3">
               <div className="w-full aspect-square relative overflow-hidden bg-zinc-900 border border-zinc-800">
-                <Image src="/campaign-worlds/f8bc3ba5d07efbee4c99ce1f6c028602.jpg" alt="Raw Product Input" fill className="object-cover filter grayscale opacity-80 mix-blend-luminosity" />
+                <Image src="/campaign-worlds/groton-17.jpg" alt="Raw Product Input" fill className="object-cover filter grayscale opacity-80 mix-blend-luminosity" />
               </div>
               <span className="text-xs tracking-[0.2em] uppercase font-bold text-zinc-500">Raw Product Asset</span>
             </div>
@@ -364,7 +387,7 @@ export default function Home() {
 
             <div className="flex flex-col items-center gap-6 w-full md:w-1/2">
               <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-900 shadow-2xl">
-                <Image src="/campaign-worlds/c85eebec43abf0ea972f6a8fcd15371d.jpg" alt="Final Campaign Visual" fill className="object-cover" />
+                <Image src="/campaign-worlds/groton-14.jpg" alt="Final Campaign Visual" fill className="object-cover" />
               </div>
               <span className="text-xs tracking-[0.2em] uppercase font-bold text-white">Final Campaign Visual</span>
             </div>
@@ -380,13 +403,13 @@ export default function Home() {
         </div>
         <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
            <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-             <Image src="/campaign-worlds/cef7134dfb9512f9d8034ce9d8626853.jpg" alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+             <Image src="/campaign-worlds/groton-15.jpg" alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
            <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden md:mt-12" data-cursor="view">
-             <Image src="/campaign-worlds/04b99ee05dbfbbb23eab1576a0fcf6f4.jpg" alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+             <Image src="/campaign-worlds/groton-1.jpg" alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
            <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-             <Image src="/campaign-worlds/88ed8c348d74c49b9c906f032986a937.jpg" alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+             <Image src="/campaign-worlds/groton-9.jpg" alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
         </div>
       </section>
@@ -399,14 +422,14 @@ export default function Home() {
         </div>
         <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-6">
            <div className="md:col-span-7 aspect-[16/9] relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-             <Image src="/campaign-worlds/d9e1c8fd5191c143b2ad5e29c1a15f37.jpg" alt="Pendant Lights" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+             <Image src="/campaign-worlds/groton-16.jpg" alt="Pendant Lights" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
            <div className="md:col-span-5 flex flex-col gap-6">
              <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-               <Image src="/campaign-worlds/96162aabb92e6fedb4c4918e9b746219.jpg" alt="Orange Cushions" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+               <Image src="/campaign-worlds/groton-11.jpg" alt="Orange Cushions" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
              </div>
              <div className="w-full aspect-[21/9] relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-               <Image src="/campaign-worlds/5548c29a92a965abad9325b905a07cdd.jpg" alt="Translucent Lamp" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+               <Image src="/campaign-worlds/groton-7.jpg" alt="Translucent Lamp" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
              </div>
            </div>
         </div>
@@ -429,7 +452,7 @@ export default function Home() {
           
           <div className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
             <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200">
-              <Image src="/campaign-worlds/24f5f63a08c1fa2434bdb5edfe06e4bb.jpg" alt="Fashion Apparel" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <Image src="/campaign-worlds/groton-3.jpg" alt="Fashion Apparel" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex justify-between items-center px-1">
               <span className="text-xs font-bold tracking-widest uppercase">Fashion</span>
@@ -438,7 +461,7 @@ export default function Home() {
 
           <div className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
             <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200">
-              <Image src="/campaign-worlds/990d5aeb63b8b4ecc01f0e17d877fc6c.jpg" alt="Footwear" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <Image src="/campaign-worlds/groton-13.jpg" alt="Footwear" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex justify-between items-center px-1">
               <span className="text-xs font-bold tracking-widest uppercase">Footwear</span>
@@ -447,7 +470,7 @@ export default function Home() {
 
           <div className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
             <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200">
-              <Image src="/campaign-worlds/51c544e78767b419a857af993f1814ab.jpg" alt="Home" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <Image src="/campaign-worlds/groton-6.jpg" alt="Home" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex justify-between items-center px-1">
               <span className="text-xs font-bold tracking-widest uppercase">Home</span>
@@ -456,7 +479,7 @@ export default function Home() {
 
           <div className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
             <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200">
-              <Image src="/campaign-worlds/8ba03716f09635d4a54c4dfbd7ca2687.jpg" alt="Product" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <Image src="/campaign-worlds/groton-10.jpg" alt="Product" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex justify-between items-center px-1">
               <span className="text-xs font-bold tracking-widest uppercase">Product</span>
@@ -465,7 +488,7 @@ export default function Home() {
           
           <div className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
             <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200">
-              <Image src="/campaign-worlds/45258c05db236072e9efbed40ba5e79e.jpg" alt="Lifestyle" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <Image src="/campaign-worlds/groton-5.jpg" alt="Lifestyle" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex justify-between items-center px-1">
               <span className="text-xs font-bold tracking-widest uppercase">Lifestyle</span>
