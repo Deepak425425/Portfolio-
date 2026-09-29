@@ -32,7 +32,15 @@ interface BulkProcessorProps {
   disableBulk?: boolean;
   
   // Custom export buttons to override the default "Export Image" button area
-  customExportButtons?: (isProcessing: boolean, processSingle: () => void, processBulkZip: () => void) => React.ReactNode;
+  customExportButtons?: (
+    isProcessing: boolean, 
+    processSingle: () => Promise<void>, 
+    processBulkZip: () => Promise<void>,
+    images: ImgFile[],
+    setProgress: React.Dispatch<React.SetStateAction<{current: number, total: number}>>,
+    setIsProcessing: React.Dispatch<React.SetStateAction<boolean>>,
+    mode: "single" | "bulk"
+  ) => React.ReactNode;
 }
 
 export default function BulkProcessor({ onProcess, renderControls, renderPreview, onReset, onDownloadSingle, disableBulk, customExportButtons }: BulkProcessorProps) {
@@ -216,7 +224,7 @@ export default function BulkProcessor({ onProcess, renderControls, renderPreview
             <div className="flex flex-col gap-3 mt-4 border-t border-zinc-100 pt-6">
               
               {customExportButtons ? (
-                customExportButtons(isProcessing, processSingle, processBulkZip)
+                customExportButtons(isProcessing, processSingle, processBulkZip, images, setProgress, setIsProcessing, mode)
               ) : (
                 mode === "single" || disableBulk ? (
                   <button disabled={isProcessing} onClick={processSingle} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50">
