@@ -32,12 +32,11 @@ export default function PrivacyPolicyPage() {
       <main className="flex-1 w-full flex flex-col py-24 md:py-32 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto">
         <div className="mb-16 border-b border-zinc-200 pb-12">
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6">Privacy Policy</h1>
-          <p className="text-sm text-zinc-500 font-light">Last updated: [DATE_PLACEHOLDER]</p>
+          <p className="text-sm text-zinc-500 font-light">Last updated: September 29, 2026</p>
         </div>
 
         <div className="prose prose-zinc prose-p:font-light prose-p:text-zinc-600 max-w-none">
           <p>
-            {/* TODO: Legal Review Required - Replace placeholders with actual business entities before publishing */}
             At GROTON ("we", "our", or "us"), we are committed to protecting your privacy. This Privacy Policy explains how your personal information is collected, used, and disclosed by GROTON.
           </p>
 
@@ -70,9 +69,7 @@ export default function PrivacyPolicyPage() {
             Specifically, we may share data with:
           </p>
           <ul className="list-disc pl-5 space-y-2 mt-4 font-light text-zinc-600 text-sm">
-            <li>[ANALYTICS_PROVIDER_PLACEHOLDER] for website analytics.</li>
-            <li>[HOSTING_PROVIDER_PLACEHOLDER] for infrastructure.</li>
-            <li>[CRM_PROVIDER_PLACEHOLDER] for client relationship management.</li>
+            <li>Vercel for infrastructure.</li>
           </ul>
 
           <h3 className="font-serif text-2xl mt-12 mb-4">4. Intellectual Property & Visual Generation</h3>
@@ -85,8 +82,8 @@ export default function PrivacyPolicyPage() {
             If you have any questions about this Privacy Policy, please contact us at:
             <br/><br/>
             <strong>GROTON AI STUDIO</strong><br/>
-            Email: [EMAIL_PLACEHOLDER]<br/>
-            Address: [ADDRESS_PLACEHOLDER]
+            Jaipur, Rajasthan, India<br/>
+            Email: deepak@graflystudio.com
           </p>
         </div>
       </main>
