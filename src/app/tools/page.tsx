@@ -61,24 +61,46 @@ export default function ToolsLandingPage() {
       
       <div className="flex-1 w-full max-w-[1400px] mx-auto px-4 md:px-8 py-16 md:py-24">
         
-        {/* HERO SECTION */}
-        <div className="flex flex-col items-start gap-4 mb-16 max-w-3xl">
-          <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-accent">GROTON AI / TOOLS</span>
-          <h1 className="text-4xl md:text-6xl font-serif tracking-tight leading-tight">Image tools, without the busywork.</h1>
-          <p className="text-lg text-sec-text mt-2 font-light">Fast, browser-based tools for converting, resizing, compressing, organizing and preparing images.</p>
+        <div className="flex flex-col items-start gap-4 mb-16 w-full">
+          <div className="max-w-3xl">
+            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-accent">GROTON AI / TOOLS</span>
+            <h1 className="text-4xl md:text-6xl font-serif tracking-tight leading-tight">Image tools, without the busywork.</h1>
+            <p className="text-lg text-sec-text mt-2 font-light">Fast, browser-based tools for converting, resizing, compressing, organizing and preparing images.</p>
+            
+            <div className="flex flex-wrap gap-4 mt-6">
+              <a href="#explore" className="bg-accent text-white px-8 py-4 text-xs uppercase tracking-widest font-bold hover:bg-accent-dark transition-colors">
+                Explore Tools
+              </a>
+              <div className="relative group">
+                <input 
+                  type="text" 
+                  placeholder="Search tools... (e.g. 'compress')"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  className="bg-white border border-border-color px-6 py-4 text-sm w-[300px] focus:outline-none focus:border-accent transition-colors shadow-sm"
+                />
+              </div>
+            </div>
+          </div>
           
-          <div className="flex flex-wrap gap-4 mt-6">
-            <a href="#explore" className="bg-accent text-white px-8 py-4 text-xs uppercase tracking-widest font-bold hover:bg-accent-dark transition-colors">
-              Explore Tools
-            </a>
-            <div className="relative group">
-              <input 
-                type="text" 
-                placeholder="Search tools... (e.g. 'compress')"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="bg-white border border-border-color px-6 py-4 text-sm w-[300px] focus:outline-none focus:border-accent transition-colors shadow-sm"
-              />
+          <div className="mt-12 pt-8 border-t border-border-color/50 w-full">
+            <p className="text-[10px] uppercase tracking-widest font-bold text-sec-text mb-6">What do you want to do?</p>
+            <div className="flex flex-wrap gap-3">
+              {[
+                { label: "Make it smaller", link: "/tools/compressor" },
+                { label: "Change format", link: "/tools/convert" },
+                { label: "Remove background", link: "/tools/background-remover" },
+                { label: "Create color palette", link: "/tools/color-palette" },
+                { label: "Resize for social", link: "/tools/social-resizer" },
+                { label: "Add watermark", link: "/tools/watermark" },
+                { label: "Blur a face", link: "/tools/face-blur" },
+                { label: "Create collage", link: "/tools/collage" },
+                { label: "Make PDF", link: "/tools/pdf-contact-sheet" }
+              ].map(action => (
+                <Link key={action.label} href={action.link} className="px-5 py-2.5 bg-white border border-border-color text-xs font-bold text-foreground hover:border-black transition-colors rounded-sm shadow-sm hover:shadow">
+                  {action.label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
