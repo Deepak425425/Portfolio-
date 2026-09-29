@@ -305,7 +305,7 @@ export default function CollageMakerPage() {
                   onDragOver={e => handleDragOver(e, i)}
                   onDragEnd={handleDragEnd}
                   onClick={() => setSelectedId(img.id)}
-                  className={`flex items-center gap-3 p-2 border transition-colors cursor-move group ${selectedId === img.id ? 'border-black bg-zinc-50' : 'border-zinc-100 hover:border-zinc-300'} ${dragIndex === i ? 'opacity-50' : ''}`}
+                  className={`flex items-center gap-3 p-2 border transition-colors cursor-move group ${selectedId === img.id ? 'border-[#111111] bg-zinc-50' : 'border-zinc-100 hover:border-zinc-300'} ${dragIndex === i ? 'opacity-50' : ''}`}
                 >
                   <span className="text-[9px] font-bold text-zinc-400 w-4">{String(i + 1).padStart(2, '0')}</span>
                   <img src={img.url} className="w-10 h-10 object-cover border border-zinc-200" />
@@ -344,7 +344,7 @@ export default function CollageMakerPage() {
               {images.map(img => (
                 <div key={img.id} className="flex flex-col items-center">
                   <div 
-                    className={`relative w-full overflow-hidden border transition-colors cursor-grab active:cursor-grabbing ${selectedId === img.id ? 'border-blue-500 shadow-[0_0_0_2px_rgba(59,130,246,0.5)] z-10' : 'border-transparent'}`}
+                    className={`relative w-full overflow-hidden border transition-colors cursor-grab active:cursor-grabbing ${selectedId === img.id ? 'border-[#8B7CFF] shadow-[0_0_0_2px_rgba(59,130,246,0.5)] z-10' : 'border-transparent'}`}
                     style={{ aspectRatio: ratioValues[ratioStr] }}
                     onMouseDown={e => handlePanStart(e, img)}
                     onMouseMove={e => handlePanMove(e, img)}
@@ -393,7 +393,7 @@ export default function CollageMakerPage() {
                 <label className="text-[9px] uppercase tracking-widest text-zinc-500">Columns</label>
                 <div className="grid grid-cols-5 gap-1">
                   {[1,2,3,4,5].map(c => (
-                    <button key={c} onClick={() => setColumns(c)} className={`py-1 text-[10px] border ${columns === c ? 'bg-black text-white border-black' : 'border-zinc-200 hover:border-black'}`}>{c}</button>
+                    <button key={c} onClick={() => setColumns(c)} className={`py-1 text-[10px] border ${columns === c ? 'bg-[#111111] text-white border-[#111111]' : 'border-zinc-200 hover:border-[#111111]'}`}>{c}</button>
                   ))}
                 </div>
               </div>
@@ -401,7 +401,7 @@ export default function CollageMakerPage() {
                 <label className="text-[9px] uppercase tracking-widest text-zinc-500">Image Ratio</label>
                 <div className="grid grid-cols-4 gap-1">
                   {["1:1","4:5","3:4","4:3","3:2","16:9","9:16"].map(r => (
-                    <button key={r} onClick={() => setRatioStr(r)} className={`py-1 text-[10px] border ${ratioStr === r ? 'bg-black text-white border-black' : 'border-zinc-200 hover:border-black'}`}>{r}</button>
+                    <button key={r} onClick={() => setRatioStr(r)} className={`py-1 text-[10px] border ${ratioStr === r ? 'bg-[#111111] text-white border-[#111111]' : 'border-zinc-200 hover:border-[#111111]'}`}>{r}</button>
                   ))}
                 </div>
               </div>
@@ -418,7 +418,7 @@ export default function CollageMakerPage() {
                     <span>Zoom</span>
                     <span>{images.find(i=>i.id===selectedId)?.zoom.toFixed(2)}x</span>
                   </label>
-                  <input type="range" min="0.5" max="3" step="0.05" value={images.find(i=>i.id===selectedId)?.zoom || 1} onChange={e => selectedId && updateImage(selectedId, { zoom: parseFloat(e.target.value) })} className="w-full accent-black" />
+                  <input type="range" min="0.5" max="3" step="0.05" value={images.find(i=>i.id===selectedId)?.zoom || 1} onChange={e => selectedId && updateImage(selectedId, { zoom: parseFloat(e.target.value) })} className="w-full accent-[#8B7CFF]" />
                 </div>
                 <button onClick={() => selectedId && updateImage(selectedId, { zoom:1, panX:0, panY:0 })} className="text-[9px] uppercase tracking-widest font-bold text-zinc-400 hover:text-black text-left">Reset Image Position</button>
               </div>
@@ -440,9 +440,9 @@ export default function CollageMakerPage() {
               <div className="flex flex-col gap-1">
                 <label className="text-[9px] uppercase tracking-widest text-zinc-500">Background</label>
                 <div className="grid grid-cols-3 gap-1 mt-1">
-                  <button onClick={() => setBgColor("#ffffff")} className={`h-6 border ${bgColor==='#ffffff'?'border-black':'border-zinc-200'} bg-white`}></button>
-                  <button onClick={() => setBgColor("#000000")} className={`h-6 border ${bgColor==='#000000'?'border-blue-500':'border-zinc-200'} bg-black`}></button>
-                  <button onClick={() => setBgColor("transparent")} className={`h-6 border ${bgColor==='transparent'?'border-black':'border-zinc-200'} bg-[#e5e5f7]`} style={{ backgroundImage: 'repeating-linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)', backgroundSize: '10px 10px' }}></button>
+                  <button onClick={() => setBgColor("#ffffff")} className={`h-6 border ${bgColor==='#ffffff'?'border-[#111111]':'border-zinc-200'} bg-white`}></button>
+                  <button onClick={() => setBgColor("#000000")} className={`h-6 border ${bgColor==='#000000'?'border-[#8B7CFF]':'border-zinc-200'} bg-[#111111]`}></button>
+                  <button onClick={() => setBgColor("transparent")} className={`h-6 border ${bgColor==='transparent'?'border-[#111111]':'border-zinc-200'} bg-[#e5e5f7]`} style={{ backgroundImage: 'repeating-linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)', backgroundSize: '10px 10px' }}></button>
                 </div>
               </div>
             </div>
@@ -451,12 +451,12 @@ export default function CollageMakerPage() {
             <div className="flex flex-col gap-4">
               <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 border-b border-zinc-100 pb-2 flex justify-between items-center">
                 4. Labels
-                <input type="checkbox" checked={showLabels} onChange={e=>setShowLabels(e.target.checked)} className="accent-black" />
+                <input type="checkbox" checked={showLabels} onChange={e=>setShowLabels(e.target.checked)} className="accent-[#8B7CFF]" />
               </h3>
               {showLabels && (
                 <div className="flex flex-col gap-1">
                   <label className="text-[9px] uppercase tracking-widest text-zinc-500">Font Size ({fontSize}px)</label>
-                  <input type="range" min="8" max="32" value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} className="w-full accent-black" />
+                  <input type="range" min="8" max="32" value={fontSize} onChange={e=>setFontSize(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                 </div>
               )}
             </div>
@@ -468,10 +468,10 @@ export default function CollageMakerPage() {
               <div className="flex flex-col gap-2">
                 <label className="text-[9px] uppercase tracking-widest text-zinc-500">Resolution Multiplier</label>
                 <div className="grid grid-cols-4 gap-1">
-                  <button onClick={() => setResScale(1)} className={`py-1 text-[10px] border ${resScale===1 ? 'bg-black text-white border-black' : 'border-zinc-200 hover:border-black'}`}>1x</button>
-                  <button onClick={() => setResScale(2)} className={`py-1 text-[10px] border ${resScale===2 ? 'bg-black text-white border-black' : 'border-zinc-200 hover:border-black'}`}>2x</button>
-                  <button onClick={() => setResScale(3)} className={`py-1 text-[10px] border ${resScale===3 ? 'bg-black text-white border-black' : 'border-zinc-200 hover:border-black'}`}>3x</button>
-                  <button onClick={() => setResScale(4)} className={`py-1 text-[10px] border ${resScale===4 ? 'bg-black text-white border-black' : 'border-zinc-200 hover:border-black'}`}>4x</button>
+                  <button onClick={() => setResScale(1)} className={`py-1 text-[10px] border ${resScale===1 ? 'bg-[#111111] text-white border-[#111111]' : 'border-zinc-200 hover:border-[#111111]'}`}>1x</button>
+                  <button onClick={() => setResScale(2)} className={`py-1 text-[10px] border ${resScale===2 ? 'bg-[#111111] text-white border-[#111111]' : 'border-zinc-200 hover:border-[#111111]'}`}>2x</button>
+                  <button onClick={() => setResScale(3)} className={`py-1 text-[10px] border ${resScale===3 ? 'bg-[#111111] text-white border-[#111111]' : 'border-zinc-200 hover:border-[#111111]'}`}>3x</button>
+                  <button onClick={() => setResScale(4)} className={`py-1 text-[10px] border ${resScale===4 ? 'bg-[#111111] text-white border-[#111111]' : 'border-zinc-200 hover:border-[#111111]'}`}>4x</button>
                 </div>
               </div>
               
@@ -479,16 +479,16 @@ export default function CollageMakerPage() {
                 <label className="text-[9px] uppercase tracking-widest text-zinc-500 flex justify-between">
                   <span>JPG/WEBP Quality</span><span>{quality}%</span>
                 </label>
-                <input type="range" min="50" max="100" value={quality} onChange={e=>setQuality(Number(e.target.value))} className="w-full accent-black" />
+                <input type="range" min="50" max="100" value={quality} onChange={e=>setQuality(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
               </div>
 
               <div className="grid grid-cols-3 gap-1 mt-2">
-                <button disabled={isProcessing} onClick={() => exportCollage('jpeg')} className="py-2 text-[10px] uppercase font-bold tracking-widest bg-black text-white hover:bg-zinc-800 disabled:opacity-50">JPG</button>
-                <button disabled={isProcessing} onClick={() => exportCollage('png')} className="py-2 text-[10px] uppercase font-bold tracking-widest bg-black text-white hover:bg-zinc-800 disabled:opacity-50">PNG</button>
-                <button disabled={isProcessing} onClick={() => exportCollage('webp')} className="py-2 text-[10px] uppercase font-bold tracking-widest bg-black text-white hover:bg-zinc-800 disabled:opacity-50">WEBP</button>
+                <button disabled={isProcessing} onClick={() => exportCollage('jpeg')} className="py-2 text-[10px] uppercase font-bold tracking-widest bg-[#111111] text-white hover:bg-[#222222] disabled:opacity-50">JPG</button>
+                <button disabled={isProcessing} onClick={() => exportCollage('png')} className="py-2 text-[10px] uppercase font-bold tracking-widest bg-[#111111] text-white hover:bg-[#222222] disabled:opacity-50">PNG</button>
+                <button disabled={isProcessing} onClick={() => exportCollage('webp')} className="py-2 text-[10px] uppercase font-bold tracking-widest bg-[#111111] text-white hover:bg-[#222222] disabled:opacity-50">WEBP</button>
               </div>
 
-              <button disabled={isProcessing} onClick={exportAllFormats} className="w-full py-3 border border-black text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:opacity-50">
+              <button disabled={isProcessing} onClick={exportAllFormats} className="w-full py-3 border border-[#111111] text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:opacity-50">
                 Export All Formats
               </button>
 

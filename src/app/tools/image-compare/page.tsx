@@ -199,7 +199,7 @@ export default function ImageComparePage() {
         >
           {/* AFTER */}
           <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
-             <img src={afterUrl} className="w-full h-full object-contain pointer-events-none" />
+             <img src={afterUrl} className="w-full h-full max-h-[70vh] object-contain pointer-events-none" />
           </div>
 
           {/* BEFORE */}
@@ -208,12 +208,12 @@ export default function ImageComparePage() {
             style={{ width: `${sliderPos}%` }}
           >
              <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center min-w-max" style={{ width: sliderRef.current?.clientWidth || '100%' }}>
-               <img src={beforeUrl} className="w-full h-full object-contain pointer-events-none" />
+               <img src={beforeUrl} className="w-full h-full max-h-[70vh] object-contain pointer-events-none" />
              </div>
           </div>
 
           {/* Labels */}
-          <div className="absolute top-4 left-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 pointer-events-none z-10 shadow">
+          <div className="absolute top-4 left-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 pointer-events-none z-10 shadow">
             {labels.before}
           </div>
           <div className="absolute top-4 right-4 bg-white text-black text-[10px] uppercase tracking-widest font-bold px-3 py-1 pointer-events-none z-10 shadow">
@@ -239,13 +239,13 @@ export default function ImageComparePage() {
     if (mode === "side") {
       return (
         <div className="w-full h-full min-h-[500px] flex flex-col md:flex-row gap-4">
-           <div className="flex-1 bg-zinc-100 relative border border-zinc-200">
-             <div className="absolute top-4 left-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 z-10 shadow">{labels.before}</div>
-             <img src={beforeUrl} className="w-full h-full object-contain" />
+           <div className="flex-1 min-h-0 bg-zinc-100 relative border border-zinc-200">
+             <div className="absolute top-4 left-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 z-10 shadow">{labels.before}</div>
+             <img src={beforeUrl} className="w-full h-full max-h-[70vh] object-contain" />
            </div>
-           <div className="flex-1 bg-zinc-100 relative border border-zinc-200">
+           <div className="flex-1 min-h-0 bg-zinc-100 relative border border-zinc-200">
              <div className="absolute top-4 right-4 bg-white text-black text-[10px] uppercase tracking-widest font-bold px-3 py-1 z-10 shadow">{labels.after}</div>
-             <img src={afterUrl} className="w-full h-full object-contain" />
+             <img src={afterUrl} className="w-full h-full max-h-[70vh] object-contain" />
            </div>
         </div>
       );
@@ -254,13 +254,13 @@ export default function ImageComparePage() {
     if (mode === "top") {
       return (
         <div className="w-full h-full min-h-[700px] flex flex-col gap-4">
-           <div className="flex-1 bg-zinc-100 relative border border-zinc-200">
-             <div className="absolute top-4 left-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 z-10 shadow">{labels.before}</div>
-             <img src={beforeUrl} className="w-full h-full object-contain" />
+           <div className="flex-1 min-h-0 bg-zinc-100 relative border border-zinc-200">
+             <div className="absolute top-4 left-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 z-10 shadow">{labels.before}</div>
+             <img src={beforeUrl} className="w-full h-full max-h-[70vh] object-contain" />
            </div>
-           <div className="flex-1 bg-zinc-100 relative border border-zinc-200">
+           <div className="flex-1 min-h-0 bg-zinc-100 relative border border-zinc-200">
              <div className="absolute bottom-4 left-4 bg-white text-black text-[10px] uppercase tracking-widest font-bold px-3 py-1 z-10 shadow">{labels.after}</div>
-             <img src={afterUrl} className="w-full h-full object-contain" />
+             <img src={afterUrl} className="w-full h-full max-h-[70vh] object-contain" />
            </div>
         </div>
       );
@@ -271,7 +271,7 @@ export default function ImageComparePage() {
         <div className="w-full h-full min-h-[500px] bg-zinc-950 relative border border-zinc-800 flex items-center justify-center">
            <div className="absolute top-4 left-4 bg-white text-black text-[10px] uppercase tracking-widest font-bold px-3 py-1 z-10 shadow">Difference Map</div>
            {diffUrl ? (
-             <img src={diffUrl} className="w-full h-full object-contain p-4" />
+             <img src={diffUrl} className="w-full h-full max-h-[70vh] object-contain p-4" />
            ) : (
              <span className="text-zinc-500 text-xs tracking-widest uppercase font-bold">Computing Difference...</span>
            )}
@@ -286,23 +286,23 @@ export default function ImageComparePage() {
         <Link href="/tools" className="text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-black mb-8 block">
           ← Back to Tools
         </Link>
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 min-h-[70vh]">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 h-[70vh] max-h-[70vh]">
           
           {/* Main Workspace */}
-          <div className="flex-1 flex flex-col gap-6 w-full lg:w-auto">
+          <div className="flex-1 flex flex-col gap-6 w-full lg:w-auto h-[65vh] max-h-[65vh]">
             {(!beforeUrl || !afterUrl) ? (
               <div className="flex-1 min-h-[500px] flex flex-col md:flex-row gap-6">
                 
                 {/* Before Upload */}
                 <div 
-                  className={`flex-1 border-2 border-dashed ${dragBefore ? 'border-black bg-zinc-50' : 'border-zinc-200'} flex flex-col items-center justify-center p-8 transition-colors relative cursor-pointer group`}
+                  className={`flex-1 border-2 border-dashed ${dragBefore ? 'border-[#111111] bg-zinc-50' : 'border-zinc-200'} flex flex-col items-center justify-center p-8 transition-colors relative cursor-pointer group`}
                   onDragOver={(e) => { e.preventDefault(); setDragBefore(true); }}
                   onDragLeave={() => setDragBefore(false)}
                   onDrop={(e) => { e.preventDefault(); setDragBefore(false); handleBeforeUpload(e.dataTransfer.files); }}
                 >
                   <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleBeforeUpload(e.target.files)} />
                   {beforeUrl ? (
-                    <img src={beforeUrl} className="max-w-full max-h-full object-contain pointer-events-none" />
+                    <img src={beforeUrl} className="max-w-full max-h-[70vh] object-contain pointer-events-none" />
                   ) : (
                     <div className="text-center pointer-events-none">
                       <span className="text-3xl mb-4 block text-zinc-300 group-hover:text-black transition-colors">+</span>
@@ -314,14 +314,14 @@ export default function ImageComparePage() {
 
                 {/* After Upload */}
                 <div 
-                  className={`flex-1 border-2 border-dashed ${dragAfter ? 'border-black bg-zinc-50' : 'border-zinc-200'} flex flex-col items-center justify-center p-8 transition-colors relative cursor-pointer group`}
+                  className={`flex-1 border-2 border-dashed ${dragAfter ? 'border-[#111111] bg-zinc-50' : 'border-zinc-200'} flex flex-col items-center justify-center p-8 transition-colors relative cursor-pointer group`}
                   onDragOver={(e) => { e.preventDefault(); setDragAfter(true); }}
                   onDragLeave={() => setDragAfter(false)}
                   onDrop={(e) => { e.preventDefault(); setDragAfter(false); handleAfterUpload(e.dataTransfer.files); }}
                 >
                   <input type="file" accept="image/*" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleAfterUpload(e.target.files)} />
                   {afterUrl ? (
-                    <img src={afterUrl} className="max-w-full max-h-full object-contain pointer-events-none" />
+                    <img src={afterUrl} className="max-w-full max-h-[70vh] object-contain pointer-events-none" />
                   ) : (
                     <div className="text-center pointer-events-none">
                       <span className="text-3xl mb-4 block text-zinc-300 group-hover:text-black transition-colors">+</span>
@@ -356,7 +356,7 @@ export default function ImageComparePage() {
                       <button
                         key={m.id}
                         onClick={() => setMode(m.id as Mode)}
-                        className={`p-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${mode === m.id ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}
+                        className={`p-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${mode === m.id ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}
                       >
                         {m.label}
                       </button>
@@ -372,14 +372,14 @@ export default function ImageComparePage() {
                        value={labels.before} 
                        onChange={(e) => setLabels(l => ({...l, before: e.target.value}))}
                        placeholder="Before Label"
-                       className="w-full p-3 border border-zinc-200 text-xs outline-none focus:border-black transition-colors"
+                       className="w-full p-3 border border-zinc-200 text-xs outline-none focus:border-[#111111] transition-colors"
                      />
                      <input 
                        type="text" 
                        value={labels.after} 
                        onChange={(e) => setLabels(l => ({...l, after: e.target.value}))}
                        placeholder="After Label"
-                       className="w-full p-3 border border-zinc-200 text-xs outline-none focus:border-black transition-colors"
+                       className="w-full p-3 border border-zinc-200 text-xs outline-none focus:border-[#111111] transition-colors"
                      />
                   </div>
                </div>
@@ -387,14 +387,14 @@ export default function ImageComparePage() {
                <div className="flex flex-col gap-3 mt-auto">
                  <button
                    onClick={() => { setBeforeUrl(null); setAfterUrl(null); }}
-                   className="w-full py-4 bg-transparent border border-zinc-200 text-black text-[10px] uppercase tracking-widest font-bold hover:border-black transition-colors"
+                   className="w-full py-4 bg-transparent border border-zinc-200 text-black text-[10px] uppercase tracking-widest font-bold hover:border-[#111111] transition-colors"
                  >
                    Reset Images
                  </button>
                  <button
                    onClick={handleExport}
                    disabled={!beforeUrl || !afterUrl}
-                   className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:bg-black"
+                   className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:opacity-50 disabled:bg-[#111111]"
                  >
                    Export Comparison
                  </button>

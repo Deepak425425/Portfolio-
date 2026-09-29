@@ -261,7 +261,7 @@ export default function ResizePage() {
             <UploadDropzone onUpload={handleUpload} multiple={true} />
           ) : (
             <div className="w-full bg-[#F7F6F2] relative flex flex-col items-center justify-center border border-[#DEDCD5] min-h-[60vh] p-8 overflow-hidden">
-              <canvas ref={canvasRef} className="max-w-full max-h-full object-contain block shadow-xl transition-all duration-300 bg-white" />
+              <canvas ref={canvasRef} className="max-w-full max-h-[70vh] object-contain block shadow-xl transition-all duration-300 bg-white" />
               
               <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1.5 border border-[#DEDCD5] text-[10px] uppercase font-bold tracking-widest shadow-sm">
                 Output: {width} × {height}
@@ -271,7 +271,7 @@ export default function ResizePage() {
                 <div className="absolute bottom-0 left-0 w-full bg-white/90 backdrop-blur p-4 flex gap-2 overflow-x-auto border-t border-[#DEDCD5]">
                   {images.map((img, i) => (
                     <button key={img.id} onClick={() => setPreviewIndex(i)} className={`relative h-14 w-14 shrink-0 border-2 transition-all ${previewIndex === i ? 'border-[#8B7CFF] shadow-md scale-105' : 'border-transparent opacity-60 hover:opacity-100'}`}>
-                      <img src={img.url} className="w-full h-full object-cover" />
+                      <img src={img.url} className="w-full h-full max-h-[70vh] object-cover" />
                     </button>
                   ))}
                 </div>
@@ -289,7 +289,7 @@ export default function ResizePage() {
               <select 
                  value={preset} 
                  onChange={(e) => handlePreset(e.target.value)}
-                 className="w-full p-3 border border-[#DEDCD5] text-sm font-bold bg-[#F7F6F2] outline-none hover:border-black focus:border-black transition-colors"
+                 className="w-full p-3 border border-[#DEDCD5] text-sm font-bold bg-[#F7F6F2] outline-none hover:border-[#111111] focus:border-[#111111] transition-colors"
               >
                  {platformPresets.map(p => (
                    <option key={p.id} value={p.id}>{p.name} {p.w > 0 ? `(${p.w} × ${p.h})` : ''}</option>
@@ -302,19 +302,19 @@ export default function ResizePage() {
               <div className="flex items-center justify-between">
                 <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text">Dimensions</label>
                 <label className="text-[9px] tracking-widest uppercase font-bold text-sec-text flex items-center gap-1.5 cursor-pointer hover:text-black">
-                  <input type="checkbox" checked={lockRatio} onChange={e => setLockRatio(e.target.checked)} className="accent-black" /> Lock Aspect
+                  <input type="checkbox" checked={lockRatio} onChange={e => setLockRatio(e.target.checked)} className="accent-[#8B7CFF]" /> Lock Aspect
                 </label>
               </div>
               
               <div className="flex gap-4">
                 <div className="flex-1 flex flex-col gap-1">
                   <span className="text-[10px] text-sec-text uppercase tracking-widest">Width</span>
-                  <input type="number" value={width} onChange={e => handleWChange(Number(e.target.value))} className="w-full border-b-2 border-[#DEDCD5] py-2 bg-transparent focus:outline-none focus:border-black transition-colors font-mono font-bold text-lg text-center" />
+                  <input type="number" value={width} onChange={e => handleWChange(Number(e.target.value))} className="w-full border-b-2 border-[#DEDCD5] py-2 bg-transparent focus:outline-none focus:border-[#111111] transition-colors font-mono font-bold text-lg text-center" />
                 </div>
                 <div className="flex items-end pb-3 text-[#DEDCD5] text-xl">×</div>
                 <div className="flex-1 flex flex-col gap-1">
                   <span className="text-[10px] text-sec-text uppercase tracking-widest">Height</span>
-                  <input type="number" value={height} onChange={e => handleHChange(Number(e.target.value))} className="w-full border-b-2 border-[#DEDCD5] py-2 bg-transparent focus:outline-none focus:border-black transition-colors font-mono font-bold text-lg text-center" />
+                  <input type="number" value={height} onChange={e => handleHChange(Number(e.target.value))} className="w-full border-b-2 border-[#DEDCD5] py-2 bg-transparent focus:outline-none focus:border-[#111111] transition-colors font-mono font-bold text-lg text-center" />
                 </div>
               </div>
             </div>
@@ -323,9 +323,9 @@ export default function ResizePage() {
             <div className="flex flex-col gap-3 pt-4 border-t border-[#DEDCD5]">
               <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text">Resize Strategy</label>
               <div className="grid grid-cols-3 gap-2">
-                <button onClick={() => setMode("fill")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${mode === "fill" ? 'bg-black text-white border-black' : 'bg-transparent text-sec-text border-[#DEDCD5] hover:border-black'}`}>Fill / Crop</button>
-                <button onClick={() => setMode("fit")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${mode === "fit" ? 'bg-black text-white border-black' : 'bg-transparent text-sec-text border-[#DEDCD5] hover:border-black'}`}>Contain</button>
-                <button onClick={() => setMode("exact")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${mode === "exact" ? 'bg-black text-white border-black' : 'bg-transparent text-sec-text border-[#DEDCD5] hover:border-black'}`}>Stretch</button>
+                <button onClick={() => setMode("fill")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${mode === "fill" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-sec-text border-[#DEDCD5] hover:border-[#111111]'}`}>Fill / Crop</button>
+                <button onClick={() => setMode("fit")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${mode === "fit" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-sec-text border-[#DEDCD5] hover:border-[#111111]'}`}>Contain</button>
+                <button onClick={() => setMode("exact")} className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${mode === "exact" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-sec-text border-[#DEDCD5] hover:border-[#111111]'}`}>Stretch</button>
               </div>
             </div>
 
@@ -334,7 +334,7 @@ export default function ResizePage() {
                <div className="flex items-center justify-between">
                  <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text">Background</label>
                  <label className="text-[9px] tracking-widest uppercase font-bold text-sec-text flex items-center gap-1.5 cursor-pointer hover:text-black">
-                   <input type="checkbox" checked={transparentBg} onChange={e => setTransparentBg(e.target.checked)} className="accent-black" /> Transparent (PNG)
+                   <input type="checkbox" checked={transparentBg} onChange={e => setTransparentBg(e.target.checked)} className="accent-[#8B7CFF]" /> Transparent (PNG)
                  </label>
                </div>
                
@@ -349,7 +349,7 @@ export default function ResizePage() {
                  <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text flex justify-between">
                    <span>Padding</span> <span>{padding}px</span>
                  </label>
-                 <input type="range" min="0" max="200" value={padding} onChange={e => setPadding(Number(e.target.value))} className="w-full accent-black" />
+                 <input type="range" min="0" max="200" value={padding} onChange={e => setPadding(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                </div>
             </div>
 
@@ -363,10 +363,10 @@ export default function ResizePage() {
                 </div>
                 
                 <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text text-center">{images.length} Image{images.length > 1 ? 's' : ''} Ready</span>
-                <button disabled={isProcessing} onClick={downloadZip} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#8B7CFF] transition-colors disabled:opacity-50">
+                <button disabled={isProcessing} onClick={downloadZip} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#8B7CFF] transition-colors disabled:opacity-50">
                   {isProcessing ? 'Processing...' : 'Download ZIP'}
                 </button>
-                <button disabled={isProcessing} onClick={downloadAll} className="w-full py-3 bg-transparent border border-black text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:opacity-50">
+                <button disabled={isProcessing} onClick={downloadAll} className="w-full py-3 bg-transparent border border-[#111111] text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:opacity-50">
                   Download All
                 </button>
               </div>

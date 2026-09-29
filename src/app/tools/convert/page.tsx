@@ -98,7 +98,7 @@ export default function ConvertPage() {
                     <button 
                       key={f.id} 
                       onClick={() => setFormat(f.id as any)} 
-                      className={`py-3 text-xs font-bold tracking-widest border uppercase transition-colors ${format === f.id ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}
+                      className={`py-3 text-xs font-bold tracking-widest border uppercase transition-colors ${format === f.id ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}
                     >
                       {f.label}
                     </button>
@@ -112,7 +112,7 @@ export default function ConvertPage() {
                     <span>Quality</span>
                     <span>{quality}</span>
                   </label>
-                  <input type="range" min="50" max="100" value={quality} onChange={e=>setQuality(Number(e.target.value))} className="w-full accent-black" />
+                  <input type="range" min="50" max="100" value={quality} onChange={e=>setQuality(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                 </div>
               )}
               {format === "png" && (
@@ -166,7 +166,7 @@ export default function ConvertPage() {
             <div className="w-full h-full p-8 flex justify-center items-center">
               <div className="relative group">
                  <img src={currentImg.url} className="max-h-[50vh] object-contain shadow-2xl transition-transform transform group-hover:scale-[1.02]" />
-                 <div className="absolute -bottom-4 right-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 shadow-lg pointer-events-none">
+                 <div className="absolute -bottom-4 right-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 shadow-lg pointer-events-none">
                     Preview
                  </div>
               </div>

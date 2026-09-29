@@ -103,13 +103,13 @@ export default function QualityCheckerPage() {
         <Link href="/tools" className="text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-black mb-8 block">
           ← Back to Tools
         </Link>
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 min-h-[70vh]">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 h-[70vh] max-h-[70vh]">
           
           {/* Main Workspace */}
-          <div className="flex-1 flex flex-col gap-6 w-full lg:w-auto">
+          <div className="flex-1 flex flex-col gap-6 w-full lg:w-auto h-[65vh] max-h-[65vh]">
             {images.length === 0 ? (
               <div 
-                className={`flex-1 min-h-[500px] border-2 border-dashed ${isDragging ? 'border-black bg-zinc-50' : 'border-zinc-200'} flex flex-col items-center justify-center p-8 transition-colors`}
+                className={`flex-1 min-h-[500px] border-2 border-dashed ${isDragging ? 'border-[#111111] bg-zinc-50' : 'border-zinc-200'} flex flex-col items-center justify-center p-8 transition-colors`}
                 onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                 onDragLeave={() => setIsDragging(false)}
                 onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFiles(e.dataTransfer.files); }}
@@ -118,7 +118,7 @@ export default function QualityCheckerPage() {
                   <h3 className="font-serif text-3xl mb-2">Image Quality Checker</h3>
                   <p className="text-zinc-500 text-sm">Upload images to analyze resolution, size, and print/web suitability.</p>
                 </div>
-                <button onClick={() => fileInputRef.current?.click()} className="px-8 py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
+                <button onClick={() => fileInputRef.current?.click()} className="px-8 py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors">
                   Upload Images
                 </button>
                 <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
@@ -126,8 +126,8 @@ export default function QualityCheckerPage() {
             ) : (
               <div className="flex flex-col gap-4 h-full">
                 {/* Visual Preview */}
-                <div className="w-full aspect-[16/9] md:aspect-auto md:flex-1 bg-zinc-100 flex items-center justify-center p-4 relative border border-zinc-200">
-                  <img src={activeImg.url} className="max-w-full max-h-full object-contain shadow-md" />
+                <div className="w-full h-full min-h-0 bg-zinc-100 flex items-center justify-center p-4 relative border border-zinc-200">
+                  <img src={activeImg.url} className="max-w-full max-h-[60vh] object-contain shadow-md" />
                 </div>
                 
                 {/* Thumbnails */}
@@ -137,12 +137,12 @@ export default function QualityCheckerPage() {
                       <button 
                         key={img.id}
                         onClick={() => setActiveIndex(idx)}
-                        className={`w-16 h-16 shrink-0 relative overflow-hidden border-2 transition-colors ${activeIndex === idx ? 'border-black' : 'border-transparent'}`}
+                        className={`w-16 h-16 shrink-0 relative overflow-hidden border-2 transition-colors ${activeIndex === idx ? 'border-[#111111]' : 'border-transparent'}`}
                       >
-                        <img src={img.url} className="w-full h-full object-cover" />
+                        <img src={img.url} className="w-full h-full max-h-[70vh] object-cover" />
                       </button>
                     ))}
-                    <button onClick={() => fileInputRef.current?.click()} className="w-16 h-16 shrink-0 border-2 border-dashed border-zinc-200 flex items-center justify-center hover:border-black transition-colors">
+                    <button onClick={() => fileInputRef.current?.click()} className="w-16 h-16 shrink-0 border-2 border-dashed border-zinc-200 flex items-center justify-center hover:border-[#111111] transition-colors">
                       <span className="text-xl text-zinc-400">+</span>
                     </button>
                     <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleFiles(e.target.files)} />
@@ -249,7 +249,7 @@ export default function QualityCheckerPage() {
 
                  <button
                    onClick={downloadReport}
-                   className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors mt-auto"
+                   className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors mt-auto"
                  >
                    Download Report (CSV)
                  </button>

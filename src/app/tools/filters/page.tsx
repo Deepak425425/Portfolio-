@@ -210,7 +210,15 @@ export default function FiltersPage() {
   };
 
   return (
-    <main className="h-screen w-screen bg-[#EEF0F4] text-[#242631] font-sans flex flex-col overflow-hidden">
+    <main className="h-screen w-screen bg-[#F7F6F2] text-[#242631] font-sans flex flex-col overflow-hidden">
+      {/* AMBIENT GRADIENTS */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#DCD7FF] opacity-30 blur-[120px] rounded-full"></div>
+         <div className="absolute top-[20%] right-[-10%] w-[40%] h-[60%] bg-[#E4E9FF] opacity-30 blur-[120px] rounded-full"></div>
+         <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[40%] bg-[#FFF4E6] opacity-30 blur-[120px] rounded-full"></div>
+         <div className="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] bg-[#F8DDEB] opacity-30 blur-[120px] rounded-full"></div>
+      </div>
+
       <style>{`
         input[type=range] {
           -webkit-appearance: none;
@@ -392,13 +400,13 @@ export default function FiltersPage() {
                        <div className="flex flex-col gap-4">
                           {effects.map((eff, idx) => (
                              <div key={eff.id} className="flex flex-col neu-flat rounded-2xl overflow-hidden">
-                                <div className={`flex items-center justify-between p-4 cursor-pointer transition-all ${activeEffectId === eff.id ? 'bg-[#EEF0F4]' : ''}`} onClick={() => setActiveEffectId(activeEffectId === eff.id ? null : eff.id)}>
+                                <div className={`flex items-center justify-between p-4 cursor-pointer transition-all ${activeEffectId === eff.id ? 'bg-[#F7F6F2]' : ''}`} onClick={() => setActiveEffectId(activeEffectId === eff.id ? null : eff.id)}>
                                    <div className="flex items-center gap-3">
                                       <span className="text-[9px] font-mono text-[#7B7F89] opacity-60">0{idx + 1}</span>
                                       <span className={`text-[10px] uppercase tracking-widest font-bold ${activeEffectId === eff.id ? 'text-[#8B7CFF]' : 'text-[#242631]'}`}>{EFFECT_LABELS[eff.type]}</span>
                                    </div>
                                    <div className="flex items-center gap-3">
-                                      <button onClick={(e) => { e.stopPropagation(); toggleEffect(eff.id); }} className={`px-2 py-1 text-[9px] font-bold rounded ${eff.enabled ? 'text-[#8B7CFF] bg-[#EEF0F4] neu-inset' : 'text-[#7B7F89] bg-transparent'}`}>{eff.enabled ? 'ON' : 'OFF'}</button>
+                                      <button onClick={(e) => { e.stopPropagation(); toggleEffect(eff.id); }} className={`px-2 py-1 text-[9px] font-bold rounded ${eff.enabled ? 'text-[#8B7CFF] bg-[#F7F6F2] neu-inset' : 'text-[#7B7F89] bg-transparent'}`}>{eff.enabled ? 'ON' : 'OFF'}</button>
                                       <button onClick={(e) => { e.stopPropagation(); removeEffect(eff.id); }} className="text-[12px] font-bold text-[#7B7F89] hover:text-red-400 p-1">✕</button>
                                    </div>
                                 </div>

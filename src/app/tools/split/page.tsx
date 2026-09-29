@@ -55,7 +55,7 @@ export default function SplitPage() {
           <button onClick={()=>setGrid({r:3,c:3})} className="border p-2">3x3 Grid (Instagram)</button>
           <button onClick={()=>setGrid({r:2,c:2})} className="border p-2">2x2 Grid</button>
           <button onClick={()=>setGrid({r:4,c:3})} className="border p-2">4x3 Grid</button>
-          {img && <button onClick={generate} className="bg-black text-white p-4 font-bold mt-4">Download ZIP</button>}
+          {img && <button onClick={generate} className="bg-[#111111] text-white p-4 font-bold mt-4">Download ZIP</button>}
         </div>
       </div>
     </ToolLayout>

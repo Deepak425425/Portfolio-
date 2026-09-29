@@ -58,7 +58,7 @@ export default function RoundedPage() {
         renderControls={() => (
           <div className="flex flex-col gap-4">
             <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 border-b border-zinc-100 pb-2">Corner Radius</h3>
-            <input type="range" min="0" max="50" value={radius} onChange={e=>setRadius(Number(e.target.value))} className="w-full accent-black" />
+            <input type="range" min="0" max="50" value={radius} onChange={e=>setRadius(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
             <div className="flex justify-between text-xs font-mono">
                <span>Square</span>
                <span>Circle/Pill</span>

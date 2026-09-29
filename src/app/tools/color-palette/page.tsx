@@ -265,18 +265,18 @@ export default function PalettePage() {
 
           return (
             <div className="flex flex-col gap-3">
-              <button disabled={isProcessing} onClick={() => runExport("png")} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50">
+              <button disabled={isProcessing} onClick={() => runExport("png")} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:opacity-50">
                 {isProcessing ? 'Generating...' : 'Export PNG'}
               </button>
               <div className="flex gap-2">
-                 <button disabled={isProcessing} onClick={() => runExport("jpg")} className="w-full flex-1 py-3 border border-border-color bg-background text-foreground text-[10px] uppercase tracking-widest font-bold hover:border-black transition-colors disabled:opacity-50">
+                 <button disabled={isProcessing} onClick={() => runExport("jpg")} className="w-full flex-1 py-3 border border-border-color bg-background text-foreground text-[10px] uppercase tracking-widest font-bold hover:border-[#111111] transition-colors disabled:opacity-50">
                    Export JPG
                  </button>
-                 <button disabled={isProcessing} onClick={() => runExport("json")} className="w-full flex-1 py-3 border border-border-color bg-background text-foreground text-[10px] uppercase tracking-widest font-bold hover:border-black transition-colors disabled:opacity-50">
+                 <button disabled={isProcessing} onClick={() => runExport("json")} className="w-full flex-1 py-3 border border-border-color bg-background text-foreground text-[10px] uppercase tracking-widest font-bold hover:border-[#111111] transition-colors disabled:opacity-50">
                    Export JSON
                  </button>
               </div>
-              <button disabled={isProcessing} onClick={() => runExport("png", true)} className="w-full py-3 mt-4 border border-black bg-white text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:opacity-50">
+              <button disabled={isProcessing} onClick={() => runExport("png", true)} className="w-full py-3 mt-4 border border-[#111111] bg-white text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:opacity-50">
                 EXPORT ALL (ZIP)
               </button>
             </div>
@@ -314,15 +314,15 @@ export default function PalettePage() {
                  <div className="flex items-center justify-between mb-8">
                     <h2 className="text-2xl font-bold text-[#111111] tracking-tight">Extracted Palette</h2>
                     <div className="flex gap-2">
-                       <button onClick={copyAll} className="px-3 py-1.5 bg-white border border-[#DEDCD5] text-[10px] font-bold uppercase tracking-widest hover:border-black transition-colors">Copy All</button>
-                       <button onClick={copyCSS} className="px-3 py-1.5 bg-white border border-[#DEDCD5] text-[10px] font-bold uppercase tracking-widest hover:border-black transition-colors">Copy CSS</button>
+                       <button onClick={copyAll} className="px-3 py-1.5 bg-white border border-[#DEDCD5] text-[10px] font-bold uppercase tracking-widest hover:border-[#111111] transition-colors">Copy All</button>
+                       <button onClick={copyCSS} className="px-3 py-1.5 bg-white border border-[#DEDCD5] text-[10px] font-bold uppercase tracking-widest hover:border-[#111111] transition-colors">Copy CSS</button>
                     </div>
                  </div>
 
                  <Reorder.Group axis="y" values={palette} onReorder={setPalette} className="flex flex-col gap-3">
                    <AnimatePresence>
                      {palette.map((c, i) => (
-                       <Reorder.Item key={c.id} value={c} className="group relative bg-white border border-[#DEDCD5] p-3 flex items-center gap-4 hover:border-black transition-colors cursor-grab active:cursor-grabbing">
+                       <Reorder.Item key={c.id} value={c} className="group relative bg-white border border-[#DEDCD5] p-3 flex items-center gap-4 hover:border-[#111111] transition-colors cursor-grab active:cursor-grabbing">
                           <div className="w-16 h-16 shrink-0 shadow-inner" style={{ backgroundColor: c.hex }}></div>
                           <div className="flex flex-col flex-1 min-w-0">
                              <div className="flex items-center justify-between">
@@ -337,7 +337,7 @@ export default function PalettePage() {
                           </div>
                           
                           <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                             <button onClick={() => toggleLock(i)} className={`p-2 border ${c.isLocked ? 'bg-black text-white border-black' : 'bg-white text-black border-[#DEDCD5] hover:border-black'}`}>
+                             <button onClick={() => toggleLock(i)} className={`p-2 border ${c.isLocked ? 'bg-[#111111] text-white border-[#111111]' : 'bg-white text-black border-[#DEDCD5] hover:border-[#111111]'}`}>
                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                              </button>
                              <button onClick={() => removeColor(c.id)} className="p-2 border border-[#DEDCD5] bg-white text-red-500 hover:border-red-500 transition-colors">
@@ -393,7 +393,7 @@ export default function PalettePage() {
                     <button 
                       key={s} 
                       onClick={() => setSize(s)} 
-                      className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${size === s ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}
+                      className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${size === s ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}
                     >
                       {s}
                     </button>
@@ -409,7 +409,7 @@ export default function PalettePage() {
                     <button 
                       key={m} 
                       onClick={() => setMode(m)} 
-                      className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${mode === m ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'} ${m === 'BALANCED' ? 'col-span-2' : ''}`}
+                      className={`py-2 text-[10px] font-bold tracking-widest border uppercase transition-colors ${mode === m ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'} ${m === 'BALANCED' ? 'col-span-2' : ''}`}
                     >
                       {m}
                     </button>
@@ -433,7 +433,7 @@ export default function PalettePage() {
                     <button 
                        key={i} 
                        onClick={() => setPalette(h)}
-                       className="shrink-0 flex items-center border border-zinc-200 hover:border-black"
+                       className="shrink-0 flex items-center border border-zinc-200 hover:border-[#111111]"
                     >
                        {h.slice(0, 4).map(c => (
                          <div key={c.id} className="w-4 h-6" style={{ backgroundColor: c.hex }}></div>
@@ -452,7 +452,7 @@ export default function PalettePage() {
                 <select 
                    value={harmonyMode} 
                    onChange={(e) => setHarmonyMode(e.target.value)}
-                   className="w-full p-2 border border-zinc-200 text-sm font-bold uppercase tracking-wider bg-transparent outline-none hover:border-black"
+                   className="w-full p-2 border border-zinc-200 text-sm font-bold uppercase tracking-wider bg-transparent outline-none hover:border-[#111111]"
                 >
                    <option value="NONE">None</option>
                    <option value="COMPLEMENTARY">Complementary</option>
@@ -466,7 +466,7 @@ export default function PalettePage() {
                        <button 
                          key={c.id}
                          onClick={() => setHarmonySourceIndex(i)}
-                         className={`w-8 h-8 shrink-0 rounded-full border-2 ${harmonySourceIndex === i ? 'border-black' : 'border-transparent'}`}
+                         className={`w-8 h-8 shrink-0 rounded-full border-2 ${harmonySourceIndex === i ? 'border-[#111111]' : 'border-transparent'}`}
                          style={{ backgroundColor: c.hex }}
                        />
                      ))}
@@ -482,7 +482,7 @@ export default function PalettePage() {
                     <button 
                       key={s} 
                       onClick={() => setExportStyle(s)} 
-                      className={`py-2 text-[9px] font-bold tracking-widest border uppercase transition-colors ${exportStyle === s ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}
+                      className={`py-2 text-[9px] font-bold tracking-widest border uppercase transition-colors ${exportStyle === s ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}
                     >
                       {s}
                     </button>

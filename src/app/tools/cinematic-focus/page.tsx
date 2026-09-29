@@ -172,7 +172,7 @@ export default function CinematicFocusPage() {
               <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 border-b border-zinc-100 pb-2">Studio Presets</h3>
               <div className="flex flex-wrap gap-2">
                  {Object.keys(PRESETS).map(name => (
-                    <button key={name} onClick={() => { setEffects(JSON.parse(JSON.stringify(PRESETS[name]))); setActiveEffectId(null); }} className="px-3 py-2 text-[9px] uppercase tracking-widest border border-zinc-200 text-zinc-600 hover:border-black transition-colors">
+                    <button key={name} onClick={() => { setEffects(JSON.parse(JSON.stringify(PRESETS[name]))); setActiveEffectId(null); }} className="px-3 py-2 text-[9px] uppercase tracking-widest border border-zinc-200 text-zinc-600 hover:border-[#111111] transition-colors">
                        {name}
                     </button>
                  ))}
@@ -254,9 +254,9 @@ export default function CinematicFocusPage() {
            <div className={`bg-white p-6 border border-zinc-200 flex flex-col gap-4 transition-opacity ${!url ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
               <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 border-b border-zinc-100 pb-2">Export Final Image</h3>
               <div className="flex gap-2">
-                 <button onClick={() => exportImage("jpg")} disabled={isProcessing} className="flex-1 py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50">JPG</button>
-                 <button onClick={() => exportImage("png")} disabled={isProcessing} className="flex-1 py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50">PNG</button>
-                 <button onClick={() => exportImage("webp")} disabled={isProcessing} className="flex-1 py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50">WEBP</button>
+                 <button onClick={() => exportImage("jpg")} disabled={isProcessing} className="flex-1 py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:opacity-50">JPG</button>
+                 <button onClick={() => exportImage("png")} disabled={isProcessing} className="flex-1 py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:opacity-50">PNG</button>
+                 <button onClick={() => exportImage("webp")} disabled={isProcessing} className="flex-1 py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:opacity-50">WEBP</button>
               </div>
            </div>
 

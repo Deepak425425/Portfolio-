@@ -426,14 +426,14 @@ export default function WatermarkPage() {
             <div className="flex flex-col gap-4">
               <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400 border-b border-zinc-100 pb-2">1. Watermark</h3>
               <div className="flex gap-2">
-                <button onClick={() => setType("text")} className={`flex-1 py-2 text-xs font-bold tracking-widest border uppercase ${type === "text" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>Text</button>
-                <button onClick={() => setType("logo")} className={`flex-1 py-2 text-xs font-bold tracking-widest border uppercase ${type === "logo" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}>Logo</button>
+                <button onClick={() => setType("text")} className={`flex-1 py-2 text-xs font-bold tracking-widest border uppercase ${type === "text" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>Text</button>
+                <button onClick={() => setType("logo")} className={`flex-1 py-2 text-xs font-bold tracking-widest border uppercase ${type === "logo" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>Logo</button>
               </div>
 
               {type === "text" ? (
                 <div className="flex flex-col gap-2">
                   <label className="text-[9px] uppercase tracking-widest text-zinc-500">Text Content</label>
-                  <input type="text" value={text ?? ""} onChange={e => setText(e.target.value)} className="w-full border-b border-zinc-300 py-2 bg-transparent focus:outline-none focus:border-black transition-colors font-bold text-sm" placeholder="GROTON" />
+                  <input type="text" value={text ?? ""} onChange={e => setText(e.target.value)} className="w-full border-b border-zinc-300 py-2 bg-transparent focus:outline-none focus:border-[#111111] transition-colors font-bold text-sm" placeholder="GROTON" />
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -451,22 +451,22 @@ export default function WatermarkPage() {
                 <label className="text-[9px] uppercase tracking-widest text-zinc-500 flex justify-between">
                   <span>Size</span> <span>{size}%</span>
                 </label>
-                <input type="range" min="1" max="100" value={size ?? 15} onChange={e => setSize(Number(e.target.value))} className="w-full accent-black" />
+                <input type="range" min="1" max="100" value={size ?? 15} onChange={e => setSize(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
               </div>
 
               <div className="flex flex-col gap-1">
                 <label className="text-[9px] uppercase tracking-widest text-zinc-500 flex justify-between">
                   <span>Opacity</span> <span>{opacity}%</span>
                 </label>
-                <input type="range" min="0" max="100" value={opacity ?? 15} onChange={e => setOpacity(Number(e.target.value))} className="w-full accent-black" />
+                <input type="range" min="0" max="100" value={opacity ?? 15} onChange={e => setOpacity(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
               </div>
 
               {type === "text" && (
                 <div className="flex flex-col gap-1">
                   <label className="text-[9px] uppercase tracking-widest text-zinc-500">Color</label>
                   <div className="flex gap-2">
-                    <button onClick={() => setTextColor("#ffffff")} className={`w-8 h-8 rounded-full border-2 ${textColor==="#ffffff" ? 'border-blue-500':'border-zinc-200'} bg-white shadow-sm`}></button>
-                    <button onClick={() => setTextColor("#000000")} className={`w-8 h-8 rounded-full border-2 ${textColor==="#000000" ? 'border-blue-500':'border-zinc-200'} bg-black shadow-sm`}></button>
+                    <button onClick={() => setTextColor("#ffffff")} className={`w-8 h-8 rounded-full border-2 ${textColor==="#ffffff" ? 'border-[#8B7CFF]':'border-zinc-200'} bg-white shadow-sm`}></button>
+                    <button onClick={() => setTextColor("#000000")} className={`w-8 h-8 rounded-full border-2 ${textColor==="#000000" ? 'border-[#8B7CFF]':'border-zinc-200'} bg-[#111111] shadow-sm`}></button>
                     <input type="color" value={textColor ?? "#ffffff"} onChange={e=>setTextColor(e.target.value)} className="w-8 h-8 border-0 p-0" />
                   </div>
                 </div>
@@ -479,7 +479,7 @@ export default function WatermarkPage() {
                 3. Pattern
                 <label className="flex items-center gap-2 cursor-pointer">
                   <span className="text-[9px] uppercase tracking-widest font-bold text-zinc-500">{isPattern ? 'ON' : 'OFF'}</span>
-                  <input type="checkbox" checked={Boolean(isPattern)} onChange={e=>setIsPattern(e.target.checked)} className="accent-black w-4 h-4" />
+                  <input type="checkbox" checked={Boolean(isPattern)} onChange={e=>setIsPattern(e.target.checked)} className="accent-[#8B7CFF] w-4 h-4" />
                 </label>
               </h3>
               
@@ -489,21 +489,21 @@ export default function WatermarkPage() {
                     <label className="text-[9px] uppercase tracking-widest text-zinc-500 flex justify-between">
                       <span>Rotation</span> <span>{rotation}°</span>
                     </label>
-                    <input type="range" min="-180" max="180" value={rotation ?? -30} onChange={e => setRotation(Number(e.target.value))} className="w-full accent-black" />
+                    <input type="range" min="-180" max="180" value={rotation ?? -30} onChange={e => setRotation(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                   </div>
 
                   <div className="flex flex-col gap-1">
                     <label className="text-[9px] uppercase tracking-widest text-zinc-500 flex justify-between">
                       <span>Horizontal Spacing</span> <span>{hGap}%</span>
                     </label>
-                    <input type="range" min="0" max="200" value={hGap ?? 50} onChange={e => setHGap(Number(e.target.value))} className="w-full accent-black" />
+                    <input type="range" min="0" max="200" value={hGap ?? 50} onChange={e => setHGap(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                   </div>
 
                   <div className="flex flex-col gap-1">
                     <label className="text-[9px] uppercase tracking-widest text-zinc-500 flex justify-between">
                       <span>Vertical Spacing</span> <span>{vGap}%</span>
                     </label>
-                    <input type="range" min="0" max="200" value={vGap ?? 50} onChange={e => setVGap(Number(e.target.value))} className="w-full accent-black" />
+                    <input type="range" min="0" max="200" value={vGap ?? 50} onChange={e => setVGap(Number(e.target.value))} className="w-full accent-[#8B7CFF]" />
                   </div>
                   
                   <p className="text-[10px] text-zinc-400 italic font-light mt-1">Tip: Click and drag on the image preview to move the pattern.</p>
@@ -517,13 +517,13 @@ export default function WatermarkPage() {
               <div className="flex gap-2">
                 <button 
                   onClick={() => setLayerMode("over")} 
-                  className={`flex-1 py-3 text-xs font-bold tracking-widest border uppercase transition-colors ${layerMode === "over" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}
+                  className={`flex-1 py-3 text-xs font-bold tracking-widest border uppercase transition-colors ${layerMode === "over" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}
                 >
                   Over Subject
                 </button>
                 <button 
                   onClick={() => setLayerMode("behind")} 
-                  className={`flex-1 py-3 text-xs font-bold tracking-widest border uppercase transition-colors ${layerMode === "behind" ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}
+                  className={`flex-1 py-3 text-xs font-bold tracking-widest border uppercase transition-colors ${layerMode === "behind" ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}
                 >
                   Behind Subject
                 </button>
@@ -577,12 +577,12 @@ export default function WatermarkPage() {
               <label className="text-[9px] uppercase tracking-widest text-zinc-500 flex justify-between">
                 <span>Image Export Quality</span><span>{quality}%</span>
               </label>
-              <input type="range" min="50" max="100" value={quality} onChange={e=>setQuality(Number(e.target.value))} className="w-full accent-black mb-4" />
+              <input type="range" min="50" max="100" value={quality} onChange={e=>setQuality(Number(e.target.value))} className="w-full accent-[#8B7CFF] mb-4" />
             </div>
 
             {mode === "single" ? (
               <div className="flex flex-col gap-2 w-full">
-                <button disabled={isProcessing} onClick={processSingle} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50">
+                <button disabled={isProcessing} onClick={processSingle} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:opacity-50">
                    {isProcessing ? 'Processing...' : 'Download Image'}
                 </button>
                 <button disabled={isProcessing} onClick={() => generatePDF(images, setProgress, setIsProcessing)} className="w-full py-3 border border-[#8B7CFF] text-[#8B7CFF] font-bold text-[10px] uppercase tracking-widest hover:bg-zinc-50 disabled:opacity-50">
@@ -591,7 +591,7 @@ export default function WatermarkPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-2 w-full">
-                <button disabled={isProcessing} onClick={processBulkZip} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50">
+                <button disabled={isProcessing} onClick={processBulkZip} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:opacity-50">
                    {isProcessing ? 'Processing Batch...' : 'Download ZIP'}
                 </button>
                 

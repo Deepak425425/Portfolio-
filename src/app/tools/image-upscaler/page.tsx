@@ -49,7 +49,7 @@ export default function UpscalerPage() {
         <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
            <img 
              src={imgFile.url} 
-             className="w-full h-full object-contain pointer-events-none" 
+             className="w-full h-full max-h-[70vh] object-contain pointer-events-none" 
              style={{
                imageRendering: settings.quality === 'sharp' ? 'crisp-edges' : 'auto'
              }} 
@@ -64,14 +64,14 @@ export default function UpscalerPage() {
            <div className="w-full h-full absolute top-0 left-0 flex items-center justify-center min-w-max" style={{ width: sliderRef.current?.clientWidth || '100%' }}>
              <img 
                src={imgFile.url} 
-               className="w-full h-full object-contain pointer-events-none blur-[2px]" 
+               className="w-full h-full max-h-[70vh] object-contain pointer-events-none blur-[2px]" 
                style={{ imageRendering: 'pixelated' }}
              />
            </div>
         </div>
 
         {/* Labels */}
-        <div className="absolute top-4 left-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 pointer-events-none z-10 shadow">
+        <div className="absolute top-4 left-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold px-3 py-1 pointer-events-none z-10 shadow">
           Original
         </div>
         <div className="absolute top-4 right-4 bg-white text-black text-[10px] uppercase tracking-widest font-bold px-3 py-1 pointer-events-none z-10 shadow">
@@ -122,7 +122,7 @@ export default function UpscalerPage() {
               key={scale}
               onClick={() => setSettings(s => ({ ...s, scale: scale as 2 | 4 }))}
               disabled={isProcessing}
-              className={`flex-1 py-3 text-xs font-bold tracking-widest border uppercase transition-colors ${settings.scale === scale ? 'bg-black text-white border-black' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-black'}`}
+              className={`flex-1 py-3 text-xs font-bold tracking-widest border uppercase transition-colors ${settings.scale === scale ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}
             >
               {scale}x
             </button>
@@ -142,7 +142,7 @@ export default function UpscalerPage() {
               key={q.id}
               onClick={() => setSettings(s => ({ ...s, quality: q.id as any }))}
               disabled={isProcessing}
-              className={`w-full p-4 flex flex-col items-start border transition-colors ${settings.quality === q.id ? 'bg-zinc-50 border-black' : 'bg-transparent border-zinc-200 hover:border-zinc-400'}`}
+              className={`w-full p-4 flex flex-col items-start border transition-colors ${settings.quality === q.id ? 'bg-zinc-50 border-[#111111]' : 'bg-transparent border-zinc-200 hover:border-zinc-400'}`}
             >
               <span className={`text-xs font-bold tracking-widest uppercase ${settings.quality === q.id ? 'text-black' : 'text-zinc-600'}`}>{q.label}</span>
               <span className="text-[10px] text-zinc-400 mt-1">{q.desc}</span>

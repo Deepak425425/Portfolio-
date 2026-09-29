@@ -234,11 +234,11 @@ export default function BulkImageRenamerPage() {
             <div className="w-full flex flex-col gap-4">
               <div className="flex justify-between items-center bg-zinc-100 p-4 border border-zinc-200">
                  <label className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 flex items-center gap-2 cursor-pointer">
-                   <input type="checkbox" checked={images.length > 0 && images.every(i => i.selected)} onChange={toggleAll} className="accent-black w-4 h-4" />
+                   <input type="checkbox" checked={images.length > 0 && images.every(i => i.selected)} onChange={toggleAll} className="accent-[#8B7CFF] w-4 h-4" />
                    Select All ({images.filter(i => i.selected).length}/{images.length})
                  </label>
                  
-                 <label className="w-32 py-2 bg-white text-center text-[10px] uppercase font-bold tracking-widest border border-zinc-200 cursor-pointer hover:border-black">
+                 <label className="w-32 py-2 bg-white text-center text-[10px] uppercase font-bold tracking-widest border border-zinc-200 cursor-pointer hover:border-[#111111]">
                     Add Files
                     <input type="file" multiple className="hidden" onChange={e => {if(e.target.files) handleUpload(Array.from(e.target.files))}} />
                  </label>
@@ -273,7 +273,7 @@ export default function BulkImageRenamerPage() {
                       onDragEnd={onDragEnd}
                       className={`p-4 grid grid-cols-[auto_auto_1fr_1fr_auto] gap-4 items-center border-b border-zinc-100 transition-colors ${draggedIdx === index ? 'opacity-50 bg-zinc-100' : 'bg-white hover:bg-zinc-50'} ${!img.selected ? 'opacity-40 grayscale' : ''}`}
                     >
-                      <input type="checkbox" checked={img.selected} onChange={() => toggleSelect(img.id)} className="accent-black w-4 h-4" />
+                      <input type="checkbox" checked={img.selected} onChange={() => toggleSelect(img.id)} className="accent-[#8B7CFF] w-4 h-4" />
                       
                       <div className="cursor-move text-zinc-300 hover:text-black">
                         ☰
@@ -297,7 +297,7 @@ export default function BulkImageRenamerPage() {
                           value={img.customName !== undefined ? img.customName : preview?.name.replace(`.${img.ext}`, '') || ''}
                           onChange={e => updateCustomName(img.id, e.target.value)}
                           placeholder="Custom name"
-                          className={`text-xs font-bold truncate w-full bg-transparent border-b outline-none py-1 ${isDup ? 'text-red-500 border-red-300 focus:border-red-500' : 'text-[#8B7CFF] border-transparent hover:border-zinc-300 focus:border-black'} ${!img.selected ? 'pointer-events-none' : ''}`}
+                          className={`text-xs font-bold truncate w-full bg-transparent border-b outline-none py-1 ${isDup ? 'text-red-500 border-red-300 focus:border-red-500' : 'text-[#8B7CFF] border-transparent hover:border-zinc-300 focus:border-[#111111]'} ${!img.selected ? 'pointer-events-none' : ''}`}
                           disabled={!img.selected}
                         />
                         <span className="text-[9px] text-zinc-400 absolute right-4 top-2 pointer-events-none">.{img.ext}</span>
@@ -326,11 +326,11 @@ export default function BulkImageRenamerPage() {
           <div className="flex flex-col gap-4 border-t border-zinc-100 pt-4">
             <div className="flex flex-col gap-2">
               <label className="text-[9px] uppercase tracking-widest text-zinc-500">Base Name (Empty = Original)</label>
-              <input type="text" value={baseName} onChange={e => setBaseName(e.target.value)} placeholder="e.g. Product" className="w-full p-2 border border-border-color text-xs outline-none focus:border-black" />
+              <input type="text" value={baseName} onChange={e => setBaseName(e.target.value)} placeholder="e.g. Product" className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111]" />
             </div>
             
             <label className="text-[10px] uppercase font-bold tracking-widest text-zinc-600 flex items-center gap-2 cursor-pointer mt-2 bg-zinc-50 p-2 border border-zinc-100">
-              <input type="checkbox" checked={useNumbering} onChange={e => setUseNumbering(e.target.checked)} className="accent-black w-4 h-4" />
+              <input type="checkbox" checked={useNumbering} onChange={e => setUseNumbering(e.target.checked)} className="accent-[#8B7CFF] w-4 h-4" />
               Add Sequence Number
             </label>
 
@@ -338,11 +338,11 @@ export default function BulkImageRenamerPage() {
               <div className="grid grid-cols-3 gap-2">
                 <div className="flex flex-col gap-1">
                   <label className="text-[9px] uppercase tracking-widest text-zinc-400">Start At</label>
-                  <input type="number" value={startNum} onChange={e => setStartNum(Number(e.target.value))} className="w-full p-2 border border-border-color text-xs outline-none focus:border-black" />
+                  <input type="number" value={startNum} onChange={e => setStartNum(Number(e.target.value))} className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111]" />
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-[9px] uppercase tracking-widest text-zinc-400">Padding</label>
-                  <select value={padding} onChange={e => setPadding(Number(e.target.value))} className="w-full p-2 border border-border-color text-xs outline-none focus:border-black bg-white">
+                  <select value={padding} onChange={e => setPadding(Number(e.target.value))} className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111] bg-white">
                     <option value={1}>1</option>
                     <option value={2}>01</option>
                     <option value={3}>001</option>
@@ -351,7 +351,7 @@ export default function BulkImageRenamerPage() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <label className="text-[9px] uppercase tracking-widest text-zinc-400">Separator</label>
-                  <select value={separator} onChange={e => setSeparator(e.target.value)} className="w-full p-2 border border-border-color text-xs outline-none focus:border-black bg-white">
+                  <select value={separator} onChange={e => setSeparator(e.target.value)} className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111] bg-white">
                     <option value="-">Dash (-)</option>
                     <option value="_">Under (_)</option>
                     <option value=" ">Space</option>
@@ -365,26 +365,26 @@ export default function BulkImageRenamerPage() {
           <div className="flex flex-col gap-4 border-t border-zinc-100 pt-4">
              <label className="text-[10px] font-bold tracking-widest uppercase text-zinc-400">Add Text</label>
              <div className="grid grid-cols-2 gap-2">
-                <input type="text" value={prefix} onChange={e => setPrefix(e.target.value)} placeholder="Prefix" className="w-full p-2 border border-border-color text-xs outline-none focus:border-black" />
-                <input type="text" value={suffix} onChange={e => setSuffix(e.target.value)} placeholder="Suffix" className="w-full p-2 border border-border-color text-xs outline-none focus:border-black" />
+                <input type="text" value={prefix} onChange={e => setPrefix(e.target.value)} placeholder="Prefix" className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111]" />
+                <input type="text" value={suffix} onChange={e => setSuffix(e.target.value)} placeholder="Suffix" className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111]" />
              </div>
              <div className="grid grid-cols-2 gap-2 mt-2">
-                <input type="text" value={addBefore} onChange={e => setAddBefore(e.target.value)} placeholder="Insert Before" className="w-full p-2 border border-border-color text-xs outline-none focus:border-black" />
-                <input type="text" value={addAfter} onChange={e => setAddAfter(e.target.value)} placeholder="Insert After" className="w-full p-2 border border-border-color text-xs outline-none focus:border-black" />
+                <input type="text" value={addBefore} onChange={e => setAddBefore(e.target.value)} placeholder="Insert Before" className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111]" />
+                <input type="text" value={addAfter} onChange={e => setAddAfter(e.target.value)} placeholder="Insert After" className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111]" />
              </div>
           </div>
 
           <div className="flex flex-col gap-4 border-t border-zinc-100 pt-4">
              <label className="text-[10px] font-bold tracking-widest uppercase text-zinc-400">Find & Replace</label>
              <div className="grid grid-cols-2 gap-2">
-                <input type="text" value={findStr} onChange={e => setFindStr(e.target.value)} placeholder="Find Text" className="w-full p-2 border border-border-color text-xs outline-none focus:border-black" />
-                <input type="text" value={replaceStr} onChange={e => setReplaceStr(e.target.value)} placeholder="Replace With" className="w-full p-2 border border-border-color text-xs outline-none focus:border-black" />
+                <input type="text" value={findStr} onChange={e => setFindStr(e.target.value)} placeholder="Find Text" className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111]" />
+                <input type="text" value={replaceStr} onChange={e => setReplaceStr(e.target.value)} placeholder="Replace With" className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111]" />
              </div>
           </div>
 
           <div className="flex flex-col gap-4 border-t border-zinc-100 pt-4 mb-4">
              <label className="text-[10px] font-bold tracking-widest uppercase text-zinc-400">Case Formatting</label>
-             <select value={caseMode} onChange={e => setCaseMode(e.target.value as any)} className="w-full p-2 border border-border-color text-xs outline-none focus:border-black bg-white">
+             <select value={caseMode} onChange={e => setCaseMode(e.target.value as any)} className="w-full p-2 border border-border-color text-xs outline-none focus:border-[#111111] bg-white">
                 <option value="none">Keep Original Case</option>
                 <option value="lower">lowercase everything</option>
                 <option value="upper">UPPERCASE EVERYTHING</option>
@@ -392,10 +392,10 @@ export default function BulkImageRenamerPage() {
           </div>
 
           <div className="mt-auto flex flex-col gap-3">
-             <button disabled={isProcessing || images.length === 0 || hasDuplicates} onClick={downloadAll} className="w-full py-4 bg-white border border-black text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:opacity-50">
+             <button disabled={isProcessing || images.length === 0 || hasDuplicates} onClick={downloadAll} className="w-full py-4 bg-white border border-[#111111] text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:opacity-50">
                {isProcessing ? 'Processing...' : 'Rename & Download All'}
              </button>
-             <button disabled={isProcessing || images.length === 0 || hasDuplicates} onClick={downloadZip} className="w-full py-4 bg-black border border-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:opacity-50 shadow-md">
+             <button disabled={isProcessing || images.length === 0 || hasDuplicates} onClick={downloadZip} className="w-full py-4 bg-[#111111] border border-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:opacity-50 shadow-md">
                {isProcessing ? 'Processing...' : 'Download ZIP'}
              </button>
           </div>

@@ -128,7 +128,7 @@ export default function MetadataRemoverPage() {
                           <span className="text-xs font-bold text-green-600">Cleaned</span>
                           <span className="text-[10px] text-zinc-500">{formatSize(res.newSize)}</span>
                         </div>
-                        <a href={res.url} download={res.name} className="px-3 py-1 bg-black text-white text-[10px] uppercase font-bold tracking-wider hover:bg-zinc-800 transition-colors">DL</a>
+                        <a href={res.url} download={res.name} className="px-3 py-1 bg-[#111111] text-white text-[10px] uppercase font-bold tracking-wider hover:bg-[#222222] transition-colors">DL</a>
                       </div>
                     ) : (
                       <span className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">Pending</span>
@@ -152,15 +152,15 @@ export default function MetadataRemoverPage() {
             {images.length > 0 && (
               <div className="flex flex-col gap-3">
                 {results.length === 0 ? (
-                  <button disabled={isProcessing} onClick={processImages} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:bg-zinc-300">
+                  <button disabled={isProcessing} onClick={processImages} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:bg-zinc-300">
                     {isProcessing ? 'Scrubbing Metadata...' : 'Remove Metadata'}
                   </button>
                 ) : (
                   <>
-                    <button disabled={isProcessing} onClick={downloadZip} className="w-full py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors disabled:bg-zinc-300">
+                    <button disabled={isProcessing} onClick={downloadZip} className="w-full py-4 bg-[#111111] text-white text-[10px] uppercase tracking-widest font-bold hover:bg-[#222222] transition-colors disabled:bg-zinc-300">
                       Download ZIP
                     </button>
-                    <button disabled={isProcessing} onClick={downloadAll} className="w-full py-4 bg-transparent border border-black text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:border-zinc-300">
+                    <button disabled={isProcessing} onClick={downloadAll} className="w-full py-4 bg-transparent border border-[#111111] text-black text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors disabled:border-zinc-300">
                       Download All
                     </button>
                   </>
