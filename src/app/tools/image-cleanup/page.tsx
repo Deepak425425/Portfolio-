@@ -366,7 +366,7 @@ export default function ImageCleanupPage() {
             <div 
               ref={compareRef}
               className="w-full bg-zinc-200 relative flex flex-col items-center justify-center border border-zinc-200 min-h-[60vh] overflow-hidden select-none cursor-ew-resize"
-              onMouseDown={() => setIsComparing(true)}
+              onPointerDown={() => setIsComparing(true)}
               onTouchStart={() => setIsComparing(true)}
             >
               <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
@@ -410,10 +410,10 @@ export default function ImageCleanupPage() {
                   transformOrigin: 'center center',
                   touchAction: 'none'
                 }}
-                onMouseDown={handleDown}
-                onMouseMove={handleMove}
-                onMouseUp={handleUp}
-                onMouseLeave={handleUp}
+                onPointerDown={handleDown}
+                onPointerMove={handleMove}
+                onPointerUp={handleUp}
+                onPointerLeave={handleUp}
                 onTouchStart={handleDown}
                 onTouchMove={handleMove}
                 onTouchEnd={handleUp}

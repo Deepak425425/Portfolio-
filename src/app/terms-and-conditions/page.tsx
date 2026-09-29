@@ -32,7 +32,7 @@ export default function TermsPage() {
       <main className="flex-1 w-full flex flex-col py-24 md:py-32 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto">
         <div className="mb-16 border-b border-zinc-200 pb-12">
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6">Terms & Conditions</h1>
-          <p className="text-sm text-zinc-500 font-light">Last updated: [DATE_PLACEHOLDER]</p>
+          <p className="text-sm text-zinc-500 font-light">Last updated: September 29, 2026</p>
         </div>
 
         <div className="prose prose-zinc prose-p:font-light prose-p:text-zinc-600 max-w-none">
@@ -68,7 +68,7 @@ export default function TermsPage() {
 
           <h3 className="font-serif text-2xl mt-12 mb-4">5. Governing Law</h3>
           <p>
-            These Terms shall be governed and construed in accordance with the laws of [JURISDICTION_PLACEHOLDER], without regard to its conflict of law provisions.
+            These Terms shall be governed and construed in accordance with applicable law, without regard to its conflict of law provisions.
           </p>
           
           <h3 className="font-serif text-2xl mt-12 mb-4">6. Contact Us</h3>
@@ -76,8 +76,7 @@ export default function TermsPage() {
             If you have any questions about these Terms, please contact us at:
             <br/><br/>
             <strong>GROTON AI STUDIO</strong><br/>
-            Email: [EMAIL_PLACEHOLDER]<br/>
-            Address: [ADDRESS_PLACEHOLDER]
+            Email: deepak@graflystudio.com
           </p>
         </div>
       </main>

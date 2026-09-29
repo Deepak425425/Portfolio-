@@ -332,7 +332,7 @@ export default function FiltersPage() {
                      <div className="flex items-center gap-4">
                         <span className="text-[9px] uppercase tracking-widest font-bold text-[#7B7F89]">Compare:</span>
                         <button 
-                           onMouseDown={() => setIsCompare(true)} onMouseUp={() => setIsCompare(false)} onMouseLeave={() => setIsCompare(false)} onTouchStart={() => setIsCompare(true)} onTouchEnd={() => setIsCompare(false)}
+                           onPointerDown={() => setIsCompare(true)} onPointerUp={() => setIsCompare(false)} onPointerLeave={() => setIsCompare(false)} onTouchStart={() => setIsCompare(true)} onTouchEnd={() => setIsCompare(false)}
                            className={`neu-button px-8 h-10 rounded-full text-[10px] font-bold tracking-widest uppercase transition-colors ${isCompare ? 'neu-active' : 'text-[#8B7CFF]'}`}
                         >
                            HOLD

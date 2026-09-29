@@ -309,10 +309,10 @@ export default function WatermarkRemoverPage() {
                   transformOrigin: 'center center',
                   touchAction: 'none'
                 }}
-                onMouseDown={handleDown}
-                onMouseMove={handleMove}
-                onMouseUp={handleUp}
-                onMouseLeave={handleUp}
+                onPointerDown={handleDown}
+                onPointerMove={handleMove}
+                onPointerUp={handleUp}
+                onPointerLeave={handleUp}
                 onTouchStart={handleDown}
                 onTouchMove={handleMove}
                 onTouchEnd={handleUp}

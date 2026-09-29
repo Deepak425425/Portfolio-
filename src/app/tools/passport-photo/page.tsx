@@ -467,9 +467,9 @@ export default function PassportPhotoMaker() {
                    <canvas 
                      ref={canvasRef} 
                      className="max-w-full max-h-[65vh] object-contain block cursor-move"
-                     onMouseDown={(e) => handleMouseDown(e, currentImg.id)}
+                     onPointerDown={(e) => handleMouseDown(e, currentImg.id)}
                      onTouchStart={(e) => handleMouseDown(e, currentImg.id)}
-                     onMouseMove={handleEvMove}
+                     onPointerMove={handleEvMove}
                      onTouchMove={handleEvMove}
                    />
                    {/* Zoom Controls Overlay */}

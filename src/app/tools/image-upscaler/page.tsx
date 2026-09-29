@@ -42,7 +42,7 @@ export default function UpscalerPage() {
       <div 
         ref={sliderRef}
         className="relative w-full h-full min-h-[500px] bg-zinc-100 overflow-hidden cursor-ew-resize select-none"
-        onMouseDown={() => setIsDragging(true)}
+        onPointerDown={() => setIsDragging(true)}
         onTouchStart={() => setIsDragging(true)}
       >
         {/* AFTER (Upscaled) - We use CSS rendering for preview to avoid lag, applying similar filtering if possible. */}

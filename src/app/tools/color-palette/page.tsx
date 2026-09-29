@@ -291,8 +291,8 @@ export default function PalettePage() {
                    <img 
                       src={currentImg.url} 
                       className="max-h-[60vh] object-contain shadow-xl" 
-                      onMouseMove={handleImageMouseMove}
-                      onMouseLeave={() => setHoverColor(null)}
+                      onPointerMove={handleImageMouseMove}
+                      onPointerLeave={() => setHoverColor(null)}
                       onClick={handleImageClick}
                       onMouseEnter={() => setIsSampling(true)}
                       crossOrigin="anonymous"

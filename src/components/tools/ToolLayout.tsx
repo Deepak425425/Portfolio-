@@ -12,7 +12,7 @@ interface ToolLayoutProps {
 
 export default function ToolLayout({ title, description, category = "TOOL", children }: ToolLayoutProps) {
   return (
-    <main className="min-h-screen flex flex-col bg-[#F7F6F2] text-[#111111] font-sans relative overflow-x-hidden">
+    <main className="tool-mobile-fix min-h-screen flex flex-col bg-[#F7F6F2] text-[#111111] font-sans relative overflow-x-hidden">
       {/* AMBIENT GRADIENTS */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#DCD7FF] opacity-40 blur-[120px] rounded-full"></div>

@@ -366,10 +366,10 @@ export default function FaceBlurPage() {
               <div className="relative cursor-crosshair">
                 <canvas 
                   ref={displayCanvasRef} 
-                  onMouseDown={handleMouseDown}
-                  onMouseMove={handleMouseMove}
-                  onMouseUp={handleMouseUp}
-                  onMouseLeave={handleMouseUp}
+                  onPointerDown={handleMouseDown}
+                  onPointerMove={handleMouseMove}
+                  onPointerUp={handleMouseUp}
+                  onPointerLeave={handleMouseUp}
                   className="max-w-full max-h-[60vh] object-contain block shadow-lg select-none" 
                 />
               </div>
