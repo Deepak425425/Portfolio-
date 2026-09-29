@@ -11,42 +11,47 @@ const services = [
   {
     id: "ai-product-images",
     title: "AI Product Images",
-    description: "Premium product visuals designed for eCommerce, campaigns and brand communication.",
+    description: "Premium product visuals designed for e-commerce, campaigns and brand communication.",
     details: "We ingest your physical products or existing photography and synthesize them into high-fidelity, photorealistic environments. By controlling lighting, materials, and composition algorithmically, we bypass the logistical constraints of physical sets while maintaining absolute realism.",
-    deliverables: ["Hero Campaign Imagery", "E-commerce Product Shots", "Lookbook Variations", "High-Resolution Composites"],
-    image: "/campaign-worlds/groton-14.jpg"
+    deliverables: ["Hero Product Imagery", "E-commerce Product Shots", "Catalog Variations", "High-Resolution Product Composites"],
+    image: "/campaign-worlds/groton-14.jpg",
+    position: ""
   },
   {
     id: "lifestyle-product-imagery",
     title: "Lifestyle Product Imagery",
-    "description": "Editorial and lifestyle scenes for e-commerce products.",
-    "details": "We place your products in aspirational, photorealistic environments that tell a brand story. From sun-drenched interiors to high-end architectural spaces, we create contextual imagery without the need for location scouting or physical sets.",
-    "deliverables": ["Editorial E-commerce Images", "Social Media Lifestyle Shots", "Contextual Lookbooks", "Banner & Hero Imagery"],
-    image: "/campaign-worlds/groton-10.jpg"
+    description: "Editorial and lifestyle scenes created around your products.",
+    details: "We place your products in aspirational, photorealistic environments that tell a brand story. From sun-drenched interiors to high-end architectural spaces, we create contextual imagery without the need for location scouting or physical sets.",
+    deliverables: ["Editorial E-commerce Images", "Lifestyle Product Scenes", "Contextual Lookbooks", "Banner & Hero Imagery"],
+    image: "/campaign-worlds/groton-10.jpg",
+    position: ""
   },
   {
     id: "advertising-creatives",
     title: "Advertising Creatives",
     description: "Performance-focused visual concepts for paid social and digital campaigns.",
     details: "Data-driven creative for digital advertising. We generate vast variations of visual concepts, allowing brands to test multiple visual angles, environments, and compositions for paid acquisition campaigns without blowing out the production budget.",
-    deliverables: ["Paid Social Variations", "Display Ad Composites", "A/B Testing Visual Sets", "Performance Layouts"],
-    image: "/campaign-worlds/groton-17.jpg"
+    deliverables: ["Paid Social Variations", "Display Ad Creatives", "Campaign Visual Sets", "Performance-focused Layouts"],
+    image: "/campaign-worlds/groton-17.jpg",
+    position: ""
   },
   {
     id: "social-media-content",
     title: "Social Media Content",
     description: "High-quality visual systems for consistent brand communication.",
     details: "Maintaining a premium social feed requires volume without sacrificing art direction. We build visual systems and generate batches of cohesive, on-brand imagery to fuel your organic social media strategy for months at a time.",
-    deliverables: ["Monthly Content Batches", "Grid Layout Planning", "Editorial Lifestyle Imagery", "Consistent Brand Aesthetics"],
-    image: "/campaign-worlds/groton-3.jpg"
+    deliverables: ["Monthly Content Batches", "Social Media Visuals", "Editorial Lifestyle Imagery", "Consistent Brand Aesthetics"],
+    image: "/campaign-worlds/groton-3.jpg",
+    position: ""
   },
   {
     id: "creative-direction",
     title: "Creative Direction",
     description: "Concept development, visual direction, art direction and campaign thinking.",
     details: "AI is a tool; art direction is the differentiator. Our creative directors work with you to establish the visual language, lighting logic, color theory, and conceptual framework before a single pixel is generated.",
-    deliverables: ["Visual Identity Systems", "Campaign Concepts", "Lighting & Texture Boards", "Production Briefs"],
-    image: "/campaign-worlds/groton-7.jpg"
+    deliverables: ["Visual Identity Systems", "Campaign Concepts", "Art Direction", "Production Briefs"],
+    image: "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg",
+    position: "object-[center_15%]"
   }
 ];
 
@@ -108,8 +113,8 @@ export default function ServicesPage() {
                   </Link>
                 </div>
               </div>
-              <div className={`w-full lg:w-1/2 h-[50vh] lg:h-[70vh] min-h-[400px] relative bg-zinc-200 overflow-hidden ${index % 2 !== 0 ? 'lg:order-1' : ''}`}>
-                <Image src={service.image} alt={service.title} fill className="object-cover" />
+              <div className={`w-full lg:w-1/2 h-[50vh] lg:h-[70vh] min-h-[400px] relative bg-zinc-200 overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)] ${index % 2 !== 0 ? 'lg:order-1' : ''}`}>
+                <Image src={service.image} alt={service.title} fill className={`object-cover ${service.position || ''}`} />
               </div>
             </section>
           ))}

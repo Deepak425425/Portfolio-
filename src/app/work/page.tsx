@@ -5,22 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 
 const portfolioItems = [
-  { id: 1, title: "Automotive Concept", category: "Campaign", image: "/campaign-worlds/groton-10.jpg", aspect: "aspect-[4/3]" },
-  { id: 2, title: "Modern Elegance", category: "Fashion", image: "/campaign-worlds/groton-3.jpg", aspect: "aspect-[3/4]" },
-  { id: 3, title: "Precision Craft", category: "Jewellery", image: "/campaign-worlds/groton-14.jpg", aspect: "aspect-[4/5]" },
-  { id: 4, title: "Skin Deep", category: "Beauty", image: "/campaign-worlds/groton-17.jpg", aspect: "aspect-square" },
-  { id: 5, title: "Volume Study", category: "Product", image: "/campaign-worlds/groton-7.jpg", aspect: "aspect-[16/9]" },
-  { id: 6, title: "Cinematic Atmosphere", category: "Lifestyle", image: "/campaign-worlds/groton-11.jpg", aspect: "aspect-[3/4]" },
+  { id: 1, title: "Streetwear Comfort", category: "Fashion", image: "/campaign-worlds/download (27).jpeg", aspect: "aspect-[4/3]", position: "object-[center_20%]" },
+  { id: 2, title: "Sherpa Outerwear", category: "Fashion", image: "/campaign-worlds/Caffeine is culture ☕️.jpeg", aspect: "aspect-[3/4]", position: "" },
+  { id: 3, title: "Modern Elegance", category: "Fashion", image: "/campaign-worlds/groton-3.jpg", aspect: "aspect-[4/5]", position: "" },
+  { id: 4, title: "High-Angle Editorial", category: "Editorial", image: "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg", aspect: "aspect-square", position: "" },
+  { id: 5, title: "Cat Print Styling", category: "Fashion", image: "/campaign-worlds/How to style Cat Print T shirts.jpeg", aspect: "aspect-[16/9]", position: "object-[center_20%]" },
+  { id: 6, title: "Editorial Lifestyle", category: "Fashion", image: "/campaign-worlds/mu_forart_.jpeg", aspect: "aspect-[3/4]", position: "" },
 ];
 
-const categories = ["All", "Jewellery", "Fashion", "Beauty", "Lifestyle", "Product", "Campaign"];
-
 export default function WorkPage() {
-  const [filter, setFilter] = useState("All");
-
-  const filteredItems = filter === "All" 
-    ? portfolioItems 
-    : portfolioItems.filter(item => item.category === filter);
 
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col font-sans text-black selection:bg-black selection:text-white">
@@ -49,24 +42,18 @@ export default function WorkPage() {
           <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-12">Selected Work.</h1>
           
           <div className="flex flex-wrap justify-center gap-4 md:gap-8 max-w-3xl mx-auto">
-            {categories.map(cat => (
-              <button 
-                key={cat} 
-                onClick={() => setFilter(cat)}
-                className={`text-[10px] tracking-[0.2em] uppercase font-bold transition-colors pb-1 border-b-2 ${filter === cat ? 'text-black border-black' : 'text-zinc-400 border-transparent hover:text-zinc-600'}`}
-              >
-                {cat}
-              </button>
-            ))}
+            <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-black pb-1 border-b-2 border-black">
+              CLIENT WORK
+            </span>
           </div>
         </section>
 
         <section className="py-12 md:py-24 px-6 md:px-12 lg:px-24 flex-1">
           <div className="max-w-[1400px] mx-auto columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
-            {filteredItems.map(item => (
+            {portfolioItems.map(item => (
               <div key={item.id} className="break-inside-avoid flex flex-col gap-4 group cursor-pointer mb-8">
-                <div className={`w-full ${item.aspect} bg-zinc-200 relative overflow-hidden`}>
-                  <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105" />
+                <div className={`w-full ${item.aspect} bg-zinc-200 relative overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]`}>
+                  <Image src={item.image} alt={item.title} fill className={`object-cover transition-transform duration-1000 ease-out group-hover:scale-105 ${item.position || ''}`} />
                   <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10"></div>
                 </div>
                 <div className="flex justify-between items-center px-1">
@@ -77,7 +64,7 @@ export default function WorkPage() {
             ))}
           </div>
           
-          {filteredItems.length === 0 && (
+          {portfolioItems.length === 0 && (
             <div className="text-center py-32 text-zinc-400 font-light text-sm">
               No projects found in this category yet.
             </div>
