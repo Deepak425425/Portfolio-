@@ -4,60 +4,15 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-
-// We keep arrays separate to maintain logical categories.
-const FEATURED_TOOLS = [
-  { id: "filters", name: "Image Filters & Grade", desc: "Professional creative filters and colour grading studio.", link: "/tools/filters", visual: "✦" },
-  { id: "image-compare", name: "Image Compare", desc: "Compare two images visually with side-by-side or slider tools.", link: "/tools/image-compare", visual: "◧" },
-  { id: "collage", name: "Collage Maker", desc: "Professional grid layout builder with precise constraints.", link: "/tools/collage", visual: "⊞" },
-  { id: "border", name: "Image Border", desc: "Add refined frames, shadows, and borders to images.", link: "/tools/image-border", visual: "□" },
-];
-
-const UTILITY_TOOLS = [
-  { id: "resize", name: "Resize", desc: "Scale images to exact dimensions.", link: "/tools/resize", visual: "⤡" },
-  { id: "crop", name: "Crop", desc: "Crop and reframe photos.", link: "/tools/crop", visual: "◩" },
-  { id: "compressor", name: "Compress", desc: "Reduce file sizes aggressively.", link: "/tools/compressor", visual: "⇲" },
-  { id: "convert", name: "Convert", desc: "Convert formats (JPG, PNG, WebP).", link: "/tools/convert", visual: "⇄" },
-  { id: "rotate-flip", name: "Rotate", desc: "Rotate or mirror images.", link: "/tools/rotate-flip", visual: "↺" },
-  { id: "rounded-image", name: "Rounded", desc: "Transparent curved corners.", link: "/tools/rounded-image", visual: "╭╮" },
-];
-
-const SPECIALIZED_TOOLS = [
-  { id: "passport-photo", name: "Passport Photo Maker", desc: "Format to standard ID dimensions.", link: "/tools/passport-photo", visual: "🪪" },
-  { id: "color-palette", name: "Color Palette", desc: "Extract dominant hex colors.", link: "/tools/color-palette", visual: "🎨" },
-  { id: "image-quality-checker", name: "Quality Checker", desc: "Analyze images for web & print suitability.", link: "/tools/image-quality-checker", visual: "✓" },
-  { id: "image-upscaler", name: "Image Upscaler", desc: "Increase resolution preserving quality.", link: "/tools/image-upscaler", visual: "⤢" },
-  { id: "watermark", name: "Watermark", desc: "Apply repeated watermark patterns.", link: "/tools/watermark", visual: "©" },
-  { id: "before-after", name: "Before & After", desc: "Create vertical comparison sliders.", link: "/tools/before-after", visual: "◨" },
-];
-
-const OTHER_TOOLS = [
-  { id: "metadata-remover", name: "Metadata Remover", desc: "Strip EXIF data from photos.", link: "/tools/metadata-remover", visual: "✕" },
-  { id: "image-cleanup", name: "Image Cleanup", desc: "Remove unwanted elements & dust.", link: "/tools/image-cleanup", visual: "✨" },
-  { id: "blur", name: "Image Blur", desc: "Apply gaussian blur effects.", link: "/tools/blur", visual: "☁" },
-  { id: "pixelate", name: "Pixelate Image", desc: "Create 8-bit style pixelation.", link: "/tools/pixelate", visual: "■" },
-  { id: "canvas", name: "Canvas / Padding", desc: "Add surrounding padding/margins.", link: "/tools/canvas", visual: "⛶" },
-  { id: "grid-cutter", name: "Grid Cutter", desc: "Slice an image into an Instagram grid.", link: "/tools/grid-cutter", visual: "▦" },
-  { id: "meme", name: "Meme Generator", desc: "Add classic impact font text.", link: "/tools/meme", visual: "T" },
-  { id: "pdf-contact-sheet", name: "Contact Sheet", desc: "Generate multi-image PDF galleries.", link: "/tools/pdf-contact-sheet", visual: "▤" },
-  { id: "bulk-image-renamer", name: "Bulk Image Renamer", desc: "Rename hundreds of images quickly.", link: "/tools/bulk-image-renamer", visual: "✎" },
-  { id: "face-blur", name: "Face Blur", desc: "Auto-detect and blur faces.", link: "/tools/face-blur", visual: "👤" },
-  { id: "background-remover", name: "Background Remover", desc: "Isolate subjects instantly.", link: "/tools/background-remover", visual: "✂" },
-  { id: "social-resizer", name: "Social Media Resizer", desc: "Format for Instagram, YouTube, etc.", link: "/tools/social-resizer", visual: "📱" },
-  { id: "favicon", name: "Favicon Generator", desc: "Create .ico and webapp icons.", link: "/tools/favicon", visual: "◆" },
-  { id: "color-picker", name: "Color Picker", desc: "Sample specific pixels.", link: "/tools/color-picker", visual: "💉" },
-];
-
-const ALL_TOOLS = [...FEATURED_TOOLS, ...UTILITY_TOOLS, ...SPECIALIZED_TOOLS, ...OTHER_TOOLS];
+import { TOOL_REGISTRY } from "@/lib/registry/tools";
 
 const ToolCard = ({ tool }: { tool: any }) => (
   <Link 
-    href={tool.link} 
+    href={tool.route || "#"} 
     className="group bg-[#FCFCFB] border border-zinc-200 p-6 flex flex-col rounded-2xl hover:border-[#8B7CFF] hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden h-full min-h-[170px] w-full"
   >
     <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B7CFF] opacity-0 group-hover:opacity-5 blur-[50px] transition-opacity rounded-full pointer-events-none"></div>
     
-    {/* Consistent 48x48 Icon Container */}
     <div className="w-12 h-12 bg-white shadow-sm border border-zinc-100 rounded-xl flex items-center justify-center text-xl z-10 shrink-0 mb-5 text-[#8B7CFF]">
       {tool.visual || "🔧"}
     </div>
@@ -66,19 +21,34 @@ const ToolCard = ({ tool }: { tool: any }) => (
       <div className="flex justify-between items-start">
         <h3 className="font-bold text-sm tracking-tight text-[#111111] leading-none mt-1">{tool.name}</h3>
       </div>
-      <p className="text-[11px] text-zinc-500 leading-relaxed max-w-[95%]">{tool.desc}</p>
+      <p className="text-[11px] text-zinc-500 leading-relaxed max-w-[95%]">{tool.description}</p>
     </div>
   </Link>
 );
+
+import AskAIAssistant from "@/components/tools/AskAIAssistant";
+
+// FEATURE FLAG: Toggle this to true when Ask AI is ready to be restored
+const ASK_AI_ENABLED = false;
 
 export default function ToolsLandingPage() {
   const [search, setSearch] = useState("");
 
   const searchActive = search.trim().length > 0;
-  const filteredTools = searchActive ? ALL_TOOLS.filter(t => 
+  
+  // Filter out planned tools for the UI
+  const AVAILABLE_TOOLS = TOOL_REGISTRY.filter(t => t.category !== 'planned');
+  
+  const filteredTools = searchActive ? AVAILABLE_TOOLS.filter(t => 
     t.name.toLowerCase().includes(search.toLowerCase()) || 
-    t.desc.toLowerCase().includes(search.toLowerCase())
+    t.description.toLowerCase().includes(search.toLowerCase())
   ) : [];
+
+  const FEATURED_TOOLS = AVAILABLE_TOOLS.filter(t => t.category === 'featured');
+  const UTILITY_TOOLS = AVAILABLE_TOOLS.filter(t => t.category === 'utility');
+  const SPECIALIZED_TOOLS = AVAILABLE_TOOLS.filter(t => t.category === 'specialized');
+  const OTHER_TOOLS = AVAILABLE_TOOLS.filter(t => t.category === 'other');
+
 
   return (
     <main className="min-h-screen flex flex-col bg-[#F7F6F2] text-[#111111] font-sans relative overflow-x-hidden">
@@ -165,7 +135,9 @@ export default function ToolsLandingPage() {
 
           </div>
         )}
-
+        
+        {/* Floating ASK AI Assistant (Temporarily hidden via feature flag) */}
+        {ASK_AI_ENABLED && <AskAIAssistant />}
       </div>
       <Footer />
     </main>
