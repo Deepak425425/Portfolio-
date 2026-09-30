@@ -5,7 +5,6 @@ import React, { useEffect, useRef, useState } from "react";
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
 
   const [isVisible, setIsVisible] = useState(false);
   
@@ -16,11 +15,10 @@ export default function CustomCursor() {
     ringX: -100,
     ringY: -100,
     isHoveringClickable: false,
-    isHoveringImage: false,
-    isHoveringProject: false,
-    isHoveringCTA: false,
+    isHoveringCard: false,
     isMouseDown: false,
     isHoveringInput: false,
+    dragState: "none" as "none" | "grab" | "grabbing",
     reducedMotion: false,
     hasPointer: true
   });
@@ -49,7 +47,7 @@ export default function CustomCursor() {
       if (state.current.reducedMotion && ringRef.current) {
         state.current.ringX = e.clientX;
         state.current.ringY = e.clientY;
-        updateRingTransform();
+        ringRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) scale(${getScale()})`;
       }
       
       checkHoverState(e.target as HTMLElement);
@@ -57,44 +55,48 @@ export default function CustomCursor() {
 
     const onMouseDown = () => {
       state.current.isMouseDown = true;
+      if (state.current.dragState === "grab") state.current.dragState = "grabbing";
       updateRingStyle();
     };
 
     const onMouseUp = () => {
       state.current.isMouseDown = false;
+      if (state.current.dragState === "grabbing") state.current.dragState = "grab";
       updateRingStyle();
     };
 
     const checkHoverState = (target: HTMLElement) => {
       let isClickable = false;
-      let isImage = false;
-      let isProject = false;
-      let isCTA = false;
+      let isCard = false;
       let isInput = false;
+      let dragState: "none" | "grab" | "grabbing" = "none";
 
       let curr: HTMLElement | null = target;
       while (curr && curr !== document.body) {
         const tag = curr.tagName.toLowerCase();
         
+        // Inputs
         if (tag === "input" || tag === "textarea" || curr.isContentEditable || tag === "select") {
           isInput = true;
         }
         
+        // Clickables
         if (tag === "a" || tag === "button" || curr.getAttribute("role") === "button" || curr.onclick) {
           isClickable = true;
-          // Check if it's a major CTA
-          const text = curr.textContent?.toLowerCase() || "";
-          if (text.includes("start") || text.includes("open") || text.includes("view") || curr.classList.contains("cta")) {
-             isCTA = true;
-          }
         }
         
-        if (tag === "img" || curr.getAttribute("data-cursor") === "view") {
-          isImage = true;
+        // Cards/Tools
+        if (curr.classList.contains("group") || curr.classList.contains("tool-card") || tag === "img") {
+          isCard = true;
         }
 
-        if (curr.closest("article") || curr.classList.contains("project-card")) {
-          isProject = true;
+        // Draggable
+        const classStr = curr.className;
+        const hasDragClass = typeof classStr === 'string' && 
+          (classStr.includes("cursor-move") || classStr.includes("cursor-grab") || classStr.includes("drag"));
+        
+        if (hasDragClass || curr.draggable || curr.getAttribute('data-draggable') === 'true') {
+          dragState = state.current.isMouseDown ? "grabbing" : "grab";
         }
 
         curr = curr.parentElement;
@@ -102,99 +104,44 @@ export default function CustomCursor() {
 
       state.current.isHoveringInput = isInput;
       state.current.isHoveringClickable = isClickable;
-      state.current.isHoveringImage = isImage;
-      state.current.isHoveringProject = isProject;
-      state.current.isHoveringCTA = isCTA;
+      state.current.isHoveringCard = isCard;
+      state.current.dragState = dragState;
       
       updateRingStyle();
     };
 
+    const getScale = () => {
+      if (state.current.isMouseDown) return 0.8;
+      if (state.current.dragState !== "none") return 1.2;
+      if (state.current.isHoveringClickable) return 1.5;
+      if (state.current.isHoveringCard) return 1.3;
+      return 1.0;
+    };
+
     const updateRingStyle = () => {
-      if (!ringRef.current || !dotRef.current || !textRef.current) return;
+      if (!ringRef.current || !dotRef.current) return;
       
       // Hide completely over inputs to let native text cursor take over
       if (state.current.isHoveringInput) {
         ringRef.current.style.opacity = "0";
         dotRef.current.style.opacity = "0";
-        return;
       } else {
-        dotRef.current.style.opacity = "1";
         ringRef.current.style.opacity = "1";
+        dotRef.current.style.opacity = "1";
       }
       
-      let mode = "default";
-      let text = "";
+      // We don't apply scale here if not reducedMotion, because render loop handles it
+      if (state.current.reducedMotion) {
+        ringRef.current.style.transform = `translate3d(${state.current.ringX}px, ${state.current.ringY}px, 0) scale(${getScale()})`;
+      }
       
-      if (state.current.isHoveringImage || state.current.isHoveringProject) {
-         mode = "pill";
-         text = "VIEW";
-      } else if (state.current.isHoveringCTA) {
-         mode = "expanded";
-         text = "START";
-      } else if (state.current.isHoveringClickable) {
-         mode = "expanded";
-      }
-
-      if (state.current.isMouseDown) {
-         mode = "mousedown";
-      }
-
-      // Apply styling based on mode
-      if (mode === "pill") {
-         ringRef.current.style.width = "64px";
-         ringRef.current.style.height = "26px";
-         ringRef.current.style.borderRadius = "20px";
-         ringRef.current.style.backgroundColor = "#11110f";
-         ringRef.current.style.border = "none";
-         ringRef.current.style.marginLeft = "-32px";
-         ringRef.current.style.marginTop = "-13px";
-         dotRef.current.style.opacity = "0"; // hide dot inside pill
-         textRef.current.textContent = text;
-         textRef.current.style.opacity = "1";
-         textRef.current.style.color = "#ffffff";
-      } else if (mode === "expanded") {
-         ringRef.current.style.width = "48px";
-         ringRef.current.style.height = "48px";
-         ringRef.current.style.borderRadius = "50%";
-         ringRef.current.style.backgroundColor = "transparent";
-         ringRef.current.style.border = "1px solid rgba(17, 17, 15, 0.4)";
-         ringRef.current.style.marginLeft = "-24px";
-         ringRef.current.style.marginTop = "-24px";
-         dotRef.current.style.opacity = "1";
-         if (text) {
-           textRef.current.textContent = text;
-           textRef.current.style.opacity = "1";
-           textRef.current.style.color = "#11110f";
-           dotRef.current.style.opacity = "0";
-           ringRef.current.style.backgroundColor = "#c4ff38"; // Lime accent for CTA
-           ringRef.current.style.border = "none";
-         } else {
-           textRef.current.textContent = "";
-           textRef.current.style.opacity = "0";
-         }
-      } else if (mode === "mousedown") {
-         ringRef.current.style.width = "20px";
-         ringRef.current.style.height = "20px";
-         ringRef.current.style.marginLeft = "-10px";
-         ringRef.current.style.marginTop = "-10px";
+      // Apply dragging text if needed
+      if (state.current.dragState !== "none") {
+        ringRef.current.setAttribute("data-text", state.current.dragState.toUpperCase());
+        ringRef.current.classList.add("has-text");
       } else {
-         // Default
-         ringRef.current.style.width = "32px";
-         ringRef.current.style.height = "32px";
-         ringRef.current.style.borderRadius = "50%";
-         ringRef.current.style.backgroundColor = "transparent";
-         ringRef.current.style.border = "1px solid rgba(17, 17, 15, 0.2)";
-         ringRef.current.style.marginLeft = "-16px";
-         ringRef.current.style.marginTop = "-16px";
-         dotRef.current.style.opacity = "1";
-         textRef.current.textContent = "";
-         textRef.current.style.opacity = "0";
-      }
-    };
-
-    const updateRingTransform = () => {
-      if (ringRef.current) {
-         ringRef.current.style.transform = `translate3d(${state.current.ringX}px, ${state.current.ringY}px, 0)`;
+        ringRef.current.setAttribute("data-text", "");
+        ringRef.current.classList.remove("has-text");
       }
     };
 
@@ -204,7 +151,8 @@ export default function CustomCursor() {
         // Smooth interpolation
         state.current.ringX += (state.current.mouseX - state.current.ringX) * 0.15;
         state.current.ringY += (state.current.mouseY - state.current.ringY) * 0.15;
-        updateRingTransform();
+        
+        ringRef.current.style.transform = `translate3d(${state.current.ringX}px, ${state.current.ringY}px, 0) scale(${getScale()})`;
       }
       animationFrameId = requestAnimationFrame(render);
     };
@@ -213,9 +161,6 @@ export default function CustomCursor() {
     window.addEventListener("mousedown", onMouseDown);
     window.addEventListener("mouseup", onMouseUp);
     
-    // Initial style update
-    updateRingStyle();
-
     if (!reducedMotion) {
       animationFrameId = requestAnimationFrame(render);
     }
@@ -235,33 +180,39 @@ export default function CustomCursor() {
       <style dangerouslySetInnerHTML={{ __html: `
         @media (hover: hover) and (pointer: fine) {
           body * {
-            cursor: none !important;
+            cursor: none;
           }
           /* Allow inputs to have native cursor */
           input, textarea, select, [contenteditable] {
             cursor: text !important;
           }
-          /* Remove pointer styles from buttons to let our cursor handle it */
-          a, button, [role="button"], input[type="button"], input[type="submit"], input[type="checkbox"], input[type="radio"] {
-            cursor: none !important;
+          input[type="button"], input[type="submit"], input[type="checkbox"], input[type="radio"], select {
+            cursor: pointer !important;
           }
+          /* We still want native behavior for inputs, but for dragging we can let our custom cursor handle it */
         }
       `}} />
       <div 
         ref={dotRef}
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-[#11110f] rounded-full pointer-events-none z-[999999] transition-opacity duration-200"
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-[#8B7CFF] rounded-full pointer-events-none z-[999999]"
         style={{ margin: '-3px 0 0 -3px', willChange: 'transform' }}
       ></div>
       <div 
         ref={ringRef}
-        className="fixed top-0 left-0 pointer-events-none z-[999998] flex items-center justify-center transition-all duration-300 ease-out"
-        style={{ willChange: 'transform, width, height, background-color, border-radius' }}
+        className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[999998] flex items-center justify-center transition-opacity duration-200"
+        style={{ margin: '-16px 0 0 -16px', willChange: 'transform', border: '1px solid rgba(139, 124, 255, 0.6)' }}
       >
-         <div 
-            ref={textRef} 
-            className="font-mono text-[9px] font-bold tracking-widest uppercase transition-opacity duration-200"
-            style={{ opacity: 0 }}
-         ></div>
+        <style dangerouslySetInnerHTML={{ __html: `
+          .has-text::after {
+            content: attr(data-text);
+            position: absolute;
+            font-size: 7px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            color: #8B7CFF;
+            text-transform: uppercase;
+          }
+        `}} />
       </div>
     </>
   );
