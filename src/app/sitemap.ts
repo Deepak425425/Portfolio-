@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import fs from 'fs'
 import path from 'path'
+import { BLOG_POSTS } from '@/lib/blog/data'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://groton.in'
@@ -14,7 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/services',
     '/terms-and-conditions',
     '/tools',
-    '/work'
+    '/work',
+    '/blog'
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
@@ -40,5 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     console.error('Error reading tools directory for sitemap:', e)
   }
 
-  return [...staticRoutes, ...toolRoutes]
+  const blogRoutes = BLOG_POSTS.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.datePublished),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }))
+
+  return [...staticRoutes, ...toolRoutes, ...blogRoutes]
 }

@@ -576,6 +576,8 @@ export default function Home() {
               <Link href="/about" className="hover:text-black transition-colors py-1 md:py-0">About</Link>
               <Link href="/services" className="hover:text-black transition-colors py-1 md:py-0">Services</Link>
               <Link href="/work" className="hover:text-black transition-colors py-1 md:py-0">Work</Link>
+              <Link href="/blog" className="hover:text-black transition-colors py-1 md:py-0">Blog</Link>
+
               <Link href="/pricing" className="hover:text-black transition-colors py-1 md:py-0">Pricing</Link>
               <Link href="/contact" className="hover:text-black transition-colors py-1 md:py-0">Contact</Link>
               <Link href="/privacy-policy" className="hover:text-black transition-colors py-1 md:py-0">Privacy Policy</Link>

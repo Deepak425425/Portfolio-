@@ -111,6 +111,27 @@ export default function PalettePage() {
     
     const titleOffset = 220;
     const startY = pad + titleOffset;
+    
+    // Dynamically adjust board height if cards overflow
+    const totalCardsHeight = rows * cardH + Math.max(0, rows - 1) * gap;
+    const minRequiredHeight = startY + totalCardsHeight + 200; // 200 for footer padding
+    if (boardH < minRequiredHeight) {
+       boardH = minRequiredHeight;
+       canvas.height = boardH;
+       
+       // Redraw background with new height
+       ctx.fillStyle = "#F7F6F2";
+       ctx.fillRect(0, 0, boardW, boardH);
+       
+       // Redraw Title since background wiped it
+       ctx.fillStyle = "#111111";
+       ctx.font = "bold 56px 'Inter', sans-serif";
+       ctx.fillText("COLOR PALETTE", pad, pad + 50);
+       
+       ctx.fillStyle = "#6F6C66";
+       ctx.font = "32px 'Inter', sans-serif";
+       ctx.fillText(imgName, pad, pad + 110);
+    }
 
     colors.forEach((c, i) => {
       const col = i % cols;
@@ -143,7 +164,7 @@ export default function PalettePage() {
     // Footer mark
     ctx.fillStyle = "#111111";
     ctx.font = "bold 24px 'Inter', sans-serif";
-    const footerText = "GROTON AI";
+    const footerText = "groton.in";
     const textWidth = ctx.measureText(footerText).width;
     ctx.fillText(footerText, (boardW - textWidth) / 2, boardH - 80);
 

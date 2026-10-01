@@ -11,6 +11,7 @@ interface ImgData {
   file: File;
   url: string;
   name: string;
+  defaultName: string;
   fit: "fill" | "fit";
   zoom: number;
   panX: number; // percentage offset -50 to 50
@@ -23,6 +24,7 @@ export default function CollageMakerPage() {
   const [images, setImages] = useState<ImgData[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [totalUploaded, setTotalUploaded] = useState(0);
 
   // Layout State
   const [columns, setColumns] = useState(3);
@@ -63,17 +65,18 @@ export default function CollageMakerPage() {
     const valid = files.filter(f => f.type.startsWith('image/'));
     
     const newImgs: ImgData[] = [];
-    for (const f of valid) {
+    for (let i = 0; i < valid.length; i++) {
+      const f = valid[i];
       const url = URL.createObjectURL(f);
       const img = new Image();
       await new Promise(r => { img.onload = r; img.src = url; });
-      const parts = f.name.split('.');
-      parts.pop();
+      const defaultName = `Image ${totalUploaded + i + 1}`;
       newImgs.push({
         id: Math.random().toString(36).substring(7),
         file: f,
         url,
-        name: parts.join('.'),
+        name: defaultName,
+        defaultName,
         fit: "fit",
         zoom: 1,
         panX: 0,
@@ -83,6 +86,7 @@ export default function CollageMakerPage() {
       });
     }
     setImages(prev => [...prev, ...newImgs]);
+    setTotalUploaded(prev => prev + valid.length);
   };
 
   // Reordering
@@ -413,6 +417,31 @@ export default function CollageMakerPage() {
                 2. Image {selectedId ? '(Selected)' : '(Select an image)'}
               </h3>
               <div className={`flex flex-col gap-4 ${!selectedId ? 'opacity-50 pointer-events-none' : ''}`}>
+                
+                {selectedId && (
+                  <div className="flex flex-col gap-2 bg-zinc-50 p-3 border border-zinc-100">
+                    <label className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold">Rename</label>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="text" 
+                        value={images.find(i=>i.id===selectedId)?.name || ''} 
+                        onChange={e => updateImage(selectedId, { name: e.target.value })}
+                        className="flex-1 text-xs bg-white border border-zinc-200 px-2 py-1 focus:outline-none focus:border-[#8B7CFF]"
+                        placeholder="Enter new name"
+                      />
+                      <button 
+                        onClick={() => {
+                          const img = images.find(i=>i.id===selectedId);
+                          if (img) updateImage(selectedId, { name: img.defaultName });
+                        }}
+                        className="text-[9px] uppercase tracking-widest font-bold text-zinc-400 hover:text-black shrink-0"
+                      >
+                        Reset Name
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex flex-col gap-1">
                   <label className="text-[9px] uppercase tracking-widest text-zinc-500 flex justify-between">
                     <span>Zoom</span>

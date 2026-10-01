@@ -319,14 +319,14 @@ export default function WatermarkRemoverPage() {
                 onTouchCancel={handleUp}
               >
                 {/* Result layer acts as base */}
-                <canvas ref={resultCanvasRef} className="max-w-none shadow-xl block" />
+                <canvas ref={resultCanvasRef} className="max-w-full max-h-[70vh] shadow-xl block" style={{ width: 'auto', height: 'auto' }} />
                 {/* Reference layer (Original) - hidden by default unless testing */}
-                <canvas ref={canvasRef} className="max-w-none absolute top-0 left-0 hidden" />
+                <canvas ref={canvasRef} className="max-w-full max-h-[70vh] absolute top-0 left-0 hidden" style={{ width: 'auto', height: 'auto' }} />
                 {/* Interactive Mask Layer */}
                 <canvas 
                   ref={maskCanvasRef} 
-                  className={`max-w-none absolute top-0 left-0 ${showMask ? 'opacity-80' : 'opacity-0'} mix-blend-multiply`} 
-                  style={{ cursor: activeTool === "pan" ? "grab" : "crosshair" }} 
+                  className={`max-w-full max-h-[70vh] absolute top-0 left-0 ${showMask ? 'opacity-80' : 'opacity-0'} mix-blend-multiply`} 
+                  style={{ width: '100%', height: '100%', cursor: activeTool === "pan" ? "grab" : "crosshair" }} 
                 />
               </div>
 

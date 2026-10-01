@@ -9,8 +9,12 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ffmpeg/core": "^0.12.10",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@imgly/background-removal": "^1.7.0",
     "@mediapipe/tasks-vision": "^1.0.1",
+    "exifreader": "^4.46.0",
     "framer-motion": "^13.4.4",
     "gifenc": "^1.0.3",
     "jspdf": "^4.2.1",
