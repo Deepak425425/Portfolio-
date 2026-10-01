@@ -126,6 +126,20 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
   // SPECIALIZED TOOLS
   // ==========================================
   { 
+    id: "video-editor", 
+    name: "Video Editor", 
+    route: "/tools/video-editor", 
+    category: "specialized",
+    visual: "🎬",
+    description: "Simple browser-based video editing for quick cuts, trims, crops, text, audio and exports.",
+    keywords: [
+      "video editor", "edit video", "video editing", "edit a video", 
+      "video cut", "video trim", "trim video", "cut video", "crop video", 
+      "video ko edit karna hai", "video edit karni hai", "video cut karni hai", 
+      "video trim karna hai", "video ka size change karna hai", "mujhe video cut karni hai"
+    ] 
+  },
+  { 
     id: "video-to-gif", 
     name: "Video to GIF Maker", 
     route: "/tools/video-to-gif", 
@@ -189,13 +203,13 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     keywords: ["watermark", "logo lagana", "photo pe logo lagana hai", "image pe watermark lagana hai", "watermark lagana hai", "add watermark", "protect image"] 
   },
   { 
-    id: "before-after", 
-    name: "Before & After", 
-    route: "/tools/before-after", 
+    id: "check-metadata", 
+    name: "Check Metadata", 
+    route: "/tools/check-metadata", 
     category: "specialized",
-    visual: "◨",
-    description: "Create vertical comparison sliders.",
-    keywords: ["before after", "comparison slider", "slide compare", "compare slider", "before and after"] 
+    visual: "ⓘ",
+    description: "Inspect image metadata, EXIF, IPTC, XMP and file information.",
+    keywords: ["metadata", "exif", "iptc", "xmp", "file info", "image info", "check metadata", "inspect image"] 
   },
 
   // ==========================================
@@ -252,7 +266,7 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     route: "/tools/grid-cutter", 
     category: "other",
     visual: "▦",
-    description: "Slice an image into an Instagram grid.",
+    description: "Split images into precise grids and export each section individually.",
     keywords: ["grid cutter", "split image", "slice image", "instagram grid", "3x3", "grid slice", "divide image", "cut into pieces"] 
   },
   { 
@@ -335,15 +349,6 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     visual: "🎥",
     description: "Complete studio for cinematic focus, film grading, and distressed poster effects.",
     keywords: ["cinematic", "film grading", "distressed poster", "cinematic focus", "focus effect", "film look", "movie look", "vintage film"] 
-  },
-  { 
-    id: "split", 
-    name: "Image Splitter", 
-    route: "/tools/split", 
-    category: "utility",
-    visual: "⊞",
-    description: "Slice images into exact grid coordinates for Instagram grids.",
-    keywords: ["split image", "slice image", "divide image", "cut into grid", "split photo", "image splitter", "instagram puzzle"] 
   },
   { 
     id: "watermark-remover", 

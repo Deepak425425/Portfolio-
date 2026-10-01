@@ -69,8 +69,6 @@ export default function Home() {
   const p3y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-25, 25]);
   
   // Navigation styling
-  const navBg = useTransform(scrollY, [0, 100], ["rgba(255,255,255,0)", "rgba(255,255,255,0.95)"]);
-  const navBorder = useTransform(scrollY, [0, 100], ["rgba(228,228,231,0)", "rgba(228,228,231,1)"]);
   const navPadding = useTransform(scrollY, [0, 100], ["2rem", "1.25rem"]);
 
   useEffect(() => {
@@ -105,8 +103,8 @@ export default function Home() {
 
       {/* NAVIGATION */}
       <motion.header 
-        style={{ backgroundColor: navBg, borderBottomColor: navBorder, paddingTop: navPadding, paddingBottom: navPadding }}
-        className="fixed top-0 left-0 w-full px-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-50 transition-all backdrop-blur-md"
+        style={{ paddingTop: navPadding, paddingBottom: navPadding }}
+        className="fixed top-0 left-0 w-full px-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-50 transition-all backdrop-blur-md bg-white/75 border-b border-zinc-200/50"
       >
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
           GROTON AI STUDIO
@@ -203,7 +201,7 @@ export default function Home() {
             {/* Primary - Activewear Model */}
             <motion.div 
               style={{ x: p1x, y: p1y }}
-              className="relative z-10 w-[90%] md:w-full max-w-[500px] xl:max-w-[640px] aspect-[4/5] mt-8"
+              className="relative z-10 w-[65%] sm:w-[55%] md:w-full max-w-[500px] xl:max-w-[640px] aspect-[4/5] mt-8"
             >
               <motion.div
                 style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -60]) }}
@@ -213,62 +211,59 @@ export default function Home() {
                   initial={{ opacity: 0, clipPath: "inset(5% 5% 5% 5%)" }} 
                   animate={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }} 
                   transition={{ duration: 1.5, delay: 1, ease: [0.16, 1, 0.3, 1] }}
-                  className="w-full h-full relative overflow-hidden bg-zinc-200"
+                  className="w-full h-full relative overflow-hidden bg-zinc-200 shadow-[0_12px_30px_rgba(0,0,0,0.10)]"
                   data-cursor="view"
                 >
                    <motion.div className="w-full h-full relative" whileHover={{ scale: 1.03 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                     <Image src="/campaign-worlds/groton-3.jpg" alt="Activewear Model Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
+                     <Image src="/campaign-worlds/download (22).jpeg" alt="Activewear Model Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
                    </motion.div>
                 </motion.div>
               </motion.div>
             </motion.div>
 
-            {/* Secondary 1 - Sneakers */}
-            <motion.div 
-              style={{ x: p2x, y: p2y }}
-              className="absolute left-[2%] md:left-[5%] lg:left-[10%] bottom-16 lg:bottom-24 z-20 w-[35vw] md:w-[25vw] max-w-[300px] aspect-square hidden sm:block"
-            >
-               <motion.div
-                 style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -90]) }}
-                 className="w-full h-full shadow-[-20px_40px_80px_-20px_rgba(0,0,0,0.25)] group pointer-events-auto"
-               >
-                 <motion.div 
-                   initial={{ opacity: 0, x: -30 }} 
-                   animate={{ opacity: 1, x: 0 }} 
-                   transition={{ duration: 1.2, delay: 1.3, ease: [0.16, 1, 0.3, 1] }}
-                   className="w-full h-full relative overflow-hidden bg-zinc-200"
-                   data-cursor="view"
-                 >
-                   <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                     <Image src="/campaign-worlds/groton-13.jpg" alt="Yellow Sneakers E-commerce" fill className="object-cover" priority sizes="(max-width: 768px) 0vw, 25vw" />
-                   </motion.div>
-                 </motion.div>
-               </motion.div>
-            </motion.div>
+            {/* Secondary 1 - Top Left (Shoes) */}
+            <FloatingHeroCard 
+              src="/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg"
+              alt="Floating Asset 1 - Shoes"
+              className="left-[1%] sm:left-[3%] md:left-[5%] lg:left-[8%] top-8 md:top-12 lg:top-24"
+              px={p2x} py={p2y}
+              scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -100])}
+              initial={{ opacity: 0, x: -30 }}
+              delay={1.2}
+            />
 
-            {/* Secondary 2 - Purifiers/Product */}
-            <motion.div 
-              style={{ x: p3x, y: p3y }}
-              className="absolute right-[5%] md:right-[12%] lg:right-[16%] top-12 md:top-20 lg:top-32 z-30 w-[30vw] md:w-[18vw] max-w-[220px] aspect-[3/4] hidden sm:block"
-            >
-               <motion.div
-                 style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -120]) }}
-                 className="w-full h-full shadow-[20px_40px_80px_-20px_rgba(0,0,0,0.25)] group pointer-events-auto"
-               >
-                 <motion.div 
-                   initial={{ opacity: 0, x: 30 }} 
-                   animate={{ opacity: 1, x: 0 }} 
-                   transition={{ duration: 1.2, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                   className="w-full h-full relative overflow-hidden bg-zinc-200"
-                   data-cursor="view"
-                 >
-                   <motion.div className="w-full h-full relative" whileHover={{ scale: 1.05 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                     <Image src="/campaign-worlds/groton-10.jpg" alt="Colorful Product Campaign" fill className="object-cover object-center" priority sizes="(max-width: 768px) 0vw, 20vw" />
-                   </motion.div>
-                 </motion.div>
-               </motion.div>
-            </motion.div>
+            {/* Secondary 2 - Bottom Left (T-shirt) */}
+            <FloatingHeroCard 
+              src="/campaign-worlds/Create_vertical_e-commerce_produ…_2K_20260929162058.jpg"
+              alt="Floating Asset 2 - T-shirt"
+              className="left-[1%] sm:left-[4%] md:left-[8%] lg:left-[12%] bottom-10 md:bottom-16 lg:bottom-24"
+              px={p3x} py={p3y}
+              scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -60])}
+              initial={{ opacity: 0, y: 30 }}
+              delay={1.4}
+            />
 
+            {/* Secondary 3 - Top Right (Sunglasses) */}
+            <FloatingHeroCard 
+              src="/campaign-worlds/Sunglasses_product_photography_2K_20260929162056.jpg"
+              alt="Floating Asset 3 - Sunglasses"
+              className="right-[1%] sm:right-[3%] md:right-[5%] lg:right-[8%] top-10 md:top-16 lg:top-32"
+              px={p3x} py={p3y}
+              scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -120])}
+              initial={{ opacity: 0, x: 30 }}
+              delay={1.3}
+            />
+
+            {/* Secondary 4 - Bottom Right (Jacket + Pants) */}
+            <FloatingHeroCard 
+              src="/campaign-worlds/Jacket_and_pants_fashion_display_2K_20260929162053.jpg"
+              alt="Floating Asset 4 - Jacket"
+              className="right-[2%] md:right-[8%] lg:right-[12%] bottom-12 lg:bottom-20"
+              px={p2x} py={p2y}
+              scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -80])}
+              initial={{ opacity: 0, y: 30 }}
+              delay={1.5}
+            />
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -280,6 +275,7 @@ export default function Home() {
             </motion.div>
             
           </div>
+
         </div>
       </section>
 
@@ -295,21 +291,21 @@ export default function Home() {
               We specialize in creating premium product imagery for e-commerce brands. From clean catalog shots to highly art-directed campaign visuals, we ensure your products look their absolute best.
             </p>
             <div className="grid grid-cols-2 gap-4">
-               <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-                 <Image src="/campaign-worlds/groton-10.jpg" alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+               <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
+                 <Image src="/campaign-worlds/LOGO DESIGN _ IDENTITY DESIGN _ ЛОГОТИП.jpeg" alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product Imagery</span></div>
                </div>
-               <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
+               <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
                  <Image src="/campaign-worlds/groton-9.jpg" alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product-on-Model</span></div>
                </div>
-               <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-                 <Image src="/campaign-worlds/groton-1.jpg" alt="Fashion E-commerce" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+               <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
+                 <Image src="/campaign-worlds/groton-1.jpg" alt="Fashion Apparel" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Fashion Apparel</span></div>
                </div>
-               <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
-                 <Image src="/campaign-worlds/groton-11.jpg" alt="Lifestyle Products" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                 <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Lifestyle</span></div>
+               <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
+                 <Image src="/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg" alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Editorial</span></div>
                </div>
             </div>
           </div>
@@ -343,20 +339,20 @@ export default function Home() {
 
         <div className="max-w-[1600px] mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            <div className="col-span-2 md:col-span-2 row-span-2 aspect-[4/5] relative bg-zinc-200 group overflow-hidden" data-cursor="view">
-              <Image src="/campaign-worlds/groton-4.jpg" alt="Sherpa Hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="50vw" />
+            <div className="col-span-2 md:col-span-2 row-span-2 aspect-[4/5] relative bg-zinc-200 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
+              <Image src="/campaign-worlds/Caffeine is culture ☕️.jpeg" alt="Sherpa Hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="50vw" />
             </div>
-            <div className="col-span-1 aspect-square relative bg-zinc-200 group overflow-hidden" data-cursor="view">
-              <Image src="/campaign-worlds/groton-2.jpg" alt="Pink Jacket" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+            <div className="col-span-1 aspect-square relative bg-zinc-200 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
+              <Image src="/campaign-worlds/How to style Cat Print T shirts.jpeg" alt="Pink Jacket" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
-            <div className="col-span-1 aspect-[3/4] relative bg-zinc-200 group overflow-hidden" data-cursor="view">
-              <Image src="/campaign-worlds/groton-12.jpg" alt="Pink Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+            <div className="col-span-1 aspect-[3/4] relative bg-zinc-200 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
+              <Image src="/campaign-worlds/download (27).jpeg" alt="Pink Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
-            <div className="col-span-1 aspect-[4/5] relative bg-zinc-200 group overflow-hidden" data-cursor="view">
-              <Image src="/campaign-worlds/groton-6.jpg" alt="Pendant Lights" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+            <div className="col-span-1 aspect-[4/5] relative bg-zinc-200 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
+              <Image src="/campaign-worlds/Mali džentlmen, veliki stil_ 🎨.jpeg" alt="Pendant Lights" fill className="object-cover object-[center_15%] group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
-            <div className="col-span-1 aspect-square relative bg-zinc-200 group overflow-hidden" data-cursor="view">
-              <Image src="/campaign-worlds/groton-5.jpg" alt="Sandals" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+            <div className="col-span-1 aspect-square relative bg-zinc-200 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
+              <Image src="/campaign-worlds/mu_forart_.jpeg" alt="Sandals" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
           </div>
         </div>
@@ -372,8 +368,8 @@ export default function Home() {
 
           <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
             <div className="flex flex-col items-center gap-6 w-full md:w-1/3">
-              <div className="w-full aspect-square relative overflow-hidden bg-zinc-900 border border-zinc-800">
-                <Image src="/campaign-worlds/groton-17.jpg" alt="Raw Product Input" fill className="object-cover filter grayscale opacity-80 mix-blend-luminosity" />
+              <div className="w-full aspect-square relative overflow-hidden bg-zinc-900 border border-zinc-800 shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
+                <Image src="/campaign-worlds/ghgh.jpeg" alt="Raw Product Input" fill className="object-cover filter grayscale opacity-80 mix-blend-luminosity" />
               </div>
               <span className="text-xs tracking-[0.2em] uppercase font-bold text-zinc-500">Raw Product Asset</span>
             </div>
@@ -386,8 +382,8 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col items-center gap-6 w-full md:w-1/2">
-              <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-900 shadow-2xl">
-                <Image src="/campaign-worlds/groton-14.jpg" alt="Final Campaign Visual" fill className="object-cover" />
+              <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-900 shadow-2xl shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
+                <Image src="/campaign-worlds/1368386.jpg" alt="Final Campaign Visual" fill className="object-cover" />
               </div>
               <span className="text-xs tracking-[0.2em] uppercase font-bold text-white">Final Campaign Visual</span>
             </div>
@@ -402,41 +398,41 @@ export default function Home() {
           <h2 className="font-serif text-4xl md:text-5xl text-black">Fashion & Apparel.</h2>
         </div>
         <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-           <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden" data-cursor="view">
+           <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
              <Image src="/campaign-worlds/groton-15.jpg" alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
-           <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden md:mt-12" data-cursor="view">
-             <Image src="/campaign-worlds/groton-1.jpg" alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+           <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden md:mt-12 shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
+             <Image src="/campaign-worlds/groton-12.jpg" alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
-           <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden" data-cursor="view">
+           <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
              <Image src="/campaign-worlds/groton-9.jpg" alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
         </div>
       </section>
 
       {/* 6. HOME & LIFESTYLE */}
-      <section className="relative w-full z-10 bg-[#F9F8F6] py-32 border-b border-zinc-200">
+      {false && (<section className="relative w-full z-10 bg-[#F9F8F6] py-32 border-b border-zinc-200">
         <div className="max-w-[1400px] mx-auto px-6 mb-16 text-right">
           <span className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase block mb-4">Focus</span>
           <h2 className="font-serif text-4xl md:text-5xl text-black">Home & Lifestyle.</h2>
         </div>
         <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-           <div className="md:col-span-7 aspect-[16/9] relative bg-zinc-100 group overflow-hidden" data-cursor="view">
+           <div className="md:col-span-7 aspect-[16/9] relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
              <Image src="/campaign-worlds/groton-16.jpg" alt="Pendant Lights" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
            <div className="md:col-span-5 flex flex-col gap-6">
-             <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden" data-cursor="view">
+             <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
                <Image src="/campaign-worlds/groton-11.jpg" alt="Orange Cushions" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
              </div>
-             <div className="w-full aspect-[21/9] relative bg-zinc-100 group overflow-hidden" data-cursor="view">
+             <div className="w-full aspect-[21/9] relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
                <Image src="/campaign-worlds/groton-7.jpg" alt="Translucent Lamp" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
              </div>
            </div>
         </div>
-      </section>
+      </section>)}
 
       {/* 7. HORIZONTAL GALLERY - PORTFOLIO / SELECTED WORK */}
-      <section className="relative w-full z-10 bg-white py-32 overflow-hidden border-t border-zinc-200">
+      {false && (<section className="relative w-full z-10 bg-white py-32 overflow-hidden border-t border-zinc-200">
         <div className="px-6 md:px-12 lg:px-24 mb-16 max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
           <div>
             <span className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase block mb-4">Selected Work</span>
@@ -451,7 +447,7 @@ export default function Home() {
         <div className="w-full flex gap-6 px-6 md:px-12 lg:px-24 overflow-x-auto pb-12 snap-x snap-mandatory scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
           
           <div className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
-            <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200">
+            <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200 shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
               <Image src="/campaign-worlds/groton-3.jpg" alt="Fashion Apparel" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex justify-between items-center px-1">
@@ -460,7 +456,7 @@ export default function Home() {
           </div>
 
           <div className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
-            <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200">
+            <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200 shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
               <Image src="/campaign-worlds/groton-13.jpg" alt="Footwear" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex justify-between items-center px-1">
@@ -469,7 +465,7 @@ export default function Home() {
           </div>
 
           <div className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
-            <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200">
+            <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200 shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
               <Image src="/campaign-worlds/groton-6.jpg" alt="Home" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex justify-between items-center px-1">
@@ -478,7 +474,7 @@ export default function Home() {
           </div>
 
           <div className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
-            <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200">
+            <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200 shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
               <Image src="/campaign-worlds/groton-10.jpg" alt="Product" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex justify-between items-center px-1">
@@ -487,7 +483,7 @@ export default function Home() {
           </div>
           
           <div className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
-            <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200">
+            <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-200 shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
               <Image src="/campaign-worlds/groton-5.jpg" alt="Lifestyle" fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex justify-between items-center px-1">
@@ -496,7 +492,7 @@ export default function Home() {
           </div>
 
         </div>
-      </section>
+      </section>)}
 
       {/* 8. PROCESS */}
       <section className="relative w-full z-10 bg-zinc-50 py-32 px-6">
@@ -580,6 +576,8 @@ export default function Home() {
               <Link href="/about" className="hover:text-black transition-colors py-1 md:py-0">About</Link>
               <Link href="/services" className="hover:text-black transition-colors py-1 md:py-0">Services</Link>
               <Link href="/work" className="hover:text-black transition-colors py-1 md:py-0">Work</Link>
+              <Link href="/blog" className="hover:text-black transition-colors py-1 md:py-0">Blog</Link>
+
               <Link href="/pricing" className="hover:text-black transition-colors py-1 md:py-0">Pricing</Link>
               <Link href="/contact" className="hover:text-black transition-colors py-1 md:py-0">Contact</Link>
               <Link href="/privacy-policy" className="hover:text-black transition-colors py-1 md:py-0">Privacy Policy</Link>
@@ -590,6 +588,18 @@ export default function Home() {
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
               &copy; 2026 GROTON AI STUDIO
             </p>
+            <div className="flex items-center gap-6">
+              <a href="https://www.instagram.com/d99p4k/" target="_blank" rel="noopener noreferrer" className="text-inherit opacity-60 hover:opacity-100 transition-all duration-300 hover:-translate-y-1" aria-label="Instagram">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
+                </svg>
+              </a>
+              <a href="https://in.linkedin.com/in/deepak-kumawat-grafly" target="_blank" rel="noopener noreferrer" className="text-inherit opacity-60 hover:opacity-100 hover:text-[#0a66c2] transition-all duration-300 hover:-translate-y-1" aria-label="LinkedIn">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path fillRule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clipRule="evenodd" />
+                </svg>
+              </a>
+            </div>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
               A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>
             </p>
@@ -597,5 +607,41 @@ export default function Home() {
         </div>
       </footer>
     </div>
+  );
+}
+
+
+interface FloatingCardProps {
+  src: string;
+  alt: string;
+  className: string;
+  px: any;
+  py: any;
+  scrollYTransform: any;
+  initial: any;
+  delay: number;
+}
+
+function FloatingHeroCard({ src, alt, className, px, py, scrollYTransform, initial, delay }: FloatingCardProps) {
+  return (
+    <motion.div 
+      style={{ x: px, y: py }}
+      className={`absolute z-20 w-[26vw] sm:w-[22vw] md:w-[18vw] lg:w-[14vw] max-w-[220px] aspect-[3/4] ${className}`}
+    >
+       <motion.div
+         style={{ y: scrollYTransform }}
+         className="w-full h-full shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] group pointer-events-auto"
+       >
+         <motion.div 
+           initial={initial} 
+           animate={{ opacity: 1, x: 0, y: 0 }} 
+           transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
+           className="w-full h-full relative overflow-hidden bg-white rounded-xl"
+           data-cursor="view"
+         >
+           <Image src={src} alt={alt} fill className="object-contain p-4 pointer-events-none" priority sizes="(max-width: 768px) 30vw, 20vw" />
+         </motion.div>
+       </motion.div>
+    </motion.div>
   );
 }

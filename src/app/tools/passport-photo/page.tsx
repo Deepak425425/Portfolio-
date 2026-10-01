@@ -83,18 +83,13 @@ export default function PassportPhotoMaker() {
       const frameRatio = photoW / photoH;
       const imgRatio = imgW / imgH;
       let scale = 1;
-      
-      // We want the image to completely cover the frame initially (fill)
-      // Actually typically passport photos are portrait, and phone photos are portrait.
       if (imgRatio > frameRatio) {
-        scale = photoH / imgH; 
-      } else {
-        scale = photoW / imgW;
+        scale = imgRatio / frameRatio; 
       }
       
       setTransforms(prev => ({
         ...prev,
-        [id]: { x: 0, y: 0, scale: scale * 1.5, bg: "original" } // slightly zoomed in by default for faces
+        [id]: { x: 0, y: 0, scale: scale, bg: "original" }
       }));
     }
   };
@@ -108,46 +103,28 @@ export default function PassportPhotoMaker() {
     }));
   };
 
-  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent, id: string) => {
+  const handlePointerDown = (e: React.PointerEvent, id: string) => {
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
     setIsDragging(true);
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     const t = getTransform(id);
-    dragStart.current = { x: clientX, y: clientY, tx: t.x, ty: t.y };
+    dragStart.current = { x: e.clientX, y: e.clientY, tx: t.x, ty: t.y };
   };
 
-  const handleMouseMove = (e: MouseEvent | TouchEvent, id: string) => {
+  const handlePointerMove = (e: React.PointerEvent, id: string) => {
     if (!isDragging) return;
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    
-    // Scale movement by a reasonable factor based on editor canvas size vs real physical size
-    // For simplicity, just use a 1:1 screen-to-mm ratio mapping adjusted for UX.
-    const dx = (clientX - dragStart.current.x) * 0.2; 
-    const dy = (clientY - dragStart.current.y) * 0.2;
+    const dx = (e.clientX - dragStart.current.x) * 0.2; 
+    const dy = (e.clientY - dragStart.current.y) * 0.2;
     
     updateTransform(id, {
       x: dragStart.current.tx + dx,
-      y: dragStart.current. ty + dy
+      y: dragStart.current.ty + dy
     });
   };
 
-  const handleMouseUp = () => {
+  const handlePointerUp = (e: React.PointerEvent) => {
     setIsDragging(false);
+    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
   };
-
-  useEffect(() => {
-    const onMove = (e: MouseEvent | TouchEvent) => {
-      // Find active image id indirectly through a ref or just rely on state if single
-      // To keep it simple, we bind these dynamically in the renderPreview block
-    };
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('touchend', handleMouseUp);
-    return () => {
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('touchend', handleMouseUp);
-    };
-  }, []);
 
   // Physically calculate pixels from mm
   const mmToPx = (mm: number, currentDpi: number = dpi) => (mm / MM_PER_INCH) * currentDpi;
@@ -292,7 +269,6 @@ export default function PassportPhotoMaker() {
     img.src = currentImg.url;
     await new Promise(r => img.onload = r);
     
-    initTransform(currentImg.id, img.width, img.height);
     const t = getTransform(currentImg.id);
 
     // Create a virtual coordinate system where 1 unit = 1mm for the preview logic
@@ -407,19 +383,48 @@ export default function PassportPhotoMaker() {
         unit: "mm",
         format: [layout.rawW, layout.rawH]
       });
-      pdf.deletePage(1);
 
       for (let i = 0; i < images.length; i++) {
+        const singleCanvas = await renderSinglePhoto(images[i], dpi);
+        const singleDataUrl = singleCanvas.toDataURL("image/jpeg", 0.95);
+        
         for (let p = 0; p < layout.totalPages; p++) {
           setProgress({ current: (i * layout.totalPages) + p + 1, total: images.length * layout.totalPages });
-          const canvas = await renderPrintSheet(images[i], p, dpi);
           
-          pdf.addPage([layout.rawW, layout.rawH], paperOrient === "p" ? "portrait" : "landscape");
+          if (p > 0 || i > 0) {
+            pdf.addPage([layout.rawW, layout.rawH], paperOrient === "p" ? "portrait" : "landscape");
+          }
           
-          const compression = dpi > 300 ? "FAST" : "MEDIUM";
-          // Add image covering the entire mm bounds of the page
-          pdf.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, layout.rawW, layout.rawH, undefined, compression);
+          const photosThisPage = Math.min(layout.totalCopies - (p * layout.maxPerPage), layout.maxPerPage);
           
+          let startX = margins;
+          let startY = margins;
+          if (centerSheet) {
+             const actualGridW = (layout.cols * photoW) + ((layout.cols - 1) * gap);
+             const actualGridH = (layout.rows * photoH) + ((layout.rows - 1) * gap);
+             startX = (layout.rawW - actualGridW) / 2;
+             startY = (layout.rawH - actualGridH) / 2;
+          }
+
+          let count = 0;
+          for (let r = 0; r < layout.rows; r++) {
+            for (let c = 0; c < layout.cols; c++) {
+              if (count >= photosThisPage) break;
+              const x = startX + c * (photoW + gap);
+              const y = startY + r * (photoH + gap);
+              
+              const compression = dpi > 300 ? "FAST" : "MEDIUM";
+              pdf.addImage(singleDataUrl, "JPEG", x, y, photoW, photoH, undefined, compression);
+
+              if (cutGuides) {
+                pdf.setDrawColor(0, 0, 0);
+                pdf.setLineWidth(0.2);
+                pdf.setLineDashPattern([2, 2], 0);
+                pdf.rect(x, y, photoW, photoH);
+              }
+              count++;
+            }
+          }
           await new Promise(r => setTimeout(r, 50));
         }
       }
@@ -438,17 +443,20 @@ export default function PassportPhotoMaker() {
       <BulkProcessor
         onProcess={processForExport}
         renderPreview={(currentImg) => {
+          // Initialize transform when new image is loaded
+          useEffect(() => {
+             if (currentImg && !transforms[currentImg.id]) {
+                const img = new Image();
+                img.src = currentImg.url;
+                img.onload = () => initTransform(currentImg.id, img.width, img.height);
+             }
+          }, [currentImg, transforms]);
+
           // Re-render when dependencies change
           useEffect(() => {
             if (activeTab === "photo") drawEditorPreview(currentImg);
             else drawSheetPreview(currentImg);
           }, [currentImg, activeTab, photoW, photoH, transforms, showGuides, paperStd, paperOrient, copies, grid, margins, gap, centerSheet, cutGuides]);
-
-          const handleEvMove = (e: any) => {
-             if (currentImg && isDragging) {
-               handleMouseMove(e, currentImg.id);
-             }
-          };
 
           return (
             <div className="w-full flex flex-col items-center justify-center min-h-[60vh] bg-[#F7F6F2] relative border border-[#DEDCD5] p-8 overflow-hidden">
@@ -466,11 +474,11 @@ export default function PassportPhotoMaker() {
                    {/* Editor View */}
                    <canvas 
                      ref={canvasRef} 
-                     className="max-w-full max-h-[65vh] object-contain block cursor-move"
-                     onPointerDown={(e) => handleMouseDown(e, currentImg.id)}
-                     onTouchStart={(e) => handleMouseDown(e, currentImg.id)}
-                     onPointerMove={handleEvMove}
-                     onTouchMove={handleEvMove}
+                     className="max-w-full max-h-[65vh] object-contain block cursor-move touch-none"
+                     onPointerDown={(e) => handlePointerDown(e, currentImg.id)}
+                     onPointerMove={(e) => handlePointerMove(e, currentImg.id)}
+                     onPointerUp={handlePointerUp}
+                     onPointerCancel={handlePointerUp}
                    />
                    {/* Zoom Controls Overlay */}
                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center bg-white/90 backdrop-blur shadow-lg border border-border-color px-2 py-1 gap-2 z-20">
