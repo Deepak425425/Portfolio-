@@ -5,7 +5,7 @@ export async function authenticateTestingLab(password: string) {
   
   if (!correctPassword) {
     console.error("TESTING_LAB_PASSWORD environment variable is not set.");
-    return { success: false, error: "System configuration error. Please contact administrator." };
+    return { success: false, error: "Testing Lab configuration is unavailable." };
   }
 
   if (password === correctPassword) {
