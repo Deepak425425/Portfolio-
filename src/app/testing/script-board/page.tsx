@@ -12,6 +12,7 @@ interface Scene {
   phrase: string;
   image: string | null;
   imageName: string | null;
+  frameType?: string;
   motionPrompt: string;
   notes: string;
 }
@@ -39,7 +40,7 @@ const getBase64 = (file: File): Promise<string> => {
 
 // --- Icons ---
 const Icons = {
-  ScriptBoard: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>,
+  ScriptBoard: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#7C3AED]"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>,
   Pencil: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>,
   ZoomOut: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><line x1="8" x2="14" y1="11" y2="11"/></svg>,
   ZoomIn: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><line x1="11" x2="11" y1="8" y2="14"/><line x1="8" x2="14" y1="11" y2="11"/></svg>,
@@ -76,12 +77,63 @@ export default function ScriptBoard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [pickerSceneId, setPickerSceneId] = useState<string | null>(null);
   
+  // LocalStorage / Persistence
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [showSavedIndicator, setShowSavedIndicator] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('groton-script-board-autosave');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.scenes && data.scenes.length > 0) {
+          setProjectName(data.projectName || "");
+          setScenes(data.scenes);
+          setTrayImages(data.trayImages || []);
+        }
+      } catch (e) {}
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem('groton-script-board-autosave', JSON.stringify({ projectName, scenes, trayImages }));
+      setShowSavedIndicator(true);
+      const timer = setTimeout(() => setShowSavedIndicator(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [projectName, scenes, trayImages, isLoaded]);
+  
   // Toggles
   const [multiFrame, setMultiFrame] = useState(false);
   const [missingImageOnly, setMissingImageOnly] = useState(false);
   const [notesOnly, setNotesOnly] = useState(false);
   const [motionRefOnly, setMotionRefOnly] = useState(false);
   const [selectedOnly, setSelectedOnly] = useState(false);
+  
+  // Export Menu
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const exportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (exportRef.current && !exportRef.current.contains(e.target as Node)) {
+        setIsExportOpen(false);
+      }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsExportOpen(false);
+    };
+    if (isExportOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isExportOpen]);
 
   // --- Derived Data ---
   const filteredScenes = useMemo(() => {
@@ -117,6 +169,7 @@ export default function ScriptBoard() {
       phrase: "",
       image: null,
       imageName: null,
+      frameType: "1st Frame",
       motionPrompt: "",
       notes: ""
     });
@@ -214,11 +267,12 @@ export default function ScriptBoard() {
   };
 
   const handleExportPDF = async () => {
+    setIsExportOpen(false); // Close menu
     try {
       const { jsPDF } = await import("jspdf");
       const doc = new jsPDF();
       
-      const margin = 15;
+      const margin = 20;
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
       let cursorY = margin;
@@ -226,23 +280,33 @@ export default function ScriptBoard() {
 
       const drawHeader = () => {
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(16);
+        doc.setFontSize(22);
+        doc.setTextColor(0, 0, 0);
         doc.text("GROTON AI", margin, cursorY);
+        
         doc.setFont("helvetica", "normal");
         doc.setFontSize(12);
-        doc.text("SCRIPT BOARD", margin, cursorY + 6);
+        doc.setTextColor(100, 100, 100);
+        doc.text("SCRIPT BOARD", margin, cursorY + 7);
         
         doc.setFontSize(10);
-        doc.text(`Project: ${projectName || "Untitled"}`, margin, cursorY + 12);
-        doc.text(`Date: ${new Date().toLocaleDateString()}`, margin, cursorY + 17);
+        doc.setTextColor(50, 50, 50);
+        doc.text(`Project: ${projectName || "Untitled"}`, margin, cursorY + 16);
+        doc.text(`Date: ${new Date().toLocaleDateString()}`, margin, cursorY + 21);
         
-        cursorY += 30;
+        // Subtle divider
+        doc.setDrawColor(220, 220, 220);
+        doc.setLineWidth(0.5);
+        doc.line(margin, cursorY + 26, pageWidth - margin, cursorY + 26);
+        
+        cursorY += 40;
       };
 
       const drawFooter = (page: number) => {
         doc.setFont("helvetica", "normal");
         doc.setFontSize(8);
-        doc.text(`GROTON AI SCRIPT BOARD - Page ${page}`, pageWidth / 2, pageHeight - 10, { align: "center" });
+        doc.setTextColor(150, 150, 150);
+        doc.text(`© 2024 Groton AI Studio | A Creative Venture by Grafly Studio  -  Page ${page}`, pageWidth / 2, pageHeight - 10, { align: "center" });
       };
 
       drawHeader();
@@ -251,43 +315,61 @@ export default function ScriptBoard() {
       for (let i = 0; i < scenes.length; i++) {
         const scene = scenes[i];
         
-        // Calculate required height for this scene
         const colLeft = margin;
-        const imgBoxW = 70;
-        const colRight = margin + imgBoxW + 10;
+        const imgBoxW = 90;
+        const colRight = margin + imgBoxW + 15;
         const textWidth = pageWidth - colRight - margin;
         
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(10);
         const title = `SCENE ${scene.number < 10 ? '0'+scene.number : scene.number}`;
         
         doc.setFont("helvetica", "normal");
+        
+        // Calculate text heights
         doc.setFontSize(9);
+        const frameTypeText = scene.frameType ? ` (${scene.frameType})` : '';
+        const framesText = doc.splitTextToSize((scene.imageName || `scene${scene.number}`) + frameTypeText, textWidth);
+        const phraseText = doc.splitTextToSize(scene.phrase || "(Empty)", textWidth);
+        const motionText = doc.splitTextToSize(scene.motionPrompt || "(Empty)", textWidth);
+        const notesText = doc.splitTextToSize(scene.notes || "(Empty)", textWidth);
         
-        const phraseLabel = "SCRIPT / PHRASE";
-        const phraseText = doc.splitTextToSize(scene.phrase || "Not provided", textWidth);
+        // 4 items with labels and spacing
+        const textHeight = 
+          (5 + framesText.length * 4) +
+          (10 + phraseText.length * 4) +
+          (10 + motionText.length * 4) +
+          (10 + notesText.length * 4) + 15;
         
-        const motionLabel = "MOTION PROMPT";
-        const motionText = doc.splitTextToSize(scene.motionPrompt || "Not provided", textWidth);
+        // Image usually needs ~100px height max, we balance layout
+        const blockHeight = Math.max(120, textHeight) + 30; // 30 for scene header
         
-        const notesLabel = "NOTES";
-        const notesText = doc.splitTextToSize(scene.notes || "Not provided", textWidth);
-        
-        const textHeight = 5 + (phraseText.length * 4) + 10 + (motionText.length * 4) + 10 + (notesText.length * 4) + 10;
-        const blockHeight = Math.max(90, textHeight) + 15;
-        
+        // Paginate if necessary
         if (cursorY + blockHeight > pageHeight - 20) {
           doc.addPage();
           pageNum++;
           cursorY = margin;
           drawFooter(pageNum);
+          drawHeader();
         }
         
+        // Draw Scene Card Divider TOP
         doc.setDrawColor(200, 200, 200);
-        doc.rect(margin, cursorY, pageWidth - margin*2, blockHeight - 10);
+        doc.setLineWidth(0.5);
+        doc.line(margin, cursorY, pageWidth - margin, cursorY);
+        cursorY += 7;
         
-        let finalW = 0;
-        let finalH = 0;
+        // Scene Title
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text(title, margin, cursorY);
+        
+        // Draw Scene Card Divider BOTTOM
+        cursorY += 5;
+        doc.setDrawColor(200, 200, 200);
+        doc.line(margin, cursorY, pageWidth - margin, cursorY);
+        cursorY += 10;
+        
+        // --- Render Left: IMAGE ---
         if (scene.image) {
           try {
             const img = new Image();
@@ -299,77 +381,66 @@ export default function ScriptBoard() {
             });
             
             const aspect = img.width / img.height;
-            finalW = imgBoxW - 10;
-            finalH = finalW / aspect;
+            let finalW = imgBoxW;
+            let finalH = finalW / aspect;
             
-            if (finalH > 80) {
-               finalH = 80;
-               finalW = 80 * aspect;
+            // Limit max height to prevent extreme vertical images pushing layout too far
+            if (finalH > 130) {
+               finalH = 130;
+               finalW = 130 * aspect;
             }
             
-            const xOffset = margin + 5 + (imgBoxW - 10 - finalW) / 2;
-            const yOffset = cursorY + 5 + (80 - finalH) / 2;
+            doc.addImage(img, "JPEG", margin, cursorY, finalW, finalH);
             
-            doc.addImage(img, "JPEG", xOffset, yOffset, finalW, finalH);
-            
-            doc.setDrawColor(220, 220, 220);
-            doc.rect(xOffset, yOffset, finalW, finalH);
+            // Subtle border around image
+            doc.setDrawColor(230, 230, 230);
+            doc.rect(margin, cursorY, finalW, finalH);
           } catch (e) {
+            doc.setDrawColor(230, 230, 230);
+            doc.rect(margin, cursorY, imgBoxW, 100);
             doc.setTextColor(150, 150, 150);
-            doc.text("Image error", margin + 10, cursorY + 40);
+            doc.setFontSize(10);
+            doc.text("IMAGE PREVIEW UNAVAILABLE", margin + 15, cursorY + 50);
           }
         } else {
-          doc.setDrawColor(220, 220, 220);
-          doc.rect(margin + 5, cursorY + 5, imgBoxW - 10, 80);
+          doc.setDrawColor(230, 230, 230);
+          doc.rect(margin, cursorY, imgBoxW, 100);
           doc.setTextColor(150, 150, 150);
-          doc.text("No image", margin + 25, cursorY + 45);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(12);
+          doc.text("NO IMAGE", margin + 35, cursorY + 50);
         }
         
-        let textY = cursorY + 10;
-        doc.setTextColor(0, 0, 0);
-        doc.setFont("helvetica", "bold");
-        doc.text(title, colRight, textY);
-        textY += 10;
+        // --- Render Right: TEXT ---
+        let textY = cursorY + 5;
         
-        doc.setFontSize(8);
-        doc.setTextColor(100, 100, 100);
-        doc.text(phraseLabel, colRight, textY);
-        textY += 4;
-        doc.setFontSize(9);
-        doc.setTextColor(0, 0, 0);
-        doc.setFont("helvetica", "normal");
-        doc.text(phraseText, colRight, textY);
-        textY += (phraseText.length * 4) + 6;
+        const renderSection = (label: string, textLines: string[]) => {
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(8);
+          doc.setTextColor(120, 120, 120);
+          doc.text(label, colRight, textY);
+          textY += 5;
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(9);
+          doc.setTextColor(30, 30, 30);
+          doc.text(textLines, colRight, textY);
+          textY += (textLines.length * 4) + 6;
+        };
+
+        renderSection("FRAMES", framesText);
+        renderSection("SCRIPT / PHRASE", phraseText);
+        renderSection("MOTION PROMPT", motionText);
+        renderSection("NOTES", notesText);
         
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(8);
-        doc.setTextColor(100, 100, 100);
-        doc.text(motionLabel, colRight, textY);
-        textY += 4;
-        doc.setFontSize(9);
-        doc.setTextColor(0, 0, 0);
-        doc.setFont("helvetica", "normal");
-        doc.text(motionText, colRight, textY);
-        textY += (motionText.length * 4) + 6;
-        
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(8);
-        doc.setTextColor(100, 100, 100);
-        doc.text(notesLabel, colRight, textY);
-        textY += 4;
-        doc.setFontSize(9);
-        doc.setTextColor(0, 0, 0);
-        doc.setFont("helvetica", "normal");
-        doc.text(notesText, colRight, textY);
-        
-        cursorY += blockHeight;
+        // Advance cursor
+        cursorY += Math.max(120, textY - cursorY);
       }
       
       const filename = projectName ? `${projectName.replace(/\s+/g, '-')}-groton-storyboard.pdf` : 'groton-storyboard.pdf';
       doc.save(filename);
     } catch (e) {
       console.error("PDF generation failed", e);
-      alert("Failed to generate PDF. Please ensure images are fully loaded and accessible.");
+      alert("Failed to generate PDF. Please try again.");
     }
   };
 
@@ -414,19 +485,21 @@ export default function ScriptBoard() {
       <header className="w-full flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-white sticky top-0 z-20">
         <div className="flex items-center gap-3">
           <Icons.ScriptBoard />
-          <span className="font-semibold">Script Board</span>
+          <span className="font-semibold text-gray-800">Groton.in - Script Board</span>
           <div className="flex items-center gap-2 text-gray-500 ml-4 group">
             <Icons.Pencil />
             <input 
               type="text" 
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
+              placeholder="Project Name..."
               className="border-none outline-none focus:ring-0 text-sm text-gray-600 bg-transparent w-64 hover:bg-gray-50 px-1 rounded transition-colors"
             />
           </div>
         </div>
 
         <div className="flex items-center gap-4 text-xs">
+          <span className={`text-[#7C3AED] font-medium transition-opacity ${showSavedIndicator ? 'opacity-100' : 'opacity-0'}`}>Saved</span>
           <span className="text-gray-500">{scenes.length} rows - {scenes.filter(s => s.image).length} images ({scenes.filter(s => s.image).length} linked)</span>
           
           <div className="flex items-center gap-1">
@@ -436,7 +509,7 @@ export default function ScriptBoard() {
           </div>
 
           <div className="flex items-center gap-3 ml-2">
-            <button onClick={handleAddScene.bind(null, scenes.length - 1)} className="flex items-center gap-1 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded transition-colors font-bold mr-2">
+            <button onClick={handleAddScene.bind(null, scenes.length - 1)} className="flex items-center gap-1 px-3 py-1.5 bg-[#7C3AED]/10 hover:bg-[#7C3AED]/20 text-[#7C3AED] rounded transition-colors font-bold mr-2">
               <Icons.Plus /> Add Scene
             </button>
             <label className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded cursor-pointer transition-colors text-gray-700 font-medium">
@@ -444,14 +517,24 @@ export default function ScriptBoard() {
               <input type="file" accept=".json" onChange={handleImport} className="hidden" />
             </label>
             
-            <div className="relative group">
-              <button className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded transition-colors text-gray-700 font-medium">
+            <div className="relative" ref={exportRef}>
+              <button 
+                onClick={() => setIsExportOpen(!isExportOpen)}
+                className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded transition-colors text-gray-700 font-medium"
+              >
                 <Icons.Export /> Export
               </button>
-              <div className="absolute top-full left-0 mt-1 w-36 bg-white border border-gray-200 shadow-lg rounded hidden group-hover:block z-50 overflow-hidden">
-                <button onClick={handleExportPDF} className="w-full text-left px-4 py-2 hover:bg-gray-50 text-gray-700 font-medium border-b border-gray-100">Export PDF</button>
-                <button onClick={handleExportProject} className="w-full text-left px-4 py-2 hover:bg-gray-50 text-gray-700 font-medium">Export Project</button>
-              </div>
+              
+              {isExportOpen && (
+                <div className="absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 shadow-xl rounded-md overflow-hidden z-50">
+                  <button onClick={handleExportPDF} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 font-medium border-b border-gray-100 transition-colors">
+                    Export PDF
+                  </button>
+                  <button onClick={() => { setIsExportOpen(false); handleExportProject(); }} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 font-medium transition-colors">
+                    Export Project
+                  </button>
+                </div>
+              )}
             </div>
 
             <button onClick={handleClearBoard} className="flex items-center gap-1 px-3 py-1.5 hover:bg-red-50 text-red-600 rounded transition-colors font-medium ml-1">
@@ -467,6 +550,15 @@ export default function ScriptBoard() {
           </div>
         </div>
       </header>
+      
+      {/* PROCESS WORKFLOW */}
+      <div className="w-full bg-[#fafafa] border-b border-gray-100 py-2 flex justify-center text-[10px] font-medium text-gray-400 tracking-widest gap-2 sm:gap-4 overflow-x-auto px-4 whitespace-nowrap">
+        <span className="text-[#7C3AED]">01 PRODUCT</span> <span className="opacity-50">→</span>
+        <span>02 DIRECTION</span> <span className="opacity-50">→</span>
+        <span>03 PRODUCTION</span> <span className="opacity-50">→</span>
+        <span>04 REFINEMENT</span> <span className="opacity-50">→</span>
+        <span>05 DELIVERY</span>
+      </div>
 
       {/* TRAY & ASSETS AREA */}
       <section className="w-full bg-[#fcfcfc] border-b border-gray-200 px-4 py-4 flex flex-col gap-3">
@@ -500,7 +592,7 @@ export default function ScriptBoard() {
               trayImages.map(img => (
                 <div 
                   key={img.id} 
-                  className="h-20 w-16 flex-shrink-0 relative group rounded border border-gray-200 overflow-hidden cursor-grab active:cursor-grabbing hover:border-blue-400"
+                  className="h-20 w-16 flex-shrink-0 relative group rounded border border-gray-200 overflow-hidden cursor-grab active:cursor-grabbing hover:border-[#7C3AED]/80"
                   draggable
                   onDragStart={(e) => {
                     e.dataTransfer.setData('application/json', JSON.stringify({ type: 'TRAY_IMAGE', url: img.url, name: img.name }));
@@ -550,7 +642,7 @@ export default function ScriptBoard() {
 
         {/* Add Set */}
         <div className="flex items-center gap-2 mt-2">
-          <input type="text" placeholder="New set name (e.g. backgrounds)..." className="text-xs border border-gray-300 rounded px-2 py-1 w-64 outline-none focus:border-blue-400" />
+          <input type="text" placeholder="New set name (e.g. backgrounds)..." className="text-xs border border-gray-300 rounded px-2 py-1 w-64 outline-none focus:border-[#7C3AED]/80" />
           <button className="text-xs px-2 py-1 bg-white border border-gray-300 rounded text-gray-600 hover:bg-gray-50">+ Add set</button>
         </div>
       </section>
@@ -561,35 +653,35 @@ export default function ScriptBoard() {
           
           {/* Toggles */}
           <label className="flex items-center gap-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${multiFrame ? 'bg-blue-500' : 'bg-gray-200'}`}>
+            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${multiFrame ? 'bg-[#7C3AED]' : 'bg-gray-200'}`}>
               <div className={`w-3 h-3 bg-white rounded-full transition-transform ${multiFrame ? 'translate-x-4' : ''}`} />
             </div>
             <span className="group-hover:text-black">Multi-frame</span>
           </label>
 
           <label className="flex items-center gap-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${missingImageOnly ? 'bg-blue-500' : 'bg-gray-200'}`}>
+            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${missingImageOnly ? 'bg-[#7C3AED]' : 'bg-gray-200'}`}>
               <div className={`w-3 h-3 bg-white rounded-full transition-transform ${missingImageOnly ? 'translate-x-4' : ''}`} />
             </div>
             <span className="group-hover:text-black">Missing image only · 0</span>
           </label>
 
           <label className="flex items-center gap-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${notesOnly ? 'bg-blue-500' : 'bg-gray-200'}`}>
+            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${notesOnly ? 'bg-[#7C3AED]' : 'bg-gray-200'}`}>
               <div className={`w-3 h-3 bg-white rounded-full transition-transform ${notesOnly ? 'translate-x-4' : ''}`} />
             </div>
             <span className="group-hover:text-black">Notes only · 0</span>
           </label>
 
           <label className="flex items-center gap-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${motionRefOnly ? 'bg-blue-500' : 'bg-gray-200'}`}>
+            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${motionRefOnly ? 'bg-[#7C3AED]' : 'bg-gray-200'}`}>
               <div className={`w-3 h-3 bg-white rounded-full transition-transform ${motionRefOnly ? 'translate-x-4' : ''}`} />
             </div>
             <span className="group-hover:text-black">Motion ref only · 0</span>
           </label>
 
           <label className="flex items-center gap-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${selectedOnly ? 'bg-blue-500' : 'bg-gray-200'}`}>
+            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${selectedOnly ? 'bg-[#7C3AED]' : 'bg-gray-200'}`}>
               <div className={`w-3 h-3 bg-white rounded-full transition-transform ${selectedOnly ? 'translate-x-4' : ''}`} />
             </div>
             <span className="group-hover:text-black">Selected only · 0</span>
@@ -598,7 +690,7 @@ export default function ScriptBoard() {
           {/* Size Select */}
           <div className="flex items-center gap-1 border-l border-gray-200 pl-4">
             <span>Size</span>
-            <select className="border border-gray-300 rounded px-2 py-0.5 bg-white outline-none focus:border-blue-400">
+            <select className="border border-gray-300 rounded px-2 py-0.5 bg-white outline-none focus:border-[#7C3AED]/80">
               <option>Any</option>
               <option>Small</option>
               <option>Medium</option>
@@ -651,16 +743,16 @@ export default function ScriptBoard() {
               <div className="flex flex-col items-center gap-3 w-12 py-4 border-r border-gray-100 bg-[#fbfbfb] rounded-l-xl flex-shrink-0">
                 <input 
                   type="checkbox" 
-                  className="w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 cursor-pointer"
+                  className="w-4 h-4 rounded border-gray-300 text-[#7C3AED] focus:ring-[#7C3AED] cursor-pointer"
                 />
                 <button className="cursor-grab hover:bg-gray-200 p-1 rounded transition-colors"><Icons.Drag /></button>
                 
-                <div className="w-6 h-6 bg-blue-100 text-blue-600 font-bold rounded-full flex items-center justify-center text-xs">
+                <div className="w-6 h-6 bg-[#7C3AED]/20 text-[#7C3AED] font-bold rounded-full flex items-center justify-center text-xs">
                   {scene.number}
                 </div>
                 
                 <label className="flex items-center cursor-pointer mt-1">
-                  <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${scene.enabled ? 'bg-blue-500' : 'bg-gray-300'}`}>
+                  <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${scene.enabled ? 'bg-[#7C3AED]' : 'bg-gray-300'}`}>
                     <input type="checkbox" className="hidden" checked={scene.enabled} onChange={(e) => handleUpdateScene(scene.id, 'enabled', e.target.checked)} />
                     <div className={`w-3 h-3 bg-white rounded-full transition-transform ${scene.enabled ? 'translate-x-4' : ''}`} />
                   </div>
@@ -695,8 +787,19 @@ export default function ScriptBoard() {
                   </div>
                 </div>
 
-                {/* 2. Image Thumbnail */}
+                {/* 2. Image Thumbnail & Frame Selection */}
                 <div className="w-[140px] flex flex-col items-center gap-1 flex-shrink-0">
+                  <select 
+                    value={scene.frameType || "1st Frame"} 
+                    onChange={(e) => handleUpdateScene(scene.id, 'frameType', e.target.value)}
+                    className="w-full mb-1 text-[11px] border border-gray-200 rounded px-1 py-0.5 text-gray-600 outline-none focus:border-[#7C3AED] bg-white"
+                  >
+                    <option>1st Frame</option>
+                    <option>2nd Frame</option>
+                    <option>3rd Frame</option>
+                    <option>4th Frame</option>
+                    <option>Ref Frame</option>
+                  </select>
                   <div className="w-full aspect-[4/5] bg-gray-100 border border-gray-200 rounded-lg relative overflow-hidden group">
                     {scene.image ? (
                       <>
@@ -732,14 +835,14 @@ export default function ScriptBoard() {
                     className="w-full h-full max-h-[175px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex flex-col items-center justify-center gap-1 p-2 text-center hover:bg-gray-100 hover:border-gray-400 transition-colors cursor-pointer group relative"
                     onDragOver={(e) => {
                       e.preventDefault();
-                      e.currentTarget.classList.add('border-blue-400', 'bg-blue-50');
+                      e.currentTarget.classList.add('border-[#7C3AED]/80', 'bg-[#7C3AED]/10');
                     }}
                     onDragLeave={(e) => {
-                      e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50');
+                      e.currentTarget.classList.remove('border-[#7C3AED]/80', 'bg-[#7C3AED]/10');
                     }}
                     onDrop={(e) => {
                       e.preventDefault();
-                      e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50');
+                      e.currentTarget.classList.remove('border-[#7C3AED]/80', 'bg-[#7C3AED]/10');
                       
                       try {
                         const dataStr = e.dataTransfer.getData('application/json');
@@ -805,7 +908,7 @@ export default function ScriptBoard() {
           {filteredScenes.length === 0 && (
             <div className="w-full py-16 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 text-gray-500">
               <span className="mb-2">No scenes in this project.</span>
-              <button onClick={() => handleAddScene(-1)} className="text-blue-500 font-bold hover:underline mb-2">+ Add first scene</button>
+              <button onClick={() => handleAddScene(-1)} className="text-[#7C3AED] font-bold hover:underline mb-2">+ Add first scene</button>
               {searchQuery || missingImageOnly || notesOnly || motionRefOnly || selectedOnly ? (
                 <button onClick={() => { setMissingImageOnly(false); setNotesOnly(false); setMotionRefOnly(false); setSelectedOnly(false); setSearchQuery(""); }} className="text-sm text-gray-400 hover:underline">Clear filters</button>
               ) : null}
@@ -838,14 +941,14 @@ export default function ScriptBoard() {
                 trayImages.map(img => (
                   <button 
                     key={img.id} 
-                    className="aspect-[4/5] bg-gray-100 rounded-lg border-2 border-transparent hover:border-blue-500 hover:shadow-md transition-all overflow-hidden relative group focus:outline-none focus:border-blue-500"
+                    className="aspect-[4/5] bg-gray-100 rounded-lg border-2 border-transparent hover:border-[#7C3AED] hover:shadow-md transition-all overflow-hidden relative group focus:outline-none focus:border-[#7C3AED]"
                     onClick={() => {
                       setScenes(scenes.map(s => s.id === pickerSceneId ? { ...s, image: img.url, imageName: img.name } : s));
                       setPickerSceneId(null);
                     }}
                   >
                     <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/10 transition-colors" />
+                    <div className="absolute inset-0 bg-[#7C3AED]/0 group-hover:bg-[#7C3AED]/10 transition-colors" />
                     <div className="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] truncate px-1.5 py-1 text-center font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                       Select
                     </div>
