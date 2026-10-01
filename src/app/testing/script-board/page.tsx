@@ -16,10 +16,26 @@ interface Scene {
   notes: string;
 }
 
+interface TrayImage {
+  id: string;
+  url: string;
+  name: string;
+}
+
 interface BoardData {
   projectName: string;
   scenes: Scene[];
+  trayImages?: TrayImage[];
 }
+
+const getBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = error => reject(error);
+  });
+};
 
 // --- Icons ---
 const Icons = {
@@ -56,7 +72,9 @@ export default function ScriptBoard() {
   // --- State ---
   const [projectName, setProjectName] = useState("");
   const [scenes, setScenes] = useState<Scene[]>(INITIAL_SCENES);
+  const [trayImages, setTrayImages] = useState<TrayImage[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [pickerSceneId, setPickerSceneId] = useState<string | null>(null);
   
   // Toggles
   const [multiFrame, setMultiFrame] = useState(false);
@@ -127,12 +145,39 @@ export default function ScriptBoard() {
     setScenes(scenes.map(s => s.id === id ? { ...s, [field]: value } : s));
   };
 
-  const handleImageUpload = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setScenes(scenes.map(s => s.id === id ? { ...s, image: url, imageName: file.name } : s));
+  const handleImageUpload = async (id: string, e: React.ChangeEvent<HTMLInputElement> | FileList) => {
+    const fileList = e instanceof FileList ? e : e.target.files;
+    const file = fileList?.[0];
+    if (file && file.type.startsWith('image/')) {
+      const base64 = await getBase64(file);
+      setScenes(scenes.map(s => s.id === id ? { ...s, image: base64, imageName: file.name } : s));
+      
+      // Auto-add to tray if new
+      setTrayImages(prev => {
+        if (!prev.find(t => t.url === base64)) {
+          return [...prev, { id: `tray-${Date.now()}`, url: base64, name: file.name }];
+        }
+        return prev;
+      });
     }
+  };
+  
+  const handleTrayUpload = async (e: React.ChangeEvent<HTMLInputElement> | FileList) => {
+    const files = Array.from(e instanceof FileList ? e : (e.target.files || []));
+    if (!files.length) return;
+    
+    const imageFiles = files.filter(f => f.type.startsWith('image/'));
+    const newImages = await Promise.all(imageFiles.map(async f => ({
+      id: `tray-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      url: await getBase64(f),
+      name: f.name
+    })));
+    
+    setTrayImages(prev => [...prev, ...newImages]);
+  };
+
+  const handleRemoveTrayImage = (id: string) => {
+    setTrayImages(prev => prev.filter(t => t.id !== id));
   };
   
   const handleRemoveImage = (id: string) => {
@@ -158,12 +203,12 @@ export default function ScriptBoard() {
   };
 
   const handleExportProject = () => {
-    const data: BoardData = { projectName, scenes };
+    const data: BoardData = { projectName, scenes, trayImages };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "board.json";
+    a.download = projectName ? `${projectName.replace(/\s+/g, '-')}-project.json` : "script-board-project.json";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -331,6 +376,7 @@ export default function ScriptBoard() {
   const handleClearBoard = () => {
     if(confirm("Are you sure you want to clear the board? All unsaved progress will be lost.")) {
       setScenes([]);
+      setTrayImages([]);
       setProjectName("");
     }
   };
@@ -347,12 +393,14 @@ export default function ScriptBoard() {
         if (data.scenes) {
           setProjectName(data.projectName || "Imported Project");
           setScenes(data.scenes);
+          setTrayImages(data.trayImages || []);
         }
       } catch (err) {
         console.error("Failed to parse board data", err);
       }
     };
     reader.readAsText(file);
+    e.target.value = ''; // reset input
   };
 
   const handleSave = () => {
@@ -424,11 +472,53 @@ export default function ScriptBoard() {
       <section className="w-full bg-[#fcfcfc] border-b border-gray-200 px-4 py-4 flex flex-col gap-3">
         {/* Tray */}
         <div className="flex items-start gap-4 text-xs">
-          <div className="w-24 text-gray-500 mt-1">
-            Tray<br/><span className="text-[10px]">(0 unassigned)</span>
+          <div className="w-24 text-gray-500 mt-1 flex flex-col gap-1">
+            <span className="font-medium text-gray-700">Image Tray</span>
+            <span className="text-[10px]">{trayImages.length} images</span>
+            <span className="text-[10px]">{trayImages.filter(t => !scenes.some(s => s.image === t.url)).length} unassigned</span>
+            <label className="mt-2 bg-white border border-gray-300 text-center py-1 rounded cursor-pointer hover:bg-gray-50 flex items-center justify-center gap-1 font-medium text-gray-700">
+              <Icons.Plus /> Add
+              <input type="file" multiple accept="image/*" className="hidden" onChange={handleTrayUpload} />
+            </label>
           </div>
-          <div className="flex-1 border border-dashed border-gray-300 rounded p-4 text-gray-400 bg-white flex items-center">
-            Drop images here to park them, or drag row images here to unassign.
+          
+          <div 
+            className="flex-1 min-h-[100px] border border-dashed border-gray-300 rounded p-2 bg-white flex items-center gap-2 overflow-x-auto"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                handleTrayUpload(e.dataTransfer.files);
+              }
+            }}
+          >
+            {trayImages.length === 0 ? (
+              <div className="text-gray-400 w-full text-center py-6">
+                Drop images here from your computer, or use the Add button.
+              </div>
+            ) : (
+              trayImages.map(img => (
+                <div 
+                  key={img.id} 
+                  className="h-20 w-16 flex-shrink-0 relative group rounded border border-gray-200 overflow-hidden cursor-grab active:cursor-grabbing hover:border-blue-400"
+                  draggable
+                  onDragStart={(e) => {
+                    e.dataTransfer.setData('application/json', JSON.stringify({ type: 'TRAY_IMAGE', url: img.url, name: img.name }));
+                  }}
+                >
+                  <img src={img.url} alt={img.name} className="w-full h-full object-cover" draggable={false} />
+                  <button 
+                    onClick={() => handleRemoveTrayImage(img.id)}
+                    className="absolute top-0.5 right-0.5 bg-white/90 text-red-500 p-0.5 rounded shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <Icons.Close />
+                  </button>
+                  <div className="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[8px] truncate px-1 py-0.5 opacity-0 group-hover:opacity-100">
+                    {img.name}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
         
@@ -638,13 +728,48 @@ export default function ScriptBoard() {
 
                 {/* 3. Add / Drop Area */}
                 <div className="w-[100px] flex-shrink-0">
-                  <label className="w-full h-full max-h-[175px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex flex-col items-center justify-center gap-1 p-2 text-center hover:bg-gray-100 hover:border-gray-400 transition-colors cursor-pointer group relative">
+                  <label 
+                    className="w-full h-full max-h-[175px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex flex-col items-center justify-center gap-1 p-2 text-center hover:bg-gray-100 hover:border-gray-400 transition-colors cursor-pointer group relative"
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.currentTarget.classList.add('border-blue-400', 'bg-blue-50');
+                    }}
+                    onDragLeave={(e) => {
+                      e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50');
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.currentTarget.classList.remove('border-blue-400', 'bg-blue-50');
+                      
+                      try {
+                        const dataStr = e.dataTransfer.getData('application/json');
+                        if (dataStr) {
+                          const data = JSON.parse(dataStr);
+                          if (data.type === 'TRAY_IMAGE') {
+                            setScenes(scenes.map(s => s.id === scene.id ? { ...s, image: data.url, imageName: data.name } : s));
+                            return;
+                          }
+                        }
+                      } catch (err) {}
+                      
+                      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                        handleImageUpload(scene.id, e.dataTransfer.files);
+                      }
+                    }}
+                  >
                      <Icons.AddDrop />
-                     <span className="text-[10px] text-gray-500 font-medium leading-tight mt-1 group-hover:text-gray-700">add / drop</span>
-                     <span className="text-[10px] text-gray-400 leading-tight">pick from tray</span>
-                     <span className="text-[10px] text-gray-400 leading-tight">or name...</span>
+                     <span className="text-[10px] text-gray-500 font-medium leading-tight mt-1 group-hover:text-gray-700">drop here</span>
+                     <span className="text-[10px] text-gray-400 leading-tight">or click to</span>
+                     <span className="text-[10px] text-gray-400 leading-tight">upload</span>
                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e)} />
                   </label>
+                  
+                  <button 
+                    onClick={() => setPickerSceneId(scene.id)}
+                    className="w-full mt-1 py-1 text-[9px] uppercase tracking-wider font-bold text-gray-500 bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+                  >
+                    Pick from tray
+                  </button>
                 </div>
 
                 {/* 4. Motion Prompt */}
@@ -689,6 +814,49 @@ export default function ScriptBoard() {
 
         </div>
       </main>
+
+      {/* TRAY PICKER MODAL */}
+      {pickerSceneId && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setPickerSceneId(null)}>
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-xl">
+              <div>
+                <h3 className="font-semibold text-gray-800">Pick from Tray</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Select an image to assign to this scene.</p>
+              </div>
+              <button onClick={() => setPickerSceneId(null)} className="p-2 hover:bg-gray-200 rounded-full text-gray-500 transition-colors">
+                <Icons.Close />
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto flex-1 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-4">
+              {trayImages.length === 0 ? (
+                 <div className="col-span-full py-12 flex flex-col items-center text-gray-400 text-sm">
+                   <Icons.Image />
+                   <span className="mt-2">Your tray is empty.</span>
+                 </div>
+              ) : (
+                trayImages.map(img => (
+                  <button 
+                    key={img.id} 
+                    className="aspect-[4/5] bg-gray-100 rounded-lg border-2 border-transparent hover:border-blue-500 hover:shadow-md transition-all overflow-hidden relative group focus:outline-none focus:border-blue-500"
+                    onClick={() => {
+                      setScenes(scenes.map(s => s.id === pickerSceneId ? { ...s, image: img.url, imageName: img.name } : s));
+                      setPickerSceneId(null);
+                    }}
+                  >
+                    <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/10 transition-colors" />
+                    <div className="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] truncate px-1.5 py-1 text-center font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                      Select
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
