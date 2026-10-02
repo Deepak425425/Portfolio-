@@ -43,6 +43,9 @@ const MagneticButton = ({ children, href, className }: { children: React.ReactNo
 };
 
 export default function Home() {
+  const [cmsImages, setCmsImages] = useState<Record<string, string>>({});
+  useEffect(() => { fetch('/api/studio/cms').then(r => r.json()).then(data => { const map = data.reduce((acc: any, img: any) => ({ ...acc, [img.id]: img.src }), {}); setCmsImages(map); }).catch(() => {}); }, []);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -215,7 +218,7 @@ export default function Home() {
                   data-cursor="view"
                 >
                    <motion.div className="w-full h-full relative" whileHover={{ scale: 1.03 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                     <Image src="/campaign-worlds/download (22).jpeg" alt="Activewear Model Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
+                     <Image src={cmsImages.hero_main || "/campaign-worlds/download (22).jpeg"} alt="Activewear Model Campaign" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
                    </motion.div>
                 </motion.div>
               </motion.div>
@@ -296,15 +299,15 @@ export default function Home() {
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product Imagery</span></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-                 <Image src="/campaign-worlds/groton-9.jpg" alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src={cmsImages.selected_work_2 || "/campaign-worlds/groton-9.jpg"} alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product-on-Model</span></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-                 <Image src="/campaign-worlds/groton-1.jpg" alt="Fashion Apparel" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src={cmsImages.selected_work_1 || "/campaign-worlds/groton-1.jpg"} alt="Fashion Apparel" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Fashion Apparel</span></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-                 <Image src="/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg" alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src={cmsImages.selected_work_3 || "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg"} alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Editorial</span></div>
                </div>
             </div>
@@ -369,7 +372,7 @@ export default function Home() {
           <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
             <div className="flex flex-col items-center gap-6 w-full md:w-1/3">
               <div className="w-full aspect-square relative overflow-hidden bg-zinc-900 border border-zinc-800 shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
-                <Image src="/campaign-worlds/ghgh.jpeg" alt="Raw Product Input" fill className="object-cover filter grayscale opacity-80 mix-blend-luminosity" />
+                <Image src={cmsImages.about_visual || "/campaign-worlds/ghgh.jpeg"} alt="Raw Product Input" fill className="object-cover filter grayscale opacity-80 mix-blend-luminosity" />
               </div>
               <span className="text-xs tracking-[0.2em] uppercase font-bold text-zinc-500">Raw Product Asset</span>
             </div>
@@ -405,7 +408,7 @@ export default function Home() {
              <Image src="/campaign-worlds/groton-12.jpg" alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
            <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-             <Image src="/campaign-worlds/groton-9.jpg" alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+             <Image src={cmsImages.selected_work_2 || "/campaign-worlds/groton-9.jpg"} alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
         </div>
       </section>
