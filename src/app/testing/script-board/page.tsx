@@ -71,7 +71,16 @@ const Icons = {
   Export: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>,
 };
 
-const INITIAL_SCENES: Scene[] = [];
+const getSingleScene = (): Scene[] => [{
+  id: `scene-${Date.now()}`,
+  number: 1,
+  enabled: true,
+  phrase: "",
+  leftImageAssetId: null,
+  rightImageAssetId: null,
+  motionPrompt: "",
+  notes: ""
+}];
 
 const getOrdinal = (n: number) => {
   const s = ["th", "st", "nd", "rd"];
@@ -88,7 +97,7 @@ export default function ScriptBoard() {
   
   // --- State ---
   const [projectName, setProjectName] = useState("");
-  const [scenes, setScenes] = useState<Scene[]>(INITIAL_SCENES);
+  const [scenes, setScenes] = useState<Scene[]>([]);
   const [projectAssets, setProjectAssets] = useState<ProjectAsset[]>([]);
   const [assetSearch, setAssetSearch] = useState("");
   const [assetMenuOpen, setAssetMenuOpen] = useState<string | null>(null);
@@ -104,11 +113,18 @@ export default function ScriptBoard() {
 
   useEffect(() => {
     const saved = localStorage.getItem('groton-script-board-autosave');
+    let loadedScenes: Scene[] = [];
+    let loadedAssets: ProjectAsset[] = [];
+    let loadedName = "";
+    
     if (saved) {
       try {
         const data = JSON.parse(saved);
         if (data.scenes && data.scenes.length > 0) {
-          const migrated = data.scenes.map((s: any) => ({
+          loadedName = data.projectName || "";
+          loadedAssets = data.projectAssets || data.trayImages || [];
+          
+          let migrated = data.scenes.map((s: any) => ({
             ...s,
             leftImage: s.leftImage !== undefined ? s.leftImage : (s.image || null),
             leftImageName: s.leftImageName !== undefined ? s.leftImageName : (s.imageName || null),
@@ -117,12 +133,29 @@ export default function ScriptBoard() {
             rightImageName: s.rightImageName || null,
             rightImageDisplayName: s.rightImageDisplayName || (s.rightImage ? "2nd Frame" : null)
           }));
-          setProjectName(data.projectName || "");
-          setScenes(migrated);
-          setProjectAssets(data.trayImages || []);
+          
+          const isSceneEmpty = (s: any) => !s.leftImageAssetId && !s.rightImageAssetId && !(s.phrase||"").trim() && !(s.motionPrompt||"").trim() && !(s.notes||"").trim();
+          
+          while(migrated.length > 1) {
+            const lastScene = migrated[migrated.length - 1];
+            if (isSceneEmpty(lastScene)) {
+               migrated.pop();
+            } else {
+               break;
+            }
+          }
+          loadedScenes = migrated;
         }
       } catch (e) {}
     }
+    
+    if (loadedScenes.length === 0) {
+      loadedScenes = getSingleScene();
+    }
+    
+    setProjectName(loadedName);
+    setScenes(loadedScenes);
+    setProjectAssets(loadedAssets);
     setIsLoaded(true);
   }, []);
 
@@ -341,10 +374,10 @@ export default function ScriptBoard() {
     setProjectAssets(prev => prev.filter(a => a.id !== id));
   };
   
-  const handleRemoveImage = (id: string, side: 'left' | 'right') => {
-    setScenes(scenes.map(s => s.id === id ? {
+    const handleRemoveImage = (id: string, side: 'left' | 'right') => {
+    setScenes(prev => prev.map(s => s.id === id ? {
       ...s,
-      ...(side === 'left' ? { leftImage: null, leftImageName: null, leftImageDisplayName: null } : { rightImage: null, rightImageName: null, rightImageDisplayName: null })
+      [side === 'left' ? 'leftImageAssetId' : 'rightImageAssetId']: null
     } : s));
   };
 
@@ -364,17 +397,6 @@ export default function ScriptBoard() {
     if(confirm("Clear all motion prompts?")) {
       setScenes(scenes.map(s => ({ ...s, motionPrompt: "" })));
     }
-  };
-
-  const handleExportProject = () => {
-    const data: BoardData = { projectName, scenes, projectAssets };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = projectName ? `${projectName.replace(/\s+/g, '-')}-project.json` : "script-board-project.json";
-    a.click();
-    URL.revokeObjectURL(url);
   };
 
   const handleExportPDF = async () => {
@@ -424,8 +446,10 @@ export default function ScriptBoard() {
       drawHeader();
       drawFooter(pageNum);
 
-      for (let i = 0; i < scenes.length; i++) {
-        const scene = scenes[i];
+      const isSceneEmpty = (s: any) => !s.leftImageAssetId && !s.rightImageAssetId && !(s.phrase||"").trim() && !(s.motionPrompt||"").trim() && !(s.notes||"").trim();
+      const validScenes = scenes.filter(s => !isSceneEmpty(s));
+      for (let i = 0; i < validScenes.length; i++) {
+        const scene = validScenes[i];
         const sceneAssetLeft = projectAssets.find(a => a.id === scene.leftImageAssetId);
         const sceneAssetRight = projectAssets.find(a => a.id === scene.rightImageAssetId);
         
@@ -440,7 +464,10 @@ export default function ScriptBoard() {
         
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
-        const framesText = doc.splitTextToSize((sceneAssetLeft?.displayName ? "Left: " + sceneAssetLeft?.displayName : "Left: (None)") + " | " + (sceneAssetRight?.displayName ? "Right: " + sceneAssetRight?.displayName : "Right: (None)"), textWidth);
+                const leftFile = sceneAssetLeft ? (sceneAssetLeft.displayName || "1st Frame") : "1st Frame: —";
+        const rightFile = sceneAssetRight ? (sceneAssetRight.displayName || "2nd Frame") : "2nd Frame: —";
+        const filesString = `${leftFile}\n${rightFile}`;
+        const framesText = doc.splitTextToSize(filesString, textWidth);
         const phraseText = doc.splitTextToSize(scene.phrase || "(Empty)", textWidth);
         const motionText = doc.splitTextToSize(scene.motionPrompt || "(Empty)", textWidth);
         const notesText = doc.splitTextToSize(scene.notes || "(Empty)", textWidth);
@@ -492,19 +519,21 @@ export default function ScriptBoard() {
                doc.setDrawColor(230, 230, 230);
                doc.rect(x, y + 5, finalW, finalH);
              } catch (e) {
-               doc.setDrawColor(230, 230, 230);
-               doc.rect(x, y + 5, w, 60);
+               doc.setDrawColor(240, 240, 240);
+               doc.setFillColor(250, 250, 250);
+               doc.rect(x, y + 5, w, 30, 'FD');
                doc.setTextColor(150, 150, 150);
                doc.setFontSize(7);
-               doc.text("ERROR", x + 5, y + 35);
+               doc.text("ERROR", x + 5, y + 20);
              }
            } else {
-             doc.setDrawColor(230, 230, 230);
-             doc.rect(x, y + 5, w, 60);
+             doc.setDrawColor(240, 240, 240);
+             doc.setFillColor(250, 250, 250);
+             doc.rect(x, y + 5, w, 30, 'FD');
              doc.setTextColor(150, 150, 150);
              doc.setFont("helvetica", "bold");
              doc.setFontSize(8);
-             doc.text("EMPTY", x + 10, y + 35);
+             doc.text("EMPTY", x + 10, y + 20);
            }
            doc.setFont("helvetica", "bold");
            doc.setFontSize(7);
@@ -512,8 +541,11 @@ export default function ScriptBoard() {
            doc.text(label, x, y);
         };
 
-        await renderImageSlot(sceneAssetLeft?.url || null, margin, cursorY, halfImgW, "LEFT IMAGE");
-        await renderImageSlot(sceneAssetRight?.url || null, margin + halfImgW + gap, cursorY, halfImgW, "RIGHT IMAGE");
+        const leftSlotName = "1ST FRAME";
+        const rightSlotName = "2ND FRAME";
+
+        await renderImageSlot(sceneAssetLeft?.url || null, margin, cursorY, halfImgW, leftSlotName);
+        await renderImageSlot(sceneAssetRight?.url || null, margin + halfImgW + gap, cursorY, halfImgW, rightSlotName);
         
         // Render Text Columns
         let textY = cursorY + 5;
@@ -546,34 +578,156 @@ export default function ScriptBoard() {
     }
   };
 
+const handleExportProjectZip = async () => {
+    setIsExportOpen(false);
+    try {
+        const JSZip = (await import("jszip")).default;
+        const zip = new JSZip();
+
+        const assetsFolder = zip.folder("assets");
+        const zipAssets = [];
+        
+        for (const asset of projectAssets) {
+            let fileExt = "png";
+            let mimeType = "image/png";
+            let base64Data = asset.url;
+            
+            if (asset.url && asset.url.startsWith("data:")) {
+                const parts = asset.url.split(";base64,");
+                if (parts.length === 2) {
+                    mimeType = parts[0].replace("data:", "");
+                    fileExt = mimeType.split("/")[1] || "png";
+                    base64Data = parts[1];
+                }
+            }
+            
+            const fileName = `${asset.id}.${fileExt}`;
+            assetsFolder?.file(fileName, base64Data, { base64: true });
+            
+            zipAssets.push({
+                ...asset,
+                url: undefined,
+                file: `assets/${fileName}`,
+                mimeType
+            });
+        }
+        
+        const projectData = {
+            format: "groton-script-board",
+            version: 1,
+            project: {
+                name: projectName,
+                createdAt: new Date().toISOString(),
+            },
+            assets: zipAssets,
+            scenes: scenes
+        };
+        
+        zip.file("project.json", JSON.stringify(projectData, null, 2));
+        
+        const readmeContent = `GROTON AI — Script Board Project Backup
+
+This ZIP contains:
+- Project data
+- Scene structure
+- Project assets
+- Image assignments
+- Frame names
+- Script/action
+- Motion/direction
+- Internal notes
+
+Format:
+groton-script-board
+
+Version:
+1
+
+This file is informational only.`;
+
+        zip.file("README.txt", readmeContent);
+        
+        const blob = await zip.generateAsync({ type: "blob" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        const sanitizedName = (projectName || "Untitled_Project").replace(/[^a-z0-9]/gi, '_');
+        a.download = `GROTON_${sanitizedName}.zip`;
+        a.click();
+        URL.revokeObjectURL(url);
+    } catch (e) {
+        console.error("ZIP Export failed", e);
+        alert("FAILED TO EXPORT PROJECT");
+    }
+  };
+
+  const handleImportProjectZip = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsExportOpen(false);
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    try {
+        const JSZip = (await import("jszip")).default;
+        const zip = new JSZip();
+        await zip.loadAsync(file);
+        
+        const projectFile = zip.file("project.json");
+        if (!projectFile) {
+            throw new Error("Missing project.json");
+        }
+        
+        const projectDataStr = await projectFile.async("string");
+        const projectData = JSON.parse(projectDataStr);
+        
+        if (projectData.format !== "groton-script-board") {
+            throw new Error("Invalid format");
+        }
+        
+        const restoredAssets = [];
+        if (projectData.assets && Array.isArray(projectData.assets)) {
+            for (const asset of projectData.assets) {
+                if (asset.file) {
+                    const assetFile = zip.file(asset.file);
+                    if (assetFile) {
+                        const base64Data = await assetFile.async("base64");
+                        const mimeType = asset.mimeType || "image/png";
+                        restoredAssets.push({
+                            ...asset,
+                            url: `data:${mimeType};base64,${base64Data}`,
+                            file: undefined,
+                            mimeType: undefined
+                        });
+                    } else {
+                        restoredAssets.push(asset);
+                    }
+                } else {
+                    restoredAssets.push(asset);
+                }
+            }
+        }
+        
+        if (projectData.scenes) {
+            setProjectName(projectData.project?.name || "Imported Project");
+            setScenes(projectData.scenes);
+            setProjectAssets(restoredAssets);
+            alert("PROJECT IMPORTED");
+        } else {
+            throw new Error("Missing scenes data");
+        }
+    } catch (err) {
+        console.error("ZIP Import failed", err);
+        alert("Unable to import project. The ZIP is invalid or incomplete.");
+    }
+    e.target.value = '';
+  };
+
+
   const handleClearBoard = () => {
     if(confirm("Are you sure you want to clear the board? All unsaved progress will be lost.")) {
       setScenes([]);
       setProjectAssets([]);
       setProjectName("");
     }
-  };
-
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const result = event.target?.result as string;
-        const data = JSON.parse(result) as BoardData;
-        if (data.scenes) {
-          setProjectName(data.projectName || "Imported Project");
-          setScenes(data.scenes);
-          setProjectAssets(data.trayImages || []);
-        }
-      } catch (err) {
-        console.error("Failed to parse board data", err);
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = ''; // reset input
   };
 
   const handleSave = () => {
@@ -657,12 +811,12 @@ export default function ScriptBoard() {
            {isExportOpen && (
              <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-zinc-200 shadow-xl rounded-xl overflow-hidden py-2 z-50">
                <button onClick={handleExportPDF} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export as PDF</button>
-               <button onClick={() => { setIsExportOpen(false); handleExportProject(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export Project Data</button>
-               <div className="h-px bg-zinc-100 my-2"></div>
-               <label className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium cursor-pointer block text-zinc-600">
-                 Import Project...
-                 <input type="file" accept=".json" onChange={handleImport} className="hidden" />
-               </label>
+                 <button onClick={handleExportProjectZip} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export Project ZIP</button>
+                 <div className="h-px bg-zinc-100 my-2"></div>
+                 <label className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium cursor-pointer block text-zinc-600">
+                   Import Project ZIP
+                   <input type="file" accept=".zip" onChange={handleImportProjectZip} className="hidden" />
+                 </label>
                <button onClick={() => { setIsExportOpen(false); handleSave(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-zinc-600">Save Locally</button>
              </div>
            )}
@@ -831,7 +985,7 @@ export default function ScriptBoard() {
                       <div className="w-full lg:w-[360px] shrink-0 flex gap-4">
                         {/* LEFT IMAGE SLOT */}
                         <div className="flex-1 flex flex-col gap-3">
-                          <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">Left Image</label>
+                          <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">1st Frame</label>
                           <div className="w-full aspect-[4/5] bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl relative overflow-hidden group/img transition-colors hover:border-[#8B7CFF]/50"
                               onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('hidden', 'flex'); }}
                               onDragLeave={(e) => { e.currentTarget.classList.remove('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('flex', 'hidden'); }}
@@ -877,7 +1031,7 @@ export default function ScriptBoard() {
                                  <img src={leftAsset?.url} alt={leftAsset?.originalFilename || "Scene image"} className="w-full h-full object-cover" 
                                    draggable
                                    onDragStart={(e) => {
-                                       e.dataTransfer.setData('application/json', JSON.stringify({ type: 'SCENE_IMAGE', sourceSceneId: scene.id, sourceSide: 'left', url: leftAsset?.url, name: leftAsset?.originalFilename, displayName: leftAsset?.displayName }));
+                                       e.dataTransfer.setData('application/json', JSON.stringify({ type: 'SCENE_IMAGE', sourceSceneId: scene.id, sourceSide: 'left', assetId: leftAsset?.id, url: leftAsset?.url, name: leftAsset?.originalFilename, displayName: leftAsset?.displayName }));
                                        setTimeout(() => { if (e.target) (e.target as HTMLElement).style.opacity = '0.4'; }, 0);
                                    }}
                                    onDragEnd={(e) => { e.currentTarget.style.opacity = '1'; }}
@@ -901,7 +1055,7 @@ export default function ScriptBoard() {
                                       <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e, 'left')} />
                                     </label>
                                     
-                                    <button onClick={() => handleRemoveImage(scene.id, 'left')} className="text-[9px] uppercase tracking-widest font-bold text-white hover:text-red-400 transition-colors mt-2">
+                                    <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleRemoveImage(scene.id, 'left'); }} className="text-[9px] uppercase tracking-widest font-bold text-white hover:text-red-400 transition-colors mt-2">
                                       Remove
                                     </button>
                                  </div>
@@ -919,7 +1073,7 @@ export default function ScriptBoard() {
 
                         {/* RIGHT IMAGE SLOT */}
                         <div className="flex-1 flex flex-col gap-3">
-                          <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">Right Image</label>
+                          <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">2nd Frame</label>
                           <div className="w-full aspect-[4/5] bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl relative overflow-hidden group/img transition-colors hover:border-[#8B7CFF]/50"
                               onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('hidden', 'flex'); }}
                               onDragLeave={(e) => { e.currentTarget.classList.remove('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('flex', 'hidden'); }}
@@ -965,7 +1119,7 @@ export default function ScriptBoard() {
                                  <img src={rightAsset?.url} alt={rightAsset?.originalFilename || "Scene image"} className="w-full h-full object-cover" 
                                    draggable
                                    onDragStart={(e) => {
-                                       e.dataTransfer.setData('application/json', JSON.stringify({ type: 'SCENE_IMAGE', sourceSceneId: scene.id, sourceSide: 'right', url: rightAsset?.url, name: rightAsset?.originalFilename, displayName: rightAsset?.displayName }));
+                                       e.dataTransfer.setData('application/json', JSON.stringify({ type: 'SCENE_IMAGE', sourceSceneId: scene.id, sourceSide: 'right', assetId: rightAsset?.id, url: rightAsset?.url, name: rightAsset?.originalFilename, displayName: rightAsset?.displayName }));
                                        setTimeout(() => { if (e.target) (e.target as HTMLElement).style.opacity = '0.4'; }, 0);
                                    }}
                                    onDragEnd={(e) => { e.currentTarget.style.opacity = '1'; }}
@@ -989,7 +1143,7 @@ export default function ScriptBoard() {
                                       <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e, 'right')} />
                                     </label>
                                     
-                                    <button onClick={() => handleRemoveImage(scene.id, 'right')} className="text-[9px] uppercase tracking-widest font-bold text-white hover:text-red-400 transition-colors mt-2">
+                                    <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleRemoveImage(scene.id, 'right'); }} className="text-[9px] uppercase tracking-widest font-bold text-white hover:text-red-400 transition-colors mt-2">
                                       Remove
                                     </button>
                                  </div>
