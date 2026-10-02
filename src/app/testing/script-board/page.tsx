@@ -475,7 +475,8 @@ export default function ScriptBoard() {
         
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
-        const framesText = doc.splitTextToSize((sceneAssetLeft?.displayName ? "Left: " + sceneAssetLeft?.displayName : "Left: (None)") + " | " + (sceneAssetRight?.displayName ? "Right: " + sceneAssetRight?.displayName : "Right: (None)"), textWidth);
+                const filesString = `1st Frame: ${sceneAssetLeft ? (sceneAssetLeft.displayName || "1st Frame") : "—"}\n2nd Frame: ${sceneAssetRight ? (sceneAssetRight.displayName || "2nd Frame") : "—"}`;
+        const framesText = doc.splitTextToSize(filesString, textWidth);
         const phraseText = doc.splitTextToSize(scene.phrase || "(Empty)", textWidth);
         const motionText = doc.splitTextToSize(scene.motionPrompt || "(Empty)", textWidth);
         const notesText = doc.splitTextToSize(scene.notes || "(Empty)", textWidth);
@@ -527,19 +528,21 @@ export default function ScriptBoard() {
                doc.setDrawColor(230, 230, 230);
                doc.rect(x, y + 5, finalW, finalH);
              } catch (e) {
-               doc.setDrawColor(230, 230, 230);
-               doc.rect(x, y + 5, w, 60);
+               doc.setDrawColor(240, 240, 240);
+               doc.setFillColor(250, 250, 250);
+               doc.rect(x, y + 5, w, 30, 'FD');
                doc.setTextColor(150, 150, 150);
                doc.setFontSize(7);
-               doc.text("ERROR", x + 5, y + 35);
+               doc.text("ERROR", x + 5, y + 20);
              }
            } else {
-             doc.setDrawColor(230, 230, 230);
-             doc.rect(x, y + 5, w, 60);
+             doc.setDrawColor(240, 240, 240);
+             doc.setFillColor(250, 250, 250);
+             doc.rect(x, y + 5, w, 30, 'FD');
              doc.setTextColor(150, 150, 150);
              doc.setFont("helvetica", "bold");
              doc.setFontSize(8);
-             doc.text("EMPTY", x + 10, y + 35);
+             doc.text("EMPTY", x + 10, y + 20);
            }
            doc.setFont("helvetica", "bold");
            doc.setFontSize(7);
@@ -547,8 +550,11 @@ export default function ScriptBoard() {
            doc.text(label, x, y);
         };
 
-        await renderImageSlot(sceneAssetLeft?.url || null, margin, cursorY, halfImgW, sceneAssetLeft?.displayName ? sceneAssetLeft.displayName.toUpperCase() : "LEFT IMAGE");
-        await renderImageSlot(sceneAssetRight?.url || null, margin + halfImgW + gap, cursorY, halfImgW, sceneAssetRight?.displayName ? sceneAssetRight.displayName.toUpperCase() : "RIGHT IMAGE");
+        const leftSlotName = sceneAssetLeft?.displayName ? sceneAssetLeft.displayName.toUpperCase() : "1ST FRAME";
+        const rightSlotName = sceneAssetRight?.displayName ? sceneAssetRight.displayName.toUpperCase() : "2ND FRAME";
+
+        await renderImageSlot(sceneAssetLeft?.url || null, margin, cursorY, halfImgW, leftSlotName);
+        await renderImageSlot(sceneAssetRight?.url || null, margin + halfImgW + gap, cursorY, halfImgW, rightSlotName);
         
         // Render Text Columns
         let textY = cursorY + 5;
