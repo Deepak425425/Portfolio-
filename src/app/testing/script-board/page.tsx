@@ -71,7 +71,16 @@ const Icons = {
   Export: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>,
 };
 
-const INITIAL_SCENES: Scene[] = [];
+const getSingleScene = (): Scene[] => [{
+  id: `scene-${Date.now()}`,
+  number: 1,
+  enabled: true,
+  phrase: "",
+  leftImageAssetId: null,
+  rightImageAssetId: null,
+  motionPrompt: "",
+  notes: ""
+}];
 
 const getOrdinal = (n: number) => {
   const s = ["th", "st", "nd", "rd"];
@@ -88,7 +97,7 @@ export default function ScriptBoard() {
   
   // --- State ---
   const [projectName, setProjectName] = useState("");
-  const [scenes, setScenes] = useState<Scene[]>(INITIAL_SCENES);
+  const [scenes, setScenes] = useState<Scene[]>([]);
   const [projectAssets, setProjectAssets] = useState<ProjectAsset[]>([]);
   const [assetSearch, setAssetSearch] = useState("");
   const [assetMenuOpen, setAssetMenuOpen] = useState<string | null>(null);
@@ -104,11 +113,18 @@ export default function ScriptBoard() {
 
   useEffect(() => {
     const saved = localStorage.getItem('groton-script-board-autosave');
+    let loadedScenes: Scene[] = [];
+    let loadedAssets: ProjectAsset[] = [];
+    let loadedName = "";
+    
     if (saved) {
       try {
         const data = JSON.parse(saved);
         if (data.scenes && data.scenes.length > 0) {
-          const migrated = data.scenes.map((s: any) => ({
+          loadedName = data.projectName || "";
+          loadedAssets = data.projectAssets || data.trayImages || [];
+          
+          let migrated = data.scenes.map((s: any) => ({
             ...s,
             leftImage: s.leftImage !== undefined ? s.leftImage : (s.image || null),
             leftImageName: s.leftImageName !== undefined ? s.leftImageName : (s.imageName || null),
@@ -117,12 +133,29 @@ export default function ScriptBoard() {
             rightImageName: s.rightImageName || null,
             rightImageDisplayName: s.rightImageDisplayName || (s.rightImage ? "2nd Frame" : null)
           }));
-          setProjectName(data.projectName || "");
-          setScenes(migrated);
-          setProjectAssets(data.trayImages || []);
+          
+          const isSceneEmpty = (s: any) => !s.leftImageAssetId && !s.rightImageAssetId && !(s.phrase||"").trim() && !(s.motionPrompt||"").trim() && !(s.notes||"").trim();
+          
+          while(migrated.length > 1) {
+            const lastScene = migrated[migrated.length - 1];
+            if (isSceneEmpty(lastScene)) {
+               migrated.pop();
+            } else {
+               break;
+            }
+          }
+          loadedScenes = migrated;
         }
       } catch (e) {}
     }
+    
+    if (loadedScenes.length === 0) {
+      loadedScenes = getSingleScene();
+    }
+    
+    setProjectName(loadedName);
+    setScenes(loadedScenes);
+    setProjectAssets(loadedAssets);
     setIsLoaded(true);
   }, []);
 
@@ -424,8 +457,10 @@ export default function ScriptBoard() {
       drawHeader();
       drawFooter(pageNum);
 
-      for (let i = 0; i < scenes.length; i++) {
-        const scene = scenes[i];
+      const isSceneEmpty = (s: any) => !s.leftImageAssetId && !s.rightImageAssetId && !(s.phrase||"").trim() && !(s.motionPrompt||"").trim() && !(s.notes||"").trim();
+      const validScenes = scenes.filter(s => !isSceneEmpty(s));
+      for (let i = 0; i < validScenes.length; i++) {
+        const scene = validScenes[i];
         const sceneAssetLeft = projectAssets.find(a => a.id === scene.leftImageAssetId);
         const sceneAssetRight = projectAssets.find(a => a.id === scene.rightImageAssetId);
         
