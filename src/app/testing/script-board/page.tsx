@@ -512,8 +512,8 @@ export default function ScriptBoard() {
            doc.text(label, x, y);
         };
 
-        await renderImageSlot(sceneAssetLeft?.url || null, margin, cursorY, halfImgW, "LEFT IMAGE");
-        await renderImageSlot(sceneAssetRight?.url || null, margin + halfImgW + gap, cursorY, halfImgW, "RIGHT IMAGE");
+        await renderImageSlot(sceneAssetLeft?.url || null, margin, cursorY, halfImgW, sceneAssetLeft?.displayName ? sceneAssetLeft.displayName.toUpperCase() : "LEFT IMAGE");
+        await renderImageSlot(sceneAssetRight?.url || null, margin + halfImgW + gap, cursorY, halfImgW, sceneAssetRight?.displayName ? sceneAssetRight.displayName.toUpperCase() : "RIGHT IMAGE");
         
         // Render Text Columns
         let textY = cursorY + 5;
