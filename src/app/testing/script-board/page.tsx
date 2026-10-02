@@ -342,7 +342,7 @@ export default function ScriptBoard() {
   };
   
     const handleRemoveImage = (id: string, side: 'left' | 'right') => {
-    setScenes(scenes.map(s => s.id === id ? {
+    setScenes(prev => prev.map(s => s.id === id ? {
       ...s,
       [side === 'left' ? 'leftImageAssetId' : 'rightImageAssetId']: null
     } : s));
@@ -901,7 +901,7 @@ export default function ScriptBoard() {
                                       <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e, 'left')} />
                                     </label>
                                     
-                                    <button onClick={() => handleRemoveImage(scene.id, 'left')} className="text-[9px] uppercase tracking-widest font-bold text-white hover:text-red-400 transition-colors mt-2">
+                                    <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleRemoveImage(scene.id, 'left'); }} className="text-[9px] uppercase tracking-widest font-bold text-white hover:text-red-400 transition-colors mt-2">
                                       Remove
                                     </button>
                                  </div>
@@ -989,7 +989,7 @@ export default function ScriptBoard() {
                                       <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e, 'right')} />
                                     </label>
                                     
-                                    <button onClick={() => handleRemoveImage(scene.id, 'right')} className="text-[9px] uppercase tracking-widest font-bold text-white hover:text-red-400 transition-colors mt-2">
+                                    <button onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleRemoveImage(scene.id, 'right'); }} className="text-[9px] uppercase tracking-widest font-bold text-white hover:text-red-400 transition-colors mt-2">
                                       Remove
                                     </button>
                                  </div>
