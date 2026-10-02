@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-const CMS_FILE_PATH = path.join(process.cwd(), 'data', 'cms.json');
+const isVercel = process.env.VERCEL === '1';
+const CMS_FILE_PATH = isVercel ? '/tmp/cms.json' : path.join(process.cwd(), 'data', 'cms.json');
 
 export type CmsImage = {
   id: string;
@@ -19,12 +20,22 @@ const DEFAULT_IMAGES: CmsImage[] = [
   { id: 'about_visual', name: 'About Visual', src: '/campaign-worlds/ghgh.jpeg', page: 'home', section: 'About' },
 ];
 
+let memoryCache: CmsImage[] | null = null;
+
 export function getCmsData(): CmsImage[] {
+  if (memoryCache) return memoryCache;
+
   if (!fs.existsSync(CMS_FILE_PATH)) {
-    if (!fs.existsSync(path.dirname(CMS_FILE_PATH))) {
-      fs.mkdirSync(path.dirname(CMS_FILE_PATH), { recursive: true });
+    try {
+      if (!fs.existsSync(path.dirname(CMS_FILE_PATH))) {
+        fs.mkdirSync(path.dirname(CMS_FILE_PATH), { recursive: true });
+      }
+      fs.writeFileSync(CMS_FILE_PATH, JSON.stringify(DEFAULT_IMAGES, null, 2));
+    } catch (e) {
+      console.warn('Could not write CMS file, using memory cache.', e);
+      memoryCache = DEFAULT_IMAGES;
+      return memoryCache;
     }
-    fs.writeFileSync(CMS_FILE_PATH, JSON.stringify(DEFAULT_IMAGES, null, 2));
     return DEFAULT_IMAGES;
   }
   try {
@@ -37,6 +48,13 @@ export function getCmsData(): CmsImage[] {
 export function updateCmsImage(id: string, newSrc: string) {
   const data = getCmsData();
   const updated = data.map(img => img.id === id ? { ...img, src: newSrc } : img);
-  fs.writeFileSync(CMS_FILE_PATH, JSON.stringify(updated, null, 2));
+  
+  try {
+    fs.writeFileSync(CMS_FILE_PATH, JSON.stringify(updated, null, 2));
+  } catch (e) {
+    console.warn('Could not write CMS file, updating memory cache only.', e);
+  }
+  
+  memoryCache = updated;
   return updated;
 }
