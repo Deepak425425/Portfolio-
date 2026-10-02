@@ -552,8 +552,8 @@ export default function ScriptBoard() {
            doc.text(label, x, y);
         };
 
-        const leftSlotName = sceneAssetLeft?.displayName ? sceneAssetLeft.displayName.toUpperCase() : "1ST FRAME";
-        const rightSlotName = sceneAssetRight?.displayName ? sceneAssetRight.displayName.toUpperCase() : "2ND FRAME";
+        const leftSlotName = "1ST FRAME";
+        const rightSlotName = "2ND FRAME";
 
         await renderImageSlot(sceneAssetLeft?.url || null, margin, cursorY, halfImgW, leftSlotName);
         await renderImageSlot(sceneAssetRight?.url || null, margin + halfImgW + gap, cursorY, halfImgW, rightSlotName);
@@ -1018,7 +1018,7 @@ This file is informational only.`;
                       <div className="w-full lg:w-[360px] shrink-0 flex gap-4">
                         {/* LEFT IMAGE SLOT */}
                         <div className="flex-1 flex flex-col gap-3">
-                          <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">Left Image</label>
+                          <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">1st Frame</label>
                           <div className="w-full aspect-[4/5] bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl relative overflow-hidden group/img transition-colors hover:border-[#8B7CFF]/50"
                               onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('hidden', 'flex'); }}
                               onDragLeave={(e) => { e.currentTarget.classList.remove('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('flex', 'hidden'); }}
@@ -1106,7 +1106,7 @@ This file is informational only.`;
 
                         {/* RIGHT IMAGE SLOT */}
                         <div className="flex-1 flex flex-col gap-3">
-                          <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">Right Image</label>
+                          <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">2nd Frame</label>
                           <div className="w-full aspect-[4/5] bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl relative overflow-hidden group/img transition-colors hover:border-[#8B7CFF]/50"
                               onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('hidden', 'flex'); }}
                               onDragLeave={(e) => { e.currentTarget.classList.remove('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('flex', 'hidden'); }}
