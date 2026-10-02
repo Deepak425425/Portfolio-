@@ -14,6 +14,7 @@ interface ImgFile {
   url: string;
   name: string;
   ext: string;
+  csMeta?: any;
 }
 
 interface Box {
@@ -49,12 +50,20 @@ export default function FaceBlurPage() {
       const parts = f.name.split('.');
       const ext = parts.pop() || 'jpg';
       const id = Math.random().toString(36).substring(7);
+      
+      let csMeta;
+      try {
+        const raw = localStorage.getItem(`groton_cs_meta_${f.name}`);
+        if (raw) csMeta = JSON.parse(raw);
+      } catch (e) { console.warn("Failed to parse contact sheet metadata"); }
+      
       return {
         id,
         file: f,
         url: URL.createObjectURL(f),
         name: parts.join('.'),
-        ext
+        ext,
+        csMeta
       };
     });
     setImages(prev => [...prev, ...newImgs]);
@@ -145,8 +154,20 @@ export default function FaceBlurPage() {
           }
         } else {
           ctx.save();
+          // CLIP strictly to the detected face region
+          ctx.beginPath();
+          ctx.rect(safeX, safeY, safeW, safeH);
+          ctx.clip();
+          
           ctx.filter = `blur(${strength / 2}px)`;
-          ctx.drawImage(canvas, safeX, safeY, safeW, safeH, safeX, safeY, safeW, safeH);
+          // Draw a slightly larger source area to prevent dark/transparent edges bleeding in
+          const margin = strength;
+          const sx = Math.max(0, safeX - margin);
+          const sy = Math.max(0, safeY - margin);
+          const sw = Math.min(canvas.width - sx, safeW + margin * 2);
+          const sh = Math.min(canvas.height - sy, safeH + margin * 2);
+          
+          ctx.drawImage(canvas, sx, sy, sw, sh, sx, sy, sw, sh);
           ctx.restore();
         }
         
@@ -232,30 +253,140 @@ export default function FaceBlurPage() {
           modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
           delegate: "GPU"
         },
-        runningMode: "IMAGE"
+        runningMode: "IMAGE",
+        minDetectionConfidence: 0.4,
+        minSuppressionThreshold: 0.3
       });
       
-      const detections = faceDetector.detect(imgRef.current);
+      const img = imgRef.current;
+      const allBoxes: (Box & {score: number})[] = [];
       
-      const newBoxes: Box[] = detections.detections.map((d: any) => {
+      const mapDetection = (d: any, offsetX: number, offsetY: number): (Box & {score: number}) | null => {
         const bb = d.boundingBox;
         if (!bb) return null;
-        // Expand bounding box slightly for better facial coverage
-        const padW = bb.width * 0.2;
-        const padH = bb.height * 0.2;
+        // TIGHT BOUNDING BOX: 5% padding
+        const padW = bb.width * 0.05;
+        const padH = bb.height * 0.05;
+        const score = (d.categories && d.categories.length > 0) ? d.categories[0].score : 0.5;
+        
         return {
-          id: Math.random().toString(),
-          x: Math.max(0, bb.originX - padW/2),
-          y: Math.max(0, bb.originY - padH),
+          id: Math.random().toString(36).substring(7),
+          x: Math.max(0, bb.originX + offsetX - padW / 2),
+          y: Math.max(0, bb.originY + offsetY - padH / 2),
           w: bb.width + padW,
-          h: bb.height + padH*1.5
+          h: bb.height + padH,
+          score
         };
-      }).filter(Boolean) as Box[];
+      };
+
+      // Helper to calculate Intersection over Union (IoU)
+      const calculateIoU = (box1: Box, box2: Box) => {
+        const xA = Math.max(box1.x, box2.x);
+        const yA = Math.max(box1.y, box2.y);
+        const xB = Math.min(box1.x + box1.w, box2.x + box2.w);
+        const yB = Math.min(box1.y + box1.h, box2.y + box2.h);
+        const interArea = Math.max(0, xB - xA) * Math.max(0, yB - yA);
+        const box1Area = box1.w * box1.h;
+        const box2Area = box2.w * box2.h;
+        return interArea / (box1Area + box2Area - interArea);
+      };
+
+      if (currentImg.csMeta && currentImg.csMeta.isContactSheet && currentImg.csMeta.cells) {
+        // DETECT USING CONTACT SHEET METADATA
+        const cells = currentImg.csMeta.cells;
+        
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          cells.forEach((cell: any) => {
+            canvas.width = cell.width;
+            canvas.height = cell.height;
+            ctx.clearRect(0, 0, cell.width, cell.height);
+            // Draw ONLY the clean frame cell
+            ctx.drawImage(img, cell.x, cell.y, cell.width, cell.height, 0, 0, cell.width, cell.height);
+            
+            const res = faceDetector.detect(canvas);
+            res.detections.forEach((d: any) => {
+               // Confidence filtering: Reject low confidence detections
+               const score = (d.categories && d.categories.length > 0) ? d.categories[0].score : 0.5;
+               if (score < 0.6) return;
+               
+               // Validate face size against cell size to prevent huge false positives
+               if (!d.boundingBox) return;
+               const bbRatio = (d.boundingBox.width * d.boundingBox.height) / (cell.width * cell.height);
+               if (bbRatio > 0.4) return; // A face shouldn't cover > 40% of a frame
+               
+               const box = mapDetection(d, cell.x, cell.y);
+               if (box) allBoxes.push(box);
+            });
+          });
+        }
+      } else if (img.width > 800 || img.height > 800) {
+        // FALLBACK: Process image in overlapping chunks if it's large (standard image, not a known contact sheet)
+        const windowSize = 512;
+        const step = Math.floor(windowSize * 0.6); // 40% overlap
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = windowSize;
+        canvas.height = windowSize;
+        const ctx = canvas.getContext('2d');
+        
+        if (ctx) {
+          for (let y = 0; y < img.height; y += step) {
+            for (let x = 0; x < img.width; x += step) {
+              ctx.clearRect(0, 0, windowSize, windowSize);
+              // Draw image chunk
+              ctx.drawImage(img, x, y, windowSize, windowSize, 0, 0, windowSize, windowSize);
+              
+              const res = faceDetector.detect(canvas);
+              res.detections.forEach((d: any) => {
+                 const score = (d.categories && d.categories.length > 0) ? d.categories[0].score : 0.5;
+                 if (score < 0.5) return;
+                 const box = mapDetection(d, x, y);
+                 if (box) allBoxes.push(box);
+              });
+            }
+          }
+        }
+      } else {
+        // Small image, process in one pass
+        const res = faceDetector.detect(img);
+        res.detections.forEach((d: any) => {
+          const score = (d.categories && d.categories.length > 0) ? d.categories[0].score : 0.5;
+          if (score < 0.5) return;
+          const box = mapDetection(d, 0, 0);
+          if (box) allBoxes.push(box);
+        });
+      }
+
+      // Apply Strict Non-Maximum Suppression (NMS)
+      // 1. Sort by confidence score (highest first)
+      allBoxes.sort((a, b) => b.score - a.score);
       
-      if (newBoxes.length > 0) {
+      const finalBoxes: Box[] = [];
+      allBoxes.forEach(box => {
+        let isDuplicate = false;
+        for (let i = 0; i < finalBoxes.length; i++) {
+          const iou = calculateIoU(box, finalBoxes[i]);
+          if (iou > 0.3) {
+             isDuplicate = true;
+             break;
+          }
+        }
+        if (!isDuplicate && box.w > 10 && box.h > 10) {
+          // Filter out completely unreasonable false-positive huge boxes
+          const isHugeBox = box.w > (img.width * 0.8) && box.h > (img.height * 0.8);
+          if (!isHugeBox) {
+            // Strip the score property before saving to state
+            finalBoxes.push({ id: box.id, x: box.x, y: box.y, w: box.w, h: box.h });
+          }
+        }
+      });
+      
+      if (finalBoxes.length > 0) {
         setBoxes(prev => ({
           ...prev,
-          [currentImg.id]: [...(prev[currentImg.id] || []), ...newBoxes]
+          [currentImg.id]: [...(prev[currentImg.id] || []), ...finalBoxes]
         }));
       } else {
         alert("No faces detected. You can draw manual boxes.");
@@ -295,8 +426,21 @@ export default function FaceBlurPage() {
         }
       } else {
         ctx.save();
+        // CLIP strictly to the detected face region for the final export
+        ctx.beginPath();
+        ctx.rect(box.x, box.y, box.w, box.h);
+        ctx.clip();
+        
         ctx.filter = `blur(${strength}px)`;
-        ctx.drawImage(canvas, box.x, box.y, box.w, box.h, box.x, box.y, box.w, box.h);
+        
+        // Draw a slightly larger source area to ensure edges blend with surrounding pixels
+        const margin = strength;
+        const sx = Math.max(0, box.x - margin);
+        const sy = Math.max(0, box.y - margin);
+        const sw = Math.min(canvas.width - sx, box.w + margin * 2);
+        const sh = Math.min(canvas.height - sy, box.h + margin * 2);
+        
+        ctx.drawImage(canvas, sx, sy, sw, sh, sx, sy, sw, sh);
         ctx.restore();
       }
     });

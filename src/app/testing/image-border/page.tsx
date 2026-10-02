@@ -48,6 +48,25 @@ export default function BorderStudioPage() {
   const [fileDetails, setFileDetails] = useState({ width: 0, height: 0, size: "0 MB" });
   const [imgObj, setImgObj] = useState<HTMLImageElement | null>(null);
 
+  const [isNightMode, setIsNightMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem("groton_tool_theme");
+    if (saved === "dark") {
+      setIsNightMode(true);
+    }
+  }, []);
+
+  const toggleNightMode = () => {
+    setIsNightMode(prev => {
+      const next = !prev;
+      localStorage.setItem("groton_tool_theme", next ? "dark" : "light");
+      return next;
+    });
+  };
+
   const [activePreset, setActivePreset] = useState("CLASSIC");
   const [aspectRatio, setAspectRatio] = useState("original");
 
@@ -372,8 +391,10 @@ export default function BorderStudioPage() {
      );
   };
 
+  const mainClasses = `h-screen w-screen font-sans flex flex-col overflow-hidden transition-colors duration-300 ${isNightMode ? 'tool-dark bg-[#121212] text-zinc-200' : 'bg-[#F7F6F2] text-[#242631]'}`;
+
   return (
-    <main className="h-screen w-screen bg-[#F7F6F2] text-[#242631] font-sans flex flex-col overflow-hidden">
+    <main className={mainClasses} data-theme={isNightMode ? "dark" : "light"}>
       {/* AMBIENT GRADIENTS */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#DCD7FF] opacity-30 blur-[120px] rounded-full"></div>
@@ -438,7 +459,7 @@ export default function BorderStudioPage() {
       {/* HEADER */}
       <header className="h-[72px] shrink-0 flex items-center px-8 justify-between z-10 neu-flat rounded-b-2xl mb-2">
          <div className="flex items-center gap-6">
-            <Link href="/tools" className="neu-button w-10 h-10 rounded-full flex items-center justify-center font-bold text-[#7B7F89] hover:text-[#242631]">
+            <Link href="/testing" className="neu-button w-10 h-10 rounded-full flex items-center justify-center font-bold text-[#7B7F89] hover:text-[#242631]">
                <Icons.Back />
             </Link>
             <div>
@@ -446,11 +467,22 @@ export default function BorderStudioPage() {
                <h2 className="text-[10px] uppercase tracking-widest text-[#7B7F89]">Image Border Studio</h2>
             </div>
          </div>
-         {url && (
-            <button onClick={resetAll} className="neu-button px-4 py-2 rounded-xl flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-[#7B7F89] hover:text-[#242631]">
-               <Icons.Reset /> Reset All
-            </button>
-         )}
+         <div className="flex items-center gap-4">
+            {mounted && (
+               <button 
+                  onClick={toggleNightMode}
+                  className="neu-button px-4 py-2 rounded-full flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-[#7B7F89] hover:text-[#242631]"
+                  title="Toggle Night Mode"
+               >
+                  {isNightMode ? '☀ LIGHT' : '☾ DARK'}
+               </button>
+            )}
+            {url && (
+               <button onClick={resetAll} className="neu-button px-4 py-2 rounded-xl flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-[#7B7F89] hover:text-[#242631]">
+                  <Icons.Reset /> Reset All
+               </button>
+            )}
+         </div>
       </header>
 
       {/* WORKSPACE */}

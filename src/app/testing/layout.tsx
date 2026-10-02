@@ -1,6 +1,5 @@
 import React from "react";
 import type { Metadata } from "next";
-import { TestingProvider } from "./components/TestingProvider";
 
 export const metadata: Metadata = {
   title: "Testing Lab — GROTON AI",
@@ -11,6 +10,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default function TestingLayout({ children }: { children: React.ReactNode }) {
-  return <TestingProvider>{children}</TestingProvider>;
+export default async function TestingLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }

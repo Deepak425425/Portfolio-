@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import LogoutButton from "./components/LogoutButton";
 import TestingToolCard from "./components/TestingToolCard";
 
 export default function TestingLabPage() {
@@ -11,9 +10,6 @@ export default function TestingLabPage() {
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
           GROTON AI
         </Link>
-        <div className="flex items-center gap-8">
-          <LogoutButton />
-        </div>
       </header>
 
       {/* CONTENT */}
@@ -44,6 +40,12 @@ export default function TestingLabPage() {
               description="Create and organize visual scenes, motion prompts, reference images and notes in one storyboard." 
               status="EXPERIMENTAL" 
               route="/testing/script-board" 
+            />
+            <TestingToolCard 
+              name="Image Border" 
+              description="Add refined frames, shadows, and borders to images. (Moved from public tools)" 
+              status="TESTING" 
+              route="/testing/image-border" 
             />
           </div>
         </div>

@@ -10,23 +10,25 @@ interface Scene {
   number: number;
   enabled: boolean;
   phrase: string;
-  image: string | null;
-  imageName: string | null;
+  leftImageAssetId: string | null;
+  rightImageAssetId: string | null;
   frameType?: string;
   motionPrompt: string;
   notes: string;
 }
 
-interface TrayImage {
+interface ProjectAsset {
   id: string;
   url: string;
-  name: string;
+  originalFilename: string;
+  displayName: string;
 }
 
 interface BoardData {
   projectName: string;
   scenes: Scene[];
-  trayImages?: TrayImage[];
+  projectAssets?: ProjectAsset[];
+  trayImages?: any[];
 }
 
 const getBase64 = (file: File): Promise<string> => {
@@ -61,11 +63,25 @@ const Icons = {
   Image: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>,
   Save: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>,
   Close: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>,
+  Filter: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
+  MoreHorizontal: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>,
+  ChevronDown: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>,
+
   Import: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>,
   Export: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>,
 };
 
 const INITIAL_SCENES: Scene[] = [];
+
+const getOrdinal = (n: number) => {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+};
+
+const generateNextDisplayName = (assets: ProjectAsset[]) => {
+  return `${getOrdinal(assets.length + 1)} Frame`;
+};
 
 export default function ScriptBoard() {
   const router = useRouter();
@@ -73,9 +89,14 @@ export default function ScriptBoard() {
   // --- State ---
   const [projectName, setProjectName] = useState("");
   const [scenes, setScenes] = useState<Scene[]>(INITIAL_SCENES);
-  const [trayImages, setTrayImages] = useState<TrayImage[]>([]);
+  const [projectAssets, setProjectAssets] = useState<ProjectAsset[]>([]);
+  const [assetSearch, setAssetSearch] = useState("");
+  const [assetMenuOpen, setAssetMenuOpen] = useState<string | null>(null);
+  const [isDragOverAssets, setIsDragOverAssets] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [pickerSceneId, setPickerSceneId] = useState<string | null>(null);
+  const [pickerSide, setPickerSide] = useState<'left' | 'right' | null>(null);
+  const [swapPrompt, setSwapPrompt] = useState<any>(null);
   
   // LocalStorage / Persistence
   const [isLoaded, setIsLoaded] = useState(false);
@@ -87,9 +108,18 @@ export default function ScriptBoard() {
       try {
         const data = JSON.parse(saved);
         if (data.scenes && data.scenes.length > 0) {
+          const migrated = data.scenes.map((s: any) => ({
+            ...s,
+            leftImage: s.leftImage !== undefined ? s.leftImage : (s.image || null),
+            leftImageName: s.leftImageName !== undefined ? s.leftImageName : (s.imageName || null),
+            leftImageDisplayName: s.leftImageDisplayName || (s.leftImage || s.image ? "1st Frame" : null),
+            rightImage: s.rightImage || null,
+            rightImageName: s.rightImageName || null,
+            rightImageDisplayName: s.rightImageDisplayName || (s.rightImage ? "2nd Frame" : null)
+          }));
           setProjectName(data.projectName || "");
-          setScenes(data.scenes);
-          setTrayImages(data.trayImages || []);
+          setScenes(migrated);
+          setProjectAssets(data.trayImages || []);
         }
       } catch (e) {}
     }
@@ -98,12 +128,12 @@ export default function ScriptBoard() {
 
   useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem('groton-script-board-autosave', JSON.stringify({ projectName, scenes, trayImages }));
+      localStorage.setItem('groton-script-board-autosave', JSON.stringify({ projectName, scenes, projectAssets }));
       setShowSavedIndicator(true);
       const timer = setTimeout(() => setShowSavedIndicator(false), 2000);
       return () => clearTimeout(timer);
     }
-  }, [projectName, scenes, trayImages, isLoaded]);
+  }, [projectName, scenes, projectAssets, isLoaded]);
   
   // Toggles
   const [multiFrame, setMultiFrame] = useState(false);
@@ -114,6 +144,9 @@ export default function ScriptBoard() {
   
   // Export Menu
   const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -139,7 +172,7 @@ export default function ScriptBoard() {
   const filteredScenes = useMemo(() => {
     return scenes.filter(scene => {
       // Toggles
-      if (missingImageOnly && scene.image) return false;
+        if (missingImageOnly && (scene.leftImageAssetId || scene.rightImageAssetId)) return false;
       if (notesOnly && !scene.notes) return false;
       if (motionRefOnly && !scene.motionPrompt) return false;
       if (selectedOnly && !scene.enabled) return false;
@@ -160,6 +193,59 @@ export default function ScriptBoard() {
   }, [scenes, missingImageOnly, notesOnly, motionRefOnly, selectedOnly, searchQuery]);
 
   // --- Handlers ---
+  
+  const handleMoveImage = (srcId: string, srcSide: 'left' | 'right', destId: string, destSide: 'left' | 'right', srcData: any) => {
+    setScenes(prev => {
+        const next = [...prev];
+        const sIndex = next.findIndex(s => s.id === srcId);
+        const dIndex = next.findIndex(s => s.id === destId);
+        if (sIndex < 0 || dIndex < 0) return prev;
+        
+        const srcScene = { ...next[sIndex] };
+        if (srcSide === 'left') {
+            srcScene.leftImageAssetId = null;
+        } else {
+            srcScene.rightImageAssetId = null;
+        }
+        next[sIndex] = srcScene;
+        
+        const destScene = sIndex === dIndex ? srcScene : { ...next[dIndex] };
+        if (destSide === 'left') {
+            destScene.leftImageAssetId = srcData.assetId;
+        } else {
+            destScene.rightImageAssetId = srcData.assetId;
+        }
+        next[dIndex] = destScene;
+        return next;
+    });
+  };
+
+  const handleSwapImage = (srcId: string, srcSide: 'left' | 'right', destId: string, destSide: 'left' | 'right', srcData: any, destData: any) => {
+    setScenes(prev => {
+        const next = [...prev];
+        const sIndex = next.findIndex(s => s.id === srcId);
+        const dIndex = next.findIndex(s => s.id === destId);
+        if (sIndex < 0 || dIndex < 0) return prev;
+        
+        const srcScene = { ...next[sIndex] };
+        if (srcSide === 'left') {
+            srcScene.leftImageAssetId = destData.assetId;
+        } else {
+            srcScene.rightImageAssetId = destData.assetId;
+        }
+        next[sIndex] = srcScene;
+        
+        const destScene = sIndex === dIndex ? srcScene : { ...next[dIndex] };
+        if (destSide === 'left') {
+            destScene.leftImageAssetId = srcData.assetId;
+        } else {
+            destScene.rightImageAssetId = srcData.assetId;
+        }
+        next[dIndex] = destScene;
+        return next;
+    });
+  };
+
   const handleAddScene = (index: number) => {
     const newScenes = [...scenes];
     newScenes.splice(index + 1, 0, {
@@ -167,8 +253,8 @@ export default function ScriptBoard() {
       number: 0,
       enabled: true,
       phrase: "",
-      image: null,
-      imageName: null,
+      leftImageAssetId: null,
+      rightImageAssetId: null,
       frameType: "1st Frame",
       motionPrompt: "",
       notes: ""
@@ -198,20 +284,41 @@ export default function ScriptBoard() {
     setScenes(scenes.map(s => s.id === id ? { ...s, [field]: value } : s));
   };
 
-  const handleImageUpload = async (id: string, e: React.ChangeEvent<HTMLInputElement> | FileList) => {
+
+  const handleUpdateAsset = (id: string, updates: Partial<ProjectAsset>) => {
+     setProjectAssets(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a));
+  };
+  
+  const handleRemoveAsset = (id: string) => {
+     setProjectAssets(prev => prev.filter(a => a.id !== id));
+     setScenes(prev => prev.map(s => ({
+        ...s,
+        leftImageAssetId: s.leftImageAssetId === id ? null : s.leftImageAssetId,
+        rightImageAssetId: s.rightImageAssetId === id ? null : s.rightImageAssetId
+     })));
+  };
+  
+  const handleRenameAsset = (id: string) => {
+     const newName = prompt("Enter new display name:");
+     if (newName) {
+        handleUpdateAsset(id, { displayName: newName });
+     }
+  };
+
+
+  const handleImageUpload = async (id: string, e: React.ChangeEvent<HTMLInputElement> | FileList, side: 'left' | 'right') => {
     const fileList = e instanceof FileList ? e : e.target.files;
     const file = fileList?.[0];
     if (file && file.type.startsWith('image/')) {
       const base64 = await getBase64(file);
-      setScenes(scenes.map(s => s.id === id ? { ...s, image: base64, imageName: file.name } : s));
-      
-      // Auto-add to tray if new
-      setTrayImages(prev => {
-        if (!prev.find(t => t.url === base64)) {
-          return [...prev, { id: `tray-${Date.now()}`, url: base64, name: file.name }];
-        }
-        return prev;
-      });
+      const newAsset: ProjectAsset = {
+         id: `asset-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+         url: base64,
+         originalFilename: file.name,
+         displayName: generateNextDisplayName(projectAssets)
+      };
+      setProjectAssets(prev => [...prev, newAsset]);
+      setScenes(scenes.map(s => s.id === id ? { ...s, [side === 'left' ? 'leftImageAssetId' : 'rightImageAssetId']: newAsset.id } : s));
     }
   };
   
@@ -220,21 +327,25 @@ export default function ScriptBoard() {
     if (!files.length) return;
     
     const imageFiles = files.filter(f => f.type.startsWith('image/'));
-    const newImages = await Promise.all(imageFiles.map(async f => ({
-      id: `tray-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    const newImages = await Promise.all(imageFiles.map(async (f, idx) => ({
+      id: `asset-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       url: await getBase64(f),
-      name: f.name
+      originalFilename: f.name,
+      displayName: generateNextDisplayName([...projectAssets, ...Array(idx).fill(0)])
     })));
     
-    setTrayImages(prev => [...prev, ...newImages]);
+    setProjectAssets(prev => [...prev, ...newImages]);
   };
 
   const handleRemoveTrayImage = (id: string) => {
-    setTrayImages(prev => prev.filter(t => t.id !== id));
+    setProjectAssets(prev => prev.filter(a => a.id !== id));
   };
   
-  const handleRemoveImage = (id: string) => {
-    setScenes(scenes.map(s => s.id === id ? { ...s, image: null, imageName: null } : s));
+  const handleRemoveImage = (id: string, side: 'left' | 'right') => {
+    setScenes(scenes.map(s => s.id === id ? {
+      ...s,
+      ...(side === 'left' ? { leftImage: null, leftImageName: null, leftImageDisplayName: null } : { rightImage: null, rightImageName: null, rightImageDisplayName: null })
+    } : s));
   };
 
   // Toolbar Actions
@@ -256,7 +367,7 @@ export default function ScriptBoard() {
   };
 
   const handleExportProject = () => {
-    const data: BoardData = { projectName, scenes, trayImages };
+    const data: BoardData = { projectName, scenes, projectAssets };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -278,6 +389,7 @@ export default function ScriptBoard() {
       let cursorY = margin;
       let pageNum = 1;
 
+      
       const drawHeader = () => {
         doc.setFont("helvetica", "bold");
         doc.setFontSize(22);
@@ -314,35 +426,33 @@ export default function ScriptBoard() {
 
       for (let i = 0; i < scenes.length; i++) {
         const scene = scenes[i];
+        const sceneAssetLeft = projectAssets.find(a => a.id === scene.leftImageAssetId);
+        const sceneAssetRight = projectAssets.find(a => a.id === scene.rightImageAssetId);
         
         const colLeft = margin;
-        const imgBoxW = 90;
+        const imgBoxW = 90; // total width for images column
+        const halfImgW = 42;
+        const gap = 6;
         const colRight = margin + imgBoxW + 15;
         const textWidth = pageWidth - colRight - margin;
         
         const title = `SCENE ${scene.number < 10 ? '0'+scene.number : scene.number}`;
         
         doc.setFont("helvetica", "normal");
-        
-        // Calculate text heights
         doc.setFontSize(9);
-        const frameTypeText = scene.frameType ? ` (${scene.frameType})` : '';
-        const framesText = doc.splitTextToSize((scene.imageName || `scene${scene.number}`) + frameTypeText, textWidth);
+        const framesText = doc.splitTextToSize((sceneAssetLeft?.displayName ? "Left: " + sceneAssetLeft?.displayName : "Left: (None)") + " | " + (sceneAssetRight?.displayName ? "Right: " + sceneAssetRight?.displayName : "Right: (None)"), textWidth);
         const phraseText = doc.splitTextToSize(scene.phrase || "(Empty)", textWidth);
         const motionText = doc.splitTextToSize(scene.motionPrompt || "(Empty)", textWidth);
         const notesText = doc.splitTextToSize(scene.notes || "(Empty)", textWidth);
         
-        // 4 items with labels and spacing
         const textHeight = 
           (5 + framesText.length * 4) +
           (10 + phraseText.length * 4) +
           (10 + motionText.length * 4) +
           (10 + notesText.length * 4) + 15;
         
-        // Image usually needs ~100px height max, we balance layout
-        const blockHeight = Math.max(120, textHeight) + 30; // 30 for scene header
+        const blockHeight = Math.max(120, textHeight) + 30; 
         
-        // Paginate if necessary
         if (cursorY + blockHeight > pageHeight - 20) {
           doc.addPage();
           pageNum++;
@@ -351,69 +461,62 @@ export default function ScriptBoard() {
           drawHeader();
         }
         
-        // Draw Scene Card Divider TOP
         doc.setDrawColor(200, 200, 200);
         doc.setLineWidth(0.5);
         doc.line(margin, cursorY, pageWidth - margin, cursorY);
         cursorY += 7;
         
-        // Scene Title
         doc.setFont("helvetica", "bold");
         doc.setFontSize(12);
         doc.setTextColor(0, 0, 0);
         doc.text(title, margin, cursorY);
         
-        // Draw Scene Card Divider BOTTOM
         cursorY += 5;
         doc.setDrawColor(200, 200, 200);
         doc.line(margin, cursorY, pageWidth - margin, cursorY);
         cursorY += 10;
         
-        // --- Render Left: IMAGE ---
-        if (scene.image) {
-          try {
-            const img = new Image();
-            img.crossOrigin = "Anonymous";
-            img.src = scene.image;
-            await new Promise((resolve, reject) => {
-              img.onload = resolve;
-              img.onerror = reject;
-            });
-            
-            const aspect = img.width / img.height;
-            let finalW = imgBoxW;
-            let finalH = finalW / aspect;
-            
-            // Limit max height to prevent extreme vertical images pushing layout too far
-            if (finalH > 130) {
-               finalH = 130;
-               finalW = 130 * aspect;
-            }
-            
-            doc.addImage(img, "JPEG", margin, cursorY, finalW, finalH);
-            
-            // Subtle border around image
-            doc.setDrawColor(230, 230, 230);
-            doc.rect(margin, cursorY, finalW, finalH);
-          } catch (e) {
-            doc.setDrawColor(230, 230, 230);
-            doc.rect(margin, cursorY, imgBoxW, 100);
-            doc.setTextColor(150, 150, 150);
-            doc.setFontSize(10);
-            doc.text("IMAGE PREVIEW UNAVAILABLE", margin + 15, cursorY + 50);
-          }
-        } else {
-          doc.setDrawColor(230, 230, 230);
-          doc.rect(margin, cursorY, imgBoxW, 100);
-          doc.setTextColor(150, 150, 150);
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(12);
-          doc.text("NO IMAGE", margin + 35, cursorY + 50);
-        }
+        // Render Images (LEFT and RIGHT)
+        const renderImageSlot = async (imgData: string | null, x: number, y: number, w: number, label: string) => {
+           if (imgData) {
+             try {
+               const img = new Image();
+               img.crossOrigin = "Anonymous";
+               img.src = imgData;
+               await new Promise((resolve, reject) => { img.onload = resolve; img.onerror = reject; });
+               const aspect = img.width / img.height;
+               let finalW = w;
+               let finalH = finalW / aspect;
+               if (finalH > 130) { finalH = 130; finalW = 130 * aspect; }
+               doc.addImage(img, "JPEG", x, y + 5, finalW, finalH);
+               doc.setDrawColor(230, 230, 230);
+               doc.rect(x, y + 5, finalW, finalH);
+             } catch (e) {
+               doc.setDrawColor(230, 230, 230);
+               doc.rect(x, y + 5, w, 60);
+               doc.setTextColor(150, 150, 150);
+               doc.setFontSize(7);
+               doc.text("ERROR", x + 5, y + 35);
+             }
+           } else {
+             doc.setDrawColor(230, 230, 230);
+             doc.rect(x, y + 5, w, 60);
+             doc.setTextColor(150, 150, 150);
+             doc.setFont("helvetica", "bold");
+             doc.setFontSize(8);
+             doc.text("EMPTY", x + 10, y + 35);
+           }
+           doc.setFont("helvetica", "bold");
+           doc.setFontSize(7);
+           doc.setTextColor(120, 120, 120);
+           doc.text(label, x, y);
+        };
+
+        await renderImageSlot(sceneAssetLeft?.url || null, margin, cursorY, halfImgW, "LEFT IMAGE");
+        await renderImageSlot(sceneAssetRight?.url || null, margin + halfImgW + gap, cursorY, halfImgW, "RIGHT IMAGE");
         
-        // --- Render Right: TEXT ---
+        // Render Text Columns
         let textY = cursorY + 5;
-        
         const renderSection = (label: string, textLines: string[]) => {
           doc.setFont("helvetica", "bold");
           doc.setFontSize(8);
@@ -427,12 +530,11 @@ export default function ScriptBoard() {
           textY += (textLines.length * 4) + 6;
         };
 
-        renderSection("FRAMES", framesText);
-        renderSection("SCRIPT / PHRASE", phraseText);
-        renderSection("MOTION PROMPT", motionText);
+        renderSection("FILES", framesText);
+        renderSection("SCRIPT / ACTION", phraseText);
+        renderSection("MOTION / DIRECTION", motionText);
         renderSection("NOTES", notesText);
         
-        // Advance cursor
         cursorY += Math.max(120, textY - cursorY);
       }
       
@@ -447,7 +549,7 @@ export default function ScriptBoard() {
   const handleClearBoard = () => {
     if(confirm("Are you sure you want to clear the board? All unsaved progress will be lost.")) {
       setScenes([]);
-      setTrayImages([]);
+      setProjectAssets([]);
       setProjectName("");
     }
   };
@@ -464,7 +566,7 @@ export default function ScriptBoard() {
         if (data.scenes) {
           setProjectName(data.projectName || "Imported Project");
           setScenes(data.scenes);
-          setTrayImages(data.trayImages || []);
+          setProjectAssets(data.trayImages || []);
         }
       } catch (err) {
         console.error("Failed to parse board data", err);
@@ -479,487 +581,493 @@ export default function ScriptBoard() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans text-gray-800 text-sm">
+    <div className="h-screen bg-zinc-50 flex flex-col font-sans text-gray-800 overflow-hidden selection:bg-[#8B7CFF] selection:text-white">
       
-      {/* TOP HEADER */}
-      <header className="w-full flex items-center justify-between px-4 py-2 border-b border-gray-200 bg-white sticky top-0 z-20">
-        <div className="flex items-center gap-3">
-          <Icons.ScriptBoard />
-          <span className="font-semibold text-gray-800">Groton.in - Script Board</span>
-          <div className="flex items-center gap-2 text-gray-500 ml-4 group">
-            <Icons.Pencil />
-            <input 
-              type="text" 
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              placeholder="Project Name..."
-              className="border-none outline-none focus:ring-0 text-sm text-gray-600 bg-transparent w-64 hover:bg-gray-50 px-1 rounded transition-colors"
-            />
-          </div>
-        </div>
+      {/* NEW HEADER */}
+      <header className="h-16 flex items-center justify-between px-6 border-b border-zinc-200 bg-white shrink-0 z-20 shadow-sm">
+         <div className="flex items-center gap-6">
+           <div className="font-bold tracking-[0.2em] text-xs md:text-sm uppercase text-black flex items-center gap-2">
+             <div className="w-2 h-2 bg-[#8B7CFF] rounded-full"></div>
+             GROTON
+           </div>
+           <div className="h-5 w-px bg-zinc-200 hidden md:block"></div>
+           <input 
+             type="text" 
+             value={projectName}
+             onChange={(e) => setProjectName(e.target.value)}
+             placeholder="Untitled Script Board"
+             className="font-serif text-lg md:text-xl bg-transparent border-none outline-none focus:ring-0 text-black placeholder-zinc-400 w-48 md:w-64"
+           />
+         </div>
 
-        <div className="flex items-center gap-4 text-xs">
-          <span className={`text-[#7C3AED] font-medium transition-opacity ${showSavedIndicator ? 'opacity-100' : 'opacity-0'}`}>Saved</span>
-          <span className="text-gray-500">{scenes.length} rows - {scenes.filter(s => s.image).length} images ({scenes.filter(s => s.image).length} linked)</span>
-          
-          <div className="flex items-center gap-1">
-            <button className="p-1 hover:bg-gray-100 rounded text-gray-500"><Icons.ZoomOut /></button>
-            <span className="text-gray-500 w-10 text-center">100%</span>
-            <button className="p-1 hover:bg-gray-100 rounded text-gray-500"><Icons.ZoomIn /></button>
-          </div>
+         <div className="hidden lg:flex items-center gap-2 text-[10px] font-bold tracking-widest text-zinc-400 uppercase">
+           <span className="text-black">Project</span>
+           {scenes.map(s => (
+             <React.Fragment key={s.id}>
+               <span className="opacity-30">—</span>
+               <span className={(s.leftImageAssetId || s.rightImageAssetId) ? "text-[#8B7CFF]" : ""}>
+                 {s.number.toString().padStart(2, '0')}
+               </span>
+             </React.Fragment>
+           ))}
+         </div>
 
-          <div className="flex items-center gap-3 ml-2">
-            <button onClick={handleAddScene.bind(null, scenes.length - 1)} className="flex items-center gap-1 px-3 py-1.5 bg-[#7C3AED]/10 hover:bg-[#7C3AED]/20 text-[#7C3AED] rounded transition-colors font-bold mr-2">
-              <Icons.Plus /> Add Scene
-            </button>
-            <label className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded cursor-pointer transition-colors text-gray-700 font-medium">
-              <Icons.Import /> Import
-              <input type="file" accept=".json" onChange={handleImport} className="hidden" />
-            </label>
-            
-            <div className="relative" ref={exportRef}>
-              <button 
-                onClick={() => setIsExportOpen(!isExportOpen)}
-                className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded transition-colors text-gray-700 font-medium"
-              >
-                <Icons.Export /> Export
+         <div className="flex items-center gap-2 md:gap-3 relative" ref={exportRef}>
+           {showSavedIndicator && <span className="hidden md:inline text-[10px] uppercase tracking-widest font-bold text-[#8B7CFF] mr-2">Saved</span>}
+           
+           <div className="hidden md:flex items-center bg-zinc-100 rounded-lg p-1.5 border border-zinc-200 focus-within:border-[#8B7CFF] transition-colors">
+             <Icons.Search />
+             <input 
+               type="text" 
+               placeholder="Search..."
+               value={searchQuery}
+               onChange={(e) => setSearchQuery(e.target.value)}
+               className="bg-transparent border-none outline-none text-xs w-24 focus:w-40 transition-all px-2 font-medium placeholder-zinc-400 text-black"
+             />
+           </div>
+
+           <div className="relative">
+             <button onClick={() => setIsFilterOpen(!isFilterOpen)} className={`p-2 rounded-lg transition-colors ${isFilterOpen ? 'bg-zinc-200 text-black' : 'hover:bg-zinc-100 text-zinc-500'}`}>
+                <Icons.Filter />
+             </button>
+             {isFilterOpen && (
+                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-zinc-200 shadow-xl rounded-xl p-4 z-50 flex flex-col gap-3">
+                  <span className="text-[10px] font-bold tracking-widest uppercase text-zinc-400 mb-1">Filters</span>
+                  <label className="flex items-center justify-between cursor-pointer group">
+                    <span className="text-xs font-medium text-zinc-700 group-hover:text-black">Missing Image</span>
+                    <input type="checkbox" checked={missingImageOnly} onChange={e => setMissingImageOnly(e.target.checked)} className="rounded border-zinc-300 text-[#8B7CFF] focus:ring-[#8B7CFF]" />
+                  </label>
+                  <label className="flex items-center justify-between cursor-pointer group">
+                    <span className="text-xs font-medium text-zinc-700 group-hover:text-black">Has Notes</span>
+                    <input type="checkbox" checked={notesOnly} onChange={e => setNotesOnly(e.target.checked)} className="rounded border-zinc-300 text-[#8B7CFF] focus:ring-[#8B7CFF]" />
+                  </label>
+                  <label className="flex items-center justify-between cursor-pointer group">
+                    <span className="text-xs font-medium text-zinc-700 group-hover:text-black">Has Motion</span>
+                    <input type="checkbox" checked={motionRefOnly} onChange={e => setMotionRefOnly(e.target.checked)} className="rounded border-zinc-300 text-[#8B7CFF] focus:ring-[#8B7CFF]" />
+                  </label>
+                </div>
+             )}
+           </div>
+
+           <button onClick={() => setIsExportOpen(!isExportOpen)} className={`p-2 rounded-lg transition-colors flex items-center gap-1.5 ${isExportOpen ? 'bg-zinc-200 text-black' : 'hover:bg-zinc-100 text-zinc-600'}`}>
+              <Icons.Export />
+              <span className="text-xs font-bold hidden sm:inline">EXPORT</span>
+           </button>
+           
+           {isExportOpen && (
+             <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-zinc-200 shadow-xl rounded-xl overflow-hidden py-2 z-50">
+               <button onClick={handleExportPDF} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export as PDF</button>
+               <button onClick={() => { setIsExportOpen(false); handleExportProject(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export Project Data</button>
+               <div className="h-px bg-zinc-100 my-2"></div>
+               <label className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium cursor-pointer block text-zinc-600">
+                 Import Project...
+                 <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+               </label>
+               <button onClick={() => { setIsExportOpen(false); handleSave(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-zinc-600">Save Locally</button>
+             </div>
+           )}
+           
+           <div className="relative">
+              <button onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} className={`p-2 rounded-lg transition-colors ${isMoreMenuOpen ? 'bg-zinc-200 text-black' : 'hover:bg-zinc-100 text-zinc-500'}`}>
+                <Icons.MoreHorizontal />
               </button>
-              
-              {isExportOpen && (
-                <div className="absolute top-full left-0 mt-1 w-40 bg-white border border-gray-200 shadow-xl rounded-md overflow-hidden z-50">
-                  <button onClick={handleExportPDF} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 font-medium border-b border-gray-100 transition-colors">
-                    Export PDF
-                  </button>
-                  <button onClick={() => { setIsExportOpen(false); handleExportProject(); }} className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-gray-700 font-medium transition-colors">
-                    Export Project
-                  </button>
+              {isMoreMenuOpen && (
+                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-zinc-200 shadow-xl rounded-xl overflow-hidden py-2 z-50">
+                   <button onClick={() => { setIsMoreMenuOpen(false); clearEmojis(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm text-zinc-700">Remove all emojis</button>
+                   <button onClick={() => { setIsMoreMenuOpen(false); clearMotion(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm text-zinc-700">Clear all motion prompts</button>
+                   <div className="h-px bg-zinc-100 my-2"></div>
+                   <button onClick={() => { setIsMoreMenuOpen(false); handleClearBoard(); }} className="w-full text-left px-5 py-2.5 hover:bg-red-50 text-red-600 text-sm font-bold">Clear Entire Board</button>
                 </div>
               )}
-            </div>
-
-            <button onClick={handleClearBoard} className="flex items-center gap-1 px-3 py-1.5 hover:bg-red-50 text-red-600 rounded transition-colors font-medium ml-1">
-              <Icons.Trash /> Clear Board
-            </button>
-            
-            <button onClick={handleSave} className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded transition-colors text-gray-700 font-medium">
-              <Icons.Save /> Save
-            </button>
-            <button onClick={() => router.push("/testing")} className="flex items-center gap-1 px-3 py-1.5 hover:bg-gray-100 rounded transition-colors text-gray-700 font-medium ml-2">
-              <Icons.Close /> Close
-            </button>
-          </div>
-        </div>
+           </div>
+         </div>
       </header>
-      
-      {/* PROCESS WORKFLOW */}
-      <div className="w-full bg-[#fafafa] border-b border-gray-100 py-2 flex justify-center text-[10px] font-medium text-gray-400 tracking-widest gap-2 sm:gap-4 overflow-x-auto px-4 whitespace-nowrap">
-        <span className="text-[#7C3AED]">01 PRODUCT</span> <span className="opacity-50">→</span>
-        <span>02 DIRECTION</span> <span className="opacity-50">→</span>
-        <span>03 PRODUCTION</span> <span className="opacity-50">→</span>
-        <span>04 REFINEMENT</span> <span className="opacity-50">→</span>
-        <span>05 DELIVERY</span>
-      </div>
 
-      {/* TRAY & ASSETS AREA */}
-      <section className="w-full bg-[#fcfcfc] border-b border-gray-200 px-4 py-4 flex flex-col gap-3">
-        {/* Tray */}
-        <div className="flex items-start gap-4 text-xs">
-          <div className="w-24 text-gray-500 mt-1 flex flex-col gap-1">
-            <span className="font-medium text-gray-700">Image Tray</span>
-            <span className="text-[10px]">{trayImages.length} images</span>
-            <span className="text-[10px]">{trayImages.filter(t => !scenes.some(s => s.image === t.url)).length} unassigned</span>
-            <label className="mt-2 bg-white border border-gray-300 text-center py-1 rounded cursor-pointer hover:bg-gray-50 flex items-center justify-center gap-1 font-medium text-gray-700">
-              <Icons.Plus /> Add
-              <input type="file" multiple accept="image/*" className="hidden" onChange={handleTrayUpload} />
-            </label>
-          </div>
-          
-          <div 
-            className="flex-1 min-h-[100px] border border-dashed border-gray-300 rounded p-2 bg-white flex items-center gap-2 overflow-x-auto"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
-              e.preventDefault();
-              if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                handleTrayUpload(e.dataTransfer.files);
-              }
-            }}
-          >
-            {trayImages.length === 0 ? (
-              <div className="text-gray-400 w-full text-center py-6">
-                Drop images here from your computer, or use the Add button.
-              </div>
-            ) : (
-              trayImages.map(img => (
-                <div 
-                  key={img.id} 
-                  className="h-20 w-16 flex-shrink-0 relative group rounded border border-gray-200 overflow-hidden cursor-grab active:cursor-grabbing hover:border-[#7C3AED]/80"
-                  draggable
-                  onDragStart={(e) => {
-                    e.dataTransfer.setData('application/json', JSON.stringify({ type: 'TRAY_IMAGE', url: img.url, name: img.name }));
-                  }}
-                >
-                  <img src={img.url} alt={img.name} className="w-full h-full object-cover" draggable={false} />
-                  <button 
-                    onClick={() => handleRemoveTrayImage(img.id)}
-                    className="absolute top-0.5 right-0.5 bg-white/90 text-red-500 p-0.5 rounded shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Icons.Close />
-                  </button>
-                  <div className="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[8px] truncate px-1 py-0.5 opacity-0 group-hover:opacity-100">
-                    {img.name}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+      <div className="flex flex-1 overflow-hidden">
         
-        {/* Ref Videos */}
-        <div className="flex items-start gap-4 text-xs">
-          <div className="w-24 text-gray-500 mt-1">
-            Ref videos<br/><span className="text-[10px]">(0)</span>
+        {/* ASSETS PANEL */}
+        
+        {/* ASSETS PANEL */}
+        <aside className="hidden lg:flex w-[300px] bg-white border-r border-zinc-200 flex-col shrink-0 z-10 relative"
+               onDragOver={(e) => { e.preventDefault(); setIsDragOverAssets(true); }}
+               onDragLeave={(e) => { e.preventDefault(); setIsDragOverAssets(false); }}
+               onDrop={(e) => {
+                 e.preventDefault();
+                 setIsDragOverAssets(false);
+                 if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                   handleTrayUpload(e.dataTransfer.files);
+                 }
+               }}
+        >
+          {isDragOverAssets && (
+             <div className="absolute inset-0 z-50 bg-[#8B7CFF]/90 backdrop-blur-sm flex flex-col items-center justify-center text-white pointer-events-none">
+                <div className="w-12 h-12 mb-4 rounded-full bg-white/20 flex items-center justify-center">
+                  <Icons.AddDrop />
+                </div>
+                <span className="text-sm font-bold tracking-widest uppercase">Drop Images to Add</span>
+             </div>
+          )}
+          <div className="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/50">
+             <div className="flex flex-col">
+               <h3 className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-500">Project Assets</h3>
+               <span className="text-[9px] text-zinc-400 mt-0.5">{projectAssets.length} assets</span>
+             </div>
+             <label className="text-[10px] font-bold tracking-widest uppercase bg-zinc-200 hover:bg-zinc-300 px-3 py-1.5 rounded cursor-pointer transition-colors text-black shadow-sm">
+               + Add
+               <input type="file" multiple accept="image/*" className="hidden" onChange={handleTrayUpload} />
+             </label>
           </div>
-          <div className="flex-1 flex items-center gap-2">
-            <button className="flex items-center gap-1 px-2 py-1 bg-white border border-gray-300 rounded hover:bg-gray-50 text-gray-600">
-              <Icons.FileAdd /> Add
-            </button>
-            <span className="text-gray-400">Drop video files here — they export as ref-video1, ref-video2... in the zip.</span>
-          </div>
-        </div>
-
-        {/* Ref Files */}
-        <div className="flex items-start gap-4 text-xs">
-          <div className="w-24 text-gray-500 mt-1">
-            Ref files<br/><span className="text-[10px]">(0)</span>
-          </div>
-          <div className="flex-1 flex items-center gap-2">
-            <button className="flex items-center gap-1 px-2 py-1 bg-white border border-gray-300 rounded hover:bg-gray-50 text-gray-600">
-              <Icons.FileAdd /> Add
-            </button>
-            <span className="text-gray-400">Drop audio, txt/md, xlsx, pdf or any other file here — they export to ref-files/ in the zip. Click a file to view or play it.</span>
-          </div>
-        </div>
-
-        {/* Add Set */}
-        <div className="flex items-center gap-2 mt-2">
-          <input type="text" placeholder="New set name (e.g. backgrounds)..." className="text-xs border border-gray-300 rounded px-2 py-1 w-64 outline-none focus:border-[#7C3AED]/80" />
-          <button className="text-xs px-2 py-1 bg-white border border-gray-300 rounded text-gray-600 hover:bg-gray-50">+ Add set</button>
-        </div>
-      </section>
-
-      {/* TOOLBAR */}
-      <div className="w-full px-4 py-2 bg-white border-b border-gray-200 flex items-center justify-between sticky top-[53px] z-10 shadow-sm">
-        <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
           
-          {/* Toggles */}
-          <label className="flex items-center gap-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${multiFrame ? 'bg-[#7C3AED]' : 'bg-gray-200'}`}>
-              <div className={`w-3 h-3 bg-white rounded-full transition-transform ${multiFrame ? 'translate-x-4' : ''}`} />
-            </div>
-            <span className="group-hover:text-black">Multi-frame</span>
-          </label>
-
-          <label className="flex items-center gap-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${missingImageOnly ? 'bg-[#7C3AED]' : 'bg-gray-200'}`}>
-              <div className={`w-3 h-3 bg-white rounded-full transition-transform ${missingImageOnly ? 'translate-x-4' : ''}`} />
-            </div>
-            <span className="group-hover:text-black">Missing image only · 0</span>
-          </label>
-
-          <label className="flex items-center gap-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${notesOnly ? 'bg-[#7C3AED]' : 'bg-gray-200'}`}>
-              <div className={`w-3 h-3 bg-white rounded-full transition-transform ${notesOnly ? 'translate-x-4' : ''}`} />
-            </div>
-            <span className="group-hover:text-black">Notes only · 0</span>
-          </label>
-
-          <label className="flex items-center gap-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${motionRefOnly ? 'bg-[#7C3AED]' : 'bg-gray-200'}`}>
-              <div className={`w-3 h-3 bg-white rounded-full transition-transform ${motionRefOnly ? 'translate-x-4' : ''}`} />
-            </div>
-            <span className="group-hover:text-black">Motion ref only · 0</span>
-          </label>
-
-          <label className="flex items-center gap-2 cursor-pointer group">
-            <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${selectedOnly ? 'bg-[#7C3AED]' : 'bg-gray-200'}`}>
-              <div className={`w-3 h-3 bg-white rounded-full transition-transform ${selectedOnly ? 'translate-x-4' : ''}`} />
-            </div>
-            <span className="group-hover:text-black">Selected only · 0</span>
-          </label>
-
-          {/* Size Select */}
-          <div className="flex items-center gap-1 border-l border-gray-200 pl-4">
-            <span>Size</span>
-            <select className="border border-gray-300 rounded px-2 py-0.5 bg-white outline-none focus:border-[#7C3AED]/80">
-              <option>Any</option>
-              <option>Small</option>
-              <option>Medium</option>
-              <option>Large</option>
-            </select>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2 border-l border-gray-200 pl-4">
-            <button className="flex items-center gap-1 px-2 py-1 bg-white border border-gray-300 rounded hover:bg-gray-50">
-              <Icons.Copy /> Copy phrases
-            </button>
-            <button className="flex items-center gap-1 px-2 py-1 bg-white border border-gray-300 rounded hover:bg-gray-50">
-              <Icons.Edit /> Edit phrases
-            </button>
-            <button onClick={clearEmojis} className="flex items-center gap-1 px-2 py-1 bg-white border border-gray-300 rounded hover:bg-gray-50">
-              <Icons.Clear /> Clear emojis
-            </button>
-            <button onClick={clearMotion} className="flex items-center gap-1 px-2 py-1 bg-white border border-gray-300 rounded hover:bg-gray-50">
-              <Icons.Clear /> Clear motion
-            </button>
-          </div>
-
-          {/* Search */}
-          <div className="flex items-center border border-gray-300 rounded px-2 py-1 bg-white w-56 ml-2">
-            <Icons.Search />
-            <input 
-              type="text" 
-              placeholder="Search phrase / motion / note..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="ml-2 outline-none border-none w-full text-xs text-gray-700 bg-transparent placeholder-gray-400"
-            />
-          </div>
-        </div>
-
-        <div className="text-xs text-gray-500">
-          {filteredScenes.length}/{scenes.length} rows shown
-        </div>
-      </div>
-
-      {/* SCENE ROWS AREA */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-32 bg-[#fafafa]">
-        <div className="max-w-[1400px] mx-auto flex flex-col gap-4">
-          
-          {filteredScenes.map((scene, idx) => (
-            <div key={scene.id} className={`w-full bg-white border rounded-xl flex shadow-sm transition-opacity ${scene.enabled ? 'border-gray-200' : 'border-gray-200 opacity-50'}`}>
-              
-              {/* Left Controls */}
-              <div className="flex flex-col items-center gap-3 w-12 py-4 border-r border-gray-100 bg-[#fbfbfb] rounded-l-xl flex-shrink-0">
-                <input 
-                  type="checkbox" 
-                  className="w-4 h-4 rounded border-gray-300 text-[#7C3AED] focus:ring-[#7C3AED] cursor-pointer"
-                />
-                <button className="cursor-grab hover:bg-gray-200 p-1 rounded transition-colors"><Icons.Drag /></button>
-                
-                <div className="w-6 h-6 bg-[#7C3AED]/20 text-[#7C3AED] font-bold rounded-full flex items-center justify-center text-xs">
-                  {scene.number}
-                </div>
-                
-                <label className="flex items-center cursor-pointer mt-1">
-                  <div className={`w-8 h-4 rounded-full flex items-center p-0.5 transition-colors ${scene.enabled ? 'bg-[#7C3AED]' : 'bg-gray-300'}`}>
-                    <input type="checkbox" className="hidden" checked={scene.enabled} onChange={(e) => handleUpdateScene(scene.id, 'enabled', e.target.checked)} />
-                    <div className={`w-3 h-3 bg-white rounded-full transition-transform ${scene.enabled ? 'translate-x-4' : ''}`} />
-                  </div>
-                </label>
-
-                <div className="flex flex-col gap-1 mt-2">
-                  <button onClick={() => handleMoveScene(idx, 'up')} disabled={idx === 0} className="p-1 hover:bg-gray-200 rounded text-gray-500 disabled:opacity-30"><Icons.Up /></button>
-                  <button onClick={() => handleAddScene(idx)} className="p-1 hover:bg-gray-200 rounded text-gray-500"><Icons.Plus /></button>
-                  <button onClick={() => handleMoveScene(idx, 'down')} disabled={idx === scenes.length - 1} className="p-1 hover:bg-gray-200 rounded text-gray-500 disabled:opacity-30"><Icons.Down /></button>
-                </div>
-                
-                <button onClick={() => handleDeleteScene(scene.id)} className="p-1 hover:bg-red-100 rounded text-gray-500 mt-auto mb-2 transition-colors"><Icons.Trash /></button>
-              </div>
-
-              {/* Main 5 Columns */}
-              <div className="flex-1 flex gap-3 p-3 overflow-hidden">
-                
-                {/* 1. Phrase / Script */}
-                <div className="flex flex-col flex-1 border border-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
-                  <textarea 
-                    value={scene.phrase}
-                    onChange={(e) => handleUpdateScene(scene.id, 'phrase', e.target.value)}
-                    className="flex-1 w-full p-3 text-sm text-gray-700 resize-none outline-none placeholder-gray-400 italic"
-                    placeholder="(no phrase — animation only beat)"
-                  />
-                  <div className="flex items-center gap-2 p-2 border-t border-gray-100 bg-gray-50 text-[11px] text-gray-500 uppercase tracking-wide font-medium">
-                    <button className="hover:text-gray-800 flex items-center gap-1"><Icons.Scissors /> Split</button>
-                    <button className="hover:text-gray-800 flex items-center gap-1"><Icons.Merge /> Merge</button>
-                    <button className="hover:text-gray-800 flex items-center gap-1"><Icons.Up /> Beat ↑</button>
-                    <button className="hover:text-gray-800 flex items-center gap-1"><Icons.Down /> Beat ↓</button>
-                    <button className="hover:text-gray-800 flex items-center gap-1"><Icons.Beat /> Animation beat</button>
-                  </div>
-                </div>
-
-                {/* 2. Image Thumbnail & Frame Selection */}
-                <div className="w-[140px] flex flex-col items-center gap-1 flex-shrink-0">
-                  <select 
-                    value={scene.frameType || "1st Frame"} 
-                    onChange={(e) => handleUpdateScene(scene.id, 'frameType', e.target.value)}
-                    className="w-full mb-1 text-[11px] border border-gray-200 rounded px-1 py-0.5 text-gray-600 outline-none focus:border-[#7C3AED] bg-white"
-                  >
-                    <option>1st Frame</option>
-                    <option>2nd Frame</option>
-                    <option>3rd Frame</option>
-                    <option>4th Frame</option>
-                    <option>Ref Frame</option>
-                  </select>
-                  <div className="w-full aspect-[4/5] bg-gray-100 border border-gray-200 rounded-lg relative overflow-hidden group">
-                    {scene.image ? (
-                      <>
-                        <span className="absolute top-1 left-1 bg-white/80 backdrop-blur text-gray-800 font-medium text-[9px] px-1.5 py-0.5 rounded shadow-sm z-10 border border-gray-200/50">
-                          0:00
-                        </span>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={scene.image} alt={scene.imageName || "Scene image"} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
-                          <label className="text-xs bg-white text-black px-3 py-1 rounded cursor-pointer font-medium shadow-sm hover:bg-gray-100">
-                            Replace
-                            <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e)} />
-                          </label>
-                          <button onClick={() => handleRemoveImage(scene.id)} className="text-xs bg-red-500 text-white px-3 py-1 rounded font-medium shadow-sm hover:bg-red-600">
-                            Remove
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
-                         <Icons.Image />
-                      </div>
-                    )}
-                  </div>
-                  <span className="text-[11px] text-gray-500 font-medium truncate w-full text-center">
-                    {scene.imageName || `scene${scene.number}`}
-                  </span>
-                </div>
-
-                {/* 3. Add / Drop Area */}
-                <div className="w-[100px] flex-shrink-0">
-                  <label 
-                    className="w-full h-full max-h-[175px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 flex flex-col items-center justify-center gap-1 p-2 text-center hover:bg-gray-100 hover:border-gray-400 transition-colors cursor-pointer group relative"
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      e.currentTarget.classList.add('border-[#7C3AED]/80', 'bg-[#7C3AED]/10');
-                    }}
-                    onDragLeave={(e) => {
-                      e.currentTarget.classList.remove('border-[#7C3AED]/80', 'bg-[#7C3AED]/10');
-                    }}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      e.currentTarget.classList.remove('border-[#7C3AED]/80', 'bg-[#7C3AED]/10');
-                      
-                      try {
-                        const dataStr = e.dataTransfer.getData('application/json');
-                        if (dataStr) {
-                          const data = JSON.parse(dataStr);
-                          if (data.type === 'TRAY_IMAGE') {
-                            setScenes(scenes.map(s => s.id === scene.id ? { ...s, image: data.url, imageName: data.name } : s));
-                            return;
-                          }
-                        }
-                      } catch (err) {}
-                      
-                      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                        handleImageUpload(scene.id, e.dataTransfer.files);
-                      }
-                    }}
-                  >
-                     <Icons.AddDrop />
-                     <span className="text-[10px] text-gray-500 font-medium leading-tight mt-1 group-hover:text-gray-700">drop here</span>
-                     <span className="text-[10px] text-gray-400 leading-tight">or click to</span>
-                     <span className="text-[10px] text-gray-400 leading-tight">upload</span>
-                     <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e)} />
-                  </label>
-                  
-                  <button 
-                    onClick={() => setPickerSceneId(scene.id)}
-                    className="w-full mt-1 py-1 text-[9px] uppercase tracking-wider font-bold text-gray-500 bg-gray-100 hover:bg-gray-200 rounded transition-colors"
-                  >
-                    Pick from tray
-                  </button>
-                </div>
-
-                {/* 4. Motion Prompt */}
-                <div className="flex flex-col flex-1 border border-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
-                  <textarea 
-                    value={scene.motionPrompt}
-                    onChange={(e) => handleUpdateScene(scene.id, 'motionPrompt', e.target.value)}
-                    className="flex-1 w-full p-3 text-[13px] text-gray-800 resize-none outline-none leading-relaxed"
-                    placeholder="Motion prompt..."
-                  />
-                  <div className="flex items-center justify-center p-2 border-t border-gray-100 bg-gray-50 text-[11px] text-gray-500 uppercase tracking-wide font-medium">
-                    <button className="hover:text-gray-800 flex items-center gap-1"><Icons.Image /> motion ref image</button>
-                  </div>
-                </div>
-
-                {/* 5. Notes */}
-                <div className="flex flex-col flex-1 border border-gray-200 rounded-lg bg-white overflow-hidden shadow-sm">
-                  <textarea 
-                    value={scene.notes}
-                    onChange={(e) => handleUpdateScene(scene.id, 'notes', e.target.value)}
-                    className="flex-1 w-full p-3 text-[13px] text-gray-600 resize-none outline-none leading-relaxed italic"
-                    placeholder="Notes..."
-                  />
-                  <div className="flex items-center justify-center p-2 border-t border-gray-100 bg-gray-50 text-[11px] text-gray-500 uppercase tracking-wide font-medium">
-                    <button className="hover:text-gray-800 flex items-center gap-1"><Icons.Image /> notes image</button>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          ))}
-
-          {filteredScenes.length === 0 && (
-            <div className="w-full py-16 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 text-gray-500">
-              <span className="mb-2">No scenes in this project.</span>
-              <button onClick={() => handleAddScene(-1)} className="text-[#7C3AED] font-bold hover:underline mb-2">+ Add first scene</button>
-              {searchQuery || missingImageOnly || notesOnly || motionRefOnly || selectedOnly ? (
-                <button onClick={() => { setMissingImageOnly(false); setNotesOnly(false); setMotionRefOnly(false); setSelectedOnly(false); setSearchQuery(""); }} className="text-sm text-gray-400 hover:underline">Clear filters</button>
-              ) : null}
+          {projectAssets.length > 0 && (
+            <div className="p-4 border-b border-zinc-100">
+               <div className="relative">
+                 <input type="text" placeholder="Search assets..." value={assetSearch} onChange={e => setAssetSearch(e.target.value)} className="w-full pl-8 pr-3 py-2 text-xs bg-zinc-50 border border-zinc-200 rounded-lg outline-none focus:border-[#8B7CFF] focus:bg-white transition-all"/>
+                 <div className="absolute left-3 top-2.5"><Icons.Search /></div>
+               </div>
             </div>
           )}
 
-        </div>
-      </main>
-
-      {/* TRAY PICKER MODAL */}
-      {pickerSceneId && (
-        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setPickerSceneId(null)}>
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col" onClick={e => e.stopPropagation()}>
-            <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-xl">
-              <div>
-                <h3 className="font-semibold text-gray-800">Pick from Tray</h3>
-                <p className="text-xs text-gray-500 mt-0.5">Select an image to assign to this scene.</p>
-              </div>
-              <button onClick={() => setPickerSceneId(null)} className="p-2 hover:bg-gray-200 rounded-full text-gray-500 transition-colors">
-                <Icons.Close />
-              </button>
-            </div>
-            <div className="p-6 overflow-y-auto flex-1 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-4">
-              {trayImages.length === 0 ? (
-                 <div className="col-span-full py-12 flex flex-col items-center text-gray-400 text-sm">
-                   <Icons.Image />
-                   <span className="mt-2">Your tray is empty.</span>
-                 </div>
-              ) : (
-                trayImages.map(img => (
-                  <button 
-                    key={img.id} 
-                    className="aspect-[4/5] bg-gray-100 rounded-lg border-2 border-transparent hover:border-[#7C3AED] hover:shadow-md transition-all overflow-hidden relative group focus:outline-none focus:border-[#7C3AED]"
-                    onClick={() => {
-                      setScenes(scenes.map(s => s.id === pickerSceneId ? { ...s, image: img.url, imageName: img.name } : s));
-                      setPickerSceneId(null);
-                    }}
-                  >
-                    <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-[#7C3AED]/0 group-hover:bg-[#7C3AED]/10 transition-colors" />
-                    <div className="absolute bottom-0 inset-x-0 bg-black/60 text-white text-[9px] truncate px-1.5 py-1 text-center font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                      Select
+          <div className="flex-1 overflow-y-auto p-4 relative grid grid-cols-2 gap-3 content-start">
+             {projectAssets.filter(a => a.displayName.toLowerCase().includes(assetSearch.toLowerCase()) || a.originalFilename.toLowerCase().includes(assetSearch.toLowerCase())).length === 0 ? (
+               <div className="col-span-2 text-xs text-zinc-400 p-8 text-center border-2 border-dashed border-zinc-200 rounded-xl mt-4">
+                 {assetSearch ? "No assets found." : "Drop images here to build your asset library."}
+               </div>
+             ) : (
+               projectAssets.filter(a => a.displayName.toLowerCase().includes(assetSearch.toLowerCase()) || a.originalFilename.toLowerCase().includes(assetSearch.toLowerCase())).map(asset => {
+                  const isUsed = scenes.some(s => s.leftImageAssetId === asset.id || s.rightImageAssetId === asset.id);
+                  return (
+                    <div key={asset.id} 
+                         className="flex flex-col bg-white border border-zinc-200 rounded-xl overflow-hidden hover:border-[#8B7CFF]/50 hover:shadow-md transition-all group cursor-grab relative"
+                         draggable 
+                         onDragStart={(e) => {
+                             e.dataTransfer.setData('application/json', JSON.stringify({ type: 'PROJECT_ASSET', assetId: asset.id }));
+                             setTimeout(() => { if (e.target) (e.target as HTMLElement).style.opacity = '0.5'; }, 0);
+                         }}
+                         onDragEnd={(e) => { e.currentTarget.style.opacity = '1'; }}
+                    >
+                       <div className="w-full aspect-square bg-zinc-100 relative">
+                         <img src={asset.url} className="w-full h-full object-cover pointer-events-none"/>
+                         <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                           <button onClick={(e) => { e.stopPropagation(); setAssetMenuOpen(asset.id === assetMenuOpen ? null : asset.id); }} className="p-1 bg-white/80 backdrop-blur-sm rounded text-black hover:bg-white shadow-sm">
+                             <Icons.MoreHorizontal />
+                           </button>
+                           {assetMenuOpen === asset.id && (
+                             <div className="absolute top-full right-0 mt-1 w-24 bg-white border border-zinc-200 shadow-xl rounded-lg overflow-hidden py-1 z-50">
+                                <button onClick={() => { setAssetMenuOpen(null); handleRenameAsset(asset.id); }} className="w-full text-left px-3 py-1.5 hover:bg-zinc-50 text-[10px] font-bold text-zinc-700">Rename</button>
+                                <button onClick={() => { setAssetMenuOpen(null); handleRemoveAsset(asset.id); }} className="w-full text-left px-3 py-1.5 hover:bg-red-50 text-red-600 text-[10px] font-bold">Remove</button>
+                             </div>
+                           )}
+                         </div>
+                       </div>
+                       <div className="p-2 flex flex-col">
+                         <span className="text-[9px] font-bold truncate text-black mb-0.5" title={asset.displayName}>{asset.displayName}</span>
+                         <span className={`text-[8px] uppercase font-bold tracking-widest ${isUsed ? 'text-[#8B7CFF]' : 'text-zinc-400'}`}>
+                           {isUsed ? 'IN SCENE' : 'UNUSED'}
+                         </span>
+                       </div>
                     </div>
-                  </button>
-                ))
+                  );
+               })
+             )}
+          </div>
+        </aside>
+
+
+        {/* MAIN CANVAS */}
+        <main 
+          className="flex-1 overflow-y-auto bg-zinc-50 flex flex-col items-center py-12 px-4 md:px-8 lg:px-16 relative"
+          onClick={() => setActiveMenuId(null)}
+        >
+           <div className="w-full max-w-[900px] flex flex-col gap-10 pb-32">
+              
+              {filteredScenes.length === 0 && (
+                <div className="text-center py-20 text-zinc-400 font-medium">No scenes match your current filters.</div>
               )}
-            </div>
+
+              {filteredScenes.map((scene, idx) => {
+  const leftAsset = projectAssets.find(a => a.id === scene.leftImageAssetId);
+  const rightAsset = projectAssets.find(a => a.id === scene.rightImageAssetId);
+  return (
+                <div key={scene.id} className={`bg-white border ${scene.enabled ? 'border-zinc-200 shadow-sm' : 'border-zinc-200 opacity-60'} rounded-2xl p-6 md:p-8 flex flex-col gap-6 relative group transition-opacity`}>
+                   
+                   {/* Context Menu Button */}
+                   <div className="absolute top-6 right-6" onClick={(e) => e.stopPropagation()}>
+                      <button 
+                        onClick={() => setActiveMenuId(activeMenuId === scene.id ? null : scene.id)}
+                        className="p-2 text-zinc-400 hover:text-black hover:bg-zinc-100 rounded-lg transition-colors"
+                      >
+                        <Icons.MoreHorizontal />
+                      </button>
+                      
+                      {activeMenuId === scene.id && (
+                        <div className="absolute top-full right-0 mt-1 w-48 bg-white border border-zinc-200 shadow-xl rounded-xl overflow-hidden py-2 z-30">
+                           <button onClick={() => { setActiveMenuId(null); handleUpdateScene(scene.id, 'enabled', !scene.enabled); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">
+                             {scene.enabled ? 'Disable Scene' : 'Enable Scene'}
+                           </button>
+                           <button onClick={() => { setActiveMenuId(null); handleAddScene(idx); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">
+                             Duplicate
+                           </button>
+                           <div className="h-px bg-zinc-100 my-2"></div>
+                           <button onClick={() => { setActiveMenuId(null); handleMoveScene(idx, 'up'); }} disabled={idx === 0} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-zinc-700 disabled:opacity-30">Move Up</button>
+                           <button onClick={() => { setActiveMenuId(null); handleMoveScene(idx, 'down'); }} disabled={idx === scenes.length - 1} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-zinc-700 disabled:opacity-30">Move Down</button>
+                           <div className="h-px bg-zinc-100 my-2"></div>
+                           <button onClick={() => { setActiveMenuId(null); handleDeleteScene(scene.id); }} className="w-full text-left px-5 py-2.5 hover:bg-red-50 text-sm font-bold text-red-600">Delete Scene</button>
+                        </div>
+                      )}
+                   </div>
+
+                   {/* Scene Header */}
+                   <div className="flex items-end justify-between border-b border-zinc-100 pb-4 pr-12">
+                      <div className="flex items-center gap-4">
+                        <h2 className="font-serif text-2xl md:text-3xl text-black">SCENE {scene.number.toString().padStart(2, '0')}</h2>
+                        <div className="text-[10px] font-mono font-bold tracking-widest bg-zinc-100 text-zinc-500 px-2 py-1 rounded">00:00 – 00:04</div>
+                      </div>
+                   </div>
+
+                   {/* Scene Body (2 Columns) */}
+                   <div className="flex flex-col md:flex-row gap-8">
+                      
+                      {/* Left Column: Image Area */}
+                      <div className="w-full lg:w-[360px] shrink-0 flex gap-4">
+                        {/* LEFT IMAGE SLOT */}
+                        <div className="flex-1 flex flex-col gap-3">
+                          <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">Left Image</label>
+                          <div className="w-full aspect-[4/5] bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl relative overflow-hidden group/img transition-colors hover:border-[#8B7CFF]/50"
+                              onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('hidden', 'flex'); }}
+                              onDragLeave={(e) => { e.currentTarget.classList.remove('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('flex', 'hidden'); }}
+                              onDrop={(e) => {
+                                e.preventDefault();
+                                e.currentTarget.classList.remove('border-[#8B7CFF]', 'bg-[#8B7CFF]/5');
+                                const overlay = e.currentTarget.querySelector('.drop-overlay-slot');
+                                if (overlay) overlay.classList.replace('flex', 'hidden');
+                                try {
+                                  const dataStr = e.dataTransfer.getData('application/json');
+                                  if (dataStr) {
+                                    const data = JSON.parse(dataStr);
+                                    if (data.type === 'PROJECT_ASSET') {
+      handleUpdateScene(scene.id, 'leftImageAssetId', data.assetId);
+      return;
+   }
+                                    if (data.type === 'SCENE_IMAGE') {
+       if (data.sourceSceneId === scene.id && data.sourceSide === 'left') return;
+       if (leftAsset) {
+           setSwapPrompt({
+               sourceSceneId: data.sourceSceneId, sourceSide: data.sourceSide, targetSceneId: scene.id, targetSide: 'left',
+               sourceData: { assetId: data.assetId },
+               targetData: { assetId: leftAsset.id }
+           });
+       } else {
+           handleMoveImage(data.sourceSceneId, data.sourceSide, scene.id, 'left', data);
+       }
+       return;
+   }
+                                  }
+                                } catch (err) {}
+                                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                                  handleImageUpload(scene.id, e.dataTransfer.files, 'left');
+                                }
+                              }}
+                          >
+                             <div className="absolute inset-0 z-40 hidden drop-overlay-slot bg-[#8B7CFF]/90 backdrop-blur-sm flex-col items-center justify-center text-white pointer-events-none transition-all">
+                                <div className="w-8 h-8 mb-2 rounded-full bg-white/20 flex items-center justify-center"><Icons.AddDrop /></div>
+                                <span className="text-[10px] font-bold tracking-widest uppercase">Drop Image Here</span>
+                             </div>
+                             {leftAsset?.url ? (
+                               <>
+                                 <img src={leftAsset?.url} alt={leftAsset?.originalFilename || "Scene image"} className="w-full h-full object-cover" 
+                                   draggable
+                                   onDragStart={(e) => {
+                                       e.dataTransfer.setData('application/json', JSON.stringify({ type: 'SCENE_IMAGE', sourceSceneId: scene.id, sourceSide: 'left', url: leftAsset?.url, name: leftAsset?.originalFilename, displayName: leftAsset?.displayName }));
+                                       setTimeout(() => { if (e.target) (e.target as HTMLElement).style.opacity = '0.4'; }, 0);
+                                   }}
+                                   onDragEnd={(e) => { e.currentTarget.style.opacity = '1'; }}
+                                 />
+                             {/* DISPLAY NAME EDITOR LEFT */}
+                             <div className="absolute top-2 left-2 z-10">
+                                <div className="group/rename relative flex items-center bg-white/90 backdrop-blur-sm px-2 py-1 rounded shadow-sm hover:bg-white transition-colors cursor-text">
+                                  <input 
+                                    value={leftAsset?.displayName || ""}
+                                    onChange={(e) => { if (leftAsset) handleUpdateAsset(leftAsset.id, { displayName: e.target.value }); }}
+                                    className="bg-transparent border-none outline-none text-[10px] font-bold text-black w-24 truncate placeholder-zinc-400"
+                                    placeholder="Name image..."
+                                  />
+                                  <Icons.Pencil />
+                                </div>
+                             </div>
+
+                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-sm">
+                                    <label className="text-[9px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1.5 rounded cursor-pointer hover:bg-zinc-100 transition-colors">
+                                      Replace
+                                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e, 'left')} />
+                                    </label>
+                                    
+                                    <button onClick={() => handleRemoveImage(scene.id, 'left')} className="text-[9px] uppercase tracking-widest font-bold text-white hover:text-red-400 transition-colors mt-2">
+                                      Remove
+                                    </button>
+                                 </div>
+                               </>
+                             ) : (
+                               <label className="w-full h-full flex flex-col items-center justify-center text-zinc-400 cursor-pointer hover:text-[#8B7CFF] transition-colors p-2 text-center">
+                                  <Icons.Image />
+                                  <span className="text-[9px] uppercase font-bold tracking-widest mt-2">Add Image</span>
+                                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e, 'left')} />
+                               </label>
+                             )}
+                          </div>
+                          
+                        </div>
+
+                        {/* RIGHT IMAGE SLOT */}
+                        <div className="flex-1 flex flex-col gap-3">
+                          <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">Right Image</label>
+                          <div className="w-full aspect-[4/5] bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl relative overflow-hidden group/img transition-colors hover:border-[#8B7CFF]/50"
+                              onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('hidden', 'flex'); }}
+                              onDragLeave={(e) => { e.currentTarget.classList.remove('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('flex', 'hidden'); }}
+                              onDrop={(e) => {
+                                e.preventDefault();
+                                e.currentTarget.classList.remove('border-[#8B7CFF]', 'bg-[#8B7CFF]/5');
+                                const overlay = e.currentTarget.querySelector('.drop-overlay-slot');
+                                if (overlay) overlay.classList.replace('flex', 'hidden');
+                                try {
+                                  const dataStr = e.dataTransfer.getData('application/json');
+                                  if (dataStr) {
+                                    const data = JSON.parse(dataStr);
+                                    if (data.type === 'PROJECT_ASSET') {
+      handleUpdateScene(scene.id, 'rightImageAssetId', data.assetId);
+      return;
+   }
+                                    if (data.type === 'SCENE_IMAGE') {
+       if (data.sourceSceneId === scene.id && data.sourceSide === 'right') return;
+       if (rightAsset) {
+           setSwapPrompt({
+               sourceSceneId: data.sourceSceneId, sourceSide: data.sourceSide, targetSceneId: scene.id, targetSide: 'right',
+               sourceData: { assetId: data.assetId },
+               targetData: { assetId: rightAsset.id }
+           });
+       } else {
+           handleMoveImage(data.sourceSceneId, data.sourceSide, scene.id, 'right', data);
+       }
+       return;
+   }
+                                  }
+                                } catch (err) {}
+                                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                                  handleImageUpload(scene.id, e.dataTransfer.files, 'right');
+                                }
+                              }}
+                          >
+                             <div className="absolute inset-0 z-40 hidden drop-overlay-slot bg-[#8B7CFF]/90 backdrop-blur-sm flex-col items-center justify-center text-white pointer-events-none transition-all">
+                                <div className="w-8 h-8 mb-2 rounded-full bg-white/20 flex items-center justify-center"><Icons.AddDrop /></div>
+                                <span className="text-[10px] font-bold tracking-widest uppercase">Drop Image Here</span>
+                             </div>
+                             {rightAsset?.url ? (
+                               <>
+                                 <img src={rightAsset?.url} alt={rightAsset?.originalFilename || "Scene image"} className="w-full h-full object-cover" 
+                                   draggable
+                                   onDragStart={(e) => {
+                                       e.dataTransfer.setData('application/json', JSON.stringify({ type: 'SCENE_IMAGE', sourceSceneId: scene.id, sourceSide: 'right', url: rightAsset?.url, name: rightAsset?.originalFilename, displayName: rightAsset?.displayName }));
+                                       setTimeout(() => { if (e.target) (e.target as HTMLElement).style.opacity = '0.4'; }, 0);
+                                   }}
+                                   onDragEnd={(e) => { e.currentTarget.style.opacity = '1'; }}
+                                 />
+                             {/* DISPLAY NAME EDITOR RIGHT */}
+                             <div className="absolute top-2 left-2 z-10">
+                                <div className="group/rename relative flex items-center bg-white/90 backdrop-blur-sm px-2 py-1 rounded shadow-sm hover:bg-white transition-colors cursor-text">
+                                  <input 
+                                    value={rightAsset?.displayName || ""}
+                                    onChange={(e) => { if (rightAsset) handleUpdateAsset(rightAsset.id, { displayName: e.target.value }); }}
+                                    className="bg-transparent border-none outline-none text-[10px] font-bold text-black w-24 truncate placeholder-zinc-400"
+                                    placeholder="Name image..."
+                                  />
+                                  <Icons.Pencil />
+                                </div>
+                             </div>
+
+                                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-sm">
+                                    <label className="text-[9px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1.5 rounded cursor-pointer hover:bg-zinc-100 transition-colors">
+                                      Replace
+                                      <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e, 'right')} />
+                                    </label>
+                                    
+                                    <button onClick={() => handleRemoveImage(scene.id, 'right')} className="text-[9px] uppercase tracking-widest font-bold text-white hover:text-red-400 transition-colors mt-2">
+                                      Remove
+                                    </button>
+                                 </div>
+                               </>
+                             ) : (
+                               <label className="w-full h-full flex flex-col items-center justify-center text-zinc-400 cursor-pointer hover:text-[#8B7CFF] transition-colors p-2 text-center">
+                                  <Icons.Image />
+                                  <span className="text-[9px] uppercase font-bold tracking-widest mt-2">Add Image</span>
+                                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e, 'right')} />
+                               </label>
+                             )}
+                          </div>
+                          
+                        </div>
+                      </div>
+
+                      {/* Right Column: Text Inputs */}
+                      <div className="flex-1 flex flex-col gap-6">
+                         <div className="flex flex-col group/input">
+                           <label className="text-[10px] uppercase font-bold tracking-[0.15em] text-zinc-400 mb-2 transition-colors group-focus-within/input:text-[#8B7CFF]">Scene Action / Dialogue</label>
+                           <textarea 
+                             value={scene.phrase}
+                             onChange={(e) => handleUpdateScene(scene.id, 'phrase', e.target.value)}
+                             className="w-full min-h-[80px] p-4 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-black resize-none outline-none focus:border-[#8B7CFF] focus:bg-white transition-all shadow-sm"
+                             placeholder="Describe the action or insert dialogue here..."
+                           />
+                         </div>
+
+                         <div className="flex flex-col group/input">
+                           <label className="text-[10px] uppercase font-bold tracking-[0.15em] text-zinc-400 mb-2 transition-colors group-focus-within/input:text-[#8B7CFF]">Motion / Direction</label>
+                           <textarea 
+                             value={scene.motionPrompt}
+                             onChange={(e) => handleUpdateScene(scene.id, 'motionPrompt', e.target.value)}
+                             className="w-full min-h-[80px] p-4 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-black resize-none outline-none focus:border-[#8B7CFF] focus:bg-white transition-all shadow-sm"
+                             placeholder="Camera movement, lighting, subject motion..."
+                           />
+                         </div>
+
+                         <div className="flex flex-col group/input">
+                           <label className="text-[10px] uppercase font-bold tracking-[0.15em] text-zinc-400 mb-2 transition-colors group-focus-within/input:text-[#8B7CFF]">Internal Notes</label>
+                           <textarea 
+                             value={scene.notes}
+                             onChange={(e) => handleUpdateScene(scene.id, 'notes', e.target.value)}
+                             className="w-full min-h-[60px] p-4 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-600 resize-none outline-none focus:border-[#8B7CFF] focus:bg-white transition-all italic shadow-sm"
+                             placeholder="Props needed, locations, reminders..."
+                           />
+                         </div>
+                      </div>
+                   </div>
+                </div>
+              );
+            })}
+
+              <button 
+                onClick={() => handleAddScene(scenes.length - 1)} 
+                className="w-full py-8 border-2 border-dashed border-zinc-200 rounded-2xl text-zinc-400 hover:border-[#8B7CFF] hover:text-[#8B7CFF] hover:bg-[#8B7CFF]/5 transition-all font-bold uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-2 mt-4"
+              >
+                 <Icons.Plus /> Create New Scene
+              </button>
+           </div>
+        </main></div>{swapPrompt && (
+        <div className="fixed inset-0 z-[110] bg-black/60 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-sm flex flex-col shadow-2xl overflow-hidden">
+             <div className="p-6 border-b border-zinc-100 flex flex-col items-center text-center">
+                <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-4">
+                  <Icons.Merge />
+                </div>
+                <h3 className="text-sm font-bold tracking-widest uppercase text-black mb-2">Replace image in this slot?</h3>
+                <p className="text-xs text-zinc-500">The destination slot already contains an image.</p>
+             </div>
+             <div className="p-2 grid grid-cols-3 gap-2 bg-zinc-50">
+                <button onClick={() => setSwapPrompt(null)} className="py-3 text-xs font-bold text-zinc-500 hover:text-black hover:bg-zinc-200 rounded-xl transition-colors">Cancel</button>
+                <button onClick={() => { handleSwapImage(swapPrompt.sourceSceneId, swapPrompt.sourceSide, swapPrompt.targetSceneId, swapPrompt.targetSide, swapPrompt.sourceData, swapPrompt.targetData); setSwapPrompt(null); }} className="py-3 text-xs font-bold text-[#8B7CFF] bg-[#8B7CFF]/10 hover:bg-[#8B7CFF]/20 rounded-xl transition-colors">Swap</button>
+                <button onClick={() => { handleMoveImage(swapPrompt.sourceSceneId, swapPrompt.sourceSide, swapPrompt.targetSceneId, swapPrompt.targetSide, swapPrompt.sourceData); setSwapPrompt(null); }} className="py-3 text-xs font-bold text-white bg-[#8B7CFF] hover:bg-[#7a6ce0] rounded-xl transition-colors">Replace</button>
+             </div>
           </div>
         </div>
       )}
-
     </div>
   );
 }
