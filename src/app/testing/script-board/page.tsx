@@ -399,17 +399,6 @@ export default function ScriptBoard() {
     }
   };
 
-  const handleExportProject = () => {
-    const data: BoardData = { projectName, scenes, projectAssets };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = projectName ? `${projectName.replace(/\s+/g, '-')}-project.json` : "script-board-project.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   const handleExportPDF = async () => {
     setIsExportOpen(false); // Close menu
     try {
@@ -741,28 +730,6 @@ This file is informational only.`;
     }
   };
 
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const result = event.target?.result as string;
-        const data = JSON.parse(result) as BoardData;
-        if (data.scenes) {
-          setProjectName(data.projectName || "Imported Project");
-          setScenes(data.scenes);
-          setProjectAssets(data.trayImages || []);
-        }
-      } catch (err) {
-        console.error("Failed to parse board data", err);
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = ''; // reset input
-  };
-
   const handleSave = () => {
     alert("Project saved locally.");
   };
@@ -844,14 +811,9 @@ This file is informational only.`;
            {isExportOpen && (
              <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-zinc-200 shadow-xl rounded-xl overflow-hidden py-2 z-50">
                <button onClick={handleExportPDF} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export as PDF</button>
-                 <button onClick={() => { setIsExportOpen(false); handleExportProject(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export Project Data</button>
-                 <button onClick={handleExportProjectZip} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-bold text-[#8B7CFF]">Export Project ZIP</button>
+                 <button onClick={handleExportProjectZip} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export Project ZIP</button>
                  <div className="h-px bg-zinc-100 my-2"></div>
                  <label className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium cursor-pointer block text-zinc-600">
-                   Import Project...
-                   <input type="file" accept=".json" onChange={handleImport} className="hidden" />
-                 </label>
-                 <label className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-bold cursor-pointer block text-[#8B7CFF]">
                    Import Project ZIP
                    <input type="file" accept=".zip" onChange={handleImportProjectZip} className="hidden" />
                  </label>
