@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import LogoutButton from './LogoutButton';
 
 export default async function StudioLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
@@ -20,9 +21,7 @@ export default async function StudioLayout({ children }: { children: React.React
           <Link href="/studio" className="px-4 py-2.5 rounded-lg hover:bg-zinc-800/30 text-zinc-400 text-sm font-medium transition-colors">Media Library</Link>
           <Link href="/studio" className="px-4 py-2.5 rounded-lg hover:bg-zinc-800/30 text-zinc-400 text-sm font-medium transition-colors">Settings</Link>
         </nav>
-        <button onClick={() => {
-            fetch('/api/studio/auth', { method: 'DELETE' }).then(() => window.location.href = '/studio/login');
-        }} className="text-left px-4 py-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors">Logout</button>
+        <LogoutButton />
       </aside>
       <main className="flex-1 overflow-y-auto">
         {children}
