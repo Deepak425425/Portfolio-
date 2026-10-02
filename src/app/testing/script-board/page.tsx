@@ -341,10 +341,10 @@ export default function ScriptBoard() {
     setProjectAssets(prev => prev.filter(a => a.id !== id));
   };
   
-  const handleRemoveImage = (id: string, side: 'left' | 'right') => {
+    const handleRemoveImage = (id: string, side: 'left' | 'right') => {
     setScenes(scenes.map(s => s.id === id ? {
       ...s,
-      ...(side === 'left' ? { leftImage: null, leftImageName: null, leftImageDisplayName: null } : { rightImage: null, rightImageName: null, rightImageDisplayName: null })
+      [side === 'left' ? 'leftImageAssetId' : 'rightImageAssetId']: null
     } : s));
   };
 
