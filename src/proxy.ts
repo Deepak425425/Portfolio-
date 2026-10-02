@@ -2,12 +2,28 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export default function proxy(request: NextRequest) {
-  // Authentication for /testing is now handled entirely client-side via React context
-  // so that the session does not survive a page refresh.
+  const isStudio = request.nextUrl.pathname.startsWith('/studio');
+  const isStudioApi = request.nextUrl.pathname.startsWith('/api/studio');
+
+  if (isStudio) {
+    if (request.nextUrl.pathname === '/studio/login') return NextResponse.next();
+    const token = request.cookies.get('groton_auth_token')?.value;
+    if (token !== 'secure_admin_token_2026') {
+      return NextResponse.redirect(new URL('/studio/login', request.url));
+    }
+  }
+
+  if (isStudioApi) {
+    if (request.nextUrl.pathname === '/api/studio/auth') return NextResponse.next();
+    const token = request.cookies.get('groton_auth_token')?.value;
+    if (token !== 'secure_admin_token_2026') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  // We can keep the matcher, or remove it. Keeping it empty might be safer, or just match testing as before.
-  matcher: ['/testing/:path*'],
+  matcher: ['/testing/:path*', '/studio/:path*', '/api/studio/:path*'],
 };
