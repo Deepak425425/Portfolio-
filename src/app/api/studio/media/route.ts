@@ -29,6 +29,6 @@ export async function POST(req: Request) {
   } catch (e) {
     // Vercel Read-Only fallback: return as base64 string
     console.warn('Filesystem read-only, returning base64', e);
-    return NextResponse.json({ url: \data:\;base64,\\ });
+    return NextResponse.json({ url: `data:${file.type};base64,${buffer.toString('base64')}` });
   }
 }
