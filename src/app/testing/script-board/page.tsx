@@ -815,7 +815,7 @@ This file is informational only.`;
                  <div className="h-px bg-zinc-100 my-2"></div>
                  <label className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium cursor-pointer block text-zinc-600">
                    Import Project ZIP
-                   <input type="file" accept=".zip" onChange={handleImportProjectZip} className="hidden" />
+                   <input type="file" accept=".zip,application/zip" onChange={handleImportProjectZip} className="hidden" />
                  </label>
                <button onClick={() => { setIsExportOpen(false); handleSave(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-zinc-600">Save Locally</button>
              </div>
