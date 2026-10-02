@@ -844,12 +844,17 @@ This file is informational only.`;
            {isExportOpen && (
              <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-zinc-200 shadow-xl rounded-xl overflow-hidden py-2 z-50">
                <button onClick={handleExportPDF} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export as PDF</button>
-               <button onClick={() => { setIsExportOpen(false); handleExportProject(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export Project Data</button>
-               <div className="h-px bg-zinc-100 my-2"></div>
-               <label className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium cursor-pointer block text-zinc-600">
-                 Import Project...
-                 <input type="file" accept=".json" onChange={handleImport} className="hidden" />
-               </label>
+                 <button onClick={() => { setIsExportOpen(false); handleExportProject(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export Project Data</button>
+                 <button onClick={handleExportProjectZip} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-bold text-[#8B7CFF]">Export Project ZIP</button>
+                 <div className="h-px bg-zinc-100 my-2"></div>
+                 <label className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium cursor-pointer block text-zinc-600">
+                   Import Project...
+                   <input type="file" accept=".json" onChange={handleImport} className="hidden" />
+                 </label>
+                 <label className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-bold cursor-pointer block text-[#8B7CFF]">
+                   Import Project ZIP
+                   <input type="file" accept=".zip" onChange={handleImportProjectZip} className="hidden" />
+                 </label>
                <button onClick={() => { setIsExportOpen(false); handleSave(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-zinc-600">Save Locally</button>
              </div>
            )}
