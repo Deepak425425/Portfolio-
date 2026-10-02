@@ -475,7 +475,9 @@ export default function ScriptBoard() {
         
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
-                const filesString = `1st Frame: ${sceneAssetLeft ? (sceneAssetLeft.displayName || "1st Frame") : "—"}\n2nd Frame: ${sceneAssetRight ? (sceneAssetRight.displayName || "2nd Frame") : "—"}`;
+                const leftFile = sceneAssetLeft ? (sceneAssetLeft.displayName || "1st Frame") : "1st Frame: —";
+        const rightFile = sceneAssetRight ? (sceneAssetRight.displayName || "2nd Frame") : "2nd Frame: —";
+        const filesString = `${leftFile}\n${rightFile}`;
         const framesText = doc.splitTextToSize(filesString, textWidth);
         const phraseText = doc.splitTextToSize(scene.phrase || "(Empty)", textWidth);
         const motionText = doc.splitTextToSize(scene.motionPrompt || "(Empty)", textWidth);
