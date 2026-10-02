@@ -912,7 +912,7 @@ export default function ScriptBoard() {
                                  <img src={leftAsset?.url} alt={leftAsset?.originalFilename || "Scene image"} className="w-full h-full object-cover" 
                                    draggable
                                    onDragStart={(e) => {
-                                       e.dataTransfer.setData('application/json', JSON.stringify({ type: 'SCENE_IMAGE', sourceSceneId: scene.id, sourceSide: 'left', url: leftAsset?.url, name: leftAsset?.originalFilename, displayName: leftAsset?.displayName }));
+                                       e.dataTransfer.setData('application/json', JSON.stringify({ type: 'SCENE_IMAGE', sourceSceneId: scene.id, sourceSide: 'left', assetId: leftAsset?.id, url: leftAsset?.url, name: leftAsset?.originalFilename, displayName: leftAsset?.displayName }));
                                        setTimeout(() => { if (e.target) (e.target as HTMLElement).style.opacity = '0.4'; }, 0);
                                    }}
                                    onDragEnd={(e) => { e.currentTarget.style.opacity = '1'; }}
@@ -1000,7 +1000,7 @@ export default function ScriptBoard() {
                                  <img src={rightAsset?.url} alt={rightAsset?.originalFilename || "Scene image"} className="w-full h-full object-cover" 
                                    draggable
                                    onDragStart={(e) => {
-                                       e.dataTransfer.setData('application/json', JSON.stringify({ type: 'SCENE_IMAGE', sourceSceneId: scene.id, sourceSide: 'right', url: rightAsset?.url, name: rightAsset?.originalFilename, displayName: rightAsset?.displayName }));
+                                       e.dataTransfer.setData('application/json', JSON.stringify({ type: 'SCENE_IMAGE', sourceSceneId: scene.id, sourceSide: 'right', assetId: rightAsset?.id, url: rightAsset?.url, name: rightAsset?.originalFilename, displayName: rightAsset?.displayName }));
                                        setTimeout(() => { if (e.target) (e.target as HTMLElement).style.opacity = '0.4'; }, 0);
                                    }}
                                    onDragEnd={(e) => { e.currentTarget.style.opacity = '1'; }}
