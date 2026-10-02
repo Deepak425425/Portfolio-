@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+import CmsImage from "@/components/CmsImage";
 
 export const metadata: Metadata = {
   title: "About — GROTON AI STUDIO",
@@ -41,7 +42,7 @@ export default function AboutPage() {
         </section>
 
         <section className="w-full h-[60vh] md:h-[80vh] relative">
-          <Image src="/campaign-worlds/6610031H658_BYE260114.webp" alt="GROTON AI STUDIO aesthetic" fill className="object-cover object-center" />
+          <CmsImage cmsId="about_main_visual" fallbackSrc="/campaign-worlds/6610031H658_BYE260114.webp" alt="GROTON AI STUDIO aesthetic" fill className="object-cover object-center" />
         </section>
 
         <section className="py-24 md:py-32 px-6 md:px-12 lg:px-24 bg-zinc-50 border-b border-zinc-200">

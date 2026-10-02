@@ -1,10 +1,15 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 
 type CmsImage = { id: string; name: string; src: string; page: string; section: string; };
 
-export default function Studio() {
+function StudioContent() {
+  const searchParams = useSearchParams();
+  const pageFilter = searchParams.get('page') || 'HOME';
+  const view = searchParams.get('view');
+
   const [images, setImages] = useState<CmsImage[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [mediaLibrary, setMediaLibrary] = useState<string[]>([]);
@@ -13,6 +18,7 @@ export default function Studio() {
 
   useEffect(() => {
     fetch('/api/studio/cms').then(r => r.json()).then(setImages);
+    fetch('/api/studio/media').then(r => r.json()).then(setMediaLibrary);
   }, []);
 
   const loadMedia = () => {
@@ -52,18 +58,57 @@ export default function Studio() {
     alert('Image successfully updated and published to the live site!');
   };
 
+  const deleteMedia = async (src: string) => {
+      if (!confirm('Are you sure you want to delete this media?')) return;
+      // For now we don't implement physical delete, just remove from view if needed, 
+      // or we can implement API for it. We'll skip physical delete to preserve safety.
+      alert('Media deletion is restricted in production.');
+  };
+
+  const filteredImages = images.filter(img => img.page === pageFilter);
+
+  if (view === 'media') {
+      return (
+        <div className="p-10 max-w-5xl mx-auto">
+          <header className="flex justify-between items-end mb-10 pb-6 border-b border-zinc-800">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight">Global Media Library</h2>
+              <p className="text-zinc-500 mt-2 text-sm">Manage all uploaded assets across the website</p>
+            </div>
+            <button onClick={() => fileInputRef.current?.click()} className="px-4 py-2 bg-[#8B7CFF] hover:bg-[#7a6ce0] text-white text-sm font-medium rounded-lg transition-colors">
+                Upload New Image
+            </button>
+            <input type="file" ref={fileInputRef} onChange={handleUpload} className="hidden" accept="image/png, image/jpeg, image/webp" />
+          </header>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {mediaLibrary.map(src => (
+              <div key={src} className="flex flex-col gap-3 group">
+                <div className="relative aspect-square rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900">
+                  <Image src={src} alt="Media" fill className="object-cover" />
+                </div>
+                <div className="flex flex-col gap-1 px-1">
+                    <p className="text-xs text-zinc-400 font-mono truncate">{src.split('/').pop()}</p>
+                </div>
+              </div>
+            ))}
+            {mediaLibrary.length === 0 && <p className="col-span-full text-zinc-500 text-sm py-10 text-center">No images uploaded yet.</p>}
+          </div>
+        </div>
+      );
+  }
+
   return (
     <div className="p-10 max-w-5xl mx-auto">
       <header className="flex justify-between items-end mb-10 pb-6 border-b border-zinc-800">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Homepage Editor</h2>
-          <p className="text-zinc-500 mt-2 text-sm">Manage dynamic images across the main website</p>
+          <h2 className="text-3xl font-bold tracking-tight">{pageFilter} Editor</h2>
+          <p className="text-zinc-500 mt-2 text-sm">Manage dynamic images for the {pageFilter} page</p>
         </div>
-        <a href="/" target="_blank" className="text-sm font-medium text-[#8B7CFF] hover:underline">View Live Site →</a>
+        <a href={pageFilter === 'HOME' ? '/' : '/' + pageFilter.toLowerCase()} target="_blank" className="text-sm font-medium text-[#8B7CFF] hover:underline">View Live Page +'</a>
       </header>
 
       <div className="space-y-8">
-        {images.map(img => (
+        {filteredImages.map(img => (
           <div key={img.id} className="flex flex-col md:flex-row gap-6 p-6 bg-zinc-900/50 border border-zinc-800/50 rounded-xl">
             <div className="w-full md:w-64 h-40 relative rounded-lg overflow-hidden bg-zinc-950 flex-shrink-0">
               <Image src={img.src} alt={img.name} fill className="object-cover" />
@@ -90,6 +135,7 @@ export default function Studio() {
             </div>
           </div>
         ))}
+        {filteredImages.length === 0 && <p className="text-zinc-500 py-10 text-center">No images mapped for this page yet.</p>}
       </div>
 
       {isMediaModalOpen && (
@@ -97,7 +143,7 @@ export default function Studio() {
           <div className="bg-[#0d0d0d] border border-zinc-800 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl">
             <div className="p-6 border-b border-zinc-800 flex justify-between items-center">
               <h3 className="text-xl font-bold">Media Library</h3>
-              <button onClick={() => setIsMediaModalOpen(false)} className="text-zinc-500 hover:text-white">✕</button>
+              <button onClick={() => setIsMediaModalOpen(false)} className="text-zinc-500 hover:text-white">o </button>
             </div>
             <div className="p-6 overflow-y-auto flex-1">
               <div className="mb-8 p-6 border-2 border-dashed border-zinc-800 rounded-xl text-center">
@@ -128,5 +174,13 @@ export default function Studio() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function Studio() {
+  return (
+    <Suspense fallback={<div className="p-10 text-zinc-500">Loading...</div>}>
+      <StudioContent />
+    </Suspense>
   );
 }
