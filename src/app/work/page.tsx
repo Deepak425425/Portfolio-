@@ -3,14 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import CmsImage from "@/components/CmsImage";
 
 const portfolioItems = [
-  { id: 1, title: "Streetwear Comfort", category: "Fashion", image: "/campaign-worlds/download (27).jpeg", aspect: "aspect-[4/3]", position: "object-[center_20%]" },
-  { id: 2, title: "Sherpa Outerwear", category: "Fashion", image: "/campaign-worlds/Caffeine is culture ☕️.jpeg", aspect: "aspect-[3/4]", position: "" },
-  { id: 3, title: "Modern Elegance", category: "Fashion", image: "/campaign-worlds/groton-3.jpg", aspect: "aspect-[4/5]", position: "" },
-  { id: 4, title: "High-Angle Editorial", category: "Editorial", image: "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg", aspect: "aspect-square", position: "" },
-  { id: 5, title: "Cat Print Styling", category: "Fashion", image: "/campaign-worlds/How to style Cat Print T shirts.jpeg", aspect: "aspect-[16/9]", position: "object-[center_20%]" },
-  { id: 6, title: "Editorial Lifestyle", category: "Fashion", image: "/campaign-worlds/mu_forart_.jpeg", aspect: "aspect-[3/4]", position: "" },
+  { id: 1, title: "Streetwear Comfort", category: "Fashion", image: "/campaign-worlds/download (27).jpeg", cmsId: "work_1", aspect: "aspect-[4/3]", position: "object-[center_20%]" },
+  { id: 2, title: "Sherpa Outerwear", category: "Fashion", image: "/campaign-worlds/Caffeine is culture ☕️.jpeg", cmsId: "work_2", aspect: "aspect-[3/4]", position: "" },
+  { id: 3, title: "Modern Elegance", category: "Fashion", image: "/campaign-worlds/groton-3.jpg", cmsId: "work_3", aspect: "aspect-[4/5]", position: "" },
+  { id: 4, title: "High-Angle Editorial", category: "Editorial", image: "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg", cmsId: "work_4", aspect: "aspect-square", position: "" },
+  { id: 5, title: "Cat Print Styling", category: "Fashion", image: "/campaign-worlds/How to style Cat Print T shirts.jpeg", cmsId: "work_5", aspect: "aspect-[16/9]", position: "object-[center_20%]" },
+  { id: 6, title: "Editorial Lifestyle", category: "Fashion", image: "/campaign-worlds/mu_forart_.jpeg", cmsId: "work_6", aspect: "aspect-[3/4]", position: "" },
 ];
 
 export default function WorkPage() {
@@ -53,7 +54,7 @@ export default function WorkPage() {
             {portfolioItems.map(item => (
               <div key={item.id} className="break-inside-avoid flex flex-col gap-4 group cursor-pointer mb-8">
                 <div className={`w-full ${item.aspect} bg-zinc-200 relative overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]`}>
-                  <Image src={item.image} alt={item.title} fill className={`object-cover transition-transform duration-1000 ease-out group-hover:scale-105 ${item.position || ''}`} />
+                  <CmsImage cmsId={item.cmsId} fallbackSrc={item.image} alt={item.title} fill className={`object-cover transition-transform duration-1000 ease-out group-hover:scale-105 ${item.position || ''}`} />
                   <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10"></div>
                 </div>
                 <div className="flex justify-between items-center px-1">

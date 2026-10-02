@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import CmsImage from "@/components/CmsImage";
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -157,7 +158,7 @@ export default function ContactPage() {
         </div>
 
         <div className="hidden lg:block lg:w-1/2 relative bg-zinc-100">
-          <Image src="/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg" alt="GROTON AI STUDIO" fill className="object-cover object-[center_15%]" />
+          <CmsImage cmsId="contact_visual" fallbackSrc="/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg" alt="GROTON AI STUDIO" fill className="object-cover object-[center_15%]" />
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="absolute bottom-16 left-16 max-w-sm">
             <h3 className="font-serif text-3xl text-white mb-4">"The visual standard for modern brands."</h3>
