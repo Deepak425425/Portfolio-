@@ -4,9 +4,19 @@ interface UploadProps {
   onUpload: (files: File[]) => void;
   multiple?: boolean;
   accept?: string;
+  title?: string;
+  formats?: string[];
+  className?: string;
 }
 
-export default function UploadDropzone({ onUpload, multiple = true, accept = "image/*" }: UploadProps) {
+export default function UploadDropzone({ 
+  onUpload, 
+  multiple = true, 
+  accept = "image/*",
+  title,
+  formats = ["JPG", "PNG", "WEBP"],
+  className = "min-h-[50vh]"
+}: UploadProps) {
   const [isDrag, setIsDrag] = useState(false);
 
   const onDragOver = useCallback((e: React.DragEvent) => {
@@ -37,7 +47,7 @@ export default function UploadDropzone({ onUpload, multiple = true, accept = "im
 
   return (
     <div 
-      className={`w-full min-h-[50vh] border border-dashed flex flex-col items-center justify-center p-8 transition-all duration-300 rounded-3xl relative overflow-hidden ${
+      className={`w-full ${className} border border-dashed flex flex-col items-center justify-center p-8 transition-all duration-300 rounded-3xl relative overflow-hidden ${
         isDrag ? 'border-[#8B7CFF] bg-[#F7F6F2]' : 'border-zinc-300 hover:border-[#8B7CFF] bg-white'
       }`}
       onDragOver={onDragOver}
@@ -63,7 +73,7 @@ export default function UploadDropzone({ onUpload, multiple = true, accept = "im
         <div className="flex flex-col gap-2 items-center pointer-events-none">
           <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-zinc-400">Your Workspace is Empty</span>
           <h3 className="text-2xl font-serif text-[#111111]">
-            Drop your {multiple ? 'images' : 'image'} here
+            {title || `Drop your ${multiple ? 'images' : 'image'} here`}
           </h3>
           <p className="text-sm text-zinc-500 font-light">
              or <span className="text-[#8B7CFF] cursor-pointer hover:underline pointer-events-auto relative font-medium">
@@ -79,10 +89,10 @@ export default function UploadDropzone({ onUpload, multiple = true, accept = "im
           </p>
         </div>
         
-        <div className="mt-4 flex gap-3 text-[9px] uppercase tracking-[0.2em] text-zinc-400 font-bold pointer-events-none">
-           <span className="px-3 py-1.5 bg-white border border-zinc-200 rounded-full shadow-sm">JPG</span>
-           <span className="px-3 py-1.5 bg-white border border-zinc-200 rounded-full shadow-sm">PNG</span>
-           <span className="px-3 py-1.5 bg-white border border-zinc-200 rounded-full shadow-sm">WEBP</span>
+        <div className="mt-4 flex gap-3 text-[9px] uppercase tracking-[0.2em] text-zinc-400 font-bold pointer-events-none flex-wrap justify-center">
+           {formats.map((fmt) => (
+             <span key={fmt} className="px-3 py-1.5 bg-white border border-zinc-200 rounded-full shadow-sm">{fmt}</span>
+           ))}
         </div>
       </div>
     </div>

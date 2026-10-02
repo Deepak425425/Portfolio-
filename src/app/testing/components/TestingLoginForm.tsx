@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { authenticateTestingLab } from "../actions";
+import { useRouter } from "next/navigation";
 
 export default function TestingLoginForm({ onSuccess }: { onSuccess?: () => void }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,11 +17,18 @@ export default function TestingLoginForm({ onSuccess }: { onSuccess?: () => void
     setError("");
     
     try {
-      const result = await authenticateTestingLab(password);
-      if (result.success) {
-        if (onSuccess) {
-          onSuccess();
-        }
+      const response = await fetch("/api/testing/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        if (onSuccess) onSuccess();
+        // Refresh the page so the server layout reads the new cookie
+        router.refresh();
       } else {
         setError(result.error || "Authentication failed");
       }
@@ -30,7 +38,6 @@ export default function TestingLoginForm({ onSuccess }: { onSuccess?: () => void
       setLoading(false);
     }
   };
-
 
   return (
     <div className="min-h-screen bg-zinc-50 flex flex-col font-sans text-black justify-center items-center px-6">

@@ -54,15 +54,6 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     description: "Professional grid layout builder with precise constraints.",
     keywords: ["collage", "ek saath lagana", "combine", "multiple images", "collagee", "photo grid", "grid maker", "join images"] 
   },
-  { 
-    id: "image-border", 
-    name: "Image Border", 
-    route: "/tools/image-border", 
-    category: "featured",
-    visual: "□",
-    description: "Add refined frames, shadows, and borders to images.",
-    keywords: ["border", "frame", "shadow", "stroke", "outline", "photo border", "add frame", "image pe border lagana"] 
-  },
 
   // ==========================================
   // UTILITY TOOLS
@@ -156,6 +147,15 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     visual: "🎬",
     description: "Detect hard cuts in video and extract the first frame of every shot.",
     keywords: ["hard cut", "hard cuts", "scene change", "scene cut", "scene detection", "shots detect", "find cuts", "scenes alag", "kat", "heeeard cut", "video shots", "detect scenes"] 
+  },
+  { 
+    id: "hard-cut-motion-prompt", 
+    name: "Hard Cut Motion Prompt", 
+    route: "/tools/hard-cut-motion-prompt", 
+    category: "specialized",
+    visual: "🎞",
+    description: "Detect hard cuts and generate 6-frame motion reference contact sheets.",
+    keywords: ["hard cut", "motion prompt", "motion reference", "contact sheet", "6 frames", "video frames", "shot detection"] 
   },
   { 
     id: "passport-photo", 
@@ -358,5 +358,41 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     visual: "🧽",
     description: "Content-aware object removal and intelligent image reconstruction.",
     keywords: ["watermark remover", "remove watermark", "delete watermark", "erase watermark", "content aware fill", "reconstruct image", "remove text", "remove logo"] 
+  },
+  { 
+    id: "video-compress", 
+    name: "Video Compress", 
+    route: "/tools/video-compress", 
+    category: "specialized",
+    visual: "🗜",
+    description: "Compress video file size locally in your browser. No server uploads.",
+    keywords: ["video compress", "compress video", "reduce video size", "video size reducer", "mp4 compressor"] 
+  },
+  { 
+    id: "video-audio-swap", 
+    name: "Video Audio Swap", 
+    route: "/tools/video-audio-swap", 
+    category: "specialized",
+    visual: "🎵",
+    description: "Replace or mix video audio tracks entirely in your browser.",
+    keywords: ["video audio swap", "replace audio in video", "mix audio", "add music to video", "mute video"] 
+  },
+  { 
+    id: "video-compare", 
+    name: "Video Compare", 
+    route: "/tools/video-compare", 
+    category: "featured",
+    visual: "◧",
+    description: "Visually compare two videos side-by-side or overlaid in your browser.",
+    keywords: ["video compare", "compare videos", "video comparison", "split screen video", "overlay videos"] 
+  },
+  { 
+    id: "audio-splicer", 
+    name: "Audio Splicer", 
+    route: "/tools/audio-splicer", 
+    category: "specialized",
+    visual: "✂️",
+    description: "Upload, edit, arrange, and mix multiple audio files natively in your browser.",
+    keywords: ["audio splicer", "edit audio", "merge audio", "crossfade audio", "trim audio"] 
   }
 ];

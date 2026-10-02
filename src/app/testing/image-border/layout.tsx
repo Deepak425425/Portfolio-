@@ -4,12 +4,12 @@ export const metadata: Metadata = {
   title: "Image Border Maker — Add Frames to Images",
   description: "Add classic, vintage, Polaroid, double, film and custom borders to images. A premium online image border tool with high-resolution export.",
   alternates: {
-    canonical: "/tools/image-border",
+    canonical: "/testing/image-border",
   },
   openGraph: {
     title: "Image Border Maker — Add Frames to Images",
     description: "Add classic, vintage, Polaroid, double, film and custom borders to images. A premium online image border tool with high-resolution export.",
-    url: "https://groton.in/tools/image-border",
+    url: "https://groton.in/testing/image-border",
     siteName: "GROTON AI",
     images: [
       {
