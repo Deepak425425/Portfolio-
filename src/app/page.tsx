@@ -296,19 +296,19 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-4">
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
                  <Image src={cmsImages.capability_product || "/campaign-worlds/LOGO DESIGN _ IDENTITY DESIGN _ ЛОГОТИП.jpeg"} alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                 <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product Imagery</span></div>
+                 <div className="absolute inset-0 bg-black/10 flex items-end p-4"><CmsText cmsId="home.cap.img1.label" as="span" className="text-[10px] font-bold text-white uppercase tracking-widest" fallback="Product Imagery" /></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
                  <Image src={cmsImages.capability_model || "/campaign-worlds/groton-9.jpg"} alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                 <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product-on-Model</span></div>
+                 <div className="absolute inset-0 bg-black/10 flex items-end p-4"><CmsText cmsId="home.cap.img2.label" as="span" className="text-[10px] font-bold text-white uppercase tracking-widest" fallback="Product-on-Model" /></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
                  <Image src={cmsImages.capability_apparel || "/campaign-worlds/groton-1.jpg"} alt="Fashion Apparel" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                 <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Fashion Apparel</span></div>
+                 <div className="absolute inset-0 bg-black/10 flex items-end p-4"><CmsText cmsId="home.cap.img3.label" as="span" className="text-[10px] font-bold text-white uppercase tracking-widest" fallback="Fashion Apparel" /></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
                  <Image src={cmsImages.capability_editorial || "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg"} alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                 <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Editorial</span></div>
+                 <div className="absolute inset-0 bg-black/10 flex items-end p-4"><CmsText cmsId="home.cap.img4.label" as="span" className="text-[10px] font-bold text-white uppercase tracking-widest" fallback="Editorial" /></div>
                </div>
             </div>
           </div>
@@ -372,21 +372,21 @@ export default function Home() {
               <div className="w-full aspect-square relative overflow-hidden bg-zinc-900 border border-zinc-800 shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
                 <Image src={cmsImages.process_raw || "/campaign-worlds/ghgh.jpeg"} alt="Raw Product Input" fill className="object-cover filter grayscale opacity-80 mix-blend-luminosity" />
               </div>
-              <span className="text-xs tracking-[0.2em] uppercase font-bold text-zinc-500">Raw Product Asset</span>
+              <CmsText cmsId="home.process.raw.label" as="span" className="text-xs tracking-[0.2em] uppercase font-bold text-zinc-500" fallback="Raw Product Asset" />
             </div>
 
             <div className="hidden md:flex flex-col items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-zinc-600"></div>
               <div className="w-1.5 h-1.5 rounded-full bg-zinc-600"></div>
               <div className="w-1.5 h-1.5 rounded-full bg-zinc-600"></div>
-              <span className="text-[8px] tracking-[0.2em] uppercase font-bold text-zinc-400 mt-2">Art Direction</span>
+              <CmsText cmsId="home.process.middle.label" as="span" className="text-[8px] tracking-[0.2em] uppercase font-bold text-zinc-400 mt-2" fallback="Art Direction" />
             </div>
 
             <div className="flex flex-col items-center gap-6 w-full md:w-1/2">
               <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-900 shadow-2xl shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
                 <Image src={cmsImages.process_final || "/campaign-worlds/1368386.jpg"} alt="Final Campaign Visual" fill className="object-cover" />
               </div>
-              <span className="text-xs tracking-[0.2em] uppercase font-bold text-white">Final Campaign Visual</span>
+              <CmsText cmsId="home.process.final.label" as="span" className="text-xs tracking-[0.2em] uppercase font-bold text-white" fallback="Final Campaign Visual" />
             </div>
           </div>
         </div>

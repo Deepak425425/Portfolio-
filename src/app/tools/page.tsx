@@ -168,22 +168,17 @@ export default function ToolsLandingPage() {
                 {/* TESTING LAB CARD */}
                 <Link 
                   href="/testing" 
-                  className="group bg-zinc-900 border border-zinc-800 p-6 flex flex-col rounded-2xl hover:border-zinc-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.1)] transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden h-full min-h-[170px] w-full"
+                  className="group bg-[#FCFCFB] border border-zinc-200 p-6 flex flex-col rounded-2xl hover:border-[#8B7CFF] hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden h-full min-h-[170px] w-full"
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-0 group-hover:opacity-10 blur-[50px] transition-opacity rounded-full pointer-events-none"></div>
-                  
-                  <div className="w-12 h-12 bg-zinc-800 shadow-sm border border-zinc-700 rounded-xl flex items-center justify-center text-xl z-10 shrink-0 mb-5 text-zinc-300">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                  </div>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B7CFF] opacity-0 group-hover:opacity-5 blur-[50px] transition-opacity rounded-full pointer-events-none"></div>
                   
                   <div className="flex flex-col gap-2 z-10 h-full">
                     <div className="flex justify-between items-start">
-                      <h3 className="font-bold text-sm tracking-tight text-white leading-none mt-1">TESTING LAB</h3>
-                      <span className="text-[8px] uppercase tracking-widest font-bold text-zinc-400 border border-zinc-700 px-2 py-0.5 rounded bg-zinc-800/50">PRIVATE / LOCKED</span>
+                      <h3 className="font-bold text-sm tracking-tight text-[#111111] leading-none mt-1">TESTING LAB</h3>
                     </div>
-                    <p className="text-[11px] text-zinc-400 leading-relaxed max-w-[95%] mb-4">Experimental tools and features in development.</p>
+                    <p className="text-[11px] text-zinc-500 leading-relaxed max-w-[95%] mb-4">Experimental tools and features in development.</p>
                     
-                    <div className="mt-auto text-[9px] uppercase tracking-widest font-bold text-zinc-300 group-hover:text-white transition-colors flex items-center gap-1">
+                    <div className="mt-auto text-[9px] uppercase tracking-widest font-bold text-zinc-500 group-hover:text-[#111111] transition-colors flex items-center gap-1">
                       OPEN TESTING LAB <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
                     </div>
                   </div>
