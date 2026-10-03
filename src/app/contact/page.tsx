@@ -25,18 +25,18 @@ export default function ContactPage() {
       {/* HEADER */}
       <header className="w-full p-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-30 bg-white border-b border-zinc-200">
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          GROTON AI STUDIO
+          <CmsText cmsId="global.nav.brand" fallback="GROTON AI STUDIO" />
         </Link>
         <div className="flex items-center gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
-            <Link href="/work" className="hover:text-black transition-colors">Work</Link>
-            <Link href="/services" className="hover:text-black transition-colors">Services</Link>
-            <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
-            <Link href="/tools" className="hover:text-black transition-colors">Tools</Link>
-            <Link href="/about" className="hover:text-black transition-colors">About</Link>
+            <Link href="/work" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
+            <Link href="/services" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
+            <Link href="/pricing" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
+            <Link href="/tools" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.tools" fallback="Tools" /></Link>
+            <Link href="/about" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.about" fallback="About" /></Link>
           </nav>
           <Link href="/contact" className="px-5 py-3 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
-            Contact
+            <CmsText cmsId="global.nav.contact" fallback="Contact" />
           </Link>
         </div>
       </header>
@@ -46,18 +46,20 @@ export default function ContactPage() {
         
         <div className="w-full lg:w-1/2 p-6 md:p-12 lg:p-24 flex flex-col justify-center bg-white border-r border-zinc-200">
           <div className="max-w-xl mx-auto lg:mx-0 w-full">
-            <CmsText cmsId="contact_hero_heading" as="h1" className="font-serif text-5xl md:text-6xl mb-6" fallback="Start a project." />
-            <CmsText cmsId="contact_hero_desc" as="p" className="text-sm text-zinc-500 font-light mb-12 leading-relaxed" fallback="Tell us what you are building. Our creative team will review your requirements and reach out to discuss visual direction, timelines, and next steps." />
+            <CmsText cmsId="contact.hero.heading" as="h1" className="font-serif text-5xl md:text-6xl mb-6" fallback="Start a project." />
+            <CmsText cmsId="contact.hero.desc" as="p" className="text-sm text-zinc-500 font-light mb-12 leading-relaxed" fallback="Tell us what you are building. Our creative team will review your requirements and reach out to discuss visual direction, timelines, and next steps." />
 
             <div className="flex flex-col sm:flex-row gap-8 mb-16 pb-12 border-b border-zinc-100">
               <div>
-                <h4 className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400 mb-2">Direct Contact</h4>
-                <p className="text-sm font-medium">Deepak Kumawat</p>
+                <CmsText cmsId="contact.info.direct" as="h4" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400 mb-2" fallback="Direct Contact" />
+                <CmsText cmsId="contact.info.name" as="p" className="text-sm font-medium" fallback="Deepak Kumawat" />
                 <a href="mailto:deepak@graflystudio.com" className="text-sm text-zinc-500 hover:text-black transition-colors block mt-1">deepak@graflystudio.com</a>
               </div>
               <div>
-                <h4 className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400 mb-2">Socials & Direct Line</h4>
-                <a href="https://wa.me/916378083205" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 hover:text-black transition-colors block">WhatsApp (+91 63780 83205)</a>
+                <CmsText cmsId="contact.info.social" as="h4" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400 mb-2" fallback="Socials & Direct Line" />
+                <a href="https://wa.me/916378083205" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 hover:text-black transition-colors block">
+                  <CmsText cmsId="contact.info.whatsapp" fallback="WhatsApp (+91 63780 83205)" />
+                </a>
                 <a href="https://www.linkedin.com/in/deepak-kumawat-grafly" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 hover:text-black transition-colors block mt-1">LinkedIn</a>
               </div>
             </div>
@@ -79,28 +81,28 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="name" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600">Name</label>
+                    <label htmlFor="name" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.name.label" fallback="Name" /></label>
                     <input required type="text" id="name" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="Jane Doe" />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="brand" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600">Brand / Company</label>
+                    <label htmlFor="brand" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.brand.label" fallback="Brand / Company" /></label>
                     <input required type="text" id="brand" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="Your Brand" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="email" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600">Email</label>
+                    <label htmlFor="email" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.email.label" fallback="Email" /></label>
                     <input required type="email" id="email" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="jane@brand.com" />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="phone" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600">Phone (Optional)</label>
+                    <label htmlFor="phone" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.phone.label" fallback="Phone (Optional)" /></label>
                     <input type="tel" id="phone" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="+1 234 567 890" />
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="type" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600">Project Type</label>
+                  <label htmlFor="type" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.type.label" fallback="Project Type" /></label>
                   <div className="relative">
                     <select required id="type" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
                       <option value="" disabled>Select a service...</option>
@@ -120,7 +122,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="budget" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600">Budget Range</label>
+                  <label htmlFor="budget" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.budget.label" fallback="Budget Range" /></label>
                   <div className="relative">
                     <select required id="budget" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
                       <option value="" disabled>Select a range...</option>
@@ -136,7 +138,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="details" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600">Project Details</label>
+                  <label htmlFor="details" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.details.label" fallback="Project Details" /></label>
                   <textarea required id="details" rows={4} className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm resize-none" placeholder="Tell us about the visual direction, quantity of assets, and timeline..."></textarea>
                 </div>
 
@@ -148,7 +150,7 @@ export default function ContactPage() {
                   {isSubmitting ? (
                     <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
                   ) : (
-                    "Submit Inquiry"
+                    <CmsText cmsId="contact.form.submit" fallback="Submit Inquiry" />
                   )}
                 </button>
               </form>

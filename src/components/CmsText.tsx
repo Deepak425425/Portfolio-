@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface CmsTextProps {
   cmsId: string;
@@ -7,10 +7,11 @@ interface CmsTextProps {
   as?: any;
   className?: string;
   isHtml?: boolean;
+  brClassName?: string;
   [key: string]: any;
 }
 
-export default function CmsText({ cmsId, fallback, as: Component = 'span', className, isHtml, ...rest }: CmsTextProps) {
+export default function CmsText({ cmsId, fallback, as: Component = 'span', className, isHtml, brClassName, ...rest }: CmsTextProps) {
   const [text, setText] = useState<string | null>(null);
 
   useEffect(() => {
@@ -25,15 +26,32 @@ export default function CmsText({ cmsId, fallback, as: Component = 'span', class
       .catch(() => {});
   }, [cmsId]);
 
-  if (text !== null) {
+  const renderContent = (content: string) => {
     if (isHtml) {
-      return <Component className={className} dangerouslySetInnerHTML={{ __html: text }} {...rest} />;
+      return <Component className={className} dangerouslySetInnerHTML={{ __html: content }} {...rest} />;
     }
-    return <Component className={className} {...rest}>{text}</Component>;
+    if (brClassName !== undefined || content.includes('\n')) {
+      return (
+        <Component className={className} {...rest}>
+          {content.split('\n').map((line, i, arr) => (
+            <React.Fragment key={i}>
+              {line}
+              {i < arr.length - 1 && <br className={brClassName} />}
+            </React.Fragment>
+          ))}
+        </Component>
+      );
+    }
+    return <Component className={className} {...rest}>{content}</Component>;
+  };
+
+  if (text !== null) {
+    return renderContent(text);
   }
 
-  if (isHtml && typeof fallback === 'string') {
-     return <Component className={className} dangerouslySetInnerHTML={{ __html: fallback }} {...rest} />;
+  if (typeof fallback === 'string') {
+    return renderContent(fallback);
   }
+  
   return <Component className={className} {...rest}>{fallback}</Component>;
 }

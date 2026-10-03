@@ -23,6 +23,10 @@ export default async function StudioLayout({ children }: { children: React.React
           <Link href="/studio?page=SERVICES" className="px-4 py-2 rounded-lg hover:bg-zinc-800/30 text-zinc-400 hover:text-zinc-100 text-sm font-medium transition-colors">SERVICES</Link>
           <Link href="/studio?page=WORK" className="px-4 py-2 rounded-lg hover:bg-zinc-800/30 text-zinc-400 hover:text-zinc-100 text-sm font-medium transition-colors">WORK</Link>
           <Link href="/studio?page=CONTACT" className="px-4 py-2 rounded-lg hover:bg-zinc-800/30 text-zinc-400 hover:text-zinc-100 text-sm font-medium transition-colors">CONTACT</Link>
+          <Link href="/studio?page=PRICING" className="px-4 py-2 rounded-lg hover:bg-zinc-800/30 text-zinc-400 hover:text-zinc-100 text-sm font-medium transition-colors">PRICING</Link>
+          <Link href="/studio?page=BLOG" className="px-4 py-2 rounded-lg hover:bg-zinc-800/30 text-zinc-400 hover:text-zinc-100 text-sm font-medium transition-colors">BLOG</Link>
+          <Link href="/studio?page=TOOLS" className="px-4 py-2 rounded-lg hover:bg-zinc-800/30 text-zinc-400 hover:text-zinc-100 text-sm font-medium transition-colors">TOOLS</Link>
+          <Link href="/studio?page=GLOBAL" className="px-4 py-2 rounded-lg hover:bg-zinc-800/30 text-zinc-400 hover:text-zinc-100 text-sm font-medium transition-colors">GLOBAL TEXT</Link>
           
           <span className="text-[10px] font-bold text-zinc-500 tracking-[0.2em] uppercase mb-2 mt-8">Global</span>
           <Link href="/studio?view=media" className="px-4 py-2 rounded-lg hover:bg-zinc-800/30 text-zinc-400 hover:text-zinc-100 text-sm font-medium transition-colors">Media Library</Link>

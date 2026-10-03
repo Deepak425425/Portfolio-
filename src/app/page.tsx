@@ -111,18 +111,18 @@ export default function Home() {
         className="fixed top-0 left-0 w-full px-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-50 transition-all backdrop-blur-md bg-white/75 border-b border-zinc-200/50"
       >
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          GROTON AI STUDIO
+          <CmsText cmsId="global.nav.brand" fallback="GROTON AI STUDIO" />
         </Link>
         <div className="flex items-center gap-4 lg:gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
-            <Link href="/work" className="hover:text-black transition-colors">Work</Link>
-            <Link href="/services" className="hover:text-black transition-colors">Services</Link>
-            <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
-            <Link href="/tools" className="hover:text-black transition-colors">Tools</Link>
-            <Link href="/about" className="hover:text-black transition-colors">About</Link>
+            <Link href="/work" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
+            <Link href="/services" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
+            <Link href="/pricing" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
+            <Link href="/tools" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.tools" fallback="Tools" /></Link>
+            <Link href="/about" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.about" fallback="About" /></Link>
           </nav>
           <MagneticButton href="/contact" className="hidden lg:inline-flex px-6 py-3 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
-            Contact
+            <CmsText cmsId="global.nav.contact" fallback="Contact" />
           </MagneticButton>
           
           <button 
@@ -167,18 +167,18 @@ export default function Home() {
           {/* Main Content */}
           <div className="relative z-30 flex flex-col items-center text-center w-full">
              <CmsText
-               cmsId="home_hero_heading"
+               cmsId="home.hero.heading"
                as={motion.h1}
-               isHtml={true}
+               brClassName="hidden md:block"
                initial={{ opacity: 0, y: 30 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                className="font-serif text-[2.5rem] leading-[1.1] sm:text-5xl md:text-7xl lg:text-[7.5rem] md:leading-[1.05] text-black tracking-tight max-w-5xl mx-auto"
-               fallback={'Product visuals that <br className="hidden md:block"/> make brands look better.'}
+               fallback={'Product visuals that\nmake brands look better.'}
              />
 
              <CmsText
-               cmsId="home_hero_desc"
+               cmsId="home.hero.desc"
                as={motion.p}
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
@@ -194,10 +194,10 @@ export default function Home() {
                className="flex flex-col sm:flex-row items-center justify-center gap-8 mt-12 w-full"
              >
                 <MagneticButton href="/contact" className="inline-flex px-10 py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors shadow-xl w-full sm:w-auto justify-center text-center">
-                  <CmsText cmsId="home_hero_cta_1" fallback="Start A Project" />
+                  <CmsText cmsId="home.hero.cta.primary" fallback="Start A Project" />
                 </MagneticButton>
                 <Link href="/work" className="text-[10px] uppercase tracking-widest font-bold text-black border-b border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors w-full sm:w-auto text-center">
-                  <CmsText cmsId="home_hero_cta_2" fallback="View Our Work" />
+                  <CmsText cmsId="home.hero.cta.secondary" fallback="View Our Work" />
                 </Link>
              </motion.div>
           </div>
@@ -277,8 +277,8 @@ export default function Home() {
               transition={{ duration: 1, delay: 1.8 }}
               className="absolute bottom-0 right-[5%] lg:right-[10%] z-10 hidden md:flex flex-col text-right gap-1"
             >
-               <span className="text-[8px] uppercase tracking-[0.3em] text-zinc-400">GROTON</span>
-               <span className="text-[9px] uppercase tracking-[0.1em] text-black font-semibold">Art Direction &<br/>E-Commerce Visuals</span>
+               <CmsText cmsId="home.hero.corner.label" as="span" className="text-[8px] uppercase tracking-[0.3em] text-zinc-400" fallback="GROTON" />
+               <CmsText cmsId="home.hero.corner.desc" as="span" brClassName="" className="text-[9px] uppercase tracking-[0.1em] text-black font-semibold" fallback={"Art Direction &\nE-Commerce Visuals"} />
             </motion.div>
             
           </div>
@@ -290,9 +290,9 @@ export default function Home() {
       <section className="relative w-full z-10 bg-white py-32 px-6 border-t border-zinc-200">
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24">
           <div className="flex flex-col justify-center">
-            <span className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase mb-4">Capabilities</span>
-            <CmsText cmsId="home_cap_heading" as="h2" isHtml={true} className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight text-black mb-8" fallback={'E-commerce visuals, <br/>elevated.'} />
-            <CmsText cmsId="home_cap_desc" as="p" className="font-sans text-zinc-500 font-light max-w-md leading-relaxed mb-12" fallback="We specialize in creating premium product imagery for e-commerce brands. From clean catalog shots to highly art-directed campaign visuals, we ensure your products look their absolute best." />
+            <CmsText cmsId="home.cap.label" as="span" className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase mb-4 block" fallback="Capabilities" />
+            <CmsText cmsId="home.cap.heading" as="h2" brClassName="" className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight text-black mb-8" fallback={'E-commerce visuals,\nelevated.'} />
+            <CmsText cmsId="home.cap.desc" as="p" className="font-sans text-zinc-500 font-light max-w-md leading-relaxed mb-12" fallback="We specialize in creating premium product imagery for e-commerce brands. From clean catalog shots to highly art-directed campaign visuals, we ensure your products look their absolute best." />
             <div className="grid grid-cols-2 gap-4">
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
                  <Image src={cmsImages.capability_product || "/campaign-worlds/LOGO DESIGN _ IDENTITY DESIGN _ ЛОГОТИП.jpeg"} alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -314,20 +314,20 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-6 justify-center text-sm md:text-base font-medium tracking-wide">
             <div className="flex items-center justify-between border-b border-zinc-100 pb-4">
-              <span>Product Photography</span>
-              <span className="text-zinc-400 text-xs">— Studio & Lifestyle</span>
+              <CmsText cmsId="home.cap.item1.title" fallback="Product Photography" as="span" />
+              <CmsText cmsId="home.cap.item1.desc" fallback="— Studio & Lifestyle" as="span" className="text-zinc-400 text-xs" />
             </div>
             <div className="flex items-center justify-between border-b border-zinc-100 pb-4">
-              <span>Product-on-Model</span>
-              <span className="text-zinc-400 text-xs">— Fashion & Apparel</span>
+              <CmsText cmsId="home.cap.item2.title" fallback="Product-on-Model" as="span" />
+              <CmsText cmsId="home.cap.item2.desc" fallback="— Fashion & Apparel" as="span" className="text-zinc-400 text-xs" />
             </div>
             <div className="flex items-center justify-between border-b border-zinc-100 pb-4">
-              <span>Campaign Visuals</span>
-              <span className="text-zinc-400 text-xs">— Art Directed Compositions</span>
+              <CmsText cmsId="home.cap.item3.title" fallback="Campaign Visuals" as="span" />
+              <CmsText cmsId="home.cap.item3.desc" fallback="— Art Directed Compositions" as="span" className="text-zinc-400 text-xs" />
             </div>
             <div className="flex items-center justify-between border-b border-zinc-100 pb-4">
-              <span>Catalog & Marketplace Imagery</span>
-              <span className="text-zinc-400 text-xs">— Collection Consistency</span>
+              <CmsText cmsId="home.cap.item4.title" fallback="Catalog & Marketplace Imagery" as="span" />
+              <CmsText cmsId="home.cap.item4.desc" fallback="— Collection Consistency" as="span" className="text-zinc-400 text-xs" />
             </div>
           </div>
         </div>
@@ -336,8 +336,8 @@ export default function Home() {
       {/* 3. PRODUCT COLLECTION GALLERY */}
       <section className="relative w-full z-10 bg-[#F9F8F6] py-32 overflow-hidden border-t border-zinc-200">
         <div className="max-w-[1400px] mx-auto px-6 mb-16 text-center">
-          <span className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase block mb-4">Editorial Archive</span>
-          <h2 className="font-serif text-4xl md:text-5xl text-black">A visual collection.</h2>
+          <CmsText cmsId="home.archive.label" as="span" className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase block mb-4" fallback="Editorial Archive" />
+          <CmsText cmsId="home.archive.heading" as="h2" className="font-serif text-4xl md:text-5xl text-black" fallback="A visual collection." />
         </div>
 
         <div className="max-w-[1600px] mx-auto px-6">
@@ -364,10 +364,8 @@ export default function Home() {
       {/* 4. PRODUCT TRANSFORMATION */}
       <section className="relative w-full z-10 bg-zinc-950 text-white py-32 px-6 overflow-hidden">
         <div className="max-w-[1400px] mx-auto flex flex-col items-center text-center">
-          <span className="text-[10px] tracking-[0.3em] font-bold text-zinc-500 uppercase mb-4">The Process</span>
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight mb-16">
-            From Product <br/> to Campaign.
-          </h2>
+          <CmsText cmsId="home.process.label" as="span" className="text-[10px] tracking-[0.3em] font-bold text-zinc-500 uppercase mb-4" fallback="The Process" />
+          <CmsText cmsId="home.process.heading" as="h2" brClassName="" className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight mb-16" fallback={"From Product\nto Campaign."} />
 
           <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
             <div className="flex flex-col items-center gap-6 w-full md:w-1/3">
@@ -397,8 +395,8 @@ export default function Home() {
       {/* 5. FASHION & APPAREL */}
       <section className="relative w-full z-10 bg-white py-32 border-b border-zinc-200">
         <div className="max-w-[1400px] mx-auto px-6 mb-16">
-          <span className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase block mb-4">Focus</span>
-          <h2 className="font-serif text-4xl md:text-5xl text-black">Fashion & Apparel.</h2>
+          <CmsText cmsId="home.focus.label" as="span" className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase block mb-4" fallback="Focus" />
+          <CmsText cmsId="home.focus.heading" as="h2" className="font-serif text-4xl md:text-5xl text-black" fallback="Fashion & Apparel." />
         </div>
         <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
            <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
@@ -509,32 +507,32 @@ export default function Home() {
             
             <div className="flex flex-col gap-4">
               <span className="text-zinc-300 font-serif text-3xl italic">01</span>
-              <h4 className="font-bold text-sm uppercase tracking-widest">Product</h4>
-              <p className="text-zinc-500 text-sm font-light leading-relaxed">Provide your product or reference imagery.</p>
+              <CmsText cmsId="home.process.step1.title" as="h4" className="font-bold text-sm uppercase tracking-widest" fallback="Product" />
+              <CmsText cmsId="home.process.step1.desc" as="p" className="text-zinc-500 text-sm font-light leading-relaxed" fallback="Provide your product or reference imagery." />
             </div>
             
             <div className="flex flex-col gap-4">
               <span className="text-zinc-300 font-serif text-3xl italic">02</span>
-              <h4 className="font-bold text-sm uppercase tracking-widest">Direction</h4>
-              <p className="text-zinc-500 text-sm font-light leading-relaxed">We establish the visual direction and lighting.</p>
+              <CmsText cmsId="home.process.step2.title" as="h4" className="font-bold text-sm uppercase tracking-widest" fallback="Direction" />
+              <CmsText cmsId="home.process.step2.desc" as="p" className="text-zinc-500 text-sm font-light leading-relaxed" fallback="We establish the visual direction and lighting." />
             </div>
             
             <div className="flex flex-col gap-4">
               <span className="text-zinc-300 font-serif text-3xl italic">03</span>
-              <h4 className="font-bold text-sm uppercase tracking-widest">Production</h4>
-              <p className="text-zinc-500 text-sm font-light leading-relaxed">Products are developed into the required visual style.</p>
+              <CmsText cmsId="home.process.step3.title" as="h4" className="font-bold text-sm uppercase tracking-widest" fallback="Production" />
+              <CmsText cmsId="home.process.step3.desc" as="p" className="text-zinc-500 text-sm font-light leading-relaxed" fallback="Products are developed into the required visual style." />
             </div>
             
             <div className="flex flex-col gap-4">
               <span className="text-zinc-300 font-serif text-3xl italic">04</span>
-              <h4 className="font-bold text-sm uppercase tracking-widest">Refinement</h4>
-              <p className="text-zinc-500 text-sm font-light leading-relaxed">Composition, styling, and details are meticulously polished.</p>
+              <CmsText cmsId="home.process.step4.title" as="h4" className="font-bold text-sm uppercase tracking-widest" fallback="Refinement" />
+              <CmsText cmsId="home.process.step4.desc" as="p" className="text-zinc-500 text-sm font-light leading-relaxed" fallback="Composition, styling, and details are meticulously polished." />
             </div>
             
             <div className="flex flex-col gap-4">
               <span className="text-zinc-300 font-serif text-3xl italic">05</span>
-              <h4 className="font-bold text-sm uppercase tracking-widest">Delivery</h4>
-              <p className="text-zinc-500 text-sm font-light leading-relaxed">Final commercial-ready visuals are delivered.</p>
+              <CmsText cmsId="home.process.step5.title" as="h4" className="font-bold text-sm uppercase tracking-widest" fallback="Delivery" />
+              <CmsText cmsId="home.process.step5.desc" as="p" className="text-zinc-500 text-sm font-light leading-relaxed" fallback="Final commercial-ready visuals are delivered." />
             </div>
 
           </div>
@@ -545,26 +543,24 @@ export default function Home() {
       <section className="relative w-full z-10 bg-white py-32 px-6 border-t border-zinc-200">
         <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24">
           <div className="w-full lg:w-1/3">
-            <h2 className="font-serif text-4xl md:text-5xl leading-tight text-black sticky top-32">
-              Built for <br/>E-commerce.
-            </h2>
+            <CmsText cmsId="home.why.heading" as="h2" brClassName="" className="font-serif text-4xl md:text-5xl leading-tight text-black sticky top-32" fallback={"Built for\nE-commerce."} />
           </div>
           <div className="w-full lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
             <div>
-              <h4 className="font-bold text-sm uppercase tracking-widest mb-4">Consistent Presentation</h4>
-              <p className="text-zinc-500 text-sm md:text-base font-light leading-relaxed">Maintain a unified visual language across your entire product catalog, ensuring brand consistency on every product page.</p>
+              <CmsText cmsId="home.why.item1.title" as="h4" className="font-bold text-sm uppercase tracking-widest mb-4 block" fallback="Consistent Presentation" />
+              <CmsText cmsId="home.why.item1.desc" as="p" className="text-zinc-500 text-sm md:text-base font-light leading-relaxed" fallback="Maintain a unified visual language across your entire product catalog, ensuring brand consistency on every product page." />
             </div>
             <div>
-              <h4 className="font-bold text-sm uppercase tracking-widest mb-4">Premium Aesthetic</h4>
-              <p className="text-zinc-500 text-sm md:text-base font-light leading-relaxed">Elevate your brand perception with lighting, framing, and compositions that rival top-tier physical studio productions.</p>
+              <CmsText cmsId="home.why.item2.title" as="h4" className="font-bold text-sm uppercase tracking-widest mb-4 block" fallback="Premium Aesthetic" />
+              <CmsText cmsId="home.why.item2.desc" as="p" className="text-zinc-500 text-sm md:text-base font-light leading-relaxed" fallback="Elevate your brand perception with lighting, framing, and compositions that rival top-tier physical studio productions." />
             </div>
             <div>
-              <h4 className="font-bold text-sm uppercase tracking-widest mb-4">Scalable Production</h4>
-              <p className="text-zinc-500 text-sm md:text-base font-light leading-relaxed">Whether launching a single capsule collection or re-shooting a massive inventory, our process scales effortlessly.</p>
+              <CmsText cmsId="home.why.item3.title" as="h4" className="font-bold text-sm uppercase tracking-widest mb-4 block" fallback="Scalable Production" />
+              <CmsText cmsId="home.why.item3.desc" as="p" className="text-zinc-500 text-sm md:text-base font-light leading-relaxed" fallback="Whether launching a single capsule collection or re-shooting a massive inventory, our process scales effortlessly." />
             </div>
             <div>
-              <h4 className="font-bold text-sm uppercase tracking-widest mb-4">Flexible Directions</h4>
-              <p className="text-zinc-500 text-sm md:text-base font-light leading-relaxed">Pivot from clean white-background catalog shots to moody, editorial campaign visuals using the same core product assets.</p>
+              <CmsText cmsId="home.why.item4.title" as="h4" className="font-bold text-sm uppercase tracking-widest mb-4 block" fallback="Flexible Directions" />
+              <CmsText cmsId="home.why.item4.desc" as="p" className="text-zinc-500 text-sm md:text-base font-light leading-relaxed" fallback="Pivot from clean white-background catalog shots to moody, editorial campaign visuals using the same core product assets." />
             </div>
           </div>
         </div>
@@ -574,23 +570,21 @@ export default function Home() {
       <footer className="w-full bg-white border-t border-zinc-200 mt-auto">
         <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">GROTON AI STUDIO</h3>
+            <CmsText cmsId="global.footer.brand" as="h3" className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black" fallback="GROTON AI STUDIO" />
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 md:gap-x-8 text-[11px] md:text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
-              <Link href="/about" className="hover:text-black transition-colors py-1 md:py-0">About</Link>
-              <Link href="/services" className="hover:text-black transition-colors py-1 md:py-0">Services</Link>
-              <Link href="/work" className="hover:text-black transition-colors py-1 md:py-0">Work</Link>
+              <Link href="/about" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.about" fallback="About" /></Link>
+              <Link href="/services" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
+              <Link href="/work" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
               <Link href="/blog" className="hover:text-black transition-colors py-1 md:py-0">Blog</Link>
 
-              <Link href="/pricing" className="hover:text-black transition-colors py-1 md:py-0">Pricing</Link>
-              <Link href="/contact" className="hover:text-black transition-colors py-1 md:py-0">Contact</Link>
+              <Link href="/pricing" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
+              <Link href="/contact" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.contact" fallback="Contact" /></Link>
               <Link href="/privacy-policy" className="hover:text-black transition-colors py-1 md:py-0">Privacy Policy</Link>
               <Link href="/terms-and-conditions" className="hover:text-black transition-colors py-1 md:py-0">Terms & Conditions</Link>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">
-            <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              &copy; 2026 GROTON AI STUDIO
-            </p>
+            <CmsText cmsId="global.footer.copyright" as="p" className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold" fallback="© 2026 GROTON AI STUDIO" />
             <div className="flex items-center gap-6">
               <a href="https://www.instagram.com/d99p4k/" target="_blank" rel="noopener noreferrer" className="text-inherit opacity-60 hover:opacity-100 transition-all duration-300 hover:-translate-y-1" aria-label="Instagram">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -604,7 +598,7 @@ export default function Home() {
               </a>
             </div>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>
+              <CmsText cmsId="global.footer.credit" fallback="A creative venture by" /> <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors"><CmsText cmsId="global.footer.creditLink" fallback="Grafly Studio" /></a>
             </p>
           </div>
         </div>

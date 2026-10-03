@@ -15,18 +15,18 @@ export default function AboutPage() {
       {/* HEADER */}
       <header className="w-full p-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-30 bg-white border-b border-zinc-200">
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          GROTON AI STUDIO
+          <CmsText cmsId="global.nav.brand" fallback="GROTON AI STUDIO" />
         </Link>
         <div className="flex items-center gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
-            <Link href="/work" className="hover:text-black transition-colors">Work</Link>
-            <Link href="/services" className="hover:text-black transition-colors">Services</Link>
-            <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
-            <Link href="/tools" className="hover:text-black transition-colors">Tools</Link>
-            <Link href="/about" className="text-black transition-colors">About</Link>
+            <Link href="/work" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
+            <Link href="/services" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
+            <Link href="/pricing" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
+            <Link href="/tools" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.tools" fallback="Tools" /></Link>
+            <Link href="/about" className="text-black transition-colors"><CmsText cmsId="global.nav.about" fallback="About" /></Link>
           </nav>
           <Link href="/contact" className="px-5 py-3 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
-            Contact
+            <CmsText cmsId="global.nav.contact" fallback="Contact" />
           </Link>
         </div>
       </header>
@@ -35,14 +35,14 @@ export default function AboutPage() {
       <main className="flex-1 w-full bg-white">
         <section className="py-24 md:py-32 lg:py-48 px-6 md:px-12 lg:px-24 text-center">
           <CmsText
-            cmsId="about_hero_heading"
+            cmsId="about.hero.heading"
             as="h1"
-            isHtml={true}
+            brClassName=""
             className="font-serif text-5xl md:text-6xl lg:text-7xl mb-12 max-w-4xl mx-auto leading-tight"
-            fallback={'Art direction meets <br/>algorithmic scale.'}
+            fallback={'Art direction meets\nalgorithmic scale.'}
           />
           <CmsText
-            cmsId="about_hero_desc"
+            cmsId="about.hero.desc"
             as="p"
             className="font-sans text-lg md:text-xl text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light"
             fallback="GROTON is a premium visual production studio designed for modern brands. We engineer hyper-realistic, campaign-ready visual assets that blur the line between traditional photography and artificial intelligence."
@@ -58,31 +58,23 @@ export default function AboutPage() {
             
             <div className="flex flex-col md:flex-row gap-8 md:gap-16">
               <div className="w-full md:w-1/3">
-                <h3 className="font-sans text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">The Problem</h3>
+                <CmsText cmsId="about.prob.label" as="h3" className="font-sans text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400" fallback="The Problem" />
               </div>
               <div className="w-full md:w-2/3">
-                <CmsText cmsId="about_prob_heading" as="h2" className="font-serif text-3xl md:text-4xl mb-6" fallback="Traditional production is too slow. AI is too generic." />
-                <p className="text-sm text-zinc-500 font-light leading-relaxed mb-4">
-                  Modern brands require a massive volume of visual content—from e-commerce hero shots to social media campaigns and display advertising. Traditional physical photoshoots involve heavy logistics, locations, permits, and rigid timelines. 
-                </p>
-                <p className="text-sm text-zinc-500 font-light leading-relaxed">
-                  Conversely, standard AI generation often produces generic, unpredictable, or off-brand results that fail to meet premium brand standards.
-                </p>
+                <CmsText cmsId="about.prob.heading" as="h2" className="font-serif text-3xl md:text-4xl mb-6" fallback="Traditional production is too slow. AI is too generic." />
+                <CmsText cmsId="about.prob.p1" as="p" className="text-sm text-zinc-500 font-light leading-relaxed mb-4" fallback="Modern brands require a massive volume of visual content—from e-commerce hero shots to social media campaigns and display advertising. Traditional physical photoshoots involve heavy logistics, locations, permits, and rigid timelines." />
+                <CmsText cmsId="about.prob.p2" as="p" className="text-sm text-zinc-500 font-light leading-relaxed" fallback="Conversely, standard AI generation often produces generic, unpredictable, or off-brand results that fail to meet premium brand standards." />
               </div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-8 md:gap-16">
               <div className="w-full md:w-1/3">
-                <h3 className="font-sans text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">Our Approach</h3>
+                <CmsText cmsId="about.appr.label" as="h3" className="font-sans text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400" fallback="Our Approach" />
               </div>
               <div className="w-full md:w-2/3">
-                <CmsText cmsId="about_appr_heading" as="h2" className="font-serif text-3xl md:text-4xl mb-6" fallback="Directed Generation." />
-                <p className="text-sm text-zinc-500 font-light leading-relaxed mb-4">
-                  We solve this by placing experienced creative directors at the helm of advanced AI synthesis. We don&apos;t just type prompts; we establish visual systems. We define the lighting logic, the color theory, the material textures, and the compositional hierarchy.
-                </p>
-                <p className="text-sm text-zinc-500 font-light leading-relaxed">
-                  This hybrid approach allows us to deliver production-grade realism and brand consistency at a scale and speed that traditional studios cannot match.
-                </p>
+                <CmsText cmsId="about.appr.heading" as="h2" className="font-serif text-3xl md:text-4xl mb-6" fallback="Directed Generation." />
+                <CmsText cmsId="about.appr.p1" as="p" className="text-sm text-zinc-500 font-light leading-relaxed mb-4" fallback="We solve this by placing experienced creative directors at the helm of advanced AI synthesis. We don't just type prompts; we establish visual systems. We define the lighting logic, the color theory, the material textures, and the compositional hierarchy." />
+                <CmsText cmsId="about.appr.p2" as="p" className="text-sm text-zinc-500 font-light leading-relaxed" fallback="This hybrid approach allows us to deliver production-grade realism and brand consistency at a scale and speed that traditional studios cannot match." />
               </div>
             </div>
 
@@ -90,9 +82,9 @@ export default function AboutPage() {
         </section>
 
         <section className="py-24 md:py-32 px-6 text-center bg-black text-white">
-          <CmsText cmsId="about_cta_heading" as="h2" className="font-serif text-3xl md:text-4xl lg:text-5xl mb-8 max-w-2xl mx-auto leading-tight" fallback="Elevate your visual language." />
+          <CmsText cmsId="about.cta.heading" as="h2" className="font-serif text-3xl md:text-4xl lg:text-5xl mb-8 max-w-2xl mx-auto leading-tight" fallback="Elevate your visual language." />
           <Link href="/contact" className="inline-block px-10 py-5 bg-white text-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-zinc-200 transition-colors mt-8">
-            Start A Project
+            <CmsText cmsId="about.cta.btn" fallback="Start A Project" />
           </Link>
         </section>
       </main>
@@ -101,21 +93,19 @@ export default function AboutPage() {
       <footer className="w-full bg-white border-t border-zinc-200 mt-auto">
         <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">GROTON AI STUDIO</h3>
+            <CmsText cmsId="global.footer.brand" as="h3" className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black" fallback="GROTON AI STUDIO" />
             <div className="flex flex-wrap gap-x-8 gap-y-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
-              <Link href="/about" className="text-black transition-colors">About</Link>
-              <Link href="/services" className="hover:text-black transition-colors">Services</Link>
-              <Link href="/work" className="hover:text-black transition-colors">Work</Link>
-              <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
-              <Link href="/contact" className="hover:text-black transition-colors">Contact</Link>
+              <Link href="/about" className="text-black transition-colors"><CmsText cmsId="global.nav.about" fallback="About" /></Link>
+              <Link href="/services" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
+              <Link href="/work" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
+              <Link href="/pricing" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
+              <Link href="/contact" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.contact" fallback="Contact" /></Link>
               <Link href="/privacy-policy" className="hover:text-black transition-colors">Privacy Policy</Link>
               <Link href="/terms-and-conditions" className="hover:text-black transition-colors">Terms & Conditions</Link>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">
-            <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              &copy; 2026 GROTON AI STUDIO
-            </p>
+            <CmsText cmsId="global.footer.copyright" as="p" className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold" fallback="© 2026 GROTON AI STUDIO" />
             <div className="flex items-center gap-6">
               <a href="https://www.instagram.com/d99p4k/" target="_blank" rel="noopener noreferrer" className="text-inherit opacity-60 hover:opacity-100 transition-all duration-300 hover:-translate-y-1" aria-label="Instagram">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -129,7 +119,7 @@ export default function AboutPage() {
               </a>
             </div>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>
+              <CmsText cmsId="global.footer.credit" fallback="A creative venture by" /> <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors"><CmsText cmsId="global.footer.creditLink" fallback="Grafly Studio" /></a>
             </p>
           </div>
         </div>

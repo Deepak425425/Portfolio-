@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import Image from "next/image";
 import { BLOG_POSTS } from "@/lib/blog/data";
+import CmsText from "@/components/CmsText";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -38,13 +39,9 @@ export default function BlogLandingPage() {
         
         {/* HERO SECTION */}
         <div className="mb-20 md:mb-32">
-          <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text mb-4 block">GROTON JOURNAL</span>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[0.9] mb-8">
-            Insights on product<br />imagery and brand<br />visuals.
-          </h1>
-          <p className="text-sec-text max-w-xl text-sm md:text-base leading-relaxed">
-            Thoughts, guides, and creative workflows for modern e-commerce brands, creative directors, and digital studios.
-          </p>
+          <CmsText cmsId="blog.hero.label" as="span" className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text mb-4 block" fallback="GROTON JOURNAL" />
+          <CmsText cmsId="blog.hero.heading" as="h1" className="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[0.9] mb-8" fallback={"Insights on product\nimagery and brand\nvisuals."} />
+          <CmsText cmsId="blog.hero.desc" as="p" className="text-sec-text max-w-xl text-sm md:text-base leading-relaxed" fallback="Thoughts, guides, and creative workflows for modern e-commerce brands, creative directors, and digital studios." />
         </div>
 
         {/* ARTICLES GRID */}
