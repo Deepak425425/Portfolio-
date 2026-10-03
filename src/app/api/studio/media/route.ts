@@ -98,7 +98,17 @@ export async function POST(req: Request) {
         access: 'public',
         addRandomSuffix: false
       });
-      return NextResponse.json({ url: blob.url });
+      
+      const mediaRecord = {
+        id: blob.url,
+        sourceType: 'uploaded',
+        originalPath: blob.url,
+        publicUrl: blob.url,
+        displayName: filename,
+        usages: []
+      };
+      
+      return NextResponse.json(mediaRecord);
     } catch (error) {
       console.error('Blob upload failed:', error);
       return NextResponse.json({ error: 'Storage failure: Failed to upload to Vercel Blob.' }, { status: 500 });
@@ -109,7 +119,18 @@ export async function POST(req: Request) {
     const dir = path.join(process.cwd(), 'public/uploads/studio');
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, filename), buffer);
-    return NextResponse.json({ url: '/uploads/studio/' + filename });
+    
+    const url = '/uploads/studio/' + filename;
+    const mediaRecord = {
+      id: url,
+      sourceType: 'uploaded',
+      originalPath: url,
+      publicUrl: url,
+      displayName: filename,
+      usages: []
+    };
+    
+    return NextResponse.json(mediaRecord);
   } catch (e) {
     console.warn('Filesystem read-only', e);
     return NextResponse.json({ error: 'Missing Storage Configuration: Vercel requires BLOB_READ_WRITE_TOKEN to persist uploaded files.' }, { status: 500 });
