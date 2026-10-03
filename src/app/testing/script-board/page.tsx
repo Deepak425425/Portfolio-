@@ -572,6 +572,8 @@ export default function ScriptBoard() {
       
       const filename = projectName ? `${projectName.replace(/\s+/g, '-')}-groton-storyboard.pdf` : 'groton-storyboard.pdf';
       doc.save(filename);
+      
+
     } catch (e) {
       console.error("PDF generation failed", e);
       alert("Failed to generate PDF. Please try again.");

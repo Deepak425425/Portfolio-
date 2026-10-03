@@ -10,6 +10,6 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function TestingLayout({ children }: { children: React.ReactNode }) {
+export default function TestingLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

@@ -65,9 +65,7 @@ export default function WorkPage() {
           </div>
           
           {portfolioItems.length === 0 && (
-            <div className="text-center py-32 text-zinc-400 font-light text-sm">
-              No projects found in this category yet.
-            </div>
+            <CmsText cmsId="work.empty" as="div" className="text-center py-32 text-zinc-400 font-light text-sm" fallback="No projects found in this category yet." />
           )}
         </section>
 

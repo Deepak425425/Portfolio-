@@ -9,15 +9,34 @@ import CmsText from "@/components/CmsText";
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate network request
-    setTimeout(() => {
+    setErrorMsg("");
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      if (res.ok && result.success) {
+        setIsSuccess(true);
+        e.currentTarget.reset(); // Only clear the form AFTER confirmed successful submission.
+      } else {
+        setErrorMsg(result.error || "Unable to send your message right now. Please try again.");
+      }
+    } catch (err) {
+      setErrorMsg("Unable to send your message right now. Please try again.");
+    } finally {
       setIsSubmitting(false);
-      setIsSuccess(true);
-    }, 1500);
+    }
   };
 
   return (
@@ -60,7 +79,7 @@ export default function ContactPage() {
                 <a href="https://wa.me/916378083205" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 hover:text-black transition-colors block">
                   <CmsText cmsId="contact.info.whatsapp" fallback="WhatsApp (+91 63780 83205)" />
                 </a>
-                <a href="https://www.linkedin.com/in/deepak-kumawat-grafly" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 hover:text-black transition-colors block mt-1">LinkedIn</a>
+                <CmsText cmsId="contact.info.linkedin" fallback="LinkedIn" as="a" className="text-sm text-zinc-500 hover:text-black transition-colors block mt-1" href="https://www.linkedin.com/in/deepak-kumawat-grafly" target="_blank" rel="noopener noreferrer" />
               </div>
             </div>
 
@@ -69,12 +88,10 @@ export default function ContactPage() {
                 <div className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center mx-auto mb-6">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                 </div>
-                <h3 className="font-serif text-2xl mb-4">Inquiry Received</h3>
-                <p className="text-sm text-zinc-500 font-light">
-                  Thank you for reaching out. A creative director will review your project details and get back to you within 24 hours.
-                </p>
+                <CmsText cmsId="contact.form.success.heading" as="h3" className="font-serif text-2xl mb-4" fallback="Inquiry Received" />
+                <CmsText cmsId="contact.form.success.desc" as="p" className="text-sm text-zinc-500 font-light" fallback="Thank you for reaching out. A creative director will review your project details and get back to you within 24 hours." />
                 <button onClick={() => setIsSuccess(false)} className="mt-8 text-[10px] uppercase tracking-widest font-bold border-b border-black pb-1 hover:text-zinc-500 transition-colors">
-                  Submit another project
+                  <CmsText cmsId="contact.form.success.btn" fallback="Submit another project" />
                 </button>
               </div>
             ) : (
@@ -82,29 +99,29 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="flex flex-col gap-2">
                     <label htmlFor="name" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.name.label" fallback="Name" /></label>
-                    <input required type="text" id="name" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="Jane Doe" />
+                    <input required type="text" id="name" name="name" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="Jane Doe" />
                   </div>
                   <div className="flex flex-col gap-2">
                     <label htmlFor="brand" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.brand.label" fallback="Brand / Company" /></label>
-                    <input required type="text" id="brand" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="Your Brand" />
+                    <input required type="text" id="brand" name="brand" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="Your Brand" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="flex flex-col gap-2">
                     <label htmlFor="email" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.email.label" fallback="Email" /></label>
-                    <input required type="email" id="email" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="jane@brand.com" />
+                    <input required type="email" id="email" name="email" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="jane@brand.com" />
                   </div>
                   <div className="flex flex-col gap-2">
                     <label htmlFor="phone" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.phone.label" fallback="Phone (Optional)" /></label>
-                    <input type="tel" id="phone" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="+1 234 567 890" />
+                    <input type="tel" id="phone" name="phone" className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm" placeholder="+1 234 567 890" />
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <label htmlFor="type" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.type.label" fallback="Project Type" /></label>
                   <div className="relative">
-                    <select required id="type" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
+                    <select required id="type" name="type" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
                       <option value="" disabled>Select a service...</option>
                       <option value="AI Product Images">AI Product Images</option>
                       <option value="Product-on-Model">Product-on-Model</option>
@@ -124,7 +141,7 @@ export default function ContactPage() {
                 <div className="flex flex-col gap-2">
                   <label htmlFor="budget" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.budget.label" fallback="Budget Range" /></label>
                   <div className="relative">
-                    <select required id="budget" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
+                    <select required id="budget" name="budget" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
                       <option value="" disabled>Select a range...</option>
                       <option value="Starter">Starter — 25 Images — ₹2,499+</option>
                       <option value="Growth">Growth — 50 Images — ₹4,499+</option>
@@ -139,7 +156,7 @@ export default function ContactPage() {
 
                 <div className="flex flex-col gap-2">
                   <label htmlFor="details" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.details.label" fallback="Project Details" /></label>
-                  <textarea required id="details" rows={4} className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm resize-none" placeholder="Tell us about the visual direction, quantity of assets, and timeline..."></textarea>
+                  <textarea required id="details" name="details" rows={4} className="border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm resize-none" placeholder="Tell us about the visual direction, quantity of assets, and timeline..."></textarea>
                 </div>
 
                 <button 
@@ -153,6 +170,12 @@ export default function ContactPage() {
                     <CmsText cmsId="contact.form.submit" fallback="Submit Inquiry" />
                   )}
                 </button>
+
+                {errorMsg && (
+                  <div className="mt-4 p-4 border border-red-200 bg-red-50 text-red-600 text-sm font-light text-center">
+                    {errorMsg}
+                  </div>
+                )}
               </form>
             )}
           </div>
@@ -162,7 +185,7 @@ export default function ContactPage() {
           <CmsImage cmsId="contact_visual" fallbackSrc="/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg" alt="GROTON AI STUDIO" fill className="object-cover object-[center_15%]" />
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="absolute bottom-16 left-16 max-w-sm">
-            <h3 className="font-serif text-3xl text-white mb-4">"The visual standard for modern brands."</h3>
+            <CmsText cmsId="contact.hero.quote" as="h3" className="font-serif text-3xl text-white mb-4" fallback={'"The visual standard for modern brands."'} />
           </div>
         </div>
       </main>
@@ -199,7 +222,7 @@ export default function ContactPage() {
               </a>
             </div>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>
+              <CmsText cmsId="global.footer.credit" fallback="A creative venture by" /> <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors"><CmsText cmsId="global.footer.creditLink" fallback="Grafly Studio" /></a>
             </p>
           </div>
         </div>

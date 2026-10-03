@@ -98,9 +98,8 @@ export default function ServicesPage() {
                 <CmsText cmsId={`services.s${index+1}.title`} as="h2" className="font-serif text-3xl md:text-4xl lg:text-5xl mb-6" fallback={service.title} />
                 <CmsText cmsId={`services.s${index+1}.desc`} as="h3" className="font-sans text-lg text-black mb-6 leading-relaxed" fallback={service.description} />
                 <CmsText cmsId={`services.s${index+1}.details`} as="p" className="text-sm text-zinc-500 font-light leading-relaxed mb-10" fallback={service.details} />
-                
                 <div>
-                  <h4 className="text-[10px] tracking-[0.2em] font-bold text-black uppercase mb-4 border-b border-zinc-200 pb-2">Typical Deliverables</h4>
+                  <CmsText cmsId={`services.s${index+1}.delivLabel`} as="h4" className="text-[10px] tracking-[0.2em] font-bold text-black uppercase mb-4 border-b border-zinc-200 pb-2" fallback="Typical Deliverables" />
                   <ul className="flex flex-col gap-3">
                     {service.deliverables.map((item, i) => (
                       <li key={i} className="text-sm text-zinc-500 font-light flex items-center gap-3">
@@ -113,7 +112,7 @@ export default function ServicesPage() {
                 
                 <div className="mt-12">
                   <Link href="/contact" className="inline-block px-8 py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
-                    Inquire about {service.title}
+                    <CmsText cmsId={`services.s${index+1}.inquire`} fallback={`Inquire about ${service.title}`} />
                   </Link>
                 </div>
               </div>

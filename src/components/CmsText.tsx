@@ -15,7 +15,18 @@ export default function CmsText({ cmsId, fallback, as: Component = 'span', class
   const [text, setText] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/studio/cms-text', { cache: 'no-store' })
+    let isPreview = false;
+    if (typeof window !== 'undefined') {
+      if (window.location.search.includes('preview=true')) {
+        sessionStorage.setItem('groton_preview', 'true');
+        isPreview = true;
+      } else if (sessionStorage.getItem('groton_preview') === 'true') {
+        isPreview = true;
+      }
+    }
+    const apiUrl = isPreview ? '/api/studio/cms-text?preview=true' : '/api/studio/cms-text';
+
+    fetch(apiUrl, { cache: 'no-store' })
       .then(r => r.json())
       .then(data => {
         const item = data.find((i: any) => i.id === cmsId);

@@ -15,6 +15,7 @@
     "@imgly/background-removal": "^1.7.0",
     "@mediapipe/tasks-vision": "^1.0.1",
     "@vercel/blob": "^2.8.0",
+    "@vercel/postgres": "^0.10.0",
     "exifreader": "^4.46.0",
     "framer-motion": "^13.4.4",
     "gifenc": "^1.0.3",
@@ -22,7 +23,8 @@
     "jszip": "^3.10.2",
     "next": "16.3.6",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "resend": "^6.32.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
