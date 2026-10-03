@@ -48,9 +48,16 @@ function StudioContent() {
     if (!e.target.files?.[0]) return;
     const formData = new FormData();
     formData.append('file', e.target.files[0]);
-    const res = await fetch('/api/studio/media', { method: 'POST', body: formData });
-    if (res.ok) {
-      loadMedia(); // reload library
+    try {
+      const res = await fetch('/api/studio/media', { method: 'POST', body: formData });
+      if (res.ok) {
+        loadMedia(); // reload library
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Upload failed');
+      }
+    } catch (error) {
+      alert('Upload request failed');
     }
   };
 
