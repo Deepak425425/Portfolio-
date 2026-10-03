@@ -386,6 +386,9 @@ function TextEditorRow({ item, onSave }: { item: any, onSave: (id: string, val: 
           <button onClick={() => onSave(item.id, val)} className="px-6 py-2.5 bg-[#8B7CFF] hover:bg-[#7a6ce0] text-white text-sm font-medium rounded-lg transition-colors">
             Save & Publish
           </button>
+          <button onClick={() => { setVal(item.defaultValue); onSave(item.id, item.defaultValue); }} className="px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-medium rounded-lg transition-colors">
+            Reset to Default
+          </button>
        </div>
     </div>
   )

@@ -1,28 +1,27 @@
 import React from "react";
 import Link from "next/link";
+import CmsText from "./CmsText";
 
 export default function Footer() {
   return (
     <footer className="w-full bg-background border-t border-border-color mt-auto">
       <div className="max-w-[1600px] mx-auto p-8 md:p-16 flex flex-col gap-16">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-          <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-foreground">GROTON AI</h3>
+          <CmsText cmsId="global.footer.brand" as="h3" className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-foreground" fallback="GROTON AI" />
           <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 md:gap-x-8 text-[11px] md:text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text">
-            <Link href="/about" className="hover:text-foreground transition-colors py-2 md:py-0">About</Link>
-            <Link href="/services" className="hover:text-foreground transition-colors py-2 md:py-0">Services</Link>
-            <Link href="/work" className="hover:text-foreground transition-colors py-2 md:py-0">Work</Link>
+            <Link href="/about" className="hover:text-foreground transition-colors py-2 md:py-0"><CmsText cmsId="global.nav.about" fallback="About" /></Link>
+            <Link href="/services" className="hover:text-foreground transition-colors py-2 md:py-0"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
+            <Link href="/work" className="hover:text-foreground transition-colors py-2 md:py-0"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
             <Link href="/blog" className="hover:text-foreground transition-colors py-2 md:py-0">Blog</Link>
 
-            <Link href="/pricing" className="hover:text-foreground transition-colors py-2 md:py-0">Pricing</Link>
-            <Link href="/contact" className="hover:text-foreground transition-colors py-2 md:py-0">Contact</Link>
+            <Link href="/pricing" className="hover:text-foreground transition-colors py-2 md:py-0"><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
+            <Link href="/contact" className="hover:text-foreground transition-colors py-2 md:py-0"><CmsText cmsId="global.nav.contact" fallback="Contact" /></Link>
             <Link href="/privacy-policy" className="hover:text-foreground transition-colors py-2 md:py-0">Privacy Policy</Link>
             <Link href="/terms-and-conditions" className="hover:text-foreground transition-colors py-2 md:py-0">Terms & Conditions</Link>
           </div>
         </div>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-border-color/50">
-          <p className="text-[10px] text-sec-text tracking-[0.2em] uppercase font-bold">
-            &copy; 2026 GROTON AI
-          </p>
+          <CmsText cmsId="global.footer.copyright" as="p" className="text-[10px] text-sec-text tracking-[0.2em] uppercase font-bold" fallback="© 2026 GROTON AI" />
             <div className="flex items-center gap-6">
               <a href="https://www.instagram.com/d99p4k/" target="_blank" rel="noopener noreferrer" className="text-inherit opacity-60 hover:opacity-100 transition-all duration-300 hover:-translate-y-1" aria-label="Instagram">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -36,7 +35,7 @@ export default function Footer() {
               </a>
             </div>
           <p className="text-[10px] text-sec-text tracking-[0.2em] uppercase font-bold">
-            A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Grafly Studio</a>
+            <CmsText cmsId="global.footer.credit" fallback="A creative venture by" /> <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors"><CmsText cmsId="global.footer.creditLink" fallback="Grafly Studio" /></a>
           </p>
         </div>
       </div>

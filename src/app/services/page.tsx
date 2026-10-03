@@ -67,18 +67,18 @@ export default function ServicesPage() {
       {/* HEADER */}
       <header className="w-full p-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-30 bg-white border-b border-zinc-200">
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
-          GROTON AI STUDIO
+          <CmsText cmsId="global.nav.brand" fallback="GROTON AI STUDIO" />
         </Link>
         <div className="flex items-center gap-8">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
-            <Link href="/work" className="hover:text-black transition-colors">Work</Link>
-            <Link href="/services" className="text-black transition-colors">Services</Link>
-            <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
-            <Link href="/tools" className="hover:text-black transition-colors">Tools</Link>
-            <Link href="/about" className="hover:text-black transition-colors">About</Link>
+            <Link href="/work" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
+            <Link href="/services" className="text-black transition-colors"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
+            <Link href="/pricing" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
+            <Link href="/tools" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.tools" fallback="Tools" /></Link>
+            <Link href="/about" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.about" fallback="About" /></Link>
           </nav>
           <Link href="/contact" className="px-5 py-3 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
-            Contact
+            <CmsText cmsId="global.nav.contact" fallback="Contact" />
           </Link>
         </div>
       </header>
@@ -86,8 +86,8 @@ export default function ServicesPage() {
       {/* SERVICES CONTENT */}
       <main className="flex-1 w-full">
         <section className="py-24 md:py-32 px-6 md:px-12 lg:px-24 text-center border-b border-zinc-200 bg-white">
-          <CmsText cmsId="services_hero_heading" as="h1" className="font-serif text-5xl md:text-6xl lg:text-7xl mb-8" fallback="Production Capabilities." />
-          <CmsText cmsId="services_hero_desc" as="p" className="text-base text-zinc-500 font-light max-w-2xl mx-auto leading-relaxed" fallback="A comprehensive suite of visual generation services, combining sophisticated art direction with the scale and speed of artificial intelligence." />
+          <CmsText cmsId="services.hero.heading" as="h1" className="font-serif text-5xl md:text-6xl lg:text-7xl mb-8" fallback="Production Capabilities." />
+          <CmsText cmsId="services.hero.desc" as="p" className="text-base text-zinc-500 font-light max-w-2xl mx-auto leading-relaxed" fallback="A comprehensive suite of visual generation services, combining sophisticated art direction with the scale and speed of artificial intelligence." />
         </section>
 
         <div className="flex flex-col">
@@ -95,9 +95,9 @@ export default function ServicesPage() {
             <section key={service.id} id={service.id} className={`py-24 md:py-32 px-6 md:px-12 lg:px-24 flex flex-col lg:flex-row gap-16 lg:gap-24 items-center ${index % 2 !== 0 ? 'bg-white' : 'bg-zinc-50'}`}>
               <div className={`w-full lg:w-1/2 flex flex-col ${index % 2 !== 0 ? 'lg:order-2' : ''}`}>
                 <span className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase mb-4">0{index + 1}</span>
-                <CmsText cmsId={`services_s${index+1}_title`} as="h2" className="font-serif text-3xl md:text-4xl lg:text-5xl mb-6" fallback={service.title} />
-                <CmsText cmsId={`services_s${index+1}_desc`} as="h3" className="font-sans text-lg text-black mb-6 leading-relaxed" fallback={service.description} />
-                <p className="text-sm text-zinc-500 font-light leading-relaxed mb-10">{service.details}</p>
+                <CmsText cmsId={`services.s${index+1}.title`} as="h2" className="font-serif text-3xl md:text-4xl lg:text-5xl mb-6" fallback={service.title} />
+                <CmsText cmsId={`services.s${index+1}.desc`} as="h3" className="font-sans text-lg text-black mb-6 leading-relaxed" fallback={service.description} />
+                <CmsText cmsId={`services.s${index+1}.details`} as="p" className="text-sm text-zinc-500 font-light leading-relaxed mb-10" fallback={service.details} />
                 
                 <div>
                   <h4 className="text-[10px] tracking-[0.2em] font-bold text-black uppercase mb-4 border-b border-zinc-200 pb-2">Typical Deliverables</h4>
@@ -129,21 +129,19 @@ export default function ServicesPage() {
       <footer className="w-full bg-white border-t border-zinc-200 mt-auto">
         <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
-            <h3 className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black">GROTON AI STUDIO</h3>
+            <CmsText cmsId="global.footer.brand" as="h3" className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black" fallback="GROTON AI STUDIO" />
             <div className="flex flex-wrap gap-x-8 gap-y-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
-              <Link href="/about" className="hover:text-black transition-colors">About</Link>
-              <Link href="/services" className="text-black transition-colors">Services</Link>
-              <Link href="/work" className="hover:text-black transition-colors">Work</Link>
-              <Link href="/pricing" className="hover:text-black transition-colors">Pricing</Link>
-              <Link href="/contact" className="hover:text-black transition-colors">Contact</Link>
+              <Link href="/about" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.about" fallback="About" /></Link>
+              <Link href="/services" className="text-black transition-colors"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
+              <Link href="/work" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
+              <Link href="/pricing" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
+              <Link href="/contact" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.contact" fallback="Contact" /></Link>
               <Link href="/privacy-policy" className="hover:text-black transition-colors">Privacy Policy</Link>
               <Link href="/terms-and-conditions" className="hover:text-black transition-colors">Terms & Conditions</Link>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-8 border-t border-zinc-100">
-            <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              &copy; 2026 GROTON AI STUDIO
-            </p>
+            <CmsText cmsId="global.footer.copyright" as="p" className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold" fallback="© 2026 GROTON AI STUDIO" />
             <div className="flex items-center gap-6">
               <a href="https://www.instagram.com/d99p4k/" target="_blank" rel="noopener noreferrer" className="text-inherit opacity-60 hover:opacity-100 transition-all duration-300 hover:-translate-y-1" aria-label="Instagram">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -157,7 +155,7 @@ export default function ServicesPage() {
               </a>
             </div>
             <p className="text-[10px] text-zinc-400 tracking-[0.2em] uppercase font-bold">
-              A creative venture by <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors">Grafly Studio</a>
+              <CmsText cmsId="global.footer.credit" fallback="A creative venture by" /> <a href="https://graflystudio.com" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-black transition-colors"><CmsText cmsId="global.footer.creditLink" fallback="Grafly Studio" /></a>
             </p>
           </div>
         </div>

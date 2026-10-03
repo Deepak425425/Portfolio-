@@ -5,6 +5,7 @@ import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { TOOL_REGISTRY } from "@/lib/registry/tools";
+import CmsText from "@/components/CmsText";
 
 const ToolCard = ({ tool }: { tool: any }) => (
   <Link 
@@ -100,9 +101,9 @@ export default function ToolsLandingPage() {
         
         {/* HERO */}
         <div className="flex flex-col items-center justify-center text-center gap-4 mb-24 w-full relative z-10">
-            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#8B7CFF]">GROTON AI / TOOLS</span>
-            <h1 className="text-4xl md:text-6xl font-serif tracking-tight leading-tight">Image tools, without the busywork.</h1>
-            <p className="text-base text-zinc-500 mt-2 font-light tracking-wide">Small tools. Serious image work.</p>
+            <CmsText cmsId="tools.hero.label" as="span" className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#8B7CFF]" fallback="GROTON AI / TOOLS" />
+            <CmsText cmsId="tools.hero.heading" as="h1" className="text-4xl md:text-6xl font-serif tracking-tight leading-tight" fallback="Image tools, without the busywork." />
+            <CmsText cmsId="tools.hero.desc" as="p" className="text-base text-zinc-500 mt-2 font-light tracking-wide" fallback="Small tools. Serious image work." />
             
             <div className="relative group mt-8 w-full max-w-md">
               <input 
