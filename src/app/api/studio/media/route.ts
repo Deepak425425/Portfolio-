@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { getCmsData } from '@/lib/cms';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const cmsData = getCmsData();

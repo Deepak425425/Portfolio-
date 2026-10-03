@@ -44,7 +44,7 @@ const MagneticButton = ({ children, href, className }: { children: React.ReactNo
 
 export default function Home() {
   const [cmsImages, setCmsImages] = useState<Record<string, string>>({});
-  useEffect(() => { fetch('/api/studio/cms').then(r => r.json()).then(data => { const map = data.reduce((acc: any, img: any) => ({ ...acc, [img.id]: img.src }), {}); setCmsImages(map); }).catch(() => {}); }, []);
+  useEffect(() => { fetch('/api/studio/cms', { cache: 'no-store' }).then(r => r.json()).then(data => { const map = data.reduce((acc: any, img: any) => ({ ...acc, [img.id]: img.src }), {}); setCmsImages(map); }).catch(() => {}); }, []);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
