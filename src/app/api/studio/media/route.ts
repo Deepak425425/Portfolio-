@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { getCmsData } from '@/lib/cms';
+import { put, list } from '@vercel/blob';
 
 export const dynamic = 'force-dynamic';
 
@@ -56,6 +57,26 @@ export async function GET() {
       });
     }
 
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      try {
+        const { blobs } = await list({ prefix: 'studio/' });
+        blobs.forEach(b => {
+          if (!mediaMap.has(b.url)) {
+            mediaMap.set(b.url, {
+              id: b.url,
+              sourceType: 'uploaded',
+              originalPath: b.url,
+              publicUrl: b.url,
+              displayName: b.pathname.replace('studio/', ''),
+              usages: []
+            });
+          }
+        });
+      } catch (e) {
+        console.error('Failed to list blobs:', e);
+      }
+    }
+
     return NextResponse.json(Array.from(mediaMap.values()));
   } catch (e) {
     console.error(e);
@@ -71,14 +92,26 @@ export async function POST(req: Request) {
   const buffer = Buffer.from(await file.arrayBuffer());
   const filename = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
   
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      const blob = await put(`studio/${filename}`, file, {
+        access: 'public',
+        addRandomSuffix: false
+      });
+      return NextResponse.json({ url: blob.url });
+    } catch (error) {
+      console.error('Blob upload failed:', error);
+      return NextResponse.json({ error: 'Storage failure: Failed to upload to Vercel Blob.' }, { status: 500 });
+    }
+  }
+
   try {
     const dir = path.join(process.cwd(), 'public/uploads/studio');
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, filename), buffer);
     return NextResponse.json({ url: '/uploads/studio/' + filename });
   } catch (e) {
-    // Vercel Read-Only fallback: return as base64 string
-    console.warn('Filesystem read-only, returning base64', e);
-    return NextResponse.json({ url: `data:${file.type};base64,${buffer.toString('base64')}` });
+    console.warn('Filesystem read-only', e);
+    return NextResponse.json({ error: 'Missing Storage Configuration: Vercel requires BLOB_READ_WRITE_TOKEN to persist uploaded files.' }, { status: 500 });
   }
 }

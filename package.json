@@ -14,6 +14,7 @@
     "@ffmpeg/util": "^0.12.2",
     "@imgly/background-removal": "^1.7.0",
     "@mediapipe/tasks-vision": "^1.0.1",
+    "@vercel/blob": "^2.8.0",
     "exifreader": "^4.46.0",
     "framer-motion": "^13.4.4",
     "gifenc": "^1.0.3",
