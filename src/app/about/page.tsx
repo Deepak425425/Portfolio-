@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import CmsImage from "@/components/CmsImage";
+import CmsText from "@/components/CmsText";
 
 export const metadata: Metadata = {
   title: "About — GROTON AI STUDIO",
@@ -33,12 +34,19 @@ export default function AboutPage() {
       {/* ABOUT CONTENT */}
       <main className="flex-1 w-full bg-white">
         <section className="py-24 md:py-32 lg:py-48 px-6 md:px-12 lg:px-24 text-center">
-          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-12 max-w-4xl mx-auto leading-tight">
-            Art direction meets <br/>algorithmic scale.
-          </h1>
-          <p className="font-sans text-lg md:text-xl text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light">
-            GROTON is a premium visual production studio designed for modern brands. We engineer hyper-realistic, campaign-ready visual assets that blur the line between traditional photography and artificial intelligence.
-          </p>
+          <CmsText
+            cmsId="about_hero_heading"
+            as="h1"
+            isHtml={true}
+            className="font-serif text-5xl md:text-6xl lg:text-7xl mb-12 max-w-4xl mx-auto leading-tight"
+            fallback={'Art direction meets <br/>algorithmic scale.'}
+          />
+          <CmsText
+            cmsId="about_hero_desc"
+            as="p"
+            className="font-sans text-lg md:text-xl text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light"
+            fallback="GROTON is a premium visual production studio designed for modern brands. We engineer hyper-realistic, campaign-ready visual assets that blur the line between traditional photography and artificial intelligence."
+          />
         </section>
 
         <section className="w-full h-[60vh] md:h-[80vh] relative">
@@ -53,7 +61,7 @@ export default function AboutPage() {
                 <h3 className="font-sans text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">The Problem</h3>
               </div>
               <div className="w-full md:w-2/3">
-                <h2 className="font-serif text-3xl md:text-4xl mb-6">Traditional production is too slow. AI is too generic.</h2>
+                <CmsText cmsId="about_prob_heading" as="h2" className="font-serif text-3xl md:text-4xl mb-6" fallback="Traditional production is too slow. AI is too generic." />
                 <p className="text-sm text-zinc-500 font-light leading-relaxed mb-4">
                   Modern brands require a massive volume of visual content—from e-commerce hero shots to social media campaigns and display advertising. Traditional physical photoshoots involve heavy logistics, locations, permits, and rigid timelines. 
                 </p>
@@ -68,7 +76,7 @@ export default function AboutPage() {
                 <h3 className="font-sans text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">Our Approach</h3>
               </div>
               <div className="w-full md:w-2/3">
-                <h2 className="font-serif text-3xl md:text-4xl mb-6">Directed Generation.</h2>
+                <CmsText cmsId="about_appr_heading" as="h2" className="font-serif text-3xl md:text-4xl mb-6" fallback="Directed Generation." />
                 <p className="text-sm text-zinc-500 font-light leading-relaxed mb-4">
                   We solve this by placing experienced creative directors at the helm of advanced AI synthesis. We don&apos;t just type prompts; we establish visual systems. We define the lighting logic, the color theory, the material textures, and the compositional hierarchy.
                 </p>
@@ -82,9 +90,7 @@ export default function AboutPage() {
         </section>
 
         <section className="py-24 md:py-32 px-6 text-center bg-black text-white">
-          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl mb-8 max-w-2xl mx-auto leading-tight">
-            Elevate your visual language.
-          </h2>
+          <CmsText cmsId="about_cta_heading" as="h2" className="font-serif text-3xl md:text-4xl lg:text-5xl mb-8 max-w-2xl mx-auto leading-tight" fallback="Elevate your visual language." />
           <Link href="/contact" className="inline-block px-10 py-5 bg-white text-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-zinc-200 transition-colors mt-8">
             Start A Project
           </Link>

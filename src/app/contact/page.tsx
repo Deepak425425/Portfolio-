@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import CmsImage from "@/components/CmsImage";
+import CmsText from "@/components/CmsText";
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -45,10 +46,8 @@ export default function ContactPage() {
         
         <div className="w-full lg:w-1/2 p-6 md:p-12 lg:p-24 flex flex-col justify-center bg-white border-r border-zinc-200">
           <div className="max-w-xl mx-auto lg:mx-0 w-full">
-            <h1 className="font-serif text-5xl md:text-6xl mb-6">Start a project.</h1>
-            <p className="text-sm text-zinc-500 font-light mb-12 leading-relaxed">
-              Tell us what you are building. Our creative team will review your requirements and reach out to discuss visual direction, timelines, and next steps.
-            </p>
+            <CmsText cmsId="contact_hero_heading" as="h1" className="font-serif text-5xl md:text-6xl mb-6" fallback="Start a project." />
+            <CmsText cmsId="contact_hero_desc" as="p" className="text-sm text-zinc-500 font-light mb-12 leading-relaxed" fallback="Tell us what you are building. Our creative team will review your requirements and reach out to discuss visual direction, timelines, and next steps." />
 
             <div className="flex flex-col sm:flex-row gap-8 mb-16 pb-12 border-b border-zinc-100">
               <div>
