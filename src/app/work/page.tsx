@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import CmsImage from "@/components/CmsImage";
+import CmsText from "@/components/CmsText";
 
 const portfolioItems = [
   { id: 1, title: "Streetwear Comfort", category: "Fashion", image: "/campaign-worlds/download (27).jpeg", cmsId: "work_1", aspect: "aspect-[4/3]", position: "object-[center_20%]" },
@@ -40,7 +41,7 @@ export default function WorkPage() {
       {/* PORTFOLIO CONTENT */}
       <main className="flex-1 w-full flex flex-col">
         <section className="pt-24 md:pt-32 pb-12 px-6 md:px-12 lg:px-24 text-center bg-zinc-50">
-          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-12">Selected Work.</h1>
+          <CmsText cmsId="work_hero_heading" as="h1" className="font-serif text-5xl md:text-6xl lg:text-7xl mb-12" fallback="Selected Work." />
           
           <div className="flex flex-wrap justify-center gap-4 md:gap-8 max-w-3xl mx-auto">
             <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-black pb-1 border-b-2 border-black">
@@ -73,7 +74,7 @@ export default function WorkPage() {
         </section>
 
         <section className="py-24 md:py-32 px-6 text-center border-t border-zinc-200 bg-white">
-          <h2 className="font-serif text-3xl md:text-4xl mb-8">Ready to create something new?</h2>
+          <CmsText cmsId="work_cta_heading" as="h2" className="font-serif text-3xl md:text-4xl mb-8" fallback="Ready to create something new?" />
           <Link href="/contact" className="inline-block px-10 py-5 bg-black text-white text-xs uppercase tracking-[0.2em] font-bold hover:bg-zinc-800 transition-colors">
             Start A Project
           </Link>

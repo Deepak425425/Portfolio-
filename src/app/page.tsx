@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useReducedMotion, useMotionValue } from "framer-motion";
+import CmsText from "@/components/CmsText";
 
 const revealVariants: any = {
   hidden: { opacity: 0, y: 30 },
@@ -165,23 +166,26 @@ export default function Home() {
           
           {/* Main Content */}
           <div className="relative z-30 flex flex-col items-center text-center w-full">
-             <motion.h1 
+             <CmsText
+               cmsId="home_hero_heading"
+               as={motion.h1}
+               isHtml={true}
                initial={{ opacity: 0, y: 30 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                className="font-serif text-[2.5rem] leading-[1.1] sm:text-5xl md:text-7xl lg:text-[7.5rem] md:leading-[1.05] text-black tracking-tight max-w-5xl mx-auto"
-             >
-                Product visuals that <br className="hidden md:block"/> make brands look better.
-             </motion.h1>
+               fallback={'Product visuals that <br className="hidden md:block"/> make brands look better.'}
+             />
 
-             <motion.p 
+             <CmsText
+               cmsId="home_hero_desc"
+               as={motion.p}
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
                className="font-sans text-sm md:text-base text-zinc-600 mt-8 max-w-lg mx-auto font-light leading-relaxed"
-             >
-                Premium e-commerce imagery created for modern brands. We transform ordinary products into high-end commercial campaigns.
-             </motion.p>
+               fallback="Premium e-commerce imagery created for modern brands. We transform ordinary products into high-end commercial campaigns."
+             />
 
              <motion.div 
                initial={{ opacity: 0, y: 20 }}
@@ -190,10 +194,10 @@ export default function Home() {
                className="flex flex-col sm:flex-row items-center justify-center gap-8 mt-12 w-full"
              >
                 <MagneticButton href="/contact" className="inline-flex px-10 py-4 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors shadow-xl w-full sm:w-auto justify-center text-center">
-                  Start A Project
+                  <CmsText cmsId="home_hero_cta_1" fallback="Start A Project" />
                 </MagneticButton>
                 <Link href="/work" className="text-[10px] uppercase tracking-widest font-bold text-black border-b border-black pb-1 hover:text-zinc-500 hover:border-zinc-500 transition-colors w-full sm:w-auto text-center">
-                  View Our Work
+                  <CmsText cmsId="home_hero_cta_2" fallback="View Our Work" />
                 </Link>
              </motion.div>
           </div>
@@ -287,12 +291,8 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-24">
           <div className="flex flex-col justify-center">
             <span className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase mb-4">Capabilities</span>
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight text-black mb-8">
-              E-commerce visuals, <br/>elevated.
-            </h2>
-            <p className="font-sans text-zinc-500 font-light max-w-md leading-relaxed mb-12">
-              We specialize in creating premium product imagery for e-commerce brands. From clean catalog shots to highly art-directed campaign visuals, we ensure your products look their absolute best.
-            </p>
+            <CmsText cmsId="home_cap_heading" as="h2" isHtml={true} className="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight text-black mb-8" fallback={'E-commerce visuals, <br/>elevated.'} />
+            <CmsText cmsId="home_cap_desc" as="p" className="font-sans text-zinc-500 font-light max-w-md leading-relaxed mb-12" fallback="We specialize in creating premium product imagery for e-commerce brands. From clean catalog shots to highly art-directed campaign visuals, we ensure your products look their absolute best." />
             <div className="grid grid-cols-2 gap-4">
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
                  <Image src={cmsImages.capability_product || "/campaign-worlds/LOGO DESIGN _ IDENTITY DESIGN _ ЛОГОТИП.jpeg"} alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />

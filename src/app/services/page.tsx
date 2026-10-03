@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import CmsImage from "@/components/CmsImage";
+import CmsText from "@/components/CmsText";
 
 export const metadata: Metadata = {
   title: "Services — GROTON AI STUDIO",
@@ -85,10 +86,8 @@ export default function ServicesPage() {
       {/* SERVICES CONTENT */}
       <main className="flex-1 w-full">
         <section className="py-24 md:py-32 px-6 md:px-12 lg:px-24 text-center border-b border-zinc-200 bg-white">
-          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-8">Production Capabilities.</h1>
-          <p className="text-base text-zinc-500 font-light max-w-2xl mx-auto leading-relaxed">
-            A comprehensive suite of visual generation services, combining sophisticated art direction with the scale and speed of artificial intelligence.
-          </p>
+          <CmsText cmsId="services_hero_heading" as="h1" className="font-serif text-5xl md:text-6xl lg:text-7xl mb-8" fallback="Production Capabilities." />
+          <CmsText cmsId="services_hero_desc" as="p" className="text-base text-zinc-500 font-light max-w-2xl mx-auto leading-relaxed" fallback="A comprehensive suite of visual generation services, combining sophisticated art direction with the scale and speed of artificial intelligence." />
         </section>
 
         <div className="flex flex-col">
@@ -96,8 +95,8 @@ export default function ServicesPage() {
             <section key={service.id} id={service.id} className={`py-24 md:py-32 px-6 md:px-12 lg:px-24 flex flex-col lg:flex-row gap-16 lg:gap-24 items-center ${index % 2 !== 0 ? 'bg-white' : 'bg-zinc-50'}`}>
               <div className={`w-full lg:w-1/2 flex flex-col ${index % 2 !== 0 ? 'lg:order-2' : ''}`}>
                 <span className="text-[10px] tracking-[0.3em] font-bold text-zinc-400 uppercase mb-4">0{index + 1}</span>
-                <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl mb-6">{service.title}</h2>
-                <h3 className="font-sans text-lg text-black mb-6 leading-relaxed">{service.description}</h3>
+                <CmsText cmsId={`services_s${index+1}_title`} as="h2" className="font-serif text-3xl md:text-4xl lg:text-5xl mb-6" fallback={service.title} />
+                <CmsText cmsId={`services_s${index+1}_desc`} as="h3" className="font-sans text-lg text-black mb-6 leading-relaxed" fallback={service.description} />
                 <p className="text-sm text-zinc-500 font-light leading-relaxed mb-10">{service.details}</p>
                 
                 <div>

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { getCmsData } from '@/lib/cms';
-import { put, list } from '@vercel/blob';
+import { put, list, del } from '@vercel/blob';
 
 export const dynamic = 'force-dynamic';
 
@@ -134,5 +134,44 @@ export async function POST(req: Request) {
   } catch (e) {
     console.warn('Filesystem read-only', e);
     return NextResponse.json({ error: 'Missing Storage Configuration: Vercel requires BLOB_READ_WRITE_TOKEN to persist uploaded files.' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing id parameter' }, { status: 400 });
+  }
+
+  // Ensure it's not a local asset that shouldn't be deleted
+  if (!id.includes('.blob.vercel-storage.com/') && !id.startsWith('/uploads/studio/')) {
+    return NextResponse.json({ error: 'Cannot delete built-in existing assets' }, { status: 403 });
+  }
+
+  if (process.env.BLOB_READ_WRITE_TOKEN && id.includes('.blob.vercel-storage.com/')) {
+    try {
+      await del(id);
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error('Blob delete failed:', error);
+      return NextResponse.json({ error: 'Storage failure: Failed to delete from Vercel Blob.' }, { status: 500 });
+    }
+  }
+
+  try {
+    if (id.startsWith('/uploads/studio/')) {
+      const filename = path.basename(id);
+      const filepath = path.join(process.cwd(), 'public/uploads/studio', filename);
+      if (fs.existsSync(filepath)) {
+        fs.unlinkSync(filepath);
+        return NextResponse.json({ success: true });
+      }
+    }
+    return NextResponse.json({ error: 'File not found locally' }, { status: 404 });
+  } catch (e) {
+    console.warn('Filesystem delete failed', e);
+    return NextResponse.json({ error: 'Delete failed locally' }, { status: 500 });
   }
 }

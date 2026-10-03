@@ -20,9 +20,11 @@ function StudioContent() {
   const view = searchParams.get('view');
 
   const [images, setImages] = useState<CmsImage[]>([]);
+  const [textPlacements, setTextPlacements] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [mediaLibrary, setMediaLibrary] = useState<MediaRecord[]>([]);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+  const [previewMedia, setPreviewMedia] = useState<MediaRecord | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,6 +34,7 @@ function StudioContent() {
   useEffect(() => {
     fetch('/api/studio/cms', { cache: 'no-store' }).then(r => r.json()).then(setImages);
     fetch('/api/studio/media', { cache: 'no-store' }).then(r => r.json()).then(setMediaLibrary);
+    fetch('/api/studio/cms-text', { cache: 'no-store' }).then(r => r.json()).then(setTextPlacements);
   }, []);
 
   const loadMedia = () => {
@@ -78,14 +81,42 @@ function StudioContent() {
     alert('Image successfully updated and published to the live site!');
   };
 
-  const deleteMedia = async (src: string) => {
-      if (!confirm('Are you sure you want to delete this media?')) return;
-      // For now we don't implement physical delete, just remove from view if needed, 
-      // or we can implement API for it. We'll skip physical delete to preserve safety.
-      alert('Media deletion is restricted in production.');
+  const deleteMedia = async (mediaId: string, url: string) => {
+      // Check if image is used in placements
+      const isUsed = images.some(img => img.src === url);
+      if (isUsed) {
+        alert('This image is currently used on the website. Replace the image on the public page before deleting it.');
+        return;
+      }
+      
+      if (!confirm('Are you sure you want to permanently delete this uploaded image?')) return;
+      
+      try {
+        const res = await fetch(`/api/studio/media?id=${encodeURIComponent(mediaId)}`, { method: 'DELETE' });
+        if (res.ok) {
+           loadMedia();
+           setPreviewMedia(null);
+        } else {
+           const err = await res.json();
+           alert('Delete failed: ' + (err.error || 'Unknown error'));
+        }
+      } catch(e) {
+        alert('Network error during deletion.');
+      }
+  };
+
+  const saveTextChanges = async (id: string, publishedValue: string) => {
+    await fetch('/api/studio/cms-text', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, publishedValue })
+    });
+    alert('Text successfully updated and published to the live site!');
+    fetch('/api/studio/cms-text', { cache: 'no-store' }).then(r => r.json()).then(setTextPlacements);
   };
 
   const filteredImages = images.filter(img => img.page === pageFilter);
+  const filteredTextPlacements = textPlacements.filter(t => t.page === pageFilter);
 
   const pagesWithMedia = Array.from(new Set(mediaLibrary.flatMap(m => m.usages.map(u => u.page))));
 
@@ -146,9 +177,9 @@ function StudioContent() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {filteredMediaLibrary.map(media => (
               <div key={media.id} className="flex flex-col gap-3 group">
-                <div className="relative aspect-square rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900">
-                  <Image src={media.publicUrl} alt={media.displayName} fill className="object-cover" />
-                </div>
+                <button onClick={() => setPreviewMedia(media)} className="relative aspect-square rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#8B7CFF]">
+                  <Image src={media.publicUrl} alt={media.displayName} fill className="object-cover transition-transform group-hover:scale-105" />
+                </button>
                 <div className="flex flex-col gap-1 px-1">
                     <p className="text-xs text-white font-medium truncate">{media.displayName}</p>
                     <div className="flex justify-between items-center mt-1">
@@ -167,6 +198,50 @@ function StudioContent() {
             ))}
             {filteredMediaLibrary.length === 0 && <p className="col-span-full text-zinc-500 text-sm py-10 text-center">No images found.</p>}
           </div>
+
+          {/* Media Preview Modal */}
+          {previewMedia && (
+            <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-6 backdrop-blur-md">
+              <div className="bg-[#0d0d0d] border border-zinc-800 rounded-2xl w-full max-w-5xl h-[80vh] flex shadow-2xl overflow-hidden">
+                <div className="w-2/3 h-full bg-zinc-950 relative border-r border-zinc-800">
+                  <Image src={previewMedia.publicUrl} alt={previewMedia.displayName} fill className="object-contain" />
+                </div>
+                <div className="w-1/3 h-full p-8 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold break-all mb-6">{previewMedia.displayName}</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <span className="text-[10px] text-zinc-500 uppercase tracking-widest block mb-1">Source Type</span>
+                        <span className="bg-zinc-800 text-xs px-2 py-1 rounded inline-block">{previewMedia.sourceType}</span>
+                      </div>
+                      <div>
+                         <span className="text-[10px] text-zinc-500 uppercase tracking-widest block mb-1">URL</span>
+                         <a href={previewMedia.publicUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-[#8B7CFF] hover:underline break-all">{previewMedia.publicUrl}</a>
+                      </div>
+                      {previewMedia.usages.length > 0 && (
+                        <div>
+                          <span className="text-[10px] text-zinc-500 uppercase tracking-widest block mb-2">Current Usages</span>
+                          <ul className="text-xs text-zinc-300 space-y-1">
+                            {previewMedia.usages.map((u, i) => <li key={i}>{u.page} / {u.section}</li>)}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-4 pt-6 border-t border-zinc-800 mt-6">
+                    <button onClick={() => setPreviewMedia(null)} className="flex-1 px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-sm font-medium rounded-lg transition-colors">
+                      Close
+                    </button>
+                    {previewMedia.sourceType === 'uploaded' && (
+                      <button onClick={() => deleteMedia(previewMedia.id, previewMedia.publicUrl)} className="flex-1 px-4 py-3 bg-red-600/20 text-red-500 hover:bg-red-600 hover:text-white border border-red-900/50 hover:border-red-600 text-sm font-medium rounded-lg transition-colors">
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       );
   }
@@ -181,6 +256,11 @@ function StudioContent() {
         <a href={pageFilter === 'HOME' ? '/' : '/' + pageFilter.toLowerCase()} target="_blank" className="text-sm font-medium text-[#8B7CFF] hover:underline">View Live Page +'</a>
       </header>
 
+      {filteredImages.length > 0 && (
+        <div className="mt-8 mb-6 border-b border-zinc-800 pb-4">
+          <h3 className="text-lg font-bold tracking-widest text-zinc-400 uppercase">Image Placements</h3>
+        </div>
+      )}
       <div className="space-y-8">
         {filteredImages.map(img => (
           <div key={img.id} className="flex flex-col md:flex-row gap-6 p-6 bg-zinc-900/50 border border-zinc-800/50 rounded-xl">
@@ -210,6 +290,17 @@ function StudioContent() {
           </div>
         ))}
         {filteredImages.length === 0 && <p className="text-zinc-500 py-10 text-center">No images mapped for this page yet.</p>}
+      </div>
+
+      {filteredTextPlacements.length > 0 && (
+        <div className="mt-16 mb-6 border-b border-zinc-800 pb-4">
+          <h3 className="text-lg font-bold tracking-widest text-zinc-400 uppercase">Text Placements</h3>
+        </div>
+      )}
+      <div className="space-y-6">
+        {filteredTextPlacements.map(textItem => (
+           <TextEditorRow key={textItem.id} item={textItem} onSave={saveTextChanges} />
+        ))}
       </div>
 
       {isMediaModalOpen && (
@@ -278,6 +369,26 @@ function StudioContent() {
       )}
     </div>
   );
+}
+
+function TextEditorRow({ item, onSave }: { item: any, onSave: (id: string, val: string) => void }) {
+  const [val, setVal] = useState(item.publishedValue ?? item.defaultValue);
+  
+  return (
+    <div className="flex flex-col gap-4 p-6 bg-zinc-900/50 border border-zinc-800/50 rounded-xl">
+       <div className="text-xs font-bold text-[#8B7CFF] tracking-widest uppercase mb-1">{item.section} - {item.label}</div>
+       {item.type === 'single-line' ? (
+         <input value={val} onChange={e => setVal(e.target.value)} className="w-full bg-zinc-950 border border-zinc-800 rounded p-4 text-white focus:outline-none focus:border-[#8B7CFF]" />
+       ) : (
+         <textarea value={val} onChange={e => setVal(e.target.value)} rows={4} className="w-full bg-zinc-950 border border-zinc-800 rounded p-4 text-white focus:outline-none focus:border-[#8B7CFF]" />
+       )}
+       <div className="flex gap-3 mt-2">
+          <button onClick={() => onSave(item.id, val)} className="px-6 py-2.5 bg-[#8B7CFF] hover:bg-[#7a6ce0] text-white text-sm font-medium rounded-lg transition-colors">
+            Save & Publish
+          </button>
+       </div>
+    </div>
+  )
 }
 
 export default function Studio() {
