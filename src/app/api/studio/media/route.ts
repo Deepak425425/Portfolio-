@@ -1,14 +1,62 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { getCmsData } from '@/lib/cms';
 
 export async function GET() {
   try {
+    const cmsData = getCmsData();
+    const mediaMap = new Map();
+
+    cmsData.forEach(img => {
+      if (!img.src) return;
+      const src = img.src;
+      
+      if (!mediaMap.has(src)) {
+        mediaMap.set(src, {
+          id: src,
+          sourceType: 'existing',
+          originalPath: src,
+          publicUrl: src,
+          displayName: src.split('/').pop() || src,
+          usages: []
+        });
+      }
+      
+      const media = mediaMap.get(src);
+      // Avoid duplicate usage records for the same page/section
+      const hasUsage = media.usages.some((u: any) => u.page === img.page && u.section === img.section);
+      if (!hasUsage) {
+        media.usages.push({
+          page: img.page,
+          section: img.section
+        });
+      }
+    });
+
     const dir = path.join(process.cwd(), 'public/uploads/studio');
-    if (!fs.existsSync(dir)) return NextResponse.json([]);
-    const files = fs.readdirSync(dir).map(f => '/uploads/studio/' + f);
-    return NextResponse.json(files);
+    if (fs.existsSync(dir)) {
+      const files = fs.readdirSync(dir);
+      files.forEach(f => {
+        const src = '/uploads/studio/' + f;
+        if (!mediaMap.has(src)) {
+          mediaMap.set(src, {
+            id: src,
+            sourceType: 'uploaded',
+            originalPath: src,
+            publicUrl: src,
+            displayName: f,
+            usages: []
+          });
+        } else {
+          mediaMap.get(src).sourceType = 'uploaded';
+        }
+      });
+    }
+
+    return NextResponse.json(Array.from(mediaMap.values()));
   } catch (e) {
+    console.error(e);
     return NextResponse.json([]);
   }
 }

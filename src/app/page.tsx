@@ -226,7 +226,7 @@ export default function Home() {
 
             {/* Secondary 1 - Top Left (Shoes) */}
             <FloatingHeroCard 
-              src="/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg"
+              src={cmsImages.hero_support_1 || "/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg"}
               alt="Floating Asset 1 - Shoes"
               className="left-[1%] sm:left-[3%] md:left-[5%] lg:left-[8%] top-8 md:top-12 lg:top-24"
               px={p2x} py={p2y}
@@ -237,7 +237,7 @@ export default function Home() {
 
             {/* Secondary 2 - Bottom Left (T-shirt) */}
             <FloatingHeroCard 
-              src="/campaign-worlds/Create_vertical_e-commerce_produ…_2K_20260929162058.jpg"
+              src={cmsImages.hero_support_2 || "/campaign-worlds/Create_vertical_e-commerce_produ…_2K_20260929162058.jpg"}
               alt="Floating Asset 2 - T-shirt"
               className="left-[1%] sm:left-[4%] md:left-[8%] lg:left-[12%] bottom-10 md:bottom-16 lg:bottom-24"
               px={p3x} py={p3y}
@@ -248,7 +248,7 @@ export default function Home() {
 
             {/* Secondary 3 - Top Right (Sunglasses) */}
             <FloatingHeroCard 
-              src="/campaign-worlds/Sunglasses_product_photography_2K_20260929162056.jpg"
+              src={cmsImages.hero_support_3 || "/campaign-worlds/Sunglasses_product_photography_2K_20260929162056.jpg"}
               alt="Floating Asset 3 - Sunglasses"
               className="right-[1%] sm:right-[3%] md:right-[5%] lg:right-[8%] top-10 md:top-16 lg:top-32"
               px={p3x} py={p3y}
@@ -259,7 +259,7 @@ export default function Home() {
 
             {/* Secondary 4 - Bottom Right (Jacket + Pants) */}
             <FloatingHeroCard 
-              src="/campaign-worlds/Jacket_and_pants_fashion_display_2K_20260929162053.jpg"
+              src={cmsImages.hero_support_4 || "/campaign-worlds/Jacket_and_pants_fashion_display_2K_20260929162053.jpg"}
               alt="Floating Asset 4 - Jacket"
               className="right-[2%] md:right-[8%] lg:right-[12%] bottom-12 lg:bottom-20"
               px={p2x} py={p2y}
@@ -295,19 +295,19 @@ export default function Home() {
             </p>
             <div className="grid grid-cols-2 gap-4">
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-                 <Image src="/campaign-worlds/LOGO DESIGN _ IDENTITY DESIGN _ ЛОГОТИП.jpeg" alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src={cmsImages.capability_product || "/campaign-worlds/LOGO DESIGN _ IDENTITY DESIGN _ ЛОГОТИП.jpeg"} alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product Imagery</span></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-                 <Image src={cmsImages.selected_work_2 || "/campaign-worlds/groton-9.jpg"} alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src={cmsImages.capability_model || "/campaign-worlds/groton-9.jpg"} alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Product-on-Model</span></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-                 <Image src={cmsImages.selected_work_1 || "/campaign-worlds/groton-1.jpg"} alt="Fashion Apparel" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src={cmsImages.capability_apparel || "/campaign-worlds/groton-1.jpg"} alt="Fashion Apparel" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Fashion Apparel</span></div>
                </div>
                <div className="w-full aspect-square relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-                 <Image src={cmsImages.selected_work_3 || "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg"} alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src={cmsImages.capability_editorial || "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg"} alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                  <div className="absolute inset-0 bg-black/10 flex items-end p-4"><span className="text-[10px] font-bold text-white uppercase tracking-widest">Editorial</span></div>
                </div>
             </div>
@@ -343,19 +343,19 @@ export default function Home() {
         <div className="max-w-[1600px] mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             <div className="col-span-2 md:col-span-2 row-span-2 aspect-[4/5] relative bg-zinc-200 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-              <Image src="/campaign-worlds/Caffeine is culture ☕️.jpeg" alt="Sherpa Hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="50vw" />
+              <Image src={cmsImages.gallery_1 || "/campaign-worlds/Caffeine is culture ☕️.jpeg"} alt="Sherpa Hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="50vw" />
             </div>
             <div className="col-span-1 aspect-square relative bg-zinc-200 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-              <Image src="/campaign-worlds/How to style Cat Print T shirts.jpeg" alt="Pink Jacket" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+              <Image src={cmsImages.gallery_2 || "/campaign-worlds/How to style Cat Print T shirts.jpeg"} alt="Pink Jacket" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
             <div className="col-span-1 aspect-[3/4] relative bg-zinc-200 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-              <Image src="/campaign-worlds/download (27).jpeg" alt="Pink Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+              <Image src={cmsImages.gallery_3 || "/campaign-worlds/download (27).jpeg"} alt="Pink Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
             <div className="col-span-1 aspect-[4/5] relative bg-zinc-200 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-              <Image src="/campaign-worlds/Mali džentlmen, veliki stil_ 🎨.jpeg" alt="Pendant Lights" fill className="object-cover object-[center_15%] group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+              <Image src={cmsImages.gallery_4 || "/campaign-worlds/Mali džentlmen, veliki stil_ 🎨.jpeg"} alt="Pendant Lights" fill className="object-cover object-[center_15%] group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
             <div className="col-span-1 aspect-square relative bg-zinc-200 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-              <Image src="/campaign-worlds/mu_forart_.jpeg" alt="Sandals" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
+              <Image src={cmsImages.gallery_5 || "/campaign-worlds/mu_forart_.jpeg"} alt="Sandals" fill className="object-cover group-hover:scale-105 transition-transform duration-700" sizes="25vw" />
             </div>
           </div>
         </div>
@@ -372,7 +372,7 @@ export default function Home() {
           <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
             <div className="flex flex-col items-center gap-6 w-full md:w-1/3">
               <div className="w-full aspect-square relative overflow-hidden bg-zinc-900 border border-zinc-800 shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
-                <Image src={cmsImages.about_visual || "/campaign-worlds/ghgh.jpeg"} alt="Raw Product Input" fill className="object-cover filter grayscale opacity-80 mix-blend-luminosity" />
+                <Image src={cmsImages.process_raw || "/campaign-worlds/ghgh.jpeg"} alt="Raw Product Input" fill className="object-cover filter grayscale opacity-80 mix-blend-luminosity" />
               </div>
               <span className="text-xs tracking-[0.2em] uppercase font-bold text-zinc-500">Raw Product Asset</span>
             </div>
@@ -386,7 +386,7 @@ export default function Home() {
 
             <div className="flex flex-col items-center gap-6 w-full md:w-1/2">
               <div className="w-full aspect-[4/5] relative overflow-hidden bg-zinc-900 shadow-2xl shadow-[0_12px_30px_rgba(0,0,0,0.10)]">
-                <Image src="/campaign-worlds/1368386.jpg" alt="Final Campaign Visual" fill className="object-cover" />
+                <Image src={cmsImages.process_final || "/campaign-worlds/1368386.jpg"} alt="Final Campaign Visual" fill className="object-cover" />
               </div>
               <span className="text-xs tracking-[0.2em] uppercase font-bold text-white">Final Campaign Visual</span>
             </div>
@@ -402,13 +402,13 @@ export default function Home() {
         </div>
         <div className="max-w-[1600px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
            <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-             <Image src="/campaign-worlds/groton-15.jpg" alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+             <Image src={cmsImages.fashion_1 || "/campaign-worlds/groton-15.jpg"} alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
            <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden md:mt-12 shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-             <Image src="/campaign-worlds/groton-12.jpg" alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+             <Image src={cmsImages.fashion_2 || "/campaign-worlds/groton-12.jpg"} alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
            <div className="w-full aspect-[3/4] relative bg-zinc-100 group overflow-hidden shadow-[0_12px_30px_rgba(0,0,0,0.10)]" data-cursor="view">
-             <Image src={cmsImages.selected_work_2 || "/campaign-worlds/groton-9.jpg"} alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+             <Image src={cmsImages.fashion_3 || "/campaign-worlds/groton-9.jpg"} alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
            </div>
         </div>
       </section>
