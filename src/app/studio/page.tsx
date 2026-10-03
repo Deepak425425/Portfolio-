@@ -30,12 +30,12 @@ function StudioContent() {
   const [mediaPageFilter, setMediaPageFilter] = useState('ALL');
 
   useEffect(() => {
-    fetch('/api/studio/cms').then(r => r.json()).then(setImages);
-    fetch('/api/studio/media').then(r => r.json()).then(setMediaLibrary);
+    fetch('/api/studio/cms', { cache: 'no-store' }).then(r => r.json()).then(setImages);
+    fetch('/api/studio/media', { cache: 'no-store' }).then(r => r.json()).then(setMediaLibrary);
   }, []);
 
   const loadMedia = () => {
-    fetch('/api/studio/media').then(r => r.json()).then(setMediaLibrary);
+    fetch('/api/studio/media', { cache: 'no-store' }).then(r => r.json()).then(setMediaLibrary);
   };
 
   const handleReplaceClick = (id: string) => {

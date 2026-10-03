@@ -11,7 +11,7 @@ export default function CmsImage({ cmsId, fallbackSrc, ...props }: CmsImageProps
   const [src, setSrc] = useState(fallbackSrc);
 
   useEffect(() => {
-    fetch('/api/studio/cms').then(r => r.json()).then(data => {
+    fetch('/api/studio/cms', { cache: 'no-store' }).then(r => r.json()).then(data => {
       const img = data.find((i: any) => i.id === cmsId);
       if (img && img.src) setSrc(img.src);
     }).catch(() => {});
