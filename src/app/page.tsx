@@ -43,9 +43,21 @@ const MagneticButton = ({ children, href, className }: { children: React.ReactNo
   );
 };
 
+
+const CmsMedia = ({ media, fallback, alt, fill, className, priority, sizes, style, ...props }: any) => {
+  const src = media?.src || fallback;
+  const type = media?.mediaType || (src && src.match(/\.(mp4|webm|mov)$/i) ? 'video' : 'image');
+  
+  if (type === 'video') {
+    const videoStyle = fill ? { objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, ...style } : style;
+    return <video src={src} autoPlay muted loop playsInline className={className} style={videoStyle} {...props} />;
+  }
+  return <Image src={src} alt={alt || "Media"} fill={fill} sizes={sizes} priority={priority} className={className} style={style} {...props} />;
+};
+
 export default function Home() {
-  const [cmsImages, setCmsImages] = useState<Record<string, string>>({});
-  useEffect(() => { fetch('/api/studio/cms', { cache: 'no-store' }).then(r => r.json()).then(data => { const map = data.reduce((acc: any, img: any) => ({ ...acc, [img.id]: img.src }), {}); setCmsImages(map); }).catch(() => {}); }, []);
+  const [cmsImages, setCmsImages] = useState<Record<string, any>>({});
+  useEffect(() => { fetch('/api/studio/cms', { cache: 'no-store' }).then(r => r.json()).then(data => { const map = data.reduce((acc: any, img: any) => ({ ...acc, [img.id]: { src: img.src, mediaType: img.mediaType || 'image' } }), {}); setCmsImages(map); }).catch(() => {}); }, []);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -73,7 +85,6 @@ export default function Home() {
   const p3y = useTransform(smoothMouseY, [-1, 1], shouldReduceMotion ? [0, 0] : [-25, 25]);
   
   // Navigation styling
-  const navPadding = useTransform(scrollY, [0, 100], ["2rem", "1.25rem"]);
 
   useEffect(() => {
     setMounted(true);
@@ -107,13 +118,26 @@ export default function Home() {
 
       {/* NAVIGATION */}
       <motion.header 
-        style={{ paddingTop: navPadding, paddingBottom: navPadding }}
-        className="fixed top-0 left-0 w-full px-6 md:px-12 lg:px-24 flex flex-row justify-between items-center z-50 transition-all backdrop-blur-md bg-white/75 border-b border-zinc-200/50"
+        className="fixed z-50 flex flex-row justify-between items-center transition-all"
+        style={{
+          top: "18px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "min(1400px, calc(100% - 36px))",
+          height: "64px",
+          padding: "0 10px 0 22px",
+          background: "rgba(248, 246, 241, 0.72)",
+          backdropFilter: "blur(22px)",
+          WebkitBackdropFilter: "blur(22px)",
+          border: "1px solid rgba(255, 255, 255, 0.7)",
+          borderRadius: "100px",
+          boxShadow: "0 12px 35px rgba(0, 0, 0, 0.07), inset 0 1px rgba(255, 255, 255, 0.9)"
+        }}
       >
         <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
           <CmsText cmsId="global.nav.brand" fallback="GROTON AI STUDIO" />
         </Link>
-        <div className="flex items-center gap-4 lg:gap-8">
+        <div className="flex items-center gap-4 lg:gap-8 h-full">
           <nav className="hidden lg:flex items-center gap-8 text-[11px] font-bold tracking-[0.2em] uppercase text-zinc-400">
             <Link href="/work" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
             <Link href="/services" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
@@ -121,15 +145,15 @@ export default function Home() {
             <Link href="/tools" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.tools" fallback="Tools" /></Link>
             <Link href="/about" className="hover:text-black transition-colors"><CmsText cmsId="global.nav.about" fallback="About" /></Link>
           </nav>
-          <MagneticButton href="/contact" className="hidden lg:inline-flex px-6 py-3 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
+          <MagneticButton href="/contact" className="hidden lg:flex h-[44px] items-center justify-center rounded-full px-6 bg-black text-white text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-800 transition-colors">
             <CmsText cmsId="global.nav.contact" fallback="Contact" />
           </MagneticButton>
           
           <button 
-            className="lg:hidden p-2 text-black focus:outline-none z-50"
+            className="lg:hidden flex items-center justify-center w-[44px] h-[44px] rounded-full text-black hover:bg-black/5 focus:outline-none z-50 transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                {mobileMenuOpen ? (
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                ) : (
@@ -163,12 +187,27 @@ export default function Home() {
       <section className="relative min-h-[100svh] w-full flex items-center pt-[120px] pb-[80px] lg:pt-[150px] lg:pb-[100px] overflow-hidden bg-[#f3f0ea] z-20">
         
         {/* Grid Background */}
-        <div className="absolute inset-0 opacity-[0.36] pointer-events-none z-0" style={{
-          backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.045) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.045) 1px, transparent 1px)`,
-          backgroundSize: '80px 80px',
-          maskImage: 'linear-gradient(to bottom, #000, transparent 80%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, #000, transparent 80%)'
-        }}></div>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10"
+          style={{
+            backgroundImage: `
+              linear-gradient(
+                to right,
+                rgba(0, 0, 0, 0.035) 1px,
+                transparent 1px
+              ),
+              linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.035) 1px,
+                transparent 1px
+              )
+            `,
+            backgroundSize: "80px 80px",
+            maskImage: "linear-gradient(to bottom, black, transparent 90%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black, transparent 90%)",
+          }}
+        />
 
         <div className="relative w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col lg:flex-row items-center justify-between z-10">
           
@@ -181,8 +220,17 @@ export default function Home() {
                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                className="flex items-center gap-2.5 mb-6 lg:mb-8 font-mono text-[11px] uppercase tracking-[0.08em] text-[#111]"
              >
-               <div className="w-2 h-2 rounded-full bg-[#8B7CFF] shadow-[0_0_0_5px_rgba(139,124,255,0.12)]"></div>
-               <CmsText cmsId="home.hero.kicker" fallback="AI Creative Studio / 2026" />
+               <style>{`
+                 @keyframes live-pulse {
+                   0%, 100% { box-shadow: 0 0 0 5px rgba(139, 124, 255, 0.12); }
+                   50% { box-shadow: 0 0 0 8px rgba(139, 124, 255, 0.25), 0 0 12px rgba(139, 124, 255, 0.4); }
+                 }
+                 @media (prefers-reduced-motion: no-preference) {
+                   .live-dot { animation: live-pulse 2s ease-in-out infinite; }
+                 }
+               `}</style>
+               <div className="w-2 h-2 rounded-full bg-[#8B7CFF] shadow-[0_0_0_5px_rgba(139,124,255,0.12)] live-dot"></div>
+               <CmsText cmsId="home.hero.kicker" fallback="AI CREATIVE STUDIO / GROTON AI" />
              </motion.div>
 
              <CmsText
@@ -230,32 +278,34 @@ export default function Home() {
               {/* Primary - Activewear Model */}
               <motion.div 
                 style={{ x: p1x, y: p1y }}
-                className="relative z-10 w-[60%] sm:w-[55%] lg:w-[65%] xl:w-[70%] max-w-[350px] aspect-[735/1000] group"
+                className="relative z-10 w-[65%] sm:w-[60%] lg:w-[70%] xl:w-[75%] max-w-[380px] aspect-[735/1000] group"
               >
                 <motion.div
                   style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -60]) }}
-                  className="w-full h-full rounded-xl shadow-[0_30px_70px_rgba(0,0,0,0.12)]"
+                  className="w-full h-full shadow-[0_25px_55px_rgba(0,0,0,0.09)] rounded-[16px] lg:rounded-[20px] pointer-events-auto"
                 >
                   <motion.div 
                     initial={{ opacity: 0, clipPath: "inset(5% 5% 5% 5%)" }} 
                     animate={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }} 
                     transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="w-full h-full relative overflow-hidden rounded-xl bg-[#f4f4f4]"
+                    className="w-full h-full relative overflow-hidden bg-white rounded-[16px] lg:rounded-[20px] p-[10px] lg:p-[12px]"
                     data-cursor="view"
                   >
-                     <motion.div className="w-full h-full relative flex items-center justify-center" whileHover={{ scale: 1.03 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                       <Image src={cmsImages.hero_main || "/campaign-worlds/download (22).jpeg"} alt="Activewear Model Campaign" fill className="object-contain object-center mix-blend-darken" priority sizes="(max-width: 768px) 100vw, 50vw" />
-                     </motion.div>
+                     <div className="relative w-full h-full flex items-center justify-center bg-[#f4f4f4] rounded-[6px] lg:rounded-[8px] overflow-hidden isolate">
+                       <motion.div className="w-full h-full relative flex items-center justify-center" whileHover={{ scale: 1.03 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+                         <CmsMedia media={cmsImages.hero_main} fallback="/campaign-worlds/groton-home-hero-primary-model-3x4.webp" alt="Activewear Model Campaign" fill className="object-cover object-center mix-blend-darken pointer-events-none" priority sizes="(max-width: 768px) 100vw, 50vw" />
+                       </motion.div>
+                     </div>
                   </motion.div>
                 </motion.div>
               </motion.div>
 
               {/* Secondary 1 - Top Left (Shoes) */}
               <FloatingHeroCard 
-                src={cmsImages.hero_support_1 || "/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg"}
+                media={cmsImages.hero_support_1} fallback="/campaign-worlds/groton-home-hero-floating-shoes-3x4.webp"
                 alt="Floating Asset 1 - Shoes"
                 className="-left-[5%] sm:-left-[10%] lg:-left-[14%] xl:-left-[18%] top-[8%] lg:top-[15%]"
-                imageScale={1.15}
+                
                 px={p2x} py={p2y}
                 scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -100])}
                 initial={{ opacity: 0, x: -30, y: -20 }}
@@ -264,10 +314,10 @@ export default function Home() {
 
               {/* Secondary 2 - Bottom Left (T-shirt) */}
               <FloatingHeroCard 
-                src={cmsImages.hero_support_2 || "/campaign-worlds/Create_vertical_e-commerce_produ…_2K_20260929162058.jpg"}
+                media={cmsImages.hero_support_2} fallback="/campaign-worlds/groton-home-hero-floating-tshirt-3x4.webp"
                 alt="Floating Asset 2 - T-shirt"
                 className="-left-[2%] sm:-left-[5%] lg:-left-[10%] xl:-left-[14%] bottom-[0%] lg:bottom-[6%]"
-                imageScale={1.0}
+                
                 px={p3x} py={p3y}
                 scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -60])}
                 initial={{ opacity: 0, x: -30, y: 20 }}
@@ -276,10 +326,10 @@ export default function Home() {
 
               {/* Secondary 3 - Top Right (Sunglasses) */}
               <FloatingHeroCard 
-                src={cmsImages.hero_support_3 || "/campaign-worlds/Sunglasses_product_photography_2K_20260929162056.jpg"}
+                media={cmsImages.hero_support_3} fallback="/campaign-worlds/groton-home-hero-floating-sunglasses-3x4.webp"
                 alt="Floating Asset 3 - Sunglasses"
                 className="-right-[5%] sm:-right-[10%] lg:-right-[14%] xl:-right-[18%] top-[15%] lg:top-[22%]"
-                imageScale={1.35}
+                
                 px={p3x} py={p3y}
                 scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -120])}
                 initial={{ opacity: 0, x: 30, y: -20 }}
@@ -288,10 +338,10 @@ export default function Home() {
 
               {/* Secondary 4 - Bottom Right (Jacket + Pants) */}
               <FloatingHeroCard 
-                src={cmsImages.hero_support_4 || "/campaign-worlds/Jacket_and_pants_fashion_display_2K_20260929162053.jpg"}
+                media={cmsImages.hero_support_4} fallback="/campaign-worlds/groton-home-hero-floating-jacket-3x4.webp"
                 alt="Floating Asset 4 - Jacket"
                 className="-right-[2%] sm:-right-[5%] lg:-right-[10%] xl:-right-[14%] bottom-[5%] lg:bottom-[10%]"
-                imageScale={1.05}
+                
                 px={p2x} py={p2y}
                 scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -80])}
                 initial={{ opacity: 0, x: 30, y: 20 }}
@@ -317,8 +367,8 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
              <div className="relative flex flex-col gap-6 lg:mt-0 group cursor-pointer" data-cursor="view">
-                <div className="w-full aspect-[4/5] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
-                  <Image src={cmsImages.capability_product || "/campaign-worlds/LOGO DESIGN _ IDENTITY DESIGN _ ЛОГОТИП.jpeg"} alt="Product Imagery" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                <div className="w-full aspect-[4/5] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]">
+                  <CmsMedia media={cmsImages.capability_product} fallback="/campaign-worlds/groton-home-capability-product-4x5.webp" alt="Premium e-commerce product imagery for campaigns" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img1.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Product Imagery" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -328,7 +378,7 @@ export default function Home() {
              </div>
              <div className="relative flex flex-col gap-6 lg:mt-[60px] group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#dad7d0] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
-                  <Image src={cmsImages.capability_model || "/campaign-worlds/groton-9.jpg"} alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <CmsMedia media={cmsImages.capability_model} fallback="/campaign-worlds/groton-home-capability-model-4x5.webp" alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img2.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Product-on-Model" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -338,7 +388,7 @@ export default function Home() {
              </div>
              <div className="relative flex flex-col gap-6 lg:mt-[120px] group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#d1cec7] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
-                  <Image src={cmsImages.capability_apparel || "/campaign-worlds/groton-1.jpg"} alt="Fashion Apparel" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <CmsMedia media={cmsImages.capability_apparel} fallback="/campaign-worlds/groton-1.jpg" alt="Fashion Apparel" fill className="object-cover object-top group-hover:scale-105 transition-transform duration-1000" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img3.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Fashion Apparel" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -348,7 +398,7 @@ export default function Home() {
              </div>
              <div className="relative flex flex-col gap-6 lg:mt-[180px] group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
-                  <Image src={cmsImages.capability_editorial || "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg"} alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <CmsMedia media={cmsImages.capability_editorial} fallback="/campaign-worlds/groton-home-capability-editorial-4x5.webp" alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img4.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Editorial" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -372,25 +422,25 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8">
              <div className="md:col-span-7 flex flex-col gap-6 lg:gap-8">
-                <div className="w-full aspect-[4/5] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_12px_30px_rgba(0,0,0,0.05)] transition-all duration-700 hover:shadow-lg hover:-translate-y-1" data-cursor="view">
-                  <Image src={cmsImages.gallery_1 || "/campaign-worlds/Caffeine is culture ☕️.jpeg"} alt="Sherpa Hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 60vw" />
+                <div className="w-full aspect-[4/5] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] hover:-translate-y-1" data-cursor="view">
+                  <CmsMedia media={cmsImages.gallery_1} fallback="/campaign-worlds/groton-home-gallery-sherpa-4x5.webp" alt="Fashion e-commerce apparel imagery of sherpa hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 60vw" />
                 </div>
                 <div className="grid grid-cols-2 gap-6 lg:gap-8">
-                   <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_12px_30px_rgba(0,0,0,0.05)] transition-all duration-700 hover:shadow-lg hover:-translate-y-1" data-cursor="view">
-                     <Image src={cmsImages.gallery_2 || "/campaign-worlds/How to style Cat Print T shirts.jpeg"} alt="Pink Jacket" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="30vw" />
+                   <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] hover:-translate-y-1" data-cursor="view">
+                     <CmsMedia media={cmsImages.gallery_2} fallback="/campaign-worlds/groton-home-gallery-pink-jacket-3x4.webp" alt="Product-on-model fashion photography of pink jacket" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="30vw" />
                    </div>
-                   <div className="w-full aspect-square relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_12px_30px_rgba(0,0,0,0.05)] transition-all duration-700 hover:shadow-lg hover:-translate-y-1 mt-6 lg:mt-12" data-cursor="view">
-                     <Image src={cmsImages.gallery_3 || "/campaign-worlds/download (27).jpeg"} alt="Pink Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="30vw" />
+                   <div className="w-full aspect-square relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] hover:-translate-y-1 mt-6 lg:mt-12" data-cursor="view">
+                     <CmsMedia media={cmsImages.gallery_3} fallback="/campaign-worlds/groton-home-gallery-pink-hoodie-1x1.webp" alt="Lifestyle product visuals of pink hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="30vw" />
                    </div>
                 </div>
              </div>
 
              <div className="md:col-span-5 flex flex-col gap-6 lg:gap-8 md:mt-[150px]">
-                <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_12px_30px_rgba(0,0,0,0.05)] transition-all duration-700 hover:shadow-lg hover:-translate-y-1" data-cursor="view">
-                  <Image src={cmsImages.gallery_4 || "/campaign-worlds/Mali džentlmen, veliki stil_ 🎨.jpeg"} alt="Pendant Lights" fill className="object-cover object-[center_15%] group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 40vw" />
+                <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] hover:-translate-y-1" data-cursor="view">
+                  <CmsMedia media={cmsImages.gallery_4} fallback="/campaign-worlds/groton-home-gallery-lighting-3x4.webp" alt="Lifestyle product imagery for interior lighting" fill className="object-cover object-[center_15%] group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 40vw" />
                 </div>
-                <div className="w-full aspect-[4/5] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_12px_30px_rgba(0,0,0,0.05)] transition-all duration-700 hover:shadow-lg hover:-translate-y-1" data-cursor="view">
-                  <Image src={cmsImages.gallery_5 || "/campaign-worlds/mu_forart_.jpeg"} alt="Sandals" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 40vw" />
+                <div className="w-full aspect-[4/5] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] hover:-translate-y-1" data-cursor="view">
+                  <CmsMedia media={cmsImages.gallery_5} fallback="/campaign-worlds/groton-home-gallery-footwear-4x5.webp" alt="E-commerce footwear product imagery for sandals" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 40vw" />
                 </div>
              </div>
           </div>
@@ -398,39 +448,143 @@ export default function Home() {
       </section>
 
       {/* 4. PRODUCT TRANSFORMATION */}
-      <section className="relative w-full z-10 bg-[#111] text-white py-[150px] px-6 lg:px-20 overflow-hidden border-t border-zinc-900">
-        <div className="max-w-[1440px] mx-auto flex flex-col items-center text-center">
-          <CmsText cmsId="home.process.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-400 uppercase mb-6" fallback="The Process" />
-          <CmsText cmsId="home.process.heading" as="h2" brClassName="" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] font-bold mb-[100px]" fallback={"From Product\nto Campaign."} />
+        <section className="relative w-full z-10 bg-[#111] text-white py-[100px] lg:py-[150px] px-6 lg:px-20 overflow-hidden border-t border-zinc-900">
+          <div className="max-w-[1440px] mx-auto flex flex-col items-center text-center">
+            <CmsText cmsId="home.process.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-400 uppercase mb-6" fallback="The Process" />
+            <CmsText cmsId="home.process.heading" as="h2" brClassName="" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] font-bold mb-[80px] lg:mb-[120px]" fallback={"From Product\nto Campaign."} />
 
-          <div className="w-full flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-24">
-            <div className="flex flex-col items-center gap-8 w-full lg:w-[35%]">
-              <div className="w-full aspect-square relative overflow-hidden rounded-[24px] bg-zinc-900 shadow-xl border border-zinc-800">
-                <Image src={cmsImages.process_raw || "/campaign-worlds/ghgh.jpeg"} alt="Raw Product Input" fill className="object-contain filter grayscale opacity-70 mix-blend-luminosity p-8" />
-              </div>
-              <CmsText cmsId="home.process.raw.label" as="span" className="font-mono text-[10px] tracking-[0.08em] uppercase font-bold text-zinc-400" fallback="Raw Product Asset" />
-            </div>
+            <div className="w-full flex flex-col lg:flex-row items-center lg:items-center justify-between gap-12 lg:gap-4 relative">
+              
+              {/* STAGE 01 - PRODUCT */}
+              <motion.div 
+                initial={{ opacity: shouldReduceMotion ? 1 : 0.4 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
+                transition={{ duration: 0.8 }}
+                className="w-full lg:w-[22%] flex flex-col items-center text-center relative group"
+              >
+                <div className="flex flex-col items-center gap-4 mb-6">
+                  <span className="font-mono text-[10px] text-zinc-500 group-hover:text-[#8B7CFF] transition-colors duration-500">01</span>
+                  <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest group-hover:text-[#8B7CFF] transition-colors duration-500">Product</span>
+                  <span className="font-sans text-[13px] text-zinc-400">Raw Product</span>
+                </div>
+                <div className="w-[80%] max-w-[200px] aspect-square relative overflow-hidden rounded-[16px] bg-zinc-900/50 border border-zinc-800/50">
+                  <CmsMedia media={cmsImages.process_raw} fallback="/campaign-worlds/groton-home-process-raw-1x1.webp" alt="Raw Product Input" fill className="object-contain p-6 mix-blend-luminosity opacity-70 group-hover:opacity-100 group-hover:mix-blend-normal transition-all duration-700" />
+                </div>
+              </motion.div>
 
-            <div className="hidden lg:flex flex-col items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-[#8B7CFF] shadow-[0_0_0_5px_rgba(139,124,255,0.12)]"></div>
-              <div className="w-1.5 h-1.5 rounded-full bg-zinc-700"></div>
-              <div className="w-1.5 h-1.5 rounded-full bg-zinc-700"></div>
-              <div className="w-1.5 h-1.5 rounded-full bg-zinc-700"></div>
-              <div className="w-1.5 h-1.5 rounded-full bg-zinc-700"></div>
-              <CmsText cmsId="home.process.middle.label" as="span" className="font-mono text-[9px] tracking-[0.08em] uppercase font-bold text-white mt-4" fallback="Art Direction" />
-            </div>
+              {/* ARROW 1 -> 2 */}
+              <motion.div 
+                initial={{ opacity: shouldReduceMotion ? 1 : 0.2 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="flex flex-col lg:flex-row items-center justify-center text-zinc-700"
+              >
+                {/* Mobile Arrow */}
+                <div className="lg:hidden h-8 w-[1px] bg-zinc-700 relative my-2">
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b border-r border-zinc-700 rotate-45 translate-y-[2px]"></div>
+                </div>
+                {/* Desktop Arrow */}
+                <div className="hidden lg:block w-8 lg:w-12 h-[1px] bg-zinc-700 relative">
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t border-r border-zinc-700 rotate-45 translate-x-[2px]"></div>
+                </div>
+              </motion.div>
 
-            <div className="flex flex-col items-center gap-8 w-full lg:w-[45%]">
-              <div className="w-full aspect-[4/5] relative overflow-hidden rounded-[24px] shadow-2xl">
-                <Image src={cmsImages.process_final || "/campaign-worlds/1368386.jpg"} alt="Final Campaign Visual" fill className="object-cover" />
-              </div>
-              <CmsText cmsId="home.process.final.label" as="span" className="font-mono text-[10px] tracking-[0.08em] uppercase font-bold text-white" fallback="Final Campaign Visual" />
+              {/* STAGE 02 - MODEL */}
+              <motion.div 
+                initial={{ opacity: shouldReduceMotion ? 1 : 0.4 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
+                transition={{ duration: 0.8, delay: shouldReduceMotion ? 0 : 0.2 }}
+                className="w-full lg:w-[18%] flex flex-col items-center text-center relative group"
+              >
+                <div className="flex flex-col items-center gap-4 mb-6">
+                  <span className="font-mono text-[10px] text-zinc-500 group-hover:text-[#8B7CFF] transition-colors duration-500">02</span>
+                  <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest group-hover:text-[#8B7CFF] transition-colors duration-500">Model</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <span className="font-sans text-[14px] text-zinc-300">Male</span>
+                  <span className="font-sans text-[14px] text-zinc-300">Editorial Pose</span>
+                  <span className="font-sans text-[14px] text-zinc-300">Casual Styling</span>
+                </div>
+              </motion.div>
+
+              {/* ARROW 2 -> 3 */}
+              <motion.div 
+                initial={{ opacity: shouldReduceMotion ? 1 : 0.2 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="flex flex-col lg:flex-row items-center justify-center text-zinc-700"
+              >
+                <div className="lg:hidden h-8 w-[1px] bg-zinc-700 relative my-2">
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b border-r border-zinc-700 rotate-45 translate-y-[2px]"></div>
+                </div>
+                <div className="hidden lg:block w-8 lg:w-12 h-[1px] bg-zinc-700 relative">
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t border-r border-zinc-700 rotate-45 translate-x-[2px]"></div>
+                </div>
+              </motion.div>
+
+              {/* STAGE 03 - ART DIRECTION */}
+              <motion.div 
+                initial={{ opacity: shouldReduceMotion ? 1 : 0.4 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
+                transition={{ duration: 0.8, delay: shouldReduceMotion ? 0 : 0.4 }}
+                className="w-full lg:w-[18%] flex flex-col items-center text-center relative group"
+              >
+                <div className="flex flex-col items-center gap-4 mb-6">
+                  <span className="font-mono text-[10px] text-zinc-500 group-hover:text-[#8B7CFF] transition-colors duration-500">03</span>
+                  <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest group-hover:text-[#8B7CFF] transition-colors duration-500">Art Direction</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                  <span className="font-sans text-[14px] text-zinc-300">Soft Lighting</span>
+                  <span className="font-sans text-[14px] text-zinc-300">50mm Camera</span>
+                  <span className="font-sans text-[14px] text-zinc-300">Clean Background</span>
+                  <span className="font-sans text-[14px] text-zinc-300">Editorial Composition</span>
+                </div>
+              </motion.div>
+
+              {/* ARROW 3 -> 4 */}
+              <motion.div 
+                initial={{ opacity: shouldReduceMotion ? 1 : 0.2 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="flex flex-col lg:flex-row items-center justify-center text-zinc-700"
+              >
+                <div className="lg:hidden h-8 w-[1px] bg-zinc-700 relative my-2">
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b border-r border-zinc-700 rotate-45 translate-y-[2px]"></div>
+                </div>
+                <div className="hidden lg:block w-8 lg:w-12 h-[1px] bg-zinc-700 relative">
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t border-r border-zinc-700 rotate-45 translate-x-[2px]"></div>
+                </div>
+              </motion.div>
+
+              {/* STAGE 04 - CAMPAIGN */}
+              <motion.div 
+                initial={{ opacity: shouldReduceMotion ? 1 : 0.4 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
+                transition={{ duration: 0.8, delay: shouldReduceMotion ? 0 : 0.6 }}
+                className="w-full lg:w-[28%] flex flex-col items-center text-center relative group"
+              >
+                <div className="flex flex-col items-center gap-4 mb-6">
+                  <span className="font-mono text-[10px] text-[#8B7CFF]">04</span>
+                  <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest text-[#8B7CFF]">Campaign</span>
+                  <span className="font-sans text-[13px] text-zinc-400">Final Campaign Visual</span>
+                </div>
+                <div className="w-[90%] lg:w-full max-w-[280px] aspect-[4/5] relative overflow-hidden rounded-[20px] shadow-[0_18px_40px_rgba(0,0,0,0.30)]">
+                  <CmsMedia media={cmsImages.process_final} fallback="/campaign-worlds/groton-home-process-final-4x5.webp" alt="Final Campaign Visual" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                </div>
+              </motion.div>
+
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 5. FASHION & APPAREL */}
+        {/* 5. FASHION & APPAREL */}
       <section className="relative w-full z-10 bg-[#f3f0ea] py-[150px] px-6 lg:px-20 overflow-hidden border-t border-[rgba(0,0,0,0.05)]">
         <div className="max-w-[1440px] mx-auto mb-[100px]">
           <CmsText cmsId="home.focus.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" fallback="Focus" />
@@ -438,14 +592,14 @@ export default function Home() {
         </div>
         
         <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10">
-           <div className="w-full aspect-[3/4] relative bg-[#f3f0ea] rounded-[24px] overflow-hidden group shadow-sm transition-all duration-700 hover:-translate-y-2 hover:shadow-xl" data-cursor="view">
-             <Image src={cmsImages.fashion_1 || "/campaign-worlds/groton-15.jpg"} alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+           <div className="w-full aspect-[3/4] relative bg-[#f3f0ea] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]" data-cursor="view">
+             <CmsMedia media={cmsImages.fashion_1} fallback="/campaign-worlds/groton-home-fashion-black-hoodie-3x4.webp" alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
            </div>
-           <div className="w-full aspect-[3/4] relative bg-[#e8e5df] rounded-[24px] overflow-hidden group shadow-sm transition-all duration-700 hover:-translate-y-2 hover:shadow-xl md:mt-[80px]" data-cursor="view">
-             <Image src={cmsImages.fashion_2 || "/campaign-worlds/groton-12.jpg"} alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+           <div className="w-full aspect-[3/4] relative bg-[#e8e5df] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] md:mt-[80px]" data-cursor="view">
+             <CmsMedia media={cmsImages.fashion_2} fallback="/campaign-worlds/groton-home-fashion-striped-shirt-3x4.webp" alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
            </div>
-           <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[24px] overflow-hidden group shadow-sm transition-all duration-700 hover:-translate-y-2 hover:shadow-xl md:mt-[160px]" data-cursor="view">
-             <Image src={cmsImages.fashion_3 || "/campaign-worlds/groton-9.jpg"} alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+           <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] md:mt-[160px]" data-cursor="view">
+             <CmsMedia media={cmsImages.fashion_3} fallback="/campaign-worlds/groton-home-fashion-blue-hoodie-3x4.webp" alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
            </div>
         </div>
       </section>
@@ -457,15 +611,15 @@ export default function Home() {
           <h2 className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold">Home & Lifestyle.</h2>
         </div>
         <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10">
-           <div className="md:col-span-7 aspect-[16/9] relative bg-[#dad7d0] rounded-[30px] group overflow-hidden shadow-sm" data-cursor="view">
-             <Image src="/campaign-worlds/groton-16.jpg" alt="Pendant Lights" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+           <div className="md:col-span-7 aspect-[16/9] relative bg-[#dad7d0] rounded-[30px] group overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.10)]" data-cursor="view">
+             <Image src="/campaign-worlds/groton-16.jpg" alt="Lifestyle product imagery for interior lighting" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
            </div>
            <div className="md:col-span-5 flex flex-col gap-6 lg:gap-10">
-             <div className="w-full aspect-square relative bg-[#dad7d0] rounded-[30px] group overflow-hidden shadow-sm" data-cursor="view">
-               <Image src="/campaign-worlds/groton-11.jpg" alt="Orange Cushions" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+             <div className="w-full aspect-square relative bg-[#dad7d0] rounded-[30px] group overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.10)]" data-cursor="view">
+               <Image src="/campaign-worlds/groton-11.jpg" alt="Lifestyle e-commerce product visuals for home accessories" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
              </div>
-             <div className="w-full aspect-[21/9] relative bg-[#dad7d0] rounded-[30px] group overflow-hidden shadow-sm" data-cursor="view">
-               <Image src="/campaign-worlds/groton-7.jpg" alt="Translucent Lamp" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+             <div className="w-full aspect-[21/9] relative bg-[#dad7d0] rounded-[30px] group overflow-hidden shadow-[0_18px_40px_rgba(0,0,0,0.10)]" data-cursor="view">
+               <Image src="/campaign-worlds/groton-7.jpg" alt="Catalog product imagery for home decor" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
              </div>
            </div>
         </div>
@@ -492,7 +646,7 @@ export default function Home() {
             { img: "/campaign-worlds/groton-5.jpg", label: "Lifestyle" }
           ].map((item, idx) => (
             <div key={idx} className="min-w-[85vw] md:min-w-[40vw] lg:min-w-[30vw] flex flex-col gap-4 snap-center group cursor-pointer" data-cursor="view">
-              <div className="w-full aspect-[4/5] relative overflow-hidden rounded-[24px] bg-[#dad7d0] shadow-sm">
+              <div className="w-full aspect-[4/5] relative overflow-hidden rounded-[24px] bg-[#dad7d0] shadow-[0_18px_40px_rgba(0,0,0,0.10)]">
                 <Image src={item.img} alt={item.label} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
               </div>
               <div className="flex justify-between items-center px-1">
@@ -519,11 +673,19 @@ export default function Home() {
               { id: "step4", step: "04", title: "Refinement", desc: "Composition, styling, and details are meticulously polished." },
               { id: "step5", step: "05", title: "Delivery", desc: "Final commercial-ready visuals are delivered." }
             ].map((item, idx) => (
-              <div key={idx} className="relative flex flex-col md:flex-row md:items-center gap-6 md:gap-16 py-10 lg:py-14 border-b border-[rgba(0,0,0,0.1)] group transition-colors duration-500 hover:bg-[rgba(0,0,0,0.02)] px-4 -mx-4 rounded-xl">
+              <motion.div 
+                key={idx} 
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.9, delay: shouldReduceMotion ? 0 : idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                className="relative flex flex-col md:flex-row md:items-center gap-6 md:gap-16 py-10 lg:py-14 border-b border-[rgba(0,0,0,0.1)] group transition-colors duration-500 hover:bg-[rgba(0,0,0,0.02)] px-4 -mx-4 rounded-xl"
+              >
+                <div className="absolute left-0 bottom-[-1px] h-[1px] w-0 bg-black transition-all duration-[0.6s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:w-full z-10" aria-hidden="true" />
                 <span className="font-mono text-[24px] md:text-[32px] text-zinc-300 md:w-[100px] transition-colors duration-500 group-hover:text-black">{item.step}</span>
                 <CmsText cmsId={`home.process.${item.id}.title`} as="h4" className="font-sans font-bold text-[24px] md:text-[32px] tracking-[-0.03em] text-black flex-1" fallback={item.title} />
                 <CmsText cmsId={`home.process.${item.id}.desc`} as="p" className="font-sans text-[15px] lg:text-[16px] text-zinc-500 md:w-[350px] leading-[1.7]" fallback={item.desc} />
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -596,18 +758,19 @@ export default function Home() {
 
 
 interface FloatingCardProps {
-  src: string;
+  media: any;
+  fallback: string;
   alt: string;
   className: string;
-  px: any;
-  py: any;
-  scrollYTransform: any;
-  initial: any;
-  delay: number;
+  px?: any;
+  py?: any;
+  scrollYTransform?: any;
+  initial?: any;
+  delay?: number;
   imageScale?: number;
 }
 
-function FloatingHeroCard({ src, alt, className, px, py, scrollYTransform, initial, delay, imageScale = 1 }: FloatingCardProps) {
+function FloatingHeroCard({ media, fallback, alt, className, px, py, scrollYTransform, initial, delay, imageScale = 1 }: FloatingCardProps) {
   return (
     <motion.div 
       style={{ x: px, y: py }}
@@ -615,18 +778,18 @@ function FloatingHeroCard({ src, alt, className, px, py, scrollYTransform, initi
     >
        <motion.div
          style={{ y: scrollYTransform }}
-         className="w-full h-full shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] group pointer-events-auto"
+         className="w-full h-full shadow-[0_14px_32px_rgba(0,0,0,0.09)] rounded-[16px] lg:rounded-[20px] group pointer-events-auto"
        >
          <motion.div 
            initial={initial} 
            animate={{ opacity: 1, x: 0, y: 0 }} 
            transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
-           className="w-full h-full relative overflow-hidden bg-white rounded-[16px] p-2.5 lg:p-3"
+           className="w-full h-full relative overflow-hidden bg-white rounded-[16px] lg:rounded-[20px] p-[10px] lg:p-[12px]"
            data-cursor="view"
          >
-           <div className="relative w-full h-full flex items-center justify-center bg-[#f2f2f2] rounded-[8px] overflow-hidden">
-             <div className="relative w-full h-full flex items-center justify-center" style={{ transform: `scale(${imageScale})` }}>
-               <Image src={src} alt={alt} fill className="object-contain mix-blend-darken pointer-events-none group-hover:scale-105 transition-transform duration-700" priority sizes="(max-width: 768px) 30vw, 20vw" />
+           <div className="relative w-full h-full flex items-center justify-center bg-[#f2f2f2] rounded-[6px] lg:rounded-[8px] overflow-hidden isolate">
+             <div className="relative w-full h-full flex items-center justify-center">
+               <CmsMedia media={media} fallback={fallback} alt={alt} fill className="object-cover mix-blend-darken pointer-events-none group-hover:scale-105 transition-transform duration-700" priority sizes="(max-width: 768px) 30vw, 20vw" />
              </div>
            </div>
          </motion.div>

@@ -130,16 +130,16 @@ export default function PriceCalculatorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col font-sans text-foreground selection:bg-foreground selection:text-background">
+    <div className="min-h-screen bg-[#F9F8F6] flex flex-col font-sans text-black selection:bg-[#8B7CFF] selection:text-white">
       <Navigation />
       
       <main className="flex-1 w-full max-w-[1400px] mx-auto px-6 md:px-12 py-16 md:py-24">
         <div className="mb-16 print:hidden">
-          <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-sec-text mb-4 block">GROTON AI STUDIO</span>
+          <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500 mb-4 block">GROTON AI STUDIO</span>
           <h1 className="font-serif text-4xl md:text-6xl tracking-tight leading-tight mb-6">
             Price Calculator.
           </h1>
-          <p className="text-sec-text max-w-xl text-sm md:text-base leading-relaxed">
+          <p className="text-zinc-500 max-w-xl text-sm md:text-base leading-relaxed">
             Estimate your visual production cost. Select your requirements below to generate a live quotation sheet.
           </p>
         </div>
@@ -156,15 +156,15 @@ export default function PriceCalculatorPage() {
                   <button 
                     key={pkg.id}
                     onClick={() => setSelectedPackageId(pkg.id)}
-                    className={`relative flex flex-col items-start p-6 border transition-all text-left ${selectedPackageId === pkg.id ? 'border-foreground bg-zinc-50' : 'border-border-color hover:border-zinc-300'}`}
+                    className={`relative flex flex-col items-start p-6 border transition-all text-left ${selectedPackageId === pkg.id ? 'border-foreground bg-[#F9F8F6]' : 'border-[rgba(0,0,0,0.05)] hover:border-zinc-300'}`}
                   >
                     {pkg.recommended && (
-                      <span className="absolute top-0 right-0 bg-foreground text-background text-[8px] font-bold uppercase tracking-widest px-2 py-1 -mt-2 -mr-2 shadow-sm">
+                      <span className="absolute top-0 right-0 bg-[#8B7CFF] text-white text-[8px] font-bold uppercase tracking-widest px-2 py-1 -mt-2 -mr-2 shadow-[0_18px_40px_rgba(0,0,0,0.10)]">
                         Recommended
                       </span>
                     )}
                     <span className="font-serif text-xl mb-1">{pkg.name}</span>
-                    <span className="text-sm text-sec-text mb-4">{pkg.images} {pkg.id !== 'custom' ? 'Images' : ''}</span>
+                    <span className="text-sm text-zinc-500 mb-4">{pkg.images} {pkg.id !== 'custom' ? 'Images' : ''}</span>
                     <span className="mt-auto text-[11px] font-bold tracking-widest uppercase">{pkg.label}</span>
                   </button>
                 ))}
@@ -175,15 +175,15 @@ export default function PriceCalculatorPage() {
               <section className="flex flex-col gap-4 animate-fade-in">
                 <h2 className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">NUMBER OF IMAGES</h2>
                 <div className="flex items-center gap-4">
-                  <button onClick={() => setCustomImageCount(c => Math.max(1, (Number(c)||1) - 10))} className="w-12 h-12 flex items-center justify-center border border-border-color hover:bg-zinc-50 text-xl">−</button>
+                  <button onClick={() => setCustomImageCount(c => Math.max(1, (Number(c)||1) - 10))} className="w-12 h-12 flex items-center justify-center border border-[rgba(0,0,0,0.05)] hover:bg-[#F9F8F6] text-xl">−</button>
                   <input 
                     type="number" 
                     min="1" 
                     value={customImageCount} 
                     onChange={e => setCustomImageCount(Math.max(1, parseInt(e.target.value) || 1))} 
-                    className="w-24 h-12 text-center border border-border-color focus:outline-none focus:border-foreground"
+                    className="w-24 h-12 text-center border border-[rgba(0,0,0,0.05)] focus:outline-none focus:border-foreground"
                   />
-                  <button onClick={() => setCustomImageCount(c => (Number(c)||0) + 10)} className="w-12 h-12 flex items-center justify-center border border-border-color hover:bg-zinc-50 text-xl">+</button>
+                  <button onClick={() => setCustomImageCount(c => (Number(c)||0) + 10)} className="w-12 h-12 flex items-center justify-center border border-[rgba(0,0,0,0.05)] hover:bg-[#F9F8F6] text-xl">+</button>
                 </div>
               </section>
             )}
@@ -194,7 +194,7 @@ export default function PriceCalculatorPage() {
                 <select 
                   value={service} 
                   onChange={e => setService(e.target.value)} 
-                  className="w-full border-b border-border-color py-4 bg-transparent focus:outline-none focus:border-foreground transition-colors font-light text-base appearance-none rounded-none cursor-pointer"
+                  className="w-full border-b border-[rgba(0,0,0,0.05)] py-4 bg-transparent focus:outline-none focus:border-foreground transition-colors font-light text-base appearance-none rounded-none cursor-pointer"
                 >
                   {SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
@@ -204,24 +204,24 @@ export default function PriceCalculatorPage() {
               </div>
             </section>
 
-            <section className="flex flex-col gap-6 pt-8 border-t border-border-color">
+            <section className="flex flex-col gap-6 pt-8 border-t border-[rgba(0,0,0,0.05)]">
               <h2 className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">CLIENT DETAILS (OPTIONAL)</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[9px] uppercase tracking-widest text-sec-text">Name</label>
-                  <input type="text" value={clientName} onChange={e => setClientName(e.target.value)} className="border-b border-border-color py-2 bg-transparent focus:outline-none focus:border-foreground text-sm font-light" placeholder="Jane Doe" />
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500">Name</label>
+                  <input type="text" value={clientName} onChange={e => setClientName(e.target.value)} className="border-b border-[rgba(0,0,0,0.05)] py-2 bg-transparent focus:outline-none focus:border-foreground text-sm font-light" placeholder="Jane Doe" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[9px] uppercase tracking-widest text-sec-text">Brand / Company</label>
-                  <input type="text" value={clientBrand} onChange={e => setClientBrand(e.target.value)} className="border-b border-border-color py-2 bg-transparent focus:outline-none focus:border-foreground text-sm font-light" placeholder="Your Brand" />
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500">Brand / Company</label>
+                  <input type="text" value={clientBrand} onChange={e => setClientBrand(e.target.value)} className="border-b border-[rgba(0,0,0,0.05)] py-2 bg-transparent focus:outline-none focus:border-foreground text-sm font-light" placeholder="Your Brand" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[9px] uppercase tracking-widest text-sec-text">Email</label>
-                  <input type="email" value={clientEmail} onChange={e => setClientEmail(e.target.value)} className="border-b border-border-color py-2 bg-transparent focus:outline-none focus:border-foreground text-sm font-light" placeholder="jane@brand.com" />
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500">Email</label>
+                  <input type="email" value={clientEmail} onChange={e => setClientEmail(e.target.value)} className="border-b border-[rgba(0,0,0,0.05)] py-2 bg-transparent focus:outline-none focus:border-foreground text-sm font-light" placeholder="jane@brand.com" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-[9px] uppercase tracking-widest text-sec-text">Phone</label>
-                  <input type="tel" value={clientPhone} onChange={e => setClientPhone(e.target.value)} className="border-b border-border-color py-2 bg-transparent focus:outline-none focus:border-foreground text-sm font-light" placeholder="+1 234 567 890" />
+                  <label className="text-[9px] uppercase tracking-widest text-zinc-500">Phone</label>
+                  <input type="tel" value={clientPhone} onChange={e => setClientPhone(e.target.value)} className="border-b border-[rgba(0,0,0,0.05)] py-2 bg-transparent focus:outline-none focus:border-foreground text-sm font-light" placeholder="+1 234 567 890" />
                 </div>
               </div>
             </section>
@@ -232,18 +232,18 @@ export default function PriceCalculatorPage() {
           <div className="lg:col-span-5 flex flex-col gap-8 print:w-full print:block">
             
             {/* LIVE ESTIMATE HERO */}
-            <div className="bg-zinc-50 border border-zinc-200 p-8 flex flex-col gap-4 sticky top-8 print:hidden">
+            <div className="bg-[#F9F8F6] border border-[rgba(0,0,0,0.05)] p-8 flex flex-col gap-4 sticky top-8 print:hidden">
               <h3 className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">ESTIMATED PROJECT TOTAL</h3>
-              <div className="font-serif text-4xl md:text-5xl text-foreground">
+              <div className="font-serif text-4xl md:text-5xl text-black">
                 {estimatedTotal}
               </div>
-              <p className="text-[10px] text-zinc-500 leading-relaxed mt-2 border-t border-zinc-200 pt-4">
+              <p className="text-[10px] text-zinc-500 leading-relaxed mt-2 border-t border-[rgba(0,0,0,0.05)] pt-4">
                 Pricing applies to standard e-commerce/product imagery. Product-on-model, lifestyle, advanced compositing and campaign visuals are quoted separately.
               </p>
             </div>
 
             {/* THE QUOTATION SHEET */}
-            <div id="quotation-sheet" className="bg-white border border-zinc-200 p-8 md:p-12 flex flex-col font-sans text-sm print:border-none print:p-0">
+            <div id="quotation-sheet" className="bg-white border border-[rgba(0,0,0,0.05)] p-8 md:p-12 flex flex-col font-sans text-sm print:border-none print:p-0">
               <div className="border-b-2 border-black pb-6 mb-8 flex flex-col gap-2">
                 <div className="font-sans font-bold tracking-[0.3em] uppercase text-black">GROTON AI</div>
                 <div className="text-zinc-500 tracking-[0.1em] uppercase text-xs">Project Estimate</div>
@@ -264,7 +264,7 @@ export default function PriceCalculatorPage() {
               </div>
 
               <div className="flex flex-col gap-4 mb-12">
-                <div className="flex justify-between border-b border-zinc-200 pb-2">
+                <div className="flex justify-between border-b border-[rgba(0,0,0,0.05)] pb-2">
                   <span className="text-[9px] font-bold tracking-widest uppercase text-zinc-400">Details</span>
                   <span className="text-[9px] font-bold tracking-widest uppercase text-zinc-400">Value</span>
                 </div>
@@ -283,7 +283,7 @@ export default function PriceCalculatorPage() {
               </div>
 
               <div className="flex flex-col gap-4 mb-12">
-                <div className="flex justify-between border-b border-zinc-200 pb-2">
+                <div className="flex justify-between border-b border-[rgba(0,0,0,0.05)] pb-2">
                   <span className="text-[9px] font-bold tracking-widest uppercase text-zinc-400">Cost Breakdown</span>
                   <span className="text-[9px] font-bold tracking-widest uppercase text-zinc-400">Amount</span>
                 </div>
@@ -302,7 +302,7 @@ export default function PriceCalculatorPage() {
                 <span className="font-serif text-2xl text-black">{estimatedTotal}</span>
               </div>
 
-              <div className="mt-auto pt-8 border-t border-zinc-200 text-[10px] text-zinc-400 leading-relaxed">
+              <div className="mt-auto pt-8 border-t border-[rgba(0,0,0,0.05)] text-[10px] text-zinc-400 leading-relaxed">
                 <p className="mb-4">Pricing applies to standard e-commerce/product imagery. Product-on-model, lifestyle, advanced compositing and campaign visuals are quoted separately.</p>
                 <p className="font-bold tracking-widest uppercase">GROTON.IN</p>
               </div>
@@ -310,10 +310,10 @@ export default function PriceCalculatorPage() {
 
             {/* ACTIONS */}
             <div className="flex flex-col sm:flex-row gap-4 print:hidden">
-              <button onClick={handlePrint} className="flex-1 border border-border-color py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors">
+              <button onClick={handlePrint} className="flex-1 border border-[rgba(0,0,0,0.05)] py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-[#F9F8F6] transition-colors">
                 Print Quotation
               </button>
-              <button onClick={handleDownloadPDF} className="flex-1 bg-zinc-100 border border-zinc-200 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-200 transition-colors text-black">
+              <button onClick={handleDownloadPDF} className="flex-1 bg-zinc-100 border border-[rgba(0,0,0,0.05)] py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-200 transition-colors text-black">
                 Download PDF
               </button>
             </div>

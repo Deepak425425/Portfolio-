@@ -25,7 +25,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const { id, src } = await req.json();
-  const updated = updateCmsImage(id, src);
+  const { id, src, mediaType, mimeType } = await req.json();
+  const updated = updateCmsImage(id, src, mediaType, mimeType);
   return NextResponse.json(updated);
 }
