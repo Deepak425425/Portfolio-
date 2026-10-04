@@ -6,14 +6,26 @@ import { put, list, del } from '@vercel/blob';
 
 export const dynamic = 'force-dynamic';
 
+
+function getMediaType(filename: string, mimeType?: string) {
+  if (mimeType && mimeType.startsWith('video/')) return 'video';
+  if (mimeType && mimeType.startsWith('image/')) return 'image';
+  
+  const ext = filename.split('.').pop()?.toLowerCase() || '';
+  if (['mp4', 'webm', 'mov', 'quicktime'].includes(ext)) return 'video';
+  return 'image';
+}
+
 export async function GET() {
   try {
-    const cmsData = getCmsData();
+    const cmsData: any[] = getCmsData() || [];
     const mediaMap = new Map();
 
-    cmsData.forEach(img => {
+        cmsData.forEach(img => {
       if (!img.src) return;
       const src = img.src;
+      
+      const mediaType = img.mediaType || getMediaType(src, img.mimeType);
       
       if (!mediaMap.has(src)) {
         mediaMap.set(src, {
@@ -22,6 +34,8 @@ export async function GET() {
           originalPath: src,
           publicUrl: src,
           displayName: src.split('/').pop() || src,
+          mediaType: mediaType,
+          mimeType: img.mimeType,
           usages: []
         });
       }
@@ -49,6 +63,7 @@ export async function GET() {
             originalPath: src,
             publicUrl: src,
             displayName: f,
+            mediaType: getMediaType(f, undefined),
             usages: []
           });
         } else {
@@ -60,7 +75,7 @@ export async function GET() {
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       try {
         const { blobs } = await list({ prefix: 'studio/' });
-        blobs.forEach(b => {
+        blobs.forEach((b: any) => {
           if (!mediaMap.has(b.url)) {
             mediaMap.set(b.url, {
               id: b.url,
@@ -68,6 +83,8 @@ export async function GET() {
               originalPath: b.url,
               publicUrl: b.url,
               displayName: b.pathname.replace('studio/', ''),
+              mediaType: getMediaType(b.pathname, b.contentType),
+              mimeType: b.contentType,
               usages: []
             });
           }
@@ -91,6 +108,8 @@ export async function POST(req: Request) {
   
   const buffer = Buffer.from(await file.arrayBuffer());
   const filename = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+  const mimeType = file.type;
+  const mediaType = mimeType.startsWith('video/') ? 'video' : 'image';
   
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
@@ -105,6 +124,8 @@ export async function POST(req: Request) {
         originalPath: blob.url,
         publicUrl: blob.url,
         displayName: filename,
+        mediaType,
+        mimeType,
         usages: []
       };
       
@@ -127,6 +148,8 @@ export async function POST(req: Request) {
       originalPath: url,
       publicUrl: url,
       displayName: filename,
+      mediaType,
+      mimeType,
       usages: []
     };
     

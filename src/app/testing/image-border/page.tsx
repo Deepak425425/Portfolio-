@@ -383,9 +383,9 @@ export default function BorderStudioPage() {
      return (
         <div className="w-full aspect-square rounded bg-[#F7F6F2] overflow-hidden flex items-center justify-center p-2 shadow-inner">
            {imgObj ? (
-              <canvas ref={canvasRef} className="max-w-full max-h-[70vh] object-contain filter drop-shadow-sm transition-transform group-hover:scale-105" />
+              <canvas ref={canvasRef} className="max-w-full max-h-[70vh] object-contain filter drop-shadow-[0_18px_40px_rgba(0,0,0,0.05)] transition-transform group-hover:scale-105" />
            ) : (
-              <div className="w-12 h-16 bg-transparent border border-gray-200 shadow-sm rounded-sm"></div>
+              <div className="w-12 h-16 bg-transparent border border-gray-200 shadow-[0_18px_40px_rgba(0,0,0,0.05)] rounded-sm"></div>
            )}
         </div>
      );
@@ -504,7 +504,7 @@ export default function BorderStudioPage() {
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden p-6 md:p-12">
                      <div className="relative flex items-center justify-center w-full h-full">
-                        <canvas ref={previewCanvasRef} className="max-w-full max-h-full object-contain filter drop-shadow-sm transition-transform" />
+                        <canvas ref={previewCanvasRef} className="max-w-full max-h-full object-contain filter drop-shadow-[0_18px_40px_rgba(0,0,0,0.05)] transition-transform" />
                      </div>
                   </div>
                   {isProcessing && (
@@ -687,7 +687,7 @@ export default function BorderStudioPage() {
       </div>
     
       {/* SEO CONTENT BLOCK */}
-      <section id="seo-content-block" className="max-w-[1280px] mx-auto w-full px-6 md:px-8 py-16 md:py-24 mt-12 border-t border-zinc-200/50">
+      <section id="seo-content-block" className="max-w-[1280px] mx-auto w-full px-6 md:px-8 py-16 md:py-24 mt-12 border-t border-[rgba(0,0,0,0.05)]/50">
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 text-zinc-600">
             <div className="flex flex-col gap-4 lg:col-span-2">
                <h2 className="text-2xl font-serif text-[#111111]">Add Beautiful Borders & Frames to Images</h2>

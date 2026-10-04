@@ -84,24 +84,7 @@ export default function RootLayout({
             })
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebApplication",
-              name: "Groton Image Tools",
-              url: "https://groton.in/tools",
-              applicationCategory: "MultimediaApplication",
-              operatingSystem: "All",
-              offers: {
-                "@type": "Offer",
-                price: "0",
-                priceCurrency: "USD"
-              }
-            })
-          }}
-        />
+        
         <CustomCursor />
         {children}
       </body>

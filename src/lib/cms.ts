@@ -10,6 +10,8 @@ export type CmsImage = {
   src: string;
   page: string;
   section: string;
+  mediaType?: 'image' | 'video';
+  mimeType?: string;
 };
 
 const DEFAULT_IMAGES: CmsImage[] = [
@@ -95,9 +97,9 @@ export function getCmsData(): CmsImage[] {
   }
 }
 
-export function updateCmsImage(id: string, newSrc: string) {
+export function updateCmsImage(id: string, newSrc: string, mediaType?: 'image' | 'video', mimeType?: string) {
   const data = getCmsData();
-  const updated = data.map(img => img.id === id ? { ...img, src: newSrc } : img);
+  const updated = data.map(img => img.id === id ? { ...img, src: newSrc, mediaType: mediaType || img.mediaType, mimeType: mimeType || img.mimeType } : img);
   
   try {
     fs.writeFileSync(CMS_FILE_PATH, JSON.stringify(updated, null, 2));

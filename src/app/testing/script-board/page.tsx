@@ -42,7 +42,7 @@ const getBase64 = (file: File): Promise<string> => {
 
 // --- Icons ---
 const Icons = {
-  ScriptBoard: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#7C3AED]"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>,
+  ScriptBoard: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#8B7CFF]"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>,
   Pencil: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>,
   ZoomOut: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><line x1="8" x2="14" y1="11" y2="11"/></svg>,
   ZoomIn: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><line x1="11" x2="11" y1="8" y2="14"/><line x1="8" x2="14" y1="11" y2="11"/></svg>,
@@ -737,10 +737,10 @@ This file is informational only.`;
   };
 
   return (
-    <div className="h-screen bg-zinc-50 flex flex-col font-sans text-gray-800 overflow-hidden selection:bg-[#8B7CFF] selection:text-white">
+    <div className="h-screen bg-white flex flex-col font-sans text-gray-800 overflow-hidden selection:bg-[#8B7CFF] selection:text-white">
       
       {/* NEW HEADER */}
-      <header className="h-16 flex items-center justify-between px-6 border-b border-zinc-200 bg-white shrink-0 z-20 shadow-sm">
+      <header className="h-16 flex items-center justify-between px-6 border-b border-[rgba(0,0,0,0.05)] bg-white shrink-0 z-20 shadow-[0_18px_40px_rgba(0,0,0,0.05)]">
          <div className="flex items-center gap-6">
            <div className="font-bold tracking-[0.2em] text-xs md:text-sm uppercase text-black flex items-center gap-2">
              <div className="w-2 h-2 bg-[#8B7CFF] rounded-full"></div>
@@ -771,7 +771,7 @@ This file is informational only.`;
          <div className="flex items-center gap-2 md:gap-3 relative" ref={exportRef}>
            {showSavedIndicator && <span className="hidden md:inline text-[10px] uppercase tracking-widest font-bold text-[#8B7CFF] mr-2">Saved</span>}
            
-           <div className="hidden md:flex items-center bg-zinc-100 rounded-lg p-1.5 border border-zinc-200 focus-within:border-[#8B7CFF] transition-colors">
+           <div className="hidden md:flex items-center bg-[#F9F8F6] rounded-lg p-1.5 border border-[rgba(0,0,0,0.05)] focus-within:border-[#8B7CFF] transition-colors">
              <Icons.Search />
              <input 
                type="text" 
@@ -783,11 +783,11 @@ This file is informational only.`;
            </div>
 
            <div className="relative">
-             <button onClick={() => setIsFilterOpen(!isFilterOpen)} className={`p-2 rounded-lg transition-colors ${isFilterOpen ? 'bg-zinc-200 text-black' : 'hover:bg-zinc-100 text-zinc-500'}`}>
+             <button onClick={() => setIsFilterOpen(!isFilterOpen)} className={`p-2 rounded-lg transition-colors ${isFilterOpen ? 'bg-zinc-200 text-black' : 'hover:bg-[#F9F8F6] text-zinc-500'}`}>
                 <Icons.Filter />
              </button>
              {isFilterOpen && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-zinc-200 shadow-xl rounded-xl p-4 z-50 flex flex-col gap-3">
+                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-[rgba(0,0,0,0.05)] shadow-xl rounded-xl p-4 z-50 flex flex-col gap-3">
                   <span className="text-[10px] font-bold tracking-widest uppercase text-zinc-400 mb-1">Filters</span>
                   <label className="flex items-center justify-between cursor-pointer group">
                     <span className="text-xs font-medium text-zinc-700 group-hover:text-black">Missing Image</span>
@@ -805,33 +805,33 @@ This file is informational only.`;
              )}
            </div>
 
-           <button onClick={() => setIsExportOpen(!isExportOpen)} className={`p-2 rounded-lg transition-colors flex items-center gap-1.5 ${isExportOpen ? 'bg-zinc-200 text-black' : 'hover:bg-zinc-100 text-zinc-600'}`}>
+           <button onClick={() => setIsExportOpen(!isExportOpen)} className={`p-2 rounded-lg transition-colors flex items-center gap-1.5 ${isExportOpen ? 'bg-zinc-200 text-black' : 'hover:bg-[#F9F8F6] text-zinc-600'}`}>
               <Icons.Export />
               <span className="text-xs font-bold hidden sm:inline">EXPORT</span>
            </button>
            
            {isExportOpen && (
-             <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-zinc-200 shadow-xl rounded-xl overflow-hidden py-2 z-50">
-               <button onClick={handleExportPDF} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export as PDF</button>
-                 <button onClick={handleExportProjectZip} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">Export Project ZIP</button>
-                 <div className="h-px bg-zinc-100 my-2"></div>
-                 <label className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium cursor-pointer block text-zinc-600">
+             <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-[rgba(0,0,0,0.05)] shadow-xl rounded-xl overflow-hidden py-2 z-50">
+               <button onClick={handleExportPDF} className="w-full text-left px-5 py-2.5 hover:bg-white text-sm font-medium text-black">Export as PDF</button>
+                 <button onClick={handleExportProjectZip} className="w-full text-left px-5 py-2.5 hover:bg-white text-sm font-medium text-black">Export Project ZIP</button>
+                 <div className="h-px bg-[#F9F8F6] my-2"></div>
+                 <label className="w-full text-left px-5 py-2.5 hover:bg-white text-sm font-medium cursor-pointer block text-zinc-600">
                    Import Project ZIP
                    <input type="file" accept=".zip,application/zip" onChange={handleImportProjectZip} className="hidden" />
                  </label>
-               <button onClick={() => { setIsExportOpen(false); handleSave(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-zinc-600">Save Locally</button>
+               <button onClick={() => { setIsExportOpen(false); handleSave(); }} className="w-full text-left px-5 py-2.5 hover:bg-white text-sm font-medium text-zinc-600">Save Locally</button>
              </div>
            )}
            
            <div className="relative">
-              <button onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} className={`p-2 rounded-lg transition-colors ${isMoreMenuOpen ? 'bg-zinc-200 text-black' : 'hover:bg-zinc-100 text-zinc-500'}`}>
+              <button onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)} className={`p-2 rounded-lg transition-colors ${isMoreMenuOpen ? 'bg-zinc-200 text-black' : 'hover:bg-[#F9F8F6] text-zinc-500'}`}>
                 <Icons.MoreHorizontal />
               </button>
               {isMoreMenuOpen && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-zinc-200 shadow-xl rounded-xl overflow-hidden py-2 z-50">
-                   <button onClick={() => { setIsMoreMenuOpen(false); clearEmojis(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm text-zinc-700">Remove all emojis</button>
-                   <button onClick={() => { setIsMoreMenuOpen(false); clearMotion(); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm text-zinc-700">Clear all motion prompts</button>
-                   <div className="h-px bg-zinc-100 my-2"></div>
+                <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-[rgba(0,0,0,0.05)] shadow-xl rounded-xl overflow-hidden py-2 z-50">
+                   <button onClick={() => { setIsMoreMenuOpen(false); clearEmojis(); }} className="w-full text-left px-5 py-2.5 hover:bg-white text-sm text-zinc-700">Remove all emojis</button>
+                   <button onClick={() => { setIsMoreMenuOpen(false); clearMotion(); }} className="w-full text-left px-5 py-2.5 hover:bg-white text-sm text-zinc-700">Clear all motion prompts</button>
+                   <div className="h-px bg-[#F9F8F6] my-2"></div>
                    <button onClick={() => { setIsMoreMenuOpen(false); handleClearBoard(); }} className="w-full text-left px-5 py-2.5 hover:bg-red-50 text-red-600 text-sm font-bold">Clear Entire Board</button>
                 </div>
               )}
@@ -844,7 +844,7 @@ This file is informational only.`;
         {/* ASSETS PANEL */}
         
         {/* ASSETS PANEL */}
-        <aside className="hidden lg:flex w-[300px] bg-white border-r border-zinc-200 flex-col shrink-0 z-10 relative"
+        <aside className="hidden lg:flex w-[300px] bg-white border-r border-[rgba(0,0,0,0.05)] flex-col shrink-0 z-10 relative"
                onDragOver={(e) => { e.preventDefault(); setIsDragOverAssets(true); }}
                onDragLeave={(e) => { e.preventDefault(); setIsDragOverAssets(false); }}
                onDrop={(e) => {
@@ -863,21 +863,21 @@ This file is informational only.`;
                 <span className="text-sm font-bold tracking-widest uppercase">Drop Images to Add</span>
              </div>
           )}
-          <div className="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/50">
+          <div className="p-6 border-b border-[rgba(0,0,0,0.02)] flex justify-between items-center bg-white/50">
              <div className="flex flex-col">
                <h3 className="text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-500">Project Assets</h3>
                <span className="text-[9px] text-zinc-400 mt-0.5">{projectAssets.length} assets</span>
              </div>
-             <label className="text-[10px] font-bold tracking-widest uppercase bg-zinc-200 hover:bg-zinc-300 px-3 py-1.5 rounded cursor-pointer transition-colors text-black shadow-sm">
+             <label className="text-[10px] font-bold tracking-widest uppercase bg-zinc-200 hover:bg-zinc-300 px-3 py-1.5 rounded cursor-pointer transition-colors text-black shadow-[0_18px_40px_rgba(0,0,0,0.05)]">
                + Add
                <input type="file" multiple accept="image/*" className="hidden" onChange={handleTrayUpload} />
              </label>
           </div>
           
           {projectAssets.length > 0 && (
-            <div className="p-4 border-b border-zinc-100">
+            <div className="p-4 border-b border-[rgba(0,0,0,0.02)]">
                <div className="relative">
-                 <input type="text" placeholder="Search assets..." value={assetSearch} onChange={e => setAssetSearch(e.target.value)} className="w-full pl-8 pr-3 py-2 text-xs bg-zinc-50 border border-zinc-200 rounded-lg outline-none focus:border-[#8B7CFF] focus:bg-white transition-all"/>
+                 <input type="text" placeholder="Search assets..." value={assetSearch} onChange={e => setAssetSearch(e.target.value)} className="w-full pl-8 pr-3 py-2 text-xs bg-white border border-[rgba(0,0,0,0.05)] rounded-lg outline-none focus:border-[#8B7CFF] focus:bg-white transition-all"/>
                  <div className="absolute left-3 top-2.5"><Icons.Search /></div>
                </div>
             </div>
@@ -885,7 +885,7 @@ This file is informational only.`;
 
           <div className="flex-1 overflow-y-auto p-4 relative grid grid-cols-2 gap-3 content-start">
              {projectAssets.filter(a => a.displayName.toLowerCase().includes(assetSearch.toLowerCase()) || a.originalFilename.toLowerCase().includes(assetSearch.toLowerCase())).length === 0 ? (
-               <div className="col-span-2 text-xs text-zinc-400 p-8 text-center border-2 border-dashed border-zinc-200 rounded-xl mt-4">
+               <div className="col-span-2 text-xs text-zinc-400 p-8 text-center border-2 border-dashed border-[rgba(0,0,0,0.05)] rounded-xl mt-4">
                  {assetSearch ? "No assets found." : "Drop images here to build your asset library."}
                </div>
              ) : (
@@ -893,7 +893,7 @@ This file is informational only.`;
                   const isUsed = scenes.some(s => s.leftImageAssetId === asset.id || s.rightImageAssetId === asset.id);
                   return (
                     <div key={asset.id} 
-                         className="flex flex-col bg-white border border-zinc-200 rounded-xl overflow-hidden hover:border-[#8B7CFF]/50 hover:shadow-md transition-all group cursor-grab relative"
+                         className="flex flex-col bg-white border border-[rgba(0,0,0,0.05)] rounded-xl overflow-hidden hover:border-[#8B7CFF]/50 hover:shadow-md transition-all group cursor-grab relative"
                          draggable 
                          onDragStart={(e) => {
                              e.dataTransfer.setData('application/json', JSON.stringify({ type: 'PROJECT_ASSET', assetId: asset.id }));
@@ -901,15 +901,15 @@ This file is informational only.`;
                          }}
                          onDragEnd={(e) => { e.currentTarget.style.opacity = '1'; }}
                     >
-                       <div className="w-full aspect-square bg-zinc-100 relative">
+                       <div className="w-full aspect-square bg-[#F9F8F6] relative">
                          <img src={asset.url} className="w-full h-full object-cover pointer-events-none"/>
                          <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                           <button onClick={(e) => { e.stopPropagation(); setAssetMenuOpen(asset.id === assetMenuOpen ? null : asset.id); }} className="p-1 bg-white/80 backdrop-blur-sm rounded text-black hover:bg-white shadow-sm">
+                           <button onClick={(e) => { e.stopPropagation(); setAssetMenuOpen(asset.id === assetMenuOpen ? null : asset.id); }} className="p-1 bg-white/80 backdrop-blur-sm rounded text-black hover:bg-white shadow-[0_18px_40px_rgba(0,0,0,0.05)]">
                              <Icons.MoreHorizontal />
                            </button>
                            {assetMenuOpen === asset.id && (
-                             <div className="absolute top-full right-0 mt-1 w-24 bg-white border border-zinc-200 shadow-xl rounded-lg overflow-hidden py-1 z-50">
-                                <button onClick={() => { setAssetMenuOpen(null); handleRenameAsset(asset.id); }} className="w-full text-left px-3 py-1.5 hover:bg-zinc-50 text-[10px] font-bold text-zinc-700">Rename</button>
+                             <div className="absolute top-full right-0 mt-1 w-24 bg-white border border-[rgba(0,0,0,0.05)] shadow-xl rounded-lg overflow-hidden py-1 z-50">
+                                <button onClick={() => { setAssetMenuOpen(null); handleRenameAsset(asset.id); }} className="w-full text-left px-3 py-1.5 hover:bg-white text-[10px] font-bold text-zinc-700">Rename</button>
                                 <button onClick={() => { setAssetMenuOpen(null); handleRemoveAsset(asset.id); }} className="w-full text-left px-3 py-1.5 hover:bg-red-50 text-red-600 text-[10px] font-bold">Remove</button>
                              </div>
                            )}
@@ -931,7 +931,7 @@ This file is informational only.`;
 
         {/* MAIN CANVAS */}
         <main 
-          className="flex-1 overflow-y-auto bg-zinc-50 flex flex-col items-center py-12 px-4 md:px-8 lg:px-16 relative"
+          className="flex-1 overflow-y-auto bg-white flex flex-col items-center py-12 px-4 md:px-8 lg:px-16 relative"
           onClick={() => setActiveMenuId(null)}
         >
            <div className="w-full max-w-[900px] flex flex-col gap-10 pb-32">
@@ -944,39 +944,39 @@ This file is informational only.`;
   const leftAsset = projectAssets.find(a => a.id === scene.leftImageAssetId);
   const rightAsset = projectAssets.find(a => a.id === scene.rightImageAssetId);
   return (
-                <div key={scene.id} className={`bg-white border ${scene.enabled ? 'border-zinc-200 shadow-sm' : 'border-zinc-200 opacity-60'} rounded-2xl p-6 md:p-8 flex flex-col gap-6 relative group transition-opacity`}>
+                <div key={scene.id} className={`bg-white border ${scene.enabled ? 'border-[rgba(0,0,0,0.05)] shadow-[0_18px_40px_rgba(0,0,0,0.05)]' : 'border-[rgba(0,0,0,0.05)] opacity-60'} rounded-2xl p-6 md:p-8 flex flex-col gap-6 relative group transition-opacity`}>
                    
                    {/* Context Menu Button */}
                    <div className="absolute top-6 right-6" onClick={(e) => e.stopPropagation()}>
                       <button 
                         onClick={() => setActiveMenuId(activeMenuId === scene.id ? null : scene.id)}
-                        className="p-2 text-zinc-400 hover:text-black hover:bg-zinc-100 rounded-lg transition-colors"
+                        className="p-2 text-zinc-400 hover:text-black hover:bg-[#F9F8F6] rounded-lg transition-colors"
                       >
                         <Icons.MoreHorizontal />
                       </button>
                       
                       {activeMenuId === scene.id && (
-                        <div className="absolute top-full right-0 mt-1 w-48 bg-white border border-zinc-200 shadow-xl rounded-xl overflow-hidden py-2 z-30">
-                           <button onClick={() => { setActiveMenuId(null); handleUpdateScene(scene.id, 'enabled', !scene.enabled); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">
+                        <div className="absolute top-full right-0 mt-1 w-48 bg-white border border-[rgba(0,0,0,0.05)] shadow-xl rounded-xl overflow-hidden py-2 z-30">
+                           <button onClick={() => { setActiveMenuId(null); handleUpdateScene(scene.id, 'enabled', !scene.enabled); }} className="w-full text-left px-5 py-2.5 hover:bg-white text-sm font-medium text-black">
                              {scene.enabled ? 'Disable Scene' : 'Enable Scene'}
                            </button>
-                           <button onClick={() => { setActiveMenuId(null); handleAddScene(idx); }} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-black">
+                           <button onClick={() => { setActiveMenuId(null); handleAddScene(idx); }} className="w-full text-left px-5 py-2.5 hover:bg-white text-sm font-medium text-black">
                              Duplicate
                            </button>
-                           <div className="h-px bg-zinc-100 my-2"></div>
-                           <button onClick={() => { setActiveMenuId(null); handleMoveScene(idx, 'up'); }} disabled={idx === 0} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-zinc-700 disabled:opacity-30">Move Up</button>
-                           <button onClick={() => { setActiveMenuId(null); handleMoveScene(idx, 'down'); }} disabled={idx === scenes.length - 1} className="w-full text-left px-5 py-2.5 hover:bg-zinc-50 text-sm font-medium text-zinc-700 disabled:opacity-30">Move Down</button>
-                           <div className="h-px bg-zinc-100 my-2"></div>
+                           <div className="h-px bg-[#F9F8F6] my-2"></div>
+                           <button onClick={() => { setActiveMenuId(null); handleMoveScene(idx, 'up'); }} disabled={idx === 0} className="w-full text-left px-5 py-2.5 hover:bg-white text-sm font-medium text-zinc-700 disabled:opacity-30">Move Up</button>
+                           <button onClick={() => { setActiveMenuId(null); handleMoveScene(idx, 'down'); }} disabled={idx === scenes.length - 1} className="w-full text-left px-5 py-2.5 hover:bg-white text-sm font-medium text-zinc-700 disabled:opacity-30">Move Down</button>
+                           <div className="h-px bg-[#F9F8F6] my-2"></div>
                            <button onClick={() => { setActiveMenuId(null); handleDeleteScene(scene.id); }} className="w-full text-left px-5 py-2.5 hover:bg-red-50 text-sm font-bold text-red-600">Delete Scene</button>
                         </div>
                       )}
                    </div>
 
                    {/* Scene Header */}
-                   <div className="flex items-end justify-between border-b border-zinc-100 pb-4 pr-12">
+                   <div className="flex items-end justify-between border-b border-[rgba(0,0,0,0.02)] pb-4 pr-12">
                       <div className="flex items-center gap-4">
                         <h2 className="font-serif text-2xl md:text-3xl text-black">SCENE {scene.number.toString().padStart(2, '0')}</h2>
-                        <div className="text-[10px] font-mono font-bold tracking-widest bg-zinc-100 text-zinc-500 px-2 py-1 rounded">00:00 – 00:04</div>
+                        <div className="text-[10px] font-mono font-bold tracking-widest bg-[#F9F8F6] text-zinc-500 px-2 py-1 rounded">00:00 – 00:04</div>
                       </div>
                    </div>
 
@@ -988,7 +988,7 @@ This file is informational only.`;
                         {/* LEFT IMAGE SLOT */}
                         <div className="flex-1 flex flex-col gap-3">
                           <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">1st Frame</label>
-                          <div className="w-full aspect-[4/5] bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl relative overflow-hidden group/img transition-colors hover:border-[#8B7CFF]/50"
+                          <div className="w-full aspect-[4/5] bg-white border-2 border-dashed border-[rgba(0,0,0,0.05)] rounded-xl relative overflow-hidden group/img transition-colors hover:border-[#8B7CFF]/50"
                               onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('hidden', 'flex'); }}
                               onDragLeave={(e) => { e.currentTarget.classList.remove('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('flex', 'hidden'); }}
                               onDrop={(e) => {
@@ -1040,7 +1040,7 @@ This file is informational only.`;
                                  />
                              {/* DISPLAY NAME EDITOR LEFT */}
                              <div className="absolute top-2 left-2 z-10">
-                                <div className="group/rename relative flex items-center bg-white/90 backdrop-blur-sm px-2 py-1 rounded shadow-sm hover:bg-white transition-colors cursor-text">
+                                <div className="group/rename relative flex items-center bg-white/90 backdrop-blur-sm px-2 py-1 rounded shadow-[0_18px_40px_rgba(0,0,0,0.05)] hover:bg-white transition-colors cursor-text">
                                   <input 
                                     value={leftAsset?.displayName || ""}
                                     onChange={(e) => { if (leftAsset) handleUpdateAsset(leftAsset.id, { displayName: e.target.value }); }}
@@ -1052,7 +1052,7 @@ This file is informational only.`;
                              </div>
 
                                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-sm">
-                                    <label className="text-[9px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1.5 rounded cursor-pointer hover:bg-zinc-100 transition-colors">
+                                    <label className="text-[9px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1.5 rounded cursor-pointer hover:bg-[#F9F8F6] transition-colors">
                                       Replace
                                       <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e, 'left')} />
                                     </label>
@@ -1076,7 +1076,7 @@ This file is informational only.`;
                         {/* RIGHT IMAGE SLOT */}
                         <div className="flex-1 flex flex-col gap-3">
                           <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-zinc-400 text-center">2nd Frame</label>
-                          <div className="w-full aspect-[4/5] bg-zinc-50 border-2 border-dashed border-zinc-200 rounded-xl relative overflow-hidden group/img transition-colors hover:border-[#8B7CFF]/50"
+                          <div className="w-full aspect-[4/5] bg-white border-2 border-dashed border-[rgba(0,0,0,0.05)] rounded-xl relative overflow-hidden group/img transition-colors hover:border-[#8B7CFF]/50"
                               onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('hidden', 'flex'); }}
                               onDragLeave={(e) => { e.currentTarget.classList.remove('border-[#8B7CFF]', 'bg-[#8B7CFF]/5'); const overlay = e.currentTarget.querySelector('.drop-overlay-slot'); if (overlay) overlay.classList.replace('flex', 'hidden'); }}
                               onDrop={(e) => {
@@ -1128,7 +1128,7 @@ This file is informational only.`;
                                  />
                              {/* DISPLAY NAME EDITOR RIGHT */}
                              <div className="absolute top-2 left-2 z-10">
-                                <div className="group/rename relative flex items-center bg-white/90 backdrop-blur-sm px-2 py-1 rounded shadow-sm hover:bg-white transition-colors cursor-text">
+                                <div className="group/rename relative flex items-center bg-white/90 backdrop-blur-sm px-2 py-1 rounded shadow-[0_18px_40px_rgba(0,0,0,0.05)] hover:bg-white transition-colors cursor-text">
                                   <input 
                                     value={rightAsset?.displayName || ""}
                                     onChange={(e) => { if (rightAsset) handleUpdateAsset(rightAsset.id, { displayName: e.target.value }); }}
@@ -1140,7 +1140,7 @@ This file is informational only.`;
                              </div>
 
                                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 backdrop-blur-sm">
-                                    <label className="text-[9px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1.5 rounded cursor-pointer hover:bg-zinc-100 transition-colors">
+                                    <label className="text-[9px] uppercase tracking-widest font-bold bg-white text-black px-2 py-1.5 rounded cursor-pointer hover:bg-[#F9F8F6] transition-colors">
                                       Replace
                                       <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(scene.id, e, 'right')} />
                                     </label>
@@ -1169,7 +1169,7 @@ This file is informational only.`;
                            <textarea 
                              value={scene.phrase}
                              onChange={(e) => handleUpdateScene(scene.id, 'phrase', e.target.value)}
-                             className="w-full min-h-[80px] p-4 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-black resize-none outline-none focus:border-[#8B7CFF] focus:bg-white transition-all shadow-sm"
+                             className="w-full min-h-[80px] p-4 bg-white border border-[rgba(0,0,0,0.05)] rounded-xl text-sm text-black resize-none outline-none focus:border-[#8B7CFF] focus:bg-white transition-all shadow-[0_18px_40px_rgba(0,0,0,0.05)]"
                              placeholder="Describe the action or insert dialogue here..."
                            />
                          </div>
@@ -1179,7 +1179,7 @@ This file is informational only.`;
                            <textarea 
                              value={scene.motionPrompt}
                              onChange={(e) => handleUpdateScene(scene.id, 'motionPrompt', e.target.value)}
-                             className="w-full min-h-[80px] p-4 bg-zinc-50 border border-zinc-200 rounded-xl text-sm text-black resize-none outline-none focus:border-[#8B7CFF] focus:bg-white transition-all shadow-sm"
+                             className="w-full min-h-[80px] p-4 bg-white border border-[rgba(0,0,0,0.05)] rounded-xl text-sm text-black resize-none outline-none focus:border-[#8B7CFF] focus:bg-white transition-all shadow-[0_18px_40px_rgba(0,0,0,0.05)]"
                              placeholder="Camera movement, lighting, subject motion..."
                            />
                          </div>
@@ -1189,7 +1189,7 @@ This file is informational only.`;
                            <textarea 
                              value={scene.notes}
                              onChange={(e) => handleUpdateScene(scene.id, 'notes', e.target.value)}
-                             className="w-full min-h-[60px] p-4 bg-zinc-50 border border-zinc-200 rounded-xl text-xs text-zinc-600 resize-none outline-none focus:border-[#8B7CFF] focus:bg-white transition-all italic shadow-sm"
+                             className="w-full min-h-[60px] p-4 bg-white border border-[rgba(0,0,0,0.05)] rounded-xl text-xs text-zinc-600 resize-none outline-none focus:border-[#8B7CFF] focus:bg-white transition-all italic shadow-[0_18px_40px_rgba(0,0,0,0.05)]"
                              placeholder="Props needed, locations, reminders..."
                            />
                          </div>
@@ -1201,7 +1201,7 @@ This file is informational only.`;
 
               <button 
                 onClick={() => handleAddScene(scenes.length - 1)} 
-                className="w-full py-8 border-2 border-dashed border-zinc-200 rounded-2xl text-zinc-400 hover:border-[#8B7CFF] hover:text-[#8B7CFF] hover:bg-[#8B7CFF]/5 transition-all font-bold uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-2 mt-4"
+                className="w-full py-8 border-2 border-dashed border-[rgba(0,0,0,0.05)] rounded-2xl text-zinc-400 hover:border-[#8B7CFF] hover:text-[#8B7CFF] hover:bg-[#8B7CFF]/5 transition-all font-bold uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-2 mt-4"
               >
                  <Icons.Plus /> Create New Scene
               </button>
@@ -1209,14 +1209,14 @@ This file is informational only.`;
         </main></div>{swapPrompt && (
         <div className="fixed inset-0 z-[110] bg-black/60 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl w-full max-w-sm flex flex-col shadow-2xl overflow-hidden">
-             <div className="p-6 border-b border-zinc-100 flex flex-col items-center text-center">
+             <div className="p-6 border-b border-[rgba(0,0,0,0.02)] flex flex-col items-center text-center">
                 <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-4">
                   <Icons.Merge />
                 </div>
                 <h3 className="text-sm font-bold tracking-widest uppercase text-black mb-2">Replace image in this slot?</h3>
                 <p className="text-xs text-zinc-500">The destination slot already contains an image.</p>
              </div>
-             <div className="p-2 grid grid-cols-3 gap-2 bg-zinc-50">
+             <div className="p-2 grid grid-cols-3 gap-2 bg-white">
                 <button onClick={() => setSwapPrompt(null)} className="py-3 text-xs font-bold text-zinc-500 hover:text-black hover:bg-zinc-200 rounded-xl transition-colors">Cancel</button>
                 <button onClick={() => { handleSwapImage(swapPrompt.sourceSceneId, swapPrompt.sourceSide, swapPrompt.targetSceneId, swapPrompt.targetSide, swapPrompt.sourceData, swapPrompt.targetData); setSwapPrompt(null); }} className="py-3 text-xs font-bold text-[#8B7CFF] bg-[#8B7CFF]/10 hover:bg-[#8B7CFF]/20 rounded-xl transition-colors">Swap</button>
                 <button onClick={() => { handleMoveImage(swapPrompt.sourceSceneId, swapPrompt.sourceSide, swapPrompt.targetSceneId, swapPrompt.targetSide, swapPrompt.sourceData); setSwapPrompt(null); }} className="py-3 text-xs font-bold text-white bg-[#8B7CFF] hover:bg-[#7a6ce0] rounded-xl transition-colors">Replace</button>
