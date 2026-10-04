@@ -65,7 +65,7 @@ export default function ToolsLandingPage() {
   const SECTIONS = [
     {
       title: "Featured",
-      ids: ["image-compare", "collage", "background-remover", "video-editor"]
+      ids: ["image-compare", "collage", "background-remover"]
     },
     {
       title: "Image Tools",
@@ -78,7 +78,7 @@ export default function ToolsLandingPage() {
     },
     {
       title: "Video Tools",
-      ids: ["video-editor", "video-to-gif", "video-compress", "video-compare", "video-audio-swap", "shot-cuts"]
+      ids: ["video-to-gif", "video-compress", "video-compare", "video-audio-swap", "shot-cuts"]
     },
     {
       title: "Audio Tools",
