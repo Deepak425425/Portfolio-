@@ -1,22 +1,20 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useReducer } from "react";
 import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import { getGrotonExportFilename } from "@/utils/export";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile } from "@ffmpeg/util";
-
-type Clip = {
-  id: string;
-  sourceStart: number;
-  sourceEnd: number;
-  duration: number;
-};
-
-type HistoryState = {
-  clips: Clip[];
-};
+import {
+  Clip,
+  editorReducer,
+  initialEditorState,
+  totalDurationOf,
+  clipStartTime,
+  locateClip,
+  canSplitAt,
+} from "./editorReducer";
 
 export default function VideoEditorPage() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -24,68 +22,135 @@ export default function VideoEditorPage() {
   const [fileName, setFileName] = useState("");
   const [fileSize, setFileSize] = useState(0);
   const [resolution, setResolution] = useState({ width: 0, height: 0 });
-  const [originalDuration, setOriginalDuration] = useState(0);
-  
+  const [thumbnails, setThumbnails] = useState<string[]>([]);
+
   const videoRef = useRef<HTMLVideoElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  // Centralized editor state (clips, selection, undo/redo history)
+  const [editor, dispatch] = useReducer(editorReducer, initialEditorState);
+  const { clips, selectedClipId, past, future, sourceDuration } = editor;
 
   // Playback state
   const [isPlaying, setIsPlaying] = useState(false);
-  const [globalTime, setGlobalTime] = useState(0); 
+  const [globalTime, setGlobalTimeState] = useState(0);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [volume, setVolume] = useState(100);
   const [isMuted, setIsMuted] = useState(false);
-
-  // Editor State
-  const [clips, setClips] = useState<Clip[]>([]);
-  const [selectedClipId, setSelectedClipId] = useState<string | null>(null);
-  const [history, setHistory] = useState<HistoryState[]>([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
-  const [thumbnails, setThumbnails] = useState<string[]>([]);
+  // Timeline scale is frozen while a trim handle is dragged so unrelated clips keep their width.
+  const [scaleDuration, setScaleDuration] = useState<number | null>(null);
 
   // Export State
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [statusText, setStatusText] = useState("");
   const [outputUrl, setOutputUrl] = useState<string | null>(null);
-  
+
   const ffmpegRef = useRef<FFmpeg | null>(null);
   const rAFRef = useRef<number>(0);
+  // Refs always mirror the latest state so the rAF loop and event handlers never read stale values.
+  const clipsRef = useRef<Clip[]>([]);
+  const globalTimeRef = useRef(0);
   const playStateRef = useRef({ playing: false, clipIndex: 0 });
 
-  const totalDuration = useMemo(() => clips.reduce((acc, c) => acc + c.duration, 0), [clips]);
+  const totalDuration = useMemo(() => totalDurationOf(clips), [clips]);
+  const displayDuration = Math.max(0.1, scaleDuration ?? totalDuration);
+  const canUndo = past.length > 0 && scaleDuration === null;
+  const canRedo = future.length > 0 && scaleDuration === null;
+  const canSplit = canSplitAt(clips, globalTime);
 
   useEffect(() => {
-    const loadFfmpeg = async () => {
-      const ffmpeg = new FFmpeg();
-      ffmpeg.on("progress", ({ progress }) => setProgress(Math.max(0, Math.min(100, Math.round(progress * 100)))));
-      ffmpegRef.current = ffmpeg;
-    };
-    loadFfmpeg();
+    const ffmpeg = new FFmpeg();
+    ffmpeg.on("progress", ({ progress }) => setProgress(Math.max(0, Math.min(100, Math.round(progress * 100)))));
+    ffmpegRef.current = ffmpeg;
     return () => {
       cancelAnimationFrame(rAFRef.current);
     };
   }, []);
 
-  const saveHistory = (newClips: Clip[]) => {
-    const nextHistory = history.slice(0, historyIndex + 1);
-    nextHistory.push({ clips: JSON.parse(JSON.stringify(newClips)) });
-    setHistory(nextHistory);
-    setHistoryIndex(nextHistory.length - 1);
+  const setPlayhead = (t: number) => {
+    globalTimeRef.current = t;
+    setGlobalTimeState(t);
   };
 
-  const undo = () => {
-    if (historyIndex > 0) {
-      setHistoryIndex(historyIndex - 1);
-      setClips(JSON.parse(JSON.stringify(history[historyIndex - 1].clips)));
-    }
+  /** Move the playhead and the <video> element to a timeline time, using an explicit clip list. */
+  const applySeek = (list: Clip[], time: number) => {
+    const total = totalDurationOf(list);
+    const t = Math.max(0, Math.min(time, total));
+    setPlayhead(t);
+    const loc = locateClip(list, t);
+    const v = videoRef.current;
+    if (!loc || !v) return;
+    playStateRef.current.clipIndex = loc.index;
+    v.currentTime = list[loc.index].sourceStart + loc.offset;
   };
 
-  const redo = () => {
-    if (historyIndex < history.length - 1) {
-      setHistoryIndex(historyIndex + 1);
-      setClips(JSON.parse(JSON.stringify(history[historyIndex + 1].clips)));
-    }
+  const seekGlobal = (time: number) => applySeek(clipsRef.current, time);
+
+  const pausePlayback = () => {
+    playStateRef.current.playing = false;
+    cancelAnimationFrame(rAFRef.current);
+    videoRef.current?.pause();
+    setIsPlaying(false);
   };
+
+  // Keep refs/video in sync whenever the clip list changes (edit, undo, redo, trim, reset).
+  useEffect(() => {
+    clipsRef.current = clips;
+    if (clips.length === 0) return;
+    applySeek(clips, globalTimeRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clips, videoUrl]);
+
+  // Apply volume / speed to the element without touching the playback loop.
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.playbackRate = playbackSpeed;
+    v.volume = isMuted ? 0 : volume / 100;
+  }, [playbackSpeed, volume, isMuted, videoUrl]);
+
+  // Playback loop: only depends on isPlaying; reads the latest clips from refs.
+  useEffect(() => {
+    if (!isPlaying) return;
+    playStateRef.current.playing = true;
+
+    const tick = () => {
+      if (!playStateRef.current.playing) return;
+      const v = videoRef.current;
+      const list = clipsRef.current;
+      if (!v || list.length === 0) return;
+
+      const idx = Math.min(playStateRef.current.clipIndex, list.length - 1);
+      const clip = list[idx];
+      const t = v.currentTime;
+
+      if (t >= clip.sourceEnd - 0.02 || v.ended) {
+        if (idx + 1 < list.length) {
+          const next = list[idx + 1];
+          playStateRef.current.clipIndex = idx + 1;
+          // Contiguous clips (e.g. after a split) play straight through without a seek.
+          if (Math.abs(t - next.sourceStart) > 0.08) v.currentTime = next.sourceStart;
+          setPlayhead(clipStartTime(list, idx + 1));
+        } else {
+          v.pause();
+          playStateRef.current.playing = false;
+          setIsPlaying(false);
+          setPlayhead(totalDurationOf(list));
+          return;
+        }
+      } else {
+        setPlayhead(clipStartTime(list, idx) + Math.max(0, t - clip.sourceStart));
+      }
+      rAFRef.current = requestAnimationFrame(tick);
+    };
+
+    rAFRef.current = requestAnimationFrame(tick);
+    return () => {
+      playStateRef.current.playing = false;
+      cancelAnimationFrame(rAFRef.current);
+    };
+  }, [isPlaying]);
 
   const generateThumbnails = async (file: File) => {
     const url = URL.createObjectURL(file);
@@ -120,6 +185,9 @@ export default function VideoEditorPage() {
     if (!files.length) return;
     const file = files[0];
     const url = URL.createObjectURL(file);
+    dispatch({ type: "CLEAR" });
+    setPlayhead(0);
+    setIsPlaying(false);
     setVideoUrl(url);
     setVideoFile(file);
     setFileName(file.name);
@@ -127,183 +195,107 @@ export default function VideoEditorPage() {
     generateThumbnails(file);
   };
 
-  const resetOriginal = () => {
-    if (!originalDuration) return;
-    if (confirm("Reset to original video? All edits will be lost.")) {
-      const initialClip = { id: crypto.randomUUID(), sourceStart: 0, sourceEnd: originalDuration, duration: originalDuration };
-      setClips([initialClip]);
-      saveHistory([initialClip]);
-      seekGlobal(0);
-      setSelectedClipId(null);
-    }
-  };
-
   const handleLoadedMetadata = () => {
-    if (videoRef.current && clips.length === 0) {
-      const dur = videoRef.current.duration;
-      setOriginalDuration(dur);
-      setResolution({ width: videoRef.current.videoWidth, height: videoRef.current.videoHeight });
-      const initialClip = { id: crypto.randomUUID(), sourceStart: 0, sourceEnd: dur, duration: dur };
-      setClips([initialClip]);
-      saveHistory([initialClip]);
-    }
+    const v = videoRef.current;
+    if (!v) return;
+    setResolution({ width: v.videoWidth, height: v.videoHeight });
+    // INIT is ignored by the reducer if clips already exist.
+    dispatch({ type: "INIT", duration: v.duration, id: crypto.randomUUID() });
   };
 
-  // Playback Loop
-  useEffect(() => {
-    if (!videoRef.current) return;
-    
-    const updatePlayhead = () => {
-      if (!playStateRef.current.playing) return;
-      
-      const v = videoRef.current;
-      if (!v) return;
-
-      const currentSrcTime = v.currentTime;
-      let { clipIndex } = playStateRef.current;
-
-      if (clipIndex < clips.length) {
-        const activeClip = clips[clipIndex];
-        
-        if (currentSrcTime >= activeClip.sourceEnd) {
-          clipIndex++;
-          if (clipIndex < clips.length) {
-            v.currentTime = clips[clipIndex].sourceStart;
-            playStateRef.current.clipIndex = clipIndex;
-          } else {
-            v.pause();
-            playStateRef.current.playing = false;
-            setIsPlaying(false);
-            setGlobalTime(totalDuration);
-            return;
-          }
-        } else {
-          let t = 0;
-          for (let i = 0; i < clipIndex; i++) t += clips[i].duration;
-          t += (currentSrcTime - activeClip.sourceStart);
-          setGlobalTime(t);
-        }
-      }
-      rAFRef.current = requestAnimationFrame(updatePlayhead);
-    };
-
-    if (isPlaying) {
-      playStateRef.current.playing = true;
-      videoRef.current.playbackRate = playbackSpeed;
-      videoRef.current.volume = isMuted ? 0 : volume / 100;
-      rAFRef.current = requestAnimationFrame(updatePlayhead);
-    } else {
-      playStateRef.current.playing = false;
-      cancelAnimationFrame(rAFRef.current);
-    }
-  }, [isPlaying, clips, totalDuration, playbackSpeed, volume, isMuted]);
+  // --- Editing actions (every edit pauses playback first, then goes through the reducer) ---
 
   const togglePlay = () => {
-    if (!videoRef.current) return;
+    const v = videoRef.current;
+    if (!v || clips.length === 0) return;
     if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
+      pausePlayback();
     } else {
-      if (globalTime >= totalDuration) seekGlobal(0);
-      videoRef.current.playbackRate = playbackSpeed;
-      videoRef.current.volume = isMuted ? 0 : volume / 100;
-      videoRef.current.play();
+      if (globalTimeRef.current >= totalDuration - 0.01) seekGlobal(0);
+      v.playbackRate = playbackSpeed;
+      v.volume = isMuted ? 0 : volume / 100;
+      v.play().catch(() => setIsPlaying(false));
       setIsPlaying(true);
     }
   };
 
-  const seekGlobal = (time: number) => {
-    if (!videoRef.current) return;
-    let t = Math.max(0, Math.min(time, totalDuration));
-    setGlobalTime(t);
-    
-    let acc = 0;
-    for (let i = 0; i < clips.length; i++) {
-      if (t >= acc && t <= acc + clips[i].duration) {
-        const offsetInClip = t - acc;
-        videoRef.current.currentTime = clips[i].sourceStart + offsetInClip;
-        playStateRef.current.clipIndex = i;
-        break;
-      }
-      acc += clips[i].duration;
-    }
-  };
-
   const splitClip = () => {
-    if (globalTime === 0 || globalTime === totalDuration) return;
-
-    let acc = 0;
-    const newClips = [...clips];
-    
-    for (let i = 0; i < clips.length; i++) {
-      const c = clips[i];
-      if (globalTime > acc && globalTime < acc + c.duration) {
-        const splitPoint = c.sourceStart + (globalTime - acc);
-        
-        const clip1 = { ...c, id: crypto.randomUUID(), sourceEnd: splitPoint, duration: splitPoint - c.sourceStart };
-        const clip2 = { ...c, id: crypto.randomUUID(), sourceStart: splitPoint, duration: c.sourceEnd - splitPoint };
-        
-        newClips.splice(i, 1, clip1, clip2);
-        setClips(newClips);
-        saveHistory(newClips);
-        setSelectedClipId(clip2.id);
-        break;
-      }
-      acc += c.duration;
-    }
+    if (!canSplit) return;
+    pausePlayback();
+    dispatch({ type: "SPLIT", time: globalTimeRef.current, leftId: crypto.randomUUID(), rightId: crypto.randomUUID() });
   };
 
   const deleteClip = () => {
     if (!selectedClipId || clips.length <= 1) return;
-    const newClips = clips.filter(c => c.id !== selectedClipId);
-    setClips(newClips);
-    saveHistory(newClips);
-    setSelectedClipId(null);
-    seekGlobal(0);
+    pausePlayback();
+    globalTimeRef.current = 0;
+    dispatch({ type: "DELETE" });
   };
 
   const duplicateClip = () => {
     if (!selectedClipId) return;
-    const idx = clips.findIndex(c => c.id === selectedClipId);
-    if (idx === -1) return;
-    const c = clips[idx];
-    const newClip = { ...c, id: crypto.randomUUID() };
-    const newClips = [...clips];
-    newClips.splice(idx + 1, 0, newClip);
-    setClips(newClips);
-    saveHistory(newClips);
+    pausePlayback();
+    dispatch({ type: "DUPLICATE", id: crypto.randomUUID() });
   };
 
   const moveClip = (dir: -1 | 1) => {
     if (!selectedClipId) return;
-    const idx = clips.findIndex(c => c.id === selectedClipId);
-    if (idx === -1) return;
-    if (dir === -1 && idx === 0) return;
-    if (dir === 1 && idx === clips.length - 1) return;
-
-    const newClips = [...clips];
-    const temp = newClips[idx];
-    newClips[idx] = newClips[idx + dir];
-    newClips[idx + dir] = temp;
-    
-    setClips(newClips);
-    saveHistory(newClips);
+    pausePlayback();
+    dispatch({ type: "MOVE", dir });
   };
 
-  const updateClipBounds = (clipId: string, newStart: number, newEnd: number) => {
-    const newClips = clips.map(c => {
-      if (c.id === clipId) {
-        const start = Math.max(0, newStart);
-        const end = Math.min(originalDuration, newEnd);
-        return { ...c, sourceStart: start, sourceEnd: end, duration: end - start };
-      }
-      return c;
-    });
-    setClips(newClips);
+  const undo = () => {
+    if (!canUndo) return;
+    pausePlayback();
+    dispatch({ type: "UNDO" });
   };
 
-  const commitClipBounds = () => {
-    saveHistory(clips);
+  const redo = () => {
+    if (!canRedo) return;
+    pausePlayback();
+    dispatch({ type: "REDO" });
+  };
+
+  const resetOriginal = () => {
+    if (!sourceDuration) return;
+    if (confirm("Reset to original video? All edits will be lost.")) {
+      pausePlayback();
+      globalTimeRef.current = 0;
+      dispatch({ type: "RESET", id: crypto.randomUUID() });
+    }
+  };
+
+  /**
+   * Trim drag. The drag works on the clip's SOURCE range only. Pixels are converted to seconds
+   * with a scale frozen at drag start, so unrelated clips never change width while dragging.
+   */
+  const startTrim = (e: React.PointerEvent, clip: Clip, edge: "start" | "end") => {
+    e.stopPropagation();
+    e.preventDefault();
+    const trackWidth = trackRef.current?.getBoundingClientRect().width ?? 0;
+    if (!trackWidth) return;
+    const frozen = Math.max(0.1, totalDuration);
+    const pxPerSec = trackWidth / frozen;
+    const startX = e.clientX;
+    const baseValue = edge === "start" ? clip.sourceStart : clip.sourceEnd;
+
+    pausePlayback();
+    setScaleDuration(frozen);
+    dispatch({ type: "BEGIN_TRIM" });
+
+    const move = (ev: PointerEvent) => {
+      dispatch({ type: "TRIM", id: clip.id, edge, value: baseValue + (ev.clientX - startX) / pxPerSec });
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      dispatch({ type: "END_TRIM" });
+      setScaleDuration(null);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
   };
 
   const formatTime = (time: number) => {
@@ -323,6 +315,7 @@ export default function VideoEditorPage() {
   // EXPORT
   const exportVideo = async () => {
     if (!videoFile || !ffmpegRef.current) return;
+    pausePlayback();
     setIsProcessing(true);
     setProgress(0);
     setStatusText("Loading engine...");
@@ -409,7 +402,7 @@ export default function VideoEditorPage() {
   };
 
   return (
-    <ToolLayout title="Video Editor" description="A fully functional browser-based video editor.">
+    <ToolLayout title="Video Editor" description="Trim, split, reorder and export video clips in your browser.">
       <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 -mt-4">
         
         {!videoUrl ? (
@@ -496,13 +489,13 @@ export default function VideoEditorPage() {
                        <div className="flex items-center justify-between">
                          <h3 className="text-[10px] uppercase tracking-widest font-bold text-zinc-400">Tools</h3>
                          <div className="flex gap-2">
-                           <button onClick={undo} disabled={historyIndex <= 0} className="text-[10px] uppercase font-bold text-zinc-400 hover:text-black disabled:opacity-30">Undo</button>
-                           <button onClick={redo} disabled={historyIndex >= history.length - 1} className="text-[10px] uppercase font-bold text-zinc-400 hover:text-black disabled:opacity-30">Redo</button>
+                           <button onClick={undo} disabled={!canUndo} className="text-[10px] uppercase font-bold text-zinc-400 hover:text-black disabled:opacity-30">Undo</button>
+                           <button onClick={redo} disabled={!canRedo} className="text-[10px] uppercase font-bold text-zinc-400 hover:text-black disabled:opacity-30">Redo</button>
                          </div>
                        </div>
                        
                        <div className="flex flex-col gap-2">
-                          <button onClick={splitClip} disabled={globalTime === 0 || globalTime === totalDuration} className="w-full py-3 bg-zinc-50 border border-zinc-200 text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-zinc-100 disabled:opacity-50">Split at Playhead</button>
+                          <button onClick={splitClip} disabled={!canSplit} className="w-full py-3 bg-zinc-50 border border-zinc-200 text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-zinc-100 disabled:opacity-50">Split at Playhead</button>
                           
                           {selectedClipId ? (
                             <>
@@ -537,13 +530,13 @@ export default function VideoEditorPage() {
                    </div>
                    
                    <div className="w-full overflow-x-auto relative select-none p-6 bg-zinc-100 min-h-[160px] flex items-center">
-                      <div className="relative h-20 bg-zinc-200 rounded-xl flex min-w-full">
+                      <div ref={trackRef} className="relative h-20 bg-zinc-200 rounded-xl flex min-w-full">
                         {clips.map((clip, i) => (
                           <div 
                             key={clip.id}
                             className={`relative h-full border-y-4 border-r cursor-pointer transition-colors overflow-hidden ${selectedClipId === clip.id ? 'border-[#8B7CFF] border-l-4 z-10 shadow-md' : 'border-zinc-300 border-l hover:border-zinc-400 z-0'}`}
-                            style={{ width: `${(clip.duration / Math.max(0.1, totalDuration)) * 100}%` }}
-                            onPointerDown={() => setSelectedClipId(clip.id)}
+                            style={{ width: `${(clip.duration / displayDuration) * 100}%` }}
+                            onPointerDown={() => dispatch({ type: "SELECT", id: clip.id })}
                           >
                              {/* Background Thumbnails Representation */}
                              <div className="absolute inset-0 flex opacity-40 pointer-events-none bg-black">
@@ -561,39 +554,11 @@ export default function VideoEditorPage() {
                                <>
                                  <div 
                                    className="absolute left-0 top-0 bottom-0 w-4 bg-[#8B7CFF] cursor-ew-resize hover:bg-[#7264ed] z-20 flex items-center justify-center"
-                                   onPointerDown={(e) => {
-                                     e.stopPropagation();
-                                     const startX = e.clientX;
-                                     const startVal = clip.sourceStart;
-                                     const pWidth = e.currentTarget.parentElement!.parentElement!.getBoundingClientRect().width;
-                                     
-                                     const move = (ev: PointerEvent) => {
-                                       const dx = ev.clientX - startX;
-                                       const dt = (dx / pWidth) * totalDuration;
-                                       updateClipBounds(clip.id, startVal + dt, clip.sourceEnd);
-                                     };
-                                     const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); commitClipBounds(); };
-                                     window.addEventListener('pointermove', move);
-                                     window.addEventListener('pointerup', up);
-                                   }}
+                                   onPointerDown={(e) => startTrim(e, clip, "start")}
                                  ><div className="w-1 h-4 bg-white rounded-full"></div></div>
                                  <div 
                                    className="absolute right-0 top-0 bottom-0 w-4 bg-[#8B7CFF] cursor-ew-resize hover:bg-[#7264ed] z-20 flex items-center justify-center"
-                                   onPointerDown={(e) => {
-                                     e.stopPropagation();
-                                     const startX = e.clientX;
-                                     const endVal = clip.sourceEnd;
-                                     const pWidth = e.currentTarget.parentElement!.parentElement!.getBoundingClientRect().width;
-                                     
-                                     const move = (ev: PointerEvent) => {
-                                       const dx = ev.clientX - startX;
-                                       const dt = (dx / pWidth) * totalDuration;
-                                       updateClipBounds(clip.id, clip.sourceStart, endVal + dt);
-                                     };
-                                     const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); commitClipBounds(); };
-                                     window.addEventListener('pointermove', move);
-                                     window.addEventListener('pointerup', up);
-                                   }}
+                                   onPointerDown={(e) => startTrim(e, clip, "end")}
                                  ><div className="w-1 h-4 bg-white rounded-full"></div></div>
                                </>
                              )}
@@ -607,7 +572,7 @@ export default function VideoEditorPage() {
                               const rect = e.currentTarget.getBoundingClientRect();
                               const update = (ev: React.PointerEvent | PointerEvent) => {
                                  const pct = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
-                                 seekGlobal(pct * totalDuration);
+                                 seekGlobal(pct * displayDuration);
                               };
                               update(e);
                               const move = (ev: PointerEvent) => update(ev);
@@ -618,7 +583,7 @@ export default function VideoEditorPage() {
                         >
                            <div 
                              className="absolute top-[-16px] bottom-[-16px] w-0.5 bg-red-500 pointer-events-none"
-                             style={{ left: `${(globalTime / Math.max(0.1, totalDuration)) * 100}%` }}
+                             style={{ left: `${(globalTime / displayDuration) * 100}%` }}
                            >
                              <div className="absolute -top-2 -translate-x-1/2 w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-sm"></div>
                            </div>

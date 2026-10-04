@@ -117,20 +117,6 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
   // SPECIALIZED TOOLS
   // ==========================================
   { 
-    id: "video-editor", 
-    name: "Video Editor", 
-    route: "/tools/video-editor", 
-    category: "specialized",
-    visual: "🎬",
-    description: "Simple browser-based video editing for quick cuts, trims, crops, text, audio and exports.",
-    keywords: [
-      "video editor", "edit video", "video editing", "edit a video", 
-      "video cut", "video trim", "trim video", "cut video", "crop video", 
-      "video ko edit karna hai", "video edit karni hai", "video cut karni hai", 
-      "video trim karna hai", "video ka size change karna hai", "mujhe video cut karni hai"
-    ] 
-  },
-  { 
     id: "video-to-gif", 
     name: "Video to GIF Maker", 
     route: "/tools/video-to-gif", 

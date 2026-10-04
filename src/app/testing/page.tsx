@@ -67,6 +67,12 @@ export default function TestingLabPage() {
               status="TESTING" 
               route="/testing/image-border" 
             />
+            <TestingToolCard 
+              name="Video Editor" 
+              description="Trim, split, reorder and export video clips in your browser. (Moved from public tools)" 
+              status="TESTING" 
+              route="/testing/video-editor" 
+            />
           </div>
         </div>
       </main>
