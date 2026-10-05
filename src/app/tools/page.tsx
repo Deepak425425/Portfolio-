@@ -82,7 +82,7 @@ export default function ToolsLandingPage() {
     },
     {
       title: "Audio Tools",
-      ids: ["audio-splicer"]
+      ids: ["audio-splicer", "silence-remover"]
     },
     {
       title: "PDF & Document Tools",
@@ -94,7 +94,7 @@ export default function ToolsLandingPage() {
     },
     {
       title: "Specialized / AI",
-      ids: ["image-upscaler", "image-cleanup", "background-remover", "watermark-remover", "face-blur", "cinematic-focus", "hard-cut-motion-prompt"]
+      ids: ["image-upscaler", "image-cleanup", "background-remover", "watermark-remover", "face-blur", "cinematic-focus", "hard-cut-motion-prompt", "script-board"]
     }
   ];
 

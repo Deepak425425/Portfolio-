@@ -125,6 +125,7 @@ export default function BulkProcessor({ onProcess, renderControls, renderPreview
     
     const zip = new JSZip();
     let successCount = 0;
+    let failedNames: string[] = [];
     
     for (let i = 0; i < images.length; i++) {
       setProgress({ current: i + 1, total: images.length });
@@ -133,15 +134,21 @@ export default function BulkProcessor({ onProcess, renderControls, renderPreview
         if (res) {
           zip.file(getGrotonExportFilename(res.name), res.blob);
           successCount++;
+        } else {
+          failedNames.push(images[i].name);
         }
       } catch (e) {
         console.error(`Failed to process ${images[i].name}`, e);
+        failedNames.push(images[i].name);
       }
       // Yield to main thread
       await new Promise(r => setTimeout(r, 50));
     }
     
     if (successCount > 0) {
+      if (failedNames.length > 0) {
+        alert(`Finished with errors. ${failedNames.length} image(s) failed to process: ${failedNames.slice(0, 3).join(", ")}${failedNames.length > 3 ? '...' : ''}`);
+      }
       const content = await zip.generateAsync({ type: "blob" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(content);

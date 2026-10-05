@@ -55,12 +55,7 @@ export default function TestingLabPage() {
               route="/testing/price-calculator" 
             />
             
-            <TestingToolCard 
-              name="Script Board" 
-              description="Create and organize visual scenes, motion prompts, reference images and notes in one storyboard." 
-              status="EXPERIMENTAL" 
-              route="/testing/script-board" 
-            />
+            
             <TestingToolCard 
               name="Image Border" 
               description="Add refined frames, shadows, and borders to images. (Moved from public tools)" 
@@ -72,6 +67,12 @@ export default function TestingLabPage() {
               description="Trim, split, reorder and export video clips in your browser. (Moved from public tools)" 
               status="TESTING" 
               route="/testing/video-editor" 
+            />
+            <TestingToolCard 
+              name="Video Object Cleanup" 
+              description="Remove unwanted objects, logos, text, and static overlays from video." 
+              status="TESTING" 
+              route="/testing/video-object-cleanup" 
             />
           </div>
         </div>

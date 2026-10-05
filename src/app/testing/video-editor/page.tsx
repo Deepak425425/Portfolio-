@@ -5,7 +5,7 @@ import ToolLayout from "@/components/tools/ToolLayout";
 import UploadDropzone from "@/components/tools/UploadDropzone";
 import { getGrotonExportFilename } from "@/utils/export";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile } from "@ffmpeg/util";
+import { exportTimeline, ExportError } from "./exportEngine";
 import {
   Clip,
   editorReducer,
@@ -14,6 +14,8 @@ import {
   clipStartTime,
   locateClip,
   canSplitAt,
+  ASPECT_RATIOS,
+  SPEED_PRESETS,
 } from "./editorReducer";
 
 export default function VideoEditorPage() {
@@ -22,6 +24,7 @@ export default function VideoEditorPage() {
   const [fileName, setFileName] = useState("");
   const [fileSize, setFileSize] = useState(0);
   const [resolution, setResolution] = useState({ width: 0, height: 0 });
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [thumbnails, setThumbnails] = useState<string[]>([]);
 
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -29,29 +32,47 @@ export default function VideoEditorPage() {
 
   // Centralized editor state (clips, selection, undo/redo history)
   const [editor, dispatch] = useReducer(editorReducer, initialEditorState);
-  const { clips, selectedClipId, past, future, sourceDuration } = editor;
+  const { clips, selectedClipId, past, future, sourceDuration, aspect, fit } = editor;
+  const selectedClip = clips.find((c) => c.id === selectedClipId) ?? null;
+  const aspectDef = ASPECT_RATIOS.find((a) => a.id === aspect) ?? ASPECT_RATIOS[0];
 
   // Playback state
   const [isPlaying, setIsPlaying] = useState(false);
   const [globalTime, setGlobalTimeState] = useState(0);
-  const [playbackSpeed, setPlaybackSpeed] = useState(1);
-  const [volume, setVolume] = useState(100);
-  const [isMuted, setIsMuted] = useState(false);
   // Timeline scale is frozen while a trim handle is dragged so unrelated clips keep their width.
   const [scaleDuration, setScaleDuration] = useState<number | null>(null);
 
   // Export State
   const [isProcessing, setIsProcessing] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [statusText, setStatusText] = useState("");
+  const [exportError, setExportError] = useState<string | null>(null);
   const [outputUrl, setOutputUrl] = useState<string | null>(null);
+  const [outputInfo, setOutputInfo] = useState<{ width: number; height: number; duration: number; size: number; hasAudio: boolean } | null>(null);
 
   const ffmpegRef = useRef<FFmpeg | null>(null);
+  const exportBusyRef = useRef(false);
+  const mountedRef = useRef(true);
+  // Object URLs are tracked in refs so they can always be revoked (including on unmount).
+  const videoUrlRef = useRef<string | null>(null);
+  const outputUrlRef = useRef<string | null>(null);
   const rAFRef = useRef<number>(0);
   // Refs always mirror the latest state so the rAF loop and event handlers never read stale values.
   const clipsRef = useRef<Clip[]>([]);
   const globalTimeRef = useRef(0);
   const playStateRef = useRef({ playing: false, clipIndex: 0 });
+  const audioStateRef = useRef({ originalMuted: false, originalVolume: 100 });
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [replacementAudioUrl, setReplacementAudioUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (editor.replacementAudioFile) {
+       const url = URL.createObjectURL(editor.replacementAudioFile);
+       setReplacementAudioUrl(url);
+       return () => URL.revokeObjectURL(url);
+    } else {
+       setReplacementAudioUrl(null);
+    }
+  }, [editor.replacementAudioFile]);
 
   const totalDuration = useMemo(() => totalDurationOf(clips), [clips]);
   const displayDuration = Math.max(0.1, scaleDuration ?? totalDuration);
@@ -60,11 +81,18 @@ export default function VideoEditorPage() {
   const canSplit = canSplitAt(clips, globalTime);
 
   useEffect(() => {
-    const ffmpeg = new FFmpeg();
-    ffmpeg.on("progress", ({ progress }) => setProgress(Math.max(0, Math.min(100, Math.round(progress * 100)))));
-    ffmpegRef.current = ffmpeg;
+    mountedRef.current = true;
     return () => {
+      mountedRef.current = false;
       cancelAnimationFrame(rAFRef.current);
+      try {
+        ffmpegRef.current?.terminate();
+      } catch {
+        /* not running */
+      }
+      ffmpegRef.current = null;
+      if (videoUrlRef.current) URL.revokeObjectURL(videoUrlRef.current);
+      if (outputUrlRef.current) URL.revokeObjectURL(outputUrlRef.current);
     };
   }, []);
 
@@ -73,7 +101,16 @@ export default function VideoEditorPage() {
     setGlobalTimeState(t);
   };
 
-  /** Move the playhead and the <video> element to a timeline time, using an explicit clip list. */
+  /** Apply a clip's speed / volume / mute to the <video> element (preview audio + rate). */
+  const applyClipMedia = (clip: Clip | undefined) => {
+    const v = videoRef.current;
+    if (!v || !clip) return;
+    v.playbackRate = clip.speed;
+    const projectOriginalVolume = audioStateRef.current.originalMuted ? 0 : audioStateRef.current.originalVolume / 100;
+    const clipVolume = clip.muted ? 0 : clip.volume / 100;
+    v.volume = projectOriginalVolume * clipVolume;
+  };
+
   const applySeek = (list: Clip[], time: number) => {
     const total = totalDurationOf(list);
     const t = Math.max(0, Math.min(time, total));
@@ -82,33 +119,51 @@ export default function VideoEditorPage() {
     const v = videoRef.current;
     if (!loc || !v) return;
     playStateRef.current.clipIndex = loc.index;
-    v.currentTime = list[loc.index].sourceStart + loc.offset;
+    const clip = list[loc.index];
+    applyClipMedia(clip);
+    // Timeline offset -> source offset
+    v.currentTime = clip.sourceStart + loc.offset * clip.speed;
+
+    const a = audioRef.current;
+    if (a && replacementAudioUrl) {
+       // if t is past duration, audio stops
+       a.currentTime = t;
+    }
   };
 
-  const seekGlobal = (time: number) => applySeek(clipsRef.current, time);
+  const seekGlobal = (time: number) => {
+    const list = clipsRef.current;
+    if (list.length === 0) return;
+    applySeek(list, time);
+  };
 
   const pausePlayback = () => {
     playStateRef.current.playing = false;
     cancelAnimationFrame(rAFRef.current);
     videoRef.current?.pause();
+    audioRef.current?.pause();
     setIsPlaying(false);
   };
 
   // Keep refs/video in sync whenever the clip list changes (edit, undo, redo, trim, reset).
   useEffect(() => {
     clipsRef.current = clips;
+    audioStateRef.current = { originalMuted: editor.originalAudioMuted, originalVolume: editor.originalAudioVolume };
     if (clips.length === 0) return;
+    if (playStateRef.current.playing) {
+      // Live volume / mute change while playing: update the element without seeking.
+      applyClipMedia(clips[Math.min(playStateRef.current.clipIndex, clips.length - 1)]);
+      return;
+    }
     applySeek(clips, globalTimeRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clips, videoUrl]);
+  }, [clips, videoUrl, editor.originalAudioMuted, editor.originalAudioVolume]);
 
-  // Apply volume / speed to the element without touching the playback loop.
   useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.playbackRate = playbackSpeed;
-    v.volume = isMuted ? 0 : volume / 100;
-  }, [playbackSpeed, volume, isMuted, videoUrl]);
+    if (audioRef.current) {
+      audioRef.current.volume = editor.replacementAudioMuted ? 0 : editor.replacementAudioVolume / 100;
+    }
+  }, [editor.replacementAudioMuted, editor.replacementAudioVolume]);
 
   // Playback loop: only depends on isPlaying; reads the latest clips from refs.
   useEffect(() => {
@@ -129,18 +184,21 @@ export default function VideoEditorPage() {
         if (idx + 1 < list.length) {
           const next = list[idx + 1];
           playStateRef.current.clipIndex = idx + 1;
+          applyClipMedia(next);
           // Contiguous clips (e.g. after a split) play straight through without a seek.
           if (Math.abs(t - next.sourceStart) > 0.08) v.currentTime = next.sourceStart;
           setPlayhead(clipStartTime(list, idx + 1));
         } else {
           v.pause();
+          audioRef.current?.pause();
           playStateRef.current.playing = false;
           setIsPlaying(false);
           setPlayhead(totalDurationOf(list));
           return;
         }
       } else {
-        setPlayhead(clipStartTime(list, idx) + Math.max(0, t - clip.sourceStart));
+        // Source time -> timeline time (divide by speed)
+        setPlayhead(clipStartTime(list, idx) + Math.max(0, t - clip.sourceStart) / clip.speed);
       }
       rAFRef.current = requestAnimationFrame(tick);
     };
@@ -181,10 +239,56 @@ export default function VideoEditorPage() {
     setThumbnails(thumbs);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const active = document.activeElement;
+      if (active && (['INPUT', 'TEXTAREA', 'SELECT'].includes(active.tagName) || (active as HTMLElement).isContentEditable)) {
+         return;
+      }
+      
+      if (e.key === " ") {
+         e.preventDefault();
+         togglePlay();
+      } else if (e.key.toLowerCase() === "s") {
+         e.preventDefault();
+         splitClip();
+      } else if (e.key === "Backspace" || e.key === "Delete") {
+         e.preventDefault();
+         deleteClip();
+      } else if (e.key.toLowerCase() === "z" && (e.ctrlKey || e.metaKey)) {
+         e.preventDefault();
+         if (e.shiftKey) redo();
+         else undo();
+      } else if (e.key === "ArrowLeft") {
+         e.preventDefault();
+         seekGlobal(globalTimeRef.current - 0.1);
+      } else if (e.key === "ArrowRight") {
+         e.preventDefault();
+         seekGlobal(globalTimeRef.current + 0.1);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }); // no dep array so it gets the latest closures every render, but only binds once per render
+
   const handleUpload = async (files: File[]) => {
+    setLoadError(null);
     if (!files.length) return;
     const file = files[0];
+    
+    if (!file.type.startsWith("video/")) {
+       setLoadError("Please upload a valid video file.");
+       return;
+    }
+
+    if (videoUrlRef.current) URL.revokeObjectURL(videoUrlRef.current);
+    if (outputUrlRef.current) URL.revokeObjectURL(outputUrlRef.current);
+    outputUrlRef.current = null;
+    setOutputUrl(null);
+    setOutputInfo(null);
+    setExportError(null);
     const url = URL.createObjectURL(file);
+    videoUrlRef.current = url;
     dispatch({ type: "CLEAR" });
     setPlayhead(0);
     setIsPlaying(false);
@@ -198,9 +302,14 @@ export default function VideoEditorPage() {
   const handleLoadedMetadata = () => {
     const v = videoRef.current;
     if (!v) return;
+    if (v.duration === Infinity || isNaN(v.duration) || v.duration === 0) {
+       setLoadError("The video file could not be read properly or has an invalid duration.");
+       clearProject(true);
+       return;
+    }
     setResolution({ width: v.videoWidth, height: v.videoHeight });
     // INIT is ignored by the reducer if clips already exist.
-    dispatch({ type: "INIT", duration: v.duration, id: crypto.randomUUID() });
+    dispatch({ type: "INIT", duration: v.duration, id: crypto.randomUUID(), width: v.videoWidth, height: v.videoHeight });
   };
 
   // --- Editing actions (every edit pauses playback first, then goes through the reducer) ---
@@ -212,9 +321,15 @@ export default function VideoEditorPage() {
       pausePlayback();
     } else {
       if (globalTimeRef.current >= totalDuration - 0.01) seekGlobal(0);
-      v.playbackRate = playbackSpeed;
-      v.volume = isMuted ? 0 : volume / 100;
+      const loc = locateClip(clips, globalTimeRef.current);
+      if (loc) applyClipMedia(clips[loc.index]);
       v.play().catch(() => setIsPlaying(false));
+      const a = audioRef.current;
+      if (a && replacementAudioUrl) {
+         if (a.currentTime < a.duration || isNaN(a.duration)) {
+             a.play().catch(console.error);
+         }
+      }
       setIsPlaying(true);
     }
   };
@@ -256,12 +371,50 @@ export default function VideoEditorPage() {
     dispatch({ type: "REDO" });
   };
 
+  const setSpeed = (speed: number) => {
+    if (!selectedClip || selectedClip.speed === speed) return;
+    pausePlayback();
+    dispatch({ type: "SET_SPEED", speed });
+  };
+
+  const toggleMute = () => {
+    if (!selectedClip) return;
+    dispatch({ type: "SET_MUTED", muted: !selectedClip.muted });
+  };
+
+  const setAspect = (id: typeof aspect) => {
+    if (id === aspect) return;
+    pausePlayback();
+    dispatch({ type: "SET_ASPECT", aspect: id });
+  };
+
+  const setFit = (mode: typeof fit) => {
+    if (mode === fit) return;
+    pausePlayback();
+    dispatch({ type: "SET_FIT", fit: mode });
+  };
+
   const resetOriginal = () => {
     if (!sourceDuration) return;
-    if (confirm("Reset to original video? All edits will be lost.")) {
+    if (confirm("Reset to original video? All edits and audio replacements will be lost.")) {
       pausePlayback();
       globalTimeRef.current = 0;
       dispatch({ type: "RESET", id: crypto.randomUUID() });
+    }
+  };
+
+  const clearProject = (force = false) => {
+    if (force || confirm("Clear this project and start over? All work will be lost.")) {
+       pausePlayback();
+       dispatch({ type: "CLEAR" });
+       setVideoUrl(null);
+       setVideoFile(null);
+       setOutputUrl(null);
+       setOutputInfo(null);
+       if (videoUrlRef.current) URL.revokeObjectURL(videoUrlRef.current);
+       if (outputUrlRef.current) URL.revokeObjectURL(outputUrlRef.current);
+       videoUrlRef.current = null;
+       outputUrlRef.current = null;
     }
   };
 
@@ -284,7 +437,8 @@ export default function VideoEditorPage() {
     dispatch({ type: "BEGIN_TRIM" });
 
     const move = (ev: PointerEvent) => {
-      dispatch({ type: "TRIM", id: clip.id, edge, value: baseValue + (ev.clientX - startX) / pxPerSec });
+      // Pixels are timeline seconds; multiply by speed to get source seconds.
+      dispatch({ type: "TRIM", id: clip.id, edge, value: baseValue + ((ev.clientX - startX) / pxPerSec) * clip.speed });
     };
     const up = () => {
       window.removeEventListener("pointermove", move);
@@ -314,81 +468,79 @@ export default function VideoEditorPage() {
 
   // EXPORT
   const exportVideo = async () => {
-    if (!videoFile || !ffmpegRef.current) return;
+    if (!videoFile || exportBusyRef.current) return;
+    exportBusyRef.current = true;
     pausePlayback();
+    setExportError(null);
     setIsProcessing(true);
-    setProgress(0);
-    setStatusText("Loading engine...");
+    setStatusText("Starting export");
+
+    // Snapshot everything the export depends on, so edits made while it runs cannot change the result.
+    const snapshotClips = clips.map((c) => ({
+      sourceStart: c.sourceStart,
+      sourceEnd: c.sourceEnd,
+      duration: c.duration,
+      speed: c.speed,
+      volume: c.volume,
+      muted: c.muted,
+    }));
+    const ffmpeg = ffmpegRef.current ?? (ffmpegRef.current = new FFmpeg());
 
     try {
-      const ffmpeg = ffmpegRef.current;
-      if (!ffmpeg.loaded) {
-        await ffmpeg.load({
-          coreURL: "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js",
-          wasmURL: "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm"
-        });
-      }
-
-      setStatusText("Preparing video...");
-      await ffmpeg.writeFile("input.mp4", await fetchFile(videoFile));
-
-      let hasOriginalAudio = true;
-      try {
-        await ffmpeg.exec(["-i", "input.mp4", "-vn", "-sn", "-c:a", "copy", "-t", "1", "check.aac"]);
-        const checkData = await ffmpeg.readFile("check.aac");
-        if ((checkData as Uint8Array).length === 0) hasOriginalAudio = false;
-      } catch {
-        hasOriginalAudio = false;
-      }
-
-      let filterComplex = "";
-      let concatV = "";
-      let concatA = "";
-
-      clips.forEach((c, i) => {
-         filterComplex += `[0:v]trim=start=${c.sourceStart}:end=${c.sourceEnd},setpts=PTS-STARTPTS[v${i}]; `;
-         concatV += `[v${i}]`;
-         if (hasOriginalAudio) {
-           filterComplex += `[0:a]atrim=start=${c.sourceStart}:end=${c.sourceEnd},asetpts=PTS-STARTPTS[a${i}]; `;
-           concatA += `[a${i}]`;
-         }
+      const result = await exportTimeline(ffmpeg, {
+        file: videoFile,
+        clips: snapshotClips,
+        aspect,
+        fit,
+        srcWidth: resolution.width,
+        srcHeight: resolution.height,
+        originalAudioMuted: editor.originalAudioMuted,
+        originalAudioVolume: editor.originalAudioVolume,
+        replacementAudioFile: editor.replacementAudioFile,
+        replacementAudioVolume: editor.replacementAudioVolume,
+        replacementAudioMuted: editor.replacementAudioMuted,
+        onStage: (stage) => setStatusText(stage),
       });
-      
-      filterComplex += `${concatV}concat=n=${clips.length}:v=1:a=0[concatv]; `;
-      if (hasOriginalAudio) {
-         filterComplex += `${concatA}concat=n=${clips.length}:v=0:a=1[concata]`;
-      }
-
-      const args = ["-i", "input.mp4", "-filter_complex", filterComplex, "-map", "[concatv]"];
-      if (hasOriginalAudio) args.push("-map", "[concata]");
-      
-      args.push("-c:v", "libx264");
-      args.push("-preset", "ultrafast"); 
-      args.push("-crf", "24");
-      if (hasOriginalAudio) {
-        args.push("-c:a", "aac");
-      }
-
-      // Check if it's supposed to be webm based on original format or fallback
-      const outName = "output.mp4";
-      args.push(outName);
-
-      setStatusText("Rendering Timeline...");
-      await ffmpeg.exec(args);
-
-      setStatusText("Finalizing...");
-      const data = await ffmpeg.readFile(outName);
-      const blob = new Blob([data as any], { type: "video/mp4" });
-      const url = URL.createObjectURL(blob);
-      
+      if (!mountedRef.current) return;
+      // Only now (valid, verified file) do we expose a result.
+      if (outputUrlRef.current) URL.revokeObjectURL(outputUrlRef.current);
+      const url = URL.createObjectURL(result.blob);
+      outputUrlRef.current = url;
+      setOutputInfo({
+        width: result.width,
+        height: result.height,
+        duration: result.duration,
+        size: result.blob.size,
+        hasAudio: result.hasAudio,
+      });
       setOutputUrl(url);
-      
     } catch (e) {
       console.error(e);
-      alert("Export failed. File may be too large or browser ran out of memory.");
+      // After a failure the wasm instance may be in a bad state: discard it so the next attempt starts clean.
+      try {
+        ffmpeg.terminate();
+      } catch {
+        /* already terminated */
+      }
+      ffmpegRef.current = null;
+      if (mountedRef.current) {
+        setExportError(
+          e instanceof ExportError
+            ? e.message
+            : "Export failed unexpectedly. The browser may have run out of memory or the video format may not be supported.",
+        );
+      }
     } finally {
-      setIsProcessing(false);
+      exportBusyRef.current = false;
+      if (mountedRef.current) setIsProcessing(false);
     }
+  };
+
+  const closeOutput = () => {
+    if (outputUrlRef.current) URL.revokeObjectURL(outputUrlRef.current);
+    outputUrlRef.current = null;
+    setOutputUrl(null);
+    setOutputInfo(null);
   };
 
   const downloadExport = () => {
@@ -406,14 +558,31 @@ export default function VideoEditorPage() {
       <div className="w-full max-w-6xl mx-auto flex flex-col gap-6 -mt-4">
         
         {!videoUrl ? (
-          <UploadDropzone 
-            onUpload={handleUpload} 
-            multiple={false} 
-            accept="video/*" 
-            title="Drag your video here"
-            formats={["MP4", "WEBM", "MOV"]}
-            className="min-h-[16rem]"
-          />
+          <div className="flex flex-col items-center text-center gap-6 py-16">
+             <div className="flex flex-col gap-2 max-w-lg">
+                <h2 className="text-2xl font-bold tracking-tight">GROTON Video Editor</h2>
+                <p className="text-sm text-zinc-500">
+                  Easily trim, split, reorder clips, change playback speed, resize for social media, and replace background audio securely in your browser. No files are uploaded to the cloud.
+                </p>
+             </div>
+             
+             {loadError && (
+               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-bold w-full max-w-xl">
+                  {loadError}
+               </div>
+             )}
+
+             <div className="w-full max-w-xl">
+               <UploadDropzone 
+                 onUpload={handleUpload} 
+                 multiple={false} 
+                 accept="video/*" 
+                 title="Drag your video here or click to upload"
+                 formats={["MP4", "WEBM", "MOV"]}
+                 className="min-h-[16rem] bg-white border-2 border-dashed border-zinc-200 hover:border-[#8B7CFF] transition-colors"
+               />
+             </div>
+          </div>
         ) : (
           <>
             {/* WORKSPACE */}
@@ -423,15 +592,29 @@ export default function VideoEditorPage() {
                 {/* PREVIEW ROW */}
                 <div className="flex flex-col md:flex-row gap-6">
                   {/* Left: Video */}
-                  <div className="flex-1 bg-[#111] rounded-2xl overflow-hidden shadow-sm relative aspect-video flex items-center justify-center">
-                    <video 
-                      ref={videoRef}
-                      src={videoUrl}
-                      className="w-full h-full object-contain"
-                      onLoadedMetadata={handleLoadedMetadata}
-                      onClick={togglePlay}
-                      playsInline
-                    />
+                  <div className="flex-1 bg-[#111] rounded-2xl overflow-hidden shadow-sm relative aspect-video">
+                    {/* Canvas: sized to the active aspect ratio inside the 16:9 stage; black like the export background */}
+                    <div
+                      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black overflow-hidden ring-1 ring-white/25"
+                      style={{
+                        aspectRatio: `${aspectDef.w} / ${aspectDef.h}`,
+                        ...(aspectDef.w / aspectDef.h >= 16 / 9
+                          ? { width: "100%" }
+                          : { height: "100%" }),
+                      }}
+                    >
+                      <video 
+                        ref={videoRef}
+                        src={videoUrl}
+                        className={`w-full h-full ${fit === "cover" ? "object-cover" : "object-contain"}`}
+                        onLoadedMetadata={handleLoadedMetadata}
+                        onClick={togglePlay}
+                        playsInline
+                      />
+                    </div>
+                    <span className="absolute top-3 left-3 z-10 text-[10px] font-mono font-bold text-white/80 bg-black/60 rounded-full px-2.5 py-1 pointer-events-none">
+                      {aspect} · {fit === "cover" ? "Fill" : "Fit"}
+                    </span>
                     
                     {/* Floating Playback Controls Overlay */}
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md rounded-full px-6 py-3 flex items-center gap-6 shadow-lg z-10 border border-white/10">
@@ -444,30 +627,28 @@ export default function VideoEditorPage() {
                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                          }
                       </button>
-                      <div className="flex items-center gap-2">
-                         <button onClick={() => setIsMuted(!isMuted)} className="text-white hover:text-[#8B7CFF] transition-colors" title="Mute/Unmute">
-                            {isMuted || volume === 0 ? 
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg> :
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                            }
-                         </button>
-                         <input type="range" min="0" max="100" value={volume} onChange={(e) => { setVolume(Number(e.target.value)); setIsMuted(false); }} className="w-16 accent-[#8B7CFF]" />
-                      </div>
-                      <select value={playbackSpeed} onChange={(e) => setPlaybackSpeed(Number(e.target.value))} className="bg-transparent text-white text-xs font-bold outline-none cursor-pointer">
-                        <option value="0.5" className="text-black">0.5x</option>
-                        <option value="1" className="text-black">1.0x</option>
-                        <option value="1.5" className="text-black">1.5x</option>
-                        <option value="2" className="text-black">2.0x</option>
-                      </select>
                     </div>
 
                     {isProcessing && (
-                      <div className="absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex flex-col items-center justify-center gap-6 text-white">
+                      <div className="absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex flex-col items-center justify-center gap-6 text-white" role="status" aria-live="polite">
                         <div className="text-sm font-bold uppercase tracking-[0.2em]">{statusText}</div>
-                        <div className="w-64 h-1 bg-zinc-800 overflow-hidden">
-                          <div className="h-full bg-[#8B7CFF] transition-all duration-300" style={{ width: `${progress}%` }}></div>
+                        {/* Indeterminate: ffmpeg cannot report accurate progress for a multi-clip filter graph. */}
+                        <div className="relative w-64 h-1 bg-zinc-800 overflow-hidden rounded-full">
+                          <div className="absolute inset-y-0 w-1/3 bg-[#8B7CFF] rounded-full" style={{ animation: "gvx-indeterminate 1.2s ease-in-out infinite" }}></div>
                         </div>
-                        <div className="text-xs font-mono font-bold text-zinc-400">{progress}%</div>
+                        <style>{`@keyframes gvx-indeterminate { 0% { left: -33%; } 100% { left: 100%; } }`}</style>
+                        <div className="text-[10px] uppercase tracking-widest text-zinc-500">Keep this tab open</div>
+                      </div>
+                    )}
+
+                    {exportError && !isProcessing && (
+                      <div className="absolute inset-0 bg-black/90 backdrop-blur-md z-50 flex flex-col items-center justify-center gap-5 text-white px-8 text-center" role="alert">
+                        <div className="text-sm font-bold uppercase tracking-[0.2em] text-red-400">Export failed</div>
+                        <p className="text-xs text-zinc-300 max-w-md leading-relaxed">{exportError}</p>
+                        <div className="flex gap-3">
+                          <button onClick={exportVideo} className="text-[10px] uppercase font-bold text-black bg-white hover:bg-zinc-200 px-4 py-2 rounded-full">Try again</button>
+                          <button onClick={() => setExportError(null)} className="text-[10px] uppercase font-bold text-white border border-white/30 hover:bg-white/10 px-4 py-2 rounded-full">Dismiss</button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -495,6 +676,95 @@ export default function VideoEditorPage() {
                        </div>
                        
                        <div className="flex flex-col gap-2">
+                          <div className="flex flex-col gap-2 mb-2">
+                            <span className="text-[10px] uppercase tracking-widest font-bold text-zinc-400">Canvas</span>
+                            <div className="grid grid-cols-4 gap-1.5">
+                              {ASPECT_RATIOS.map((a) => (
+                                <button key={a.id} id={`aspect-${a.id.replace(":", "x")}`} onClick={() => setAspect(a.id)} className={`py-2 text-[10px] font-bold rounded-lg border transition-colors ${aspect === a.id ? "bg-[#111] text-white border-[#111]" : "bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100"}`}>{a.id}</button>
+                              ))}
+                            </div>
+                            <div className="grid grid-cols-2 gap-1.5">
+                              <button id="fit-contain" onClick={() => setFit("contain")} className={`py-2 text-[10px] uppercase tracking-widest font-bold rounded-lg border transition-colors ${fit === "contain" ? "bg-[#111] text-white border-[#111]" : "bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100"}`}>Fit</button>
+                              <button id="fit-cover" onClick={() => setFit("cover")} className={`py-2 text-[10px] uppercase tracking-widest font-bold rounded-lg border transition-colors ${fit === "cover" ? "bg-[#111] text-white border-[#111]" : "bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100"}`}>Fill</button>
+                            </div>
+                          </div>
+
+                          {/* Project Audio */}
+                          <div className="flex flex-col gap-2 mb-2">
+                            <span className="text-[10px] uppercase tracking-widest font-bold text-zinc-400">Project Audio</span>
+                            
+                            <div className="flex flex-col gap-2 p-3 bg-zinc-50 border border-zinc-200 rounded-xl">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-bold text-zinc-600">Original Audio</span>
+                                <button onClick={() => dispatch({ type: "SET_ORIGINAL_AUDIO_MUTED", muted: !editor.originalAudioMuted })} className={`px-2 py-1 text-[10px] font-bold rounded border transition-colors ${editor.originalAudioMuted ? "bg-red-50 text-red-500 border-red-200" : "bg-white text-zinc-600 border-zinc-200"}`}>{editor.originalAudioMuted ? "Off" : "On"}</button>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <input type="range" min="0" max="100" value={editor.originalAudioVolume} onChange={(e) => dispatch({ type: "SET_ORIGINAL_AUDIO_VOLUME", volume: Number(e.target.value) })} disabled={editor.originalAudioMuted} onPointerDown={() => dispatch({ type: "BEGIN_TRIM" })} onPointerUp={() => dispatch({ type: "END_TRIM" })} className="flex-1 accent-[#8B7CFF] min-w-0 disabled:opacity-40" />
+                                <span className="w-8 text-right text-[10px] font-mono text-zinc-500">{editor.originalAudioVolume}%</span>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-col gap-2 p-3 bg-zinc-50 border border-zinc-200 rounded-xl">
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-bold text-zinc-600">Replacement Audio</span>
+                                {editor.replacementAudioFile ? (
+                                   <div className="flex gap-2">
+                                      <button onClick={() => dispatch({ type: "SET_REPLACEMENT_AUDIO_MUTED", muted: !editor.replacementAudioMuted })} className={`px-2 py-1 text-[10px] font-bold rounded border transition-colors ${editor.replacementAudioMuted ? "bg-red-50 text-red-500 border-red-200" : "bg-white text-zinc-600 border-zinc-200"}`}>{editor.replacementAudioMuted ? "Off" : "On"}</button>
+                                      <button onClick={() => dispatch({ type: "SET_REPLACEMENT_AUDIO_FILE", file: null })} className="px-2 py-1 text-[10px] font-bold rounded border bg-white text-red-500 border-zinc-200 transition-colors">Remove</button>
+                                   </div>
+                                ) : (
+                                   <label className="px-2 py-1 text-[10px] font-bold rounded border bg-white text-zinc-600 border-zinc-200 cursor-pointer hover:bg-zinc-100 transition-colors">
+                                     Add Audio
+                                     <input type="file" accept="audio/*" className="hidden" onChange={(e) => e.target.files?.[0] && dispatch({ type: "SET_REPLACEMENT_AUDIO_FILE", file: e.target.files[0] })} />
+                                   </label>
+                                )}
+                              </div>
+                              {editor.replacementAudioFile && (
+                                <>
+                                  <span className="text-[10px] text-zinc-400 truncate max-w-[150px]" title={editor.replacementAudioFile.name}>{editor.replacementAudioFile.name}</span>
+                                  <div className="flex items-center gap-2">
+                                    <input type="range" min="0" max="100" value={editor.replacementAudioVolume} onChange={(e) => dispatch({ type: "SET_REPLACEMENT_AUDIO_VOLUME", volume: Number(e.target.value) })} disabled={editor.replacementAudioMuted} onPointerDown={() => dispatch({ type: "BEGIN_TRIM" })} onPointerUp={() => dispatch({ type: "END_TRIM" })} className="flex-1 accent-[#8B7CFF] min-w-0 disabled:opacity-40" />
+                                    <span className="w-8 text-right text-[10px] font-mono text-zinc-500">{editor.replacementAudioVolume}%</span>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          {selectedClip && (
+                            <>
+                              <div className="flex flex-col gap-2 mb-2">
+                                <span className="text-[10px] uppercase tracking-widest font-bold text-zinc-400">Speed</span>
+                                <div className="grid grid-cols-4 gap-1.5">
+                                  {SPEED_PRESETS.map((s) => (
+                                    <button key={s} id={`speed-${s}`} onClick={() => setSpeed(s)} className={`py-2 text-[10px] font-bold rounded-lg border transition-colors ${selectedClip.speed === s ? "bg-[#111] text-white border-[#111]" : "bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100"}`}>{s}×</button>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="flex flex-col gap-2 mb-2">
+                                <span className="text-[10px] uppercase tracking-widest font-bold text-zinc-400">Audio</span>
+                                <div className="flex items-center gap-3">
+                                  <button id="audio-mute" onClick={toggleMute} className={`px-3 py-2 text-[10px] uppercase tracking-widest font-bold rounded-lg border transition-colors ${selectedClip.muted ? "bg-[#111] text-white border-[#111]" : "bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100"}`}>{selectedClip.muted ? "Muted" : "Mute"}</button>
+                                  <input
+                                    id="audio-volume"
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={selectedClip.volume}
+                                    disabled={selectedClip.muted}
+                                    onPointerDown={() => dispatch({ type: "BEGIN_TRIM" })}
+                                    onPointerUp={() => dispatch({ type: "END_TRIM" })}
+                                    onPointerCancel={() => dispatch({ type: "END_TRIM" })}
+                                    onBlur={() => dispatch({ type: "END_TRIM" })}
+                                    onChange={(e) => dispatch({ type: "SET_VOLUME", value: Number(e.target.value) })}
+                                    className="flex-1 min-w-0 accent-[#8B7CFF] disabled:opacity-40"
+                                  />
+                                  <span className="w-9 text-right text-[10px] font-mono font-bold text-zinc-500">{selectedClip.muted ? "0" : selectedClip.volume}%</span>
+                                </div>
+                              </div>
+                            </>
+                          )}
+
                           <button onClick={splitClip} disabled={!canSplit} className="w-full py-3 bg-zinc-50 border border-zinc-200 text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-zinc-100 disabled:opacity-50">Split at Playhead</button>
                           
                           {selectedClipId ? (
@@ -523,14 +793,15 @@ export default function VideoEditorPage() {
                          <h3 className="text-[10px] uppercase tracking-widest font-bold text-black">Timeline</h3>
                          <span className="text-xs font-mono font-bold text-[#8B7CFF]">{formatTime(globalTime)} <span className="text-zinc-400">/ {formatTime(totalDuration)}</span></span>
                       </div>
-                      <div className="flex gap-4">
-                        <button onClick={resetOriginal} className="text-[10px] uppercase font-bold text-zinc-400 hover:text-black">Reset</button>
-                        <button onClick={exportVideo} disabled={isProcessing} className="text-[10px] uppercase font-bold text-white bg-[#111111] hover:bg-[#222222] px-4 py-2 rounded-full disabled:opacity-50">Export Video</button>
+                       <div className="flex gap-4">
+                        <button onClick={() => clearProject(false)} className="text-[10px] uppercase font-bold text-zinc-400 hover:text-red-500 transition-colors mr-2">Clear Project</button>
+                        <button onClick={resetOriginal} className="text-[10px] uppercase font-bold text-zinc-400 hover:text-black transition-colors">Reset Edits</button>
+                        <button onClick={exportVideo} disabled={isProcessing} className="text-[10px] uppercase font-bold text-white bg-[#111111] hover:bg-[#222222] px-4 py-2 rounded-full disabled:opacity-50 transition-colors shadow-sm">Export Video</button>
                       </div>
                    </div>
                    
-                   <div className="w-full overflow-x-auto relative select-none p-6 bg-zinc-100 min-h-[160px] flex items-center">
-                      <div ref={trackRef} className="relative h-20 bg-zinc-200 rounded-xl flex min-w-full">
+                   <div className="w-full overflow-x-auto relative select-none p-6 bg-zinc-100 min-h-[180px] flex items-center">
+                      <div ref={trackRef} className="relative h-24 bg-zinc-200 rounded-xl flex min-w-full">
                         {clips.map((clip, i) => (
                           <div 
                             key={clip.id}
@@ -539,14 +810,22 @@ export default function VideoEditorPage() {
                             onPointerDown={() => dispatch({ type: "SELECT", id: clip.id })}
                           >
                              {/* Background Thumbnails Representation */}
-                             <div className="absolute inset-0 flex opacity-40 pointer-events-none bg-black">
-                               {thumbnails.length > 0 && thumbnails.map((thumb, idx) => (
-                                 <img key={idx} src={thumb} alt="" className="h-full object-cover flex-1 min-w-0" />
-                               ))}
+                             <div className="absolute inset-0 opacity-40 pointer-events-none bg-black overflow-hidden">
+                                <div 
+                                   className="absolute top-0 bottom-0 flex"
+                                   style={{
+                                     width: `${(sourceDuration / (clip.sourceEnd - clip.sourceStart)) * 100}%`,
+                                     left: `-${(clip.sourceStart / (clip.sourceEnd - clip.sourceStart)) * 100}%`
+                                   }}
+                                >
+                                  {thumbnails.length > 0 && thumbnails.map((thumb, idx) => (
+                                    <img key={idx} src={thumb} alt="" className="h-full object-cover flex-1 min-w-0" />
+                                  ))}
+                                </div>
                              </div>
                              
                              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <span className="text-[10px] uppercase font-bold tracking-widest text-white drop-shadow-md">Clip {i+1}</span>
+                                <span className="text-[10px] uppercase font-bold tracking-widest text-white drop-shadow-md">Clip {i+1}{clip.speed !== 1 ? ` · ${clip.speed}×` : ""}{clip.muted ? " · Muted" : ""}</span>
                              </div>
                              
                              {/* Trim Handles (Only visible when selected) */}
@@ -596,12 +875,17 @@ export default function VideoEditorPage() {
             ) : (
               /* OUTPUT WORKSPACE */
               <div className="bg-white p-6 md:p-8 border border-[#8B7CFF] rounded-2xl shadow-sm flex flex-col gap-6">
-                 <div className="flex items-center justify-between">
-                    <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#8B7CFF] flex items-center gap-2">
-                       <span className="w-2 h-2 rounded-full bg-[#8B7CFF] animate-pulse"></span>
-                       Export Complete
-                    </h2>
-                 </div>
+                  <div className="flex items-center justify-between">
+                     <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#8B7CFF] flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-[#8B7CFF]"></span>
+                        Export Complete
+                     </h2>
+                     {outputInfo && (
+                       <span className="text-[10px] font-mono font-bold text-zinc-500">
+                         {outputInfo.width}x{outputInfo.height} · {formatTime(outputInfo.duration)} · {formatSize(outputInfo.size)} · {outputInfo.hasAudio ? "Audio" : "No audio"}
+                       </span>
+                     )}
+                  </div>
 
                  <div className="bg-[#111] relative aspect-video flex items-center justify-center rounded-xl overflow-hidden border border-zinc-200">
                     <video 
@@ -620,7 +904,7 @@ export default function VideoEditorPage() {
                        Download Final Video
                      </button>
                      <button 
-                       onClick={() => setOutputUrl(null)}
+                       onClick={closeOutput}
                        className="py-4 px-8 bg-white text-black border border-zinc-200 text-xs uppercase tracking-widest font-bold rounded-xl hover:bg-zinc-50 transition-colors"
                      >
                        Back to Editor
@@ -631,6 +915,9 @@ export default function VideoEditorPage() {
           </>
         )}
       </div>
+      {replacementAudioUrl && (
+        <audio ref={audioRef} src={replacementAudioUrl} className="hidden" />
+      )}
     </ToolLayout>
   );
 }
