@@ -373,6 +373,15 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     keywords: ["video compare", "compare videos", "video comparison", "split screen video", "overlay videos"] 
   },
   { 
+    id: "silence-remover", 
+    name: "Silence Remover", 
+    route: "/tools/silence-remover", 
+    category: "specialized",
+    visual: "🔇",
+    description: "Detect and remove long silent gaps from audio.",
+    keywords: ["silence remover", "remove silence", "remove silent gaps", "audio silence", "audio cleanup", "silent parts", "silent pauses", "audio editor", "speech pauses", "trim silence", "audio tool"]
+  },
+  { 
     id: "audio-splicer", 
     name: "Audio Splicer", 
     route: "/tools/audio-splicer", 
@@ -380,5 +389,14 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     visual: "✂️",
     description: "Upload, edit, arrange, and mix multiple audio files natively in your browser.",
     keywords: ["audio splicer", "edit audio", "merge audio", "crossfade audio", "trim audio"] 
+  },
+  { 
+    id: "script-board", 
+    name: "Script Board", 
+    route: "/tools/script-board", 
+    category: "specialized",
+    visual: "📋",
+    description: "Create and organize visual scenes, motion prompts, reference images and notes in one storyboard.",
+    keywords: ["Script Board", "storyboard", "storyboard tool", "visual storyboard", "scene planner", "scene board", "motion prompt", "visual scenes", "reference images", "creative storyboard"]
   }
 ];

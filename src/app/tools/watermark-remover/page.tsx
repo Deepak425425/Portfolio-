@@ -100,6 +100,37 @@ export default function WatermarkRemoverPage() {
     }
   };
 
+  const applyTestPreset = () => {
+    const maskCtx = maskCanvasRef.current?.getContext("2d");
+    if (!maskCtx || !imgObj) return;
+
+    setShowMask(true); // Force mask visibility
+
+    // Clear existing mask
+    maskCtx.clearRect(0, 0, imgObj.width, imgObj.height);
+
+    const w = imgObj.width;
+    const h = imgObj.height;
+    
+    // Exact bounding box derived from reference image sparkle
+    const maskW = w * 0.0315;
+    const maskH = h * 0.0185;
+    const maskX = w * 0.9106;
+    const maskY = h * 0.9492;
+
+    maskCtx.globalCompositeOperation = "source-over";
+
+    // Transparent mask template containing ONLY the exact 4-point sparkle shape
+    const b64 = "iVBORw0KGgoAAAANSUhEUgAAABMAAAAUCAYAAABvVQZ0AAAAlElEQVR4Aa3BsY3DQAxFwfe3P5bDjCEzlsMCeRcoEARLtuGdEW9UTHPwlPFgsZF4UDHNhaeMG4uNFhuJFyqmecNTxoW4qJjmQ54yTsRJxTRf8pRxUMU0myw2Wmwk/lVM8yNPmTipmOZLnjIO4qJimg95yjgRNyqmueEp4wXxoGKaC08ZNxYbLTYSb1RMc/CU8WCx0R8Y3i7WIloCJwAAAABJRU5ErkJggg==";
+    
+    const img = new Image();
+    img.onload = () => {
+      maskCtx.drawImage(img, maskX, maskY, maskW, maskH);
+      saveMaskState();
+    };
+    img.src = 'data:image/png;base64,' + b64;
+  };
+
   // Initialize Canvas
   useEffect(() => {
     if (!imgObj || !canvasRef.current || !maskCanvasRef.current || !resultCanvasRef.current) return;
@@ -211,9 +242,74 @@ export default function WatermarkRemoverPage() {
     }
   };
 
-  const handleWheel = (e: React.WheelEvent) => {
-    if (e.deltaY < 0) setZoom(z => Math.min(z * 1.1, 5));
-    else setZoom(z => Math.max(z / 1.1, 0.1));
+
+
+
+  const ZOOM_STEPS = [0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5];
+  
+  const handleZoomIn = () => {
+    setZoom(z => {
+      const next = ZOOM_STEPS.find(s => s > z + 0.01);
+      return next || z;
+    });
+  };
+
+  const handleZoomOut = () => {
+    setZoom(z => {
+      const prev = [...ZOOM_STEPS].reverse().find(s => s < z - 0.01);
+      return prev || z;
+    });
+  };
+
+  const handleResetView = () => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+
+  const handlePan = (dx: number, dy: number) => {
+    setPan(p => {
+       const limit = 3000; 
+       return {
+         x: Math.max(-limit, Math.min(limit, p.x + dx)),
+         y: Math.max(-limit, Math.min(limit, p.y + dy))
+       };
+    });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement).tagName)) return;
+    
+    switch(e.key) {
+      case '=':
+      case '+':
+        e.preventDefault();
+        handleZoomIn();
+        break;
+      case '-':
+        e.preventDefault();
+        handleZoomOut();
+        break;
+      case '0':
+        e.preventDefault();
+        handleResetView();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        handlePan(0, -20);
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        handlePan(0, 20);
+        break;
+      case 'ArrowLeft':
+        e.preventDefault();
+        handlePan(-20, 0);
+        break;
+      case 'ArrowRight':
+        e.preventDefault();
+        handlePan(20, 0);
+        break;
+    }
   };
 
   const processRemoval = async () => {
@@ -299,8 +395,9 @@ export default function WatermarkRemoverPage() {
           ) : (
             <div 
               ref={containerRef}
-              className="w-full bg-zinc-200 relative flex flex-col items-center justify-center border border-zinc-200 min-h-[65vh] overflow-hidden"
-              onWheel={handleWheel}
+              tabIndex={0}
+              onKeyDown={handleKeyDown}
+              className="w-full bg-zinc-200 relative flex flex-col items-center justify-center border border-zinc-200 min-h-[65vh] overflow-hidden focus:outline-none focus:border-[#8B7CFF] focus:ring-1 focus:ring-[#8B7CFF]"
             >
               <div 
                 className="relative"
@@ -362,6 +459,19 @@ export default function WatermarkRemoverPage() {
                  </div>
               </div>
 
+              {/* PRESETS */}
+              {imgObj && (imgObj.width / imgObj.height < 0.8) && (
+                 <div className="flex flex-col gap-4 border-b border-zinc-100 pb-6">
+                    <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400">Presets</h3>
+                    <button 
+                      onClick={applyTestPreset} 
+                      className="py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]"
+                    >
+                      9:16 — Bottom Right
+                    </button>
+                 </div>
+              )}
+
               {/* BRUSH */}
               <div className="flex flex-col gap-4 border-b border-zinc-100 pb-6">
                  <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400">Brush Settings</h3>
@@ -400,13 +510,24 @@ export default function WatermarkRemoverPage() {
 
               {/* VIEW */}
               <div className="flex flex-col gap-4 border-b border-zinc-100 pb-6">
-                 <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400">View Controls</h3>
-                 <div className="grid grid-cols-4 gap-2">
-                    {[0.25, 0.5, 1, 2].map(z => (
-                       <button key={z} onClick={() => {setZoom(z); setPan({x:0,y:0});}} className={`py-2 text-[10px] font-bold border ${zoom===z ? 'border-[#111111] text-black' : 'border-zinc-200 text-zinc-500 hover:border-[#111111]'}`}>{z*100}%</button>
-                    ))}
+                 <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-zinc-400">View & Pan Controls</h3>
+                 
+                 <div className="flex justify-between items-center bg-zinc-100 p-1 border border-zinc-200">
+                    <button onClick={handleZoomOut} className="px-4 py-2 hover:bg-white text-zinc-600 font-bold transition-colors">−</button>
+                    <button onClick={handleResetView} className="px-4 py-2 hover:bg-white text-[10px] uppercase tracking-widest font-bold text-zinc-600 transition-colors">{Math.round(zoom * 100)}% (Reset)</button>
+                    <button onClick={handleZoomIn} className="px-4 py-2 hover:bg-white text-zinc-600 font-bold transition-colors">+</button>
                  </div>
-                 <button onClick={() => setShowMask(!showMask)} className={`w-full py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${showMask ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>
+
+                 <div className="flex flex-col items-center gap-1 mt-2">
+                    <button onClick={() => handlePan(0, -20)} className="w-8 h-8 flex items-center justify-center bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 text-zinc-600 text-xs transition-colors">↑</button>
+                    <div className="flex gap-1">
+                       <button onClick={() => handlePan(-20, 0)} className="w-8 h-8 flex items-center justify-center bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 text-zinc-600 text-xs transition-colors">←</button>
+                       <button onClick={() => handlePan(0, 20)} className="w-8 h-8 flex items-center justify-center bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 text-zinc-600 text-xs transition-colors">↓</button>
+                       <button onClick={() => handlePan(20, 0)} className="w-8 h-8 flex items-center justify-center bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 text-zinc-600 text-xs transition-colors">→</button>
+                    </div>
+                 </div>
+                 
+                 <button onClick={() => setShowMask(!showMask)} className={`mt-2 w-full py-3 text-[10px] font-bold tracking-widest border uppercase transition-colors ${showMask ? 'bg-[#111111] text-white border-[#111111]' : 'bg-transparent text-zinc-600 border-zinc-200 hover:border-[#111111]'}`}>
                     {showMask ? 'Hide Mask Overlay' : 'Show Mask Overlay'}
                  </button>
               </div>
