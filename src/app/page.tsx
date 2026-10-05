@@ -52,7 +52,7 @@ const CmsMedia = ({ media, fallback, alt, fill, className, priority, sizes, styl
     const videoStyle = fill ? { objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, ...style } : style;
     return <video src={src} autoPlay muted loop playsInline className={className} style={videoStyle} {...props} />;
   }
-  return <Image src={src} alt={alt || "Media"} fill={fill} sizes={sizes} priority={priority} className={className} style={style} {...props} />;
+  return <Image src={src} alt={alt || "Media"} fill={fill} sizes={sizes} priority={priority} fetchPriority={priority ? "high" : "auto"} className={className} style={style} {...props} />;
 };
 
 export default function Home() {
@@ -285,9 +285,9 @@ export default function Home() {
                   className="w-full h-full shadow-[0_25px_55px_rgba(0,0,0,0.09)] rounded-[16px] lg:rounded-[20px] pointer-events-auto"
                 >
                   <motion.div 
-                    initial={{ opacity: 0, clipPath: "inset(5% 5% 5% 5%)" }} 
-                    animate={{ opacity: 1, clipPath: "inset(0% 0 0% 0)" }} 
-                    transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1.5, delay: 0, ease: [0.16, 1, 0.3, 1] }}
                     className="w-full h-full relative overflow-hidden bg-white rounded-[16px] lg:rounded-[20px] p-[10px] lg:p-[12px]"
                     data-cursor="view"
                   >
@@ -368,7 +368,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
              <div className="relative flex flex-col gap-6 lg:mt-0 group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]">
-                  <CmsMedia media={cmsImages.capability_product} fallback="/campaign-worlds/groton-home-capability-product-4x5.webp" alt="Premium e-commerce product imagery for campaigns" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <CmsMedia media={cmsImages.capability_product} fallback="/campaign-worlds/groton-home-capability-product-4x5.webp" alt="Premium e-commerce product imagery for campaigns" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img1.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Product Imagery" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -378,7 +378,7 @@ export default function Home() {
              </div>
              <div className="relative flex flex-col gap-6 lg:mt-[60px] group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#dad7d0] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
-                  <CmsMedia media={cmsImages.capability_model} fallback="/campaign-worlds/groton-home-capability-model-4x5.webp" alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <CmsMedia media={cmsImages.capability_model} fallback="/campaign-worlds/groton-home-capability-model-4x5.webp" alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img2.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Product-on-Model" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -388,7 +388,7 @@ export default function Home() {
              </div>
              <div className="relative flex flex-col gap-6 lg:mt-[120px] group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#d1cec7] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
-                  <CmsMedia media={cmsImages.capability_apparel} fallback="/campaign-worlds/groton-1.jpg" alt="Fashion Apparel" fill className="object-cover object-top group-hover:scale-105 transition-transform duration-1000" />
+                  <CmsMedia media={cmsImages.capability_apparel} fallback="/campaign-worlds/groton-1.jpg" alt="Fashion Apparel" fill className="object-cover object-top group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img3.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Fashion Apparel" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -398,7 +398,7 @@ export default function Home() {
              </div>
              <div className="relative flex flex-col gap-6 lg:mt-[180px] group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
-                  <CmsMedia media={cmsImages.capability_editorial} fallback="/campaign-worlds/groton-home-capability-editorial-4x5.webp" alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <CmsMedia media={cmsImages.capability_editorial} fallback="/campaign-worlds/groton-home-capability-editorial-4x5.webp" alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img4.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Editorial" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -469,7 +469,7 @@ export default function Home() {
                   <span className="font-sans text-[13px] text-zinc-400">Raw Product</span>
                 </div>
                 <div className="w-[80%] max-w-[200px] aspect-square relative overflow-hidden rounded-[16px] bg-zinc-900/50 border border-zinc-800/50">
-                  <CmsMedia media={cmsImages.process_raw} fallback="/campaign-worlds/groton-home-process-raw-1x1.webp" alt="Raw Product Input" fill className="object-contain p-6 mix-blend-luminosity opacity-70 group-hover:opacity-100 group-hover:mix-blend-normal transition-all duration-700" />
+                  <CmsMedia media={cmsImages.process_raw} fallback="/campaign-worlds/groton-home-process-raw-1x1.webp" alt="Raw Product Input" fill className="object-contain p-6 mix-blend-luminosity opacity-70 group-hover:opacity-100 group-hover:mix-blend-normal transition-all duration-700" sizes="(max-width: 768px) 50vw, 20vw" />
                 </div>
               </motion.div>
 
@@ -576,7 +576,7 @@ export default function Home() {
                   <span className="font-sans text-[13px] text-zinc-400">Final Campaign Visual</span>
                 </div>
                 <div className="w-[90%] lg:w-full max-w-[280px] aspect-[4/5] relative overflow-hidden rounded-[20px] shadow-[0_18px_40px_rgba(0,0,0,0.30)]">
-                  <CmsMedia media={cmsImages.process_final} fallback="/campaign-worlds/groton-home-process-final-4x5.webp" alt="Final Campaign Visual" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  <CmsMedia media={cmsImages.process_final} fallback="/campaign-worlds/groton-home-process-final-4x5.webp" alt="Final Campaign Visual" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 80vw, 30vw" />
                 </div>
               </motion.div>
 
@@ -593,13 +593,13 @@ export default function Home() {
         
         <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10">
            <div className="w-full aspect-[3/4] relative bg-[#f3f0ea] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]" data-cursor="view">
-             <CmsMedia media={cmsImages.fashion_1} fallback="/campaign-worlds/groton-home-fashion-black-hoodie-3x4.webp" alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+             <CmsMedia media={cmsImages.fashion_1} fallback="/campaign-worlds/groton-home-fashion-black-hoodie-3x4.webp" alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 33vw" />
            </div>
            <div className="w-full aspect-[3/4] relative bg-[#e8e5df] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] md:mt-[80px]" data-cursor="view">
-             <CmsMedia media={cmsImages.fashion_2} fallback="/campaign-worlds/groton-home-fashion-striped-shirt-3x4.webp" alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+             <CmsMedia media={cmsImages.fashion_2} fallback="/campaign-worlds/groton-home-fashion-striped-shirt-3x4.webp" alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 33vw" />
            </div>
            <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] md:mt-[160px]" data-cursor="view">
-             <CmsMedia media={cmsImages.fashion_3} fallback="/campaign-worlds/groton-home-fashion-blue-hoodie-3x4.webp" alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" />
+             <CmsMedia media={cmsImages.fashion_3} fallback="/campaign-worlds/groton-home-fashion-blue-hoodie-3x4.webp" alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 33vw" />
            </div>
         </div>
       </section>
