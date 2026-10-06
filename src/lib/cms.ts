@@ -28,8 +28,9 @@ const DEFAULT_IMAGES: CmsImage[] = [
   { id: 'capability_apparel', name: 'Fashion Apparel', src: '/campaign-worlds/groton-1.jpg', page: 'HOME', section: 'Capabilities' },
   { id: 'capability_editorial', name: 'Editorial', src: '/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg', page: 'HOME', section: 'Capabilities' },
 
-  // GALLERY (Editorial Archive)
-  { id: 'gallery_1', name: 'Editorial Archive 1', src: '/campaign-worlds/Caffeine is culture ☕️.jpeg', page: 'HOME', section: 'Editorial Archive' },
+  // ARCHIVE (1:1 Visual Showcase)
+  { id: 'archive_hero', name: 'Archive Main Visual', src: '/campaign-worlds/How to style Cat Print T shirts.jpeg', page: 'HOME', section: 'Editorial Archive' },
+  { id: 'gallery_1', name: 'Editorial Archive 1', src: '/campaign-worlds/GROTON-work-selected-cat-print-742x418.webp', page: 'HOME', section: 'Editorial Archive' },
   { id: 'gallery_2', name: 'Editorial Archive 2', src: '/campaign-worlds/How to style Cat Print T shirts.jpeg', page: 'HOME', section: 'Editorial Archive' },
   { id: 'gallery_3', name: 'Editorial Archive 3', src: '/campaign-worlds/download (27).jpeg', page: 'HOME', section: 'Editorial Archive' },
   { id: 'gallery_4', name: 'Editorial Archive 4', src: '/campaign-worlds/Mali džentlmen, veliki stil_ 🎨.jpeg', page: 'HOME', section: 'Editorial Archive' },

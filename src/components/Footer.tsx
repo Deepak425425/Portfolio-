@@ -13,6 +13,8 @@ export default function Footer() {
             <Link href="/services" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
             <Link href="/work" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
             <Link href="/blog" className="hover:text-black transition-colors py-1 md:py-0">Blog</Link>
+            <Link href="/team" className="hover:text-black transition-colors py-1 md:py-0">Team</Link>
+            <Link href="/tools" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.tools" fallback="Tools" /></Link>
             <Link href="/pricing" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
             <Link href="/contact" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.contact" fallback="Contact" /></Link>
             <Link href="/privacy-policy" className="hover:text-black transition-colors py-1 md:py-0">Privacy Policy</Link>
