@@ -387,7 +387,7 @@ const HeroReference = ({ cmsImages }: { cmsImages: any }) => {
                     campaigns, and commercial imagery.
                 </p>
                 <div className="flex items-center justify-center gap-4 mt-2.5">
-                    <a href="#" className="h-[42px] px-[22px] rounded-full flex items-center gap-2.5 text-[12px] font-bold bg-[#111] text-white shadow-[0_10px_24px_rgba(0,0,0,0.14)] hover:-translate-y-0.5 transition-all duration-300 pointer-events-auto">
+                    <a href="https://www.groton.in/work" className="h-[42px] px-[22px] rounded-full flex items-center gap-2.5 text-[12px] font-bold bg-[#111] text-white shadow-[0_10px_24px_rgba(0,0,0,0.14)] hover:-translate-y-0.5 transition-all duration-300 pointer-events-auto">
                         Explore work
                         <div className="w-[19px] h-[19px] rounded-full flex items-center justify-center bg-[#8B7CFF] text-[#111] text-[10.5px] leading-none">
                             ↗
@@ -677,17 +677,17 @@ export default function Home() {
         <div className="max-w-[1440px] mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-[100px]">
              <div className="max-w-[700px]">
-                <CmsText cmsId="home.cap.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" fallback="Capabilities" />
-                <CmsText cmsId="home.cap.heading" as="h2" brClassName="" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold" fallback={'E-commerce visuals,\nelevated.'} />
+                <CmsText cmsId="home.cap.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" fallback="CAPABILITIES" />
+                <CmsText cmsId="home.cap.heading" as="h2" brClassName="" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold" fallback={'E-commerce\nvisuals,\nelevated.'} />
              </div>
-             <CmsText cmsId="home.cap.desc" as="p" className="font-sans text-[15px] lg:text-[16px] leading-[1.7] text-zinc-500 max-w-[350px] mt-8 lg:mt-0" fallback="We specialize in creating premium product imagery for e-commerce brands. From clean catalog shots to highly art-directed campaign visuals, we ensure your products look their absolute best." />
+             <CmsText cmsId="home.cap.desc" as="p" className="font-sans text-[15px] lg:text-[16px] leading-[1.7] text-zinc-500 max-w-[350px] mt-8 lg:mt-0" fallback={"We specialize in creating premium product\nimagery for e-commerce brands. From clean\ncatalog shots to highly art-directed campaign\nvisuals, we ensure your products look their\nabsolute best."} />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
              <div className="relative flex flex-col gap-6 lg:mt-0 group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]">
                   <CmsMedia media={cmsImages.capability_product} fallback="/campaign-worlds/groton-home-capability-product-4x5.webp" alt="Premium e-commerce product imagery for campaigns" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img1.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Product Imagery" /></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img1.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="PRODUCT IMAGERY" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
                    <CmsText cmsId="home.cap.item1.title" as="h4" className="font-sans font-bold text-[18px] tracking-[-0.02em] text-black" fallback="Product Photography" />
@@ -697,7 +697,7 @@ export default function Home() {
              <div className="relative flex flex-col gap-6 lg:mt-[60px] group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#dad7d0] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
                   <CmsMedia media={cmsImages.capability_model} fallback="/campaign-worlds/groton-home-capability-model-4x5.webp" alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img2.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Product-on-Model" /></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img2.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="PRODUCT-ON-MODEL" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
                    <CmsText cmsId="home.cap.item2.title" as="h4" className="font-sans font-bold text-[18px] tracking-[-0.02em] text-black" fallback="Product-on-Model" />
@@ -707,17 +707,17 @@ export default function Home() {
              <div className="relative flex flex-col gap-6 lg:mt-[120px] group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#d1cec7] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
                   <CmsMedia media={cmsImages.capability_apparel} fallback="/campaign-worlds/groton-1.jpg" alt="Fashion Apparel" fill className="object-cover object-top group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img3.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Fashion Apparel" /></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img3.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="FASHION & APPAREL" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
-                   <CmsText cmsId="home.cap.item3.title" as="h4" className="font-sans font-bold text-[18px] tracking-[-0.02em] text-black" fallback="Campaign Visuals" />
-                   <CmsText cmsId="home.cap.item3.desc" as="p" className="font-sans text-[14px] text-zinc-500" fallback="— Art Directed Compositions" />
+                   <CmsText cmsId="home.cap.item3.title" as="h4" className="font-sans font-bold text-[18px] tracking-[-0.02em] text-black" fallback="Fashion & Apparel" />
+                   <CmsText cmsId="home.cap.item3.desc" as="p" className="font-sans text-[14px] text-zinc-500" fallback="— Catalog & Collection" />
                 </div>
              </div>
              <div className="relative flex flex-col gap-6 lg:mt-[180px] group cursor-pointer" data-cursor="view">
                 <div className="w-full aspect-[4/5] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
                   <CmsMedia media={cmsImages.capability_editorial} fallback="/campaign-worlds/groton-home-capability-editorial-4x5.webp" alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img4.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="Editorial" /></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img4.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="EDITORIAL" /></div>
                 </div>
                 <div className="flex flex-col gap-2">
                    <CmsText cmsId="home.cap.item4.title" as="h4" className="font-sans font-bold text-[18px] tracking-[-0.02em] text-black" fallback="Catalog & Marketplace Imagery" />
@@ -728,8 +728,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. PRODUCT COLLECTION GALLERY */}
-      <section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] px-6 lg:px-20 overflow-hidden">
+      {/* 3. PRODUCT COLLECTION / EDITORIAL ARCHIVE */}
+      <section 
+        id="archive-section" 
+        className="relative w-full z-10 bg-[#F9F8F6] py-[120px] lg:py-[160px] pb-12 lg:pb-14 px-6 lg:px-20 overflow-hidden"
+        style={{ paddingBottom: '50px' }}
+      >
         <div 
           aria-hidden="true" 
           className="pointer-events-none absolute inset-0 z-0"
@@ -742,36 +746,48 @@ export default function Home() {
           }}
         />
         <div className="max-w-[1440px] mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-[80px]">
-            <div>
-               <CmsText cmsId="home.archive.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" fallback="Editorial Archive" />
-               <CmsText cmsId="home.archive.heading" as="h2" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold" fallback="A visual collection." />
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 xl:gap-20">
+            
+            {/* LEFT SIDE: EDITORIAL COPY */}
+            <div className="w-full lg:w-1/2 max-w-[640px] flex flex-col justify-center">
+              <CmsText 
+                cmsId="home.archive.label" 
+                as="span" 
+                className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" 
+                fallback="Editorial Archive" 
+              />
+              
+              <CmsText 
+                cmsId="home.archive.heading" 
+                as="h2" 
+                className="font-sans font-bold text-black tracking-[-0.05em] mb-8" 
+                style={{ fontSize: 'clamp(40px, 4.2vw, 64px)', lineHeight: 0.96 }}
+                fallback="Multiple Models. Multiple Products. Endless Possibilities." 
+              />
+              
+              <CmsText 
+                cmsId="home.archive.desc" 
+                as="p" 
+                className="text-zinc-600 font-sans text-base md:text-[17px] lg:text-[18px] leading-[1.6] tracking-[-0.01em] max-w-[520px]" 
+                fallback="Rather than relying on unguided generation, every asset passes through an exacting studio pipeline—from art direction and model casting to lighting and textural refinement. The result is commercial imagery with the fidelity, control, and presence of a premier editorial shoot." 
+              />
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8">
-             <div className="md:col-span-7 flex flex-col gap-6 lg:gap-8">
-                <div className="w-full aspect-[4/5] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] hover:-translate-y-1" data-cursor="view">
-                  <CmsMedia media={cmsImages.gallery_1} fallback="/campaign-worlds/groton-home-gallery-sherpa-4x5.webp" alt="Fashion e-commerce apparel imagery of sherpa hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 60vw" />
-                </div>
-                <div className="grid grid-cols-2 gap-6 lg:gap-8">
-                   <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] hover:-translate-y-1" data-cursor="view">
-                     <CmsMedia media={cmsImages.gallery_2} fallback="/campaign-worlds/groton-home-gallery-pink-jacket-3x4.webp" alt="Product-on-model fashion photography of pink jacket" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="30vw" />
-                   </div>
-                   <div className="w-full aspect-square relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] hover:-translate-y-1 mt-6 lg:mt-12" data-cursor="view">
-                     <CmsMedia media={cmsImages.gallery_3} fallback="/campaign-worlds/groton-home-gallery-pink-hoodie-1x1.webp" alt="Lifestyle product visuals of pink hoodie" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="30vw" />
-                   </div>
-                </div>
-             </div>
+            {/* RIGHT SIDE: ONE LARGE 1:1 SQUARE IMAGE (FUTURE 1:1 VIDEO) */}
+            <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
+              <div className="w-full aspect-square relative bg-[#dad7d0] rounded-[24px] md:rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.08)] group" style={{ maxWidth: '520px' }} data-cursor="view">
+                <CmsMedia 
+                  media={cmsImages.archive_hero || cmsImages.gallery_1} 
+                  fallback="/campaign-worlds/How to style Cat Print T shirts.jpeg" 
+                  alt="Multiple Models. Multiple Products. Endless Possibilities." 
+                  fill 
+                  className="object-cover object-center group-hover:scale-[1.02] transition-transform duration-1000" 
+                  sizes="(max-width: 1024px) 100vw, 50vw" 
+                  priority
+                />
+              </div>
+            </div>
 
-             <div className="md:col-span-5 flex flex-col gap-6 lg:gap-8 md:mt-[150px]">
-                <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] hover:-translate-y-1" data-cursor="view">
-                  <CmsMedia media={cmsImages.gallery_4} fallback="/campaign-worlds/groton-home-gallery-lighting-3x4.webp" alt="Lifestyle product imagery for interior lighting" fill className="object-cover object-[center_15%] group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 40vw" />
-                </div>
-                <div className="w-full aspect-[4/5] relative bg-[#dad7d0] rounded-[30px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] hover:-translate-y-1" data-cursor="view">
-                  <CmsMedia media={cmsImages.gallery_5} fallback="/campaign-worlds/groton-home-gallery-footwear-4x5.webp" alt="E-commerce footwear product imagery for sandals" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 40vw" />
-                </div>
-             </div>
           </div>
         </div>
       </section>
@@ -1098,7 +1114,8 @@ export default function Home() {
               <Link href="/services" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
               <Link href="/work" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.work" fallback="Work" /></Link>
               <Link href="/blog" className="hover:text-black transition-colors py-1 md:py-0">Blog</Link>
-
+              <Link href="/team" className="hover:text-black transition-colors py-1 md:py-0">Team</Link>
+              <Link href="/tools" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.tools" fallback="Tools" /></Link>
               <Link href="/pricing" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
               <Link href="/contact" className="hover:text-black transition-colors py-1 md:py-0"><CmsText cmsId="global.nav.contact" fallback="Contact" /></Link>
               <Link href="/privacy-policy" className="hover:text-black transition-colors py-1 md:py-0">Privacy Policy</Link>
