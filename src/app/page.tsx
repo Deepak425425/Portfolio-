@@ -55,6 +55,481 @@ const CmsMedia = ({ media, fallback, alt, fill, className, priority, sizes, styl
   return <Image src={src} alt={alt || "Media"} fill={fill} sizes={sizes} priority={priority} fetchPriority={priority ? "high" : "auto"} className={className} style={style} {...props} />;
 };
 
+const HeroReference = ({ cmsImages }: { cmsImages: any }) => {
+  useEffect(() => {
+    const pinContainer = document.getElementById('hero-pin-container');
+    const orbitRing = document.getElementById('scroll-orbit-ring');
+    const baseTiltX = -9;
+
+    const updateOrbit = (rotateY: number) => {
+        if (!orbitRing) return;
+        orbitRing.style.transform = `rotateX(${baseTiltX}deg) rotateY(${rotateY}deg)`;
+        orbitRing.style.setProperty('--ring-rotate-y', `${rotateY}deg`);
+
+        const baseAngles = [0, 72, 144, 216, 288];
+        for (let i = 0; i < 5; i++) {
+            const rad = ((baseAngles[i] + rotateY) * Math.PI) / 180;
+            const cosVal = Math.cos(rad);
+            const t = (cosVal + 1) / 2; // 0 (back) to 1 (front)
+            const scale = (0.78 + 0.24 * t).toFixed(3);
+            const opacity = (0.40 + 0.60 * t).toFixed(3);
+            orbitRing.style.setProperty(`--card-scale-${i}`, scale);
+            orbitRing.style.setProperty(`--card-op-${i}`, opacity);
+        }
+    };
+
+    if (orbitRing) {
+        updateOrbit(0);
+    }
+
+    let rafId: number | null = null;
+    const handleScroll = () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = window.requestAnimationFrame(() => {
+            if (!pinContainer || !orbitRing) return;
+            const stickyEl = pinContainer.firstElementChild as HTMLElement;
+            if (!stickyEl) return;
+            
+            const rect = pinContainer.getBoundingClientRect();
+            // Calculate exactly how far the container can scroll before the sticky element hits the bottom
+            const scrollableDistance = pinContainer.offsetHeight - stickyEl.offsetHeight;
+            
+            let progress = 0;
+            if (rect.top <= 0 && scrollableDistance > 0) {
+                progress = Math.abs(rect.top) / scrollableDistance;
+            }
+            
+            if (progress < 0) progress = 0;
+            if (progress > 1) progress = 1;
+            
+            const rotateY = progress * 360;
+            updateOrbit(rotateY);
+        });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    // Dynamic flexible connector wires tracking
+    const stickyStage = document.getElementById('hero-sticky-stage');
+    const leftWirePath = document.getElementById('hero-left-wire-path');
+    const rightWirePath = document.getElementById('hero-right-wire-path');
+    const leftCard = document.querySelector('.animate-float-1') as HTMLElement | null;
+    const rightCard = document.querySelector('.animate-float-2') as HTMLElement | null;
+    const modelImg = document.querySelector('img[alt="Center Model"]') as HTMLElement | null;
+
+    let wireRafId: number | null = null;
+    const updateWires = () => {
+        if (stickyStage && leftWirePath && rightWirePath && leftCard && rightCard && modelImg) {
+            if (leftCard.offsetParent !== null) {
+                const sRect = stickyStage.getBoundingClientRect();
+                const mRect = modelImg.getBoundingClientRect();
+                const lRect = leftCard.getBoundingClientRect();
+                const rRect = rightCard.getBoundingClientRect();
+
+                // Left wire: card inner-right edge -> person's left edge
+                const x0L = lRect.right - 1 - sRect.left;
+                const y0L = lRect.top + lRect.height * 0.42 - sRect.top;
+                const x3L = mRect.left + mRect.width * 0.22 - sRect.left;
+                const y3L = mRect.top + mRect.height * 0.32 - sRect.top;
+
+                const dxL = x3L - x0L;
+                const dyL = y3L - y0L;
+                const c1xL = x0L + dxL * 0.40;
+                const c1yL = y0L + dyL * 0.25;
+                const c2xL = x0L + dxL * 0.60;
+                const c2yL = y0L + dyL * 0.85;
+
+                leftWirePath.setAttribute('d', `M ${x0L.toFixed(1)},${y0L.toFixed(1)} C ${c1xL.toFixed(1)},${c1yL.toFixed(1)} ${c2xL.toFixed(1)},${c2yL.toFixed(1)} ${x3L.toFixed(1)},${y3L.toFixed(1)}`);
+
+                // Right wire: card inner-left edge -> person's right edge
+                const x0R = rRect.left + 1 - sRect.left;
+                const y0R = rRect.top + rRect.height * 0.42 - sRect.top;
+                const x3R = mRect.left + mRect.width * 0.78 - sRect.left;
+                const y3R = mRect.top + mRect.height * 0.32 - sRect.top;
+
+                const dxR = x3R - x0R;
+                const dyR = y3R - y0R;
+                const c1xR = x0R + dxR * 0.40;
+                const c1yR = y0R + dyR * 0.25;
+                const c2xR = x0R + dxR * 0.60;
+                const c2yR = y0R + dyR * 0.85;
+
+                rightWirePath.setAttribute('d', `M ${x0R.toFixed(1)},${y0R.toFixed(1)} C ${c1xR.toFixed(1)},${c1yR.toFixed(1)} ${c2xR.toFixed(1)},${c2yR.toFixed(1)} ${x3R.toFixed(1)},${y3R.toFixed(1)}`);
+            }
+        }
+    };
+
+    const runWireLoop = () => {
+        updateWires();
+        wireRafId = window.requestAnimationFrame(runWireLoop);
+    };
+
+    updateWires();
+    wireRafId = window.requestAnimationFrame(runWireLoop);
+
+    return () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        if (wireRafId) cancelAnimationFrame(wireRafId);
+        window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  return (
+    <>
+      <style>{`
+        :root {
+            --orbit-radius: clamp(230px, min(22vw, 32vh), 320px);
+            --orbit-card-w: clamp(170px, 14vw, 210px);
+            --card-scale-0: 1.02;
+            --card-scale-1: 0.93;
+            --card-scale-2: 0.81;
+            --card-scale-3: 0.81;
+            --card-scale-4: 0.93;
+            --card-op-0: 1;
+            --card-op-1: 0.79;
+            --card-op-2: 0.49;
+            --card-op-3: 0.49;
+            --card-op-4: 0.79;
+        }
+        @media (max-width: 1024px) {
+            :root {
+                --orbit-radius: clamp(190px, min(26vw, 28vh), 260px);
+                --orbit-card-w: clamp(160px, 16vw, 190px);
+            }
+        }
+        @media (max-width: 768px) {
+            :root {
+                --orbit-radius: clamp(140px, min(34vw, 24vh), 190px);
+                --orbit-card-w: 160px;
+            }
+        }
+        .hero-bg {
+            background-image:
+                linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+        .perspective-container {
+            perspective: 2000px;
+            perspective-origin: 50% 50%;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        .orbit-glass-card {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.06), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+            transition: box-shadow 0.3s ease;
+        }
+        .orbit-glass-card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 1);
+        }
+        .side-glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.05), inset 0 1px 1px rgba(255,255,255,1);
+            border-radius: 22px;
+        }
+        .svg-connector {
+            position: absolute;
+            pointer-events: none;
+        }
+        @keyframes hero-float-1 {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px) rotate(0deg);
+            }
+            33% {
+                transform: translateY(-5px) translateX(1.5px) rotate(0.6deg);
+            }
+            66% {
+                transform: translateY(-8px) translateX(-1px) rotate(-0.5deg);
+            }
+        }
+        @keyframes hero-float-2 {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px) rotate(0deg);
+            }
+            35% {
+                transform: translateY(-4px) translateX(-1.5px) rotate(-0.5deg);
+            }
+            70% {
+                transform: translateY(-7.5px) translateX(1px) rotate(0.6deg);
+            }
+        }
+        .animate-float-1 {
+            animation: hero-float-1 4.6s ease-in-out infinite;
+            will-change: transform;
+        }
+        .animate-float-2 {
+            animation: hero-float-2 5.4s ease-in-out -1.8s infinite;
+            will-change: transform;
+        }
+        @keyframes live-pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 5px rgba(139, 124, 255, 0.12);
+                opacity: 0.8;
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(139, 124, 255, 0.25), 0 0 12px rgba(139, 124, 255, 0.4);
+                opacity: 1;
+            }
+        }
+        .live-dot {
+            animation: live-pulse 2s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .animate-float-1,
+            .animate-float-2,
+            .live-dot {
+                animation: none !important;
+                transform: none !important;
+            }
+        }
+      `}</style>
+      <section id="hero-pin-container" className="relative w-full h-[300vh] bg-[#F9F8F6] z-20">
+        <div id="hero-sticky-stage" className="sticky top-0 w-full h-[100vh] h-[100dvh] flex flex-col items-center pt-[88px] lg:pt-[92px] pb-3 overflow-hidden">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 hero-bg"></div>
+
+            {/* DYNAMIC CONNECTOR WIRES SVG OVERLAY */}
+            <svg id="hero-connectors-svg" className="hidden md:block pointer-events-none absolute inset-0 w-full h-full z-[1] overflow-visible" aria-hidden="true">
+                <path id="hero-left-wire-path" fill="none" stroke="#dedcd5" strokeWidth="1.2" strokeLinecap="round" />
+                <path id="hero-right-wire-path" fill="none" stroke="#dedcd5" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+
+            {/* LEFT STATIC DETAIL (BOTTOM CORNER) */}
+            <div className="hidden lg:flex absolute left-[3%] xl:left-[4%] bottom-[4%] flex-col gap-2 reveal delay-100 z-30 pointer-events-none">
+                <div className="w-8 h-[1px] bg-zinc-300"></div>
+                <p className="text-[12px] text-zinc-500 font-medium max-w-[150px] leading-tight">
+                    Trusted by top-tier modern brands.
+                </p>
+                <div className="flex items-center -space-x-2 mt-0.5">
+                    <img src="https://i.pravatar.cc/100?img=11" className="w-7 h-7 rounded-full border-2 border-[#F9F8F6]" alt="Client 1" />
+                    <img src="https://i.pravatar.cc/100?img=32" className="w-7 h-7 rounded-full border-2 border-[#F9F8F6]" alt="Client 2" />
+                    <img src="https://i.pravatar.cc/100?img=12" className="w-7 h-7 rounded-full border-2 border-[#F9F8F6]" alt="Client 3" />
+                    <div className="w-7 h-7 rounded-full border-2 border-[#F9F8F6] bg-white flex items-center justify-center text-[10px] font-bold text-zinc-500">
+                        +
+                    </div>
+                </div>
+            </div>
+
+            {/* RIGHT STATIC DETAIL (BOTTOM CORNER) */}
+            <div className="hidden lg:flex absolute right-[3%] xl:right-[4%] bottom-[4%] text-right reveal delay-100 z-30 pointer-events-none">
+                <p className="text-[12px] text-zinc-500 font-medium leading-tight">
+                    Creative partner with<br/>
+                    <a
+                        href="https://graflystudio.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="pointer-events-auto text-[#8B7CFF] hover:text-black hover:underline underline-offset-2 transition-colors"
+                    >
+                        Grafly Studio.
+                    </a>
+                </p>
+            </div>
+
+            {/* LEFT OUTER FRAMING CARD (HIGH POSITION FLANKING HEADLINE) */}
+            <div className="absolute left-[2%] xl:left-[4%] top-[18%] lg:top-[20%] w-[190px] lg:w-[210px] xl:w-[230px] side-glass-card p-4 lg:p-5 text-left hidden md:block animate-float-1 z-30 pointer-events-auto">
+                <div className="w-9 h-9 bg-zinc-100 rounded-[10px] flex items-center justify-center mb-3">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2">
+                        <path d="M12 4v16m-4-12v8m8-10v12"/>
+                    </svg>
+                </div>
+                <h3 className="font-bold text-[14px] lg:text-[15px] leading-[1.2] mb-1.5 text-[#111]">
+                    Generate ideas<br/>
+                    into reality.
+                </h3>
+                <p className="text-[11px] lg:text-[12px] text-zinc-500 font-medium leading-[1.4]">
+                    Rapid prototyping and final commercial renders.
+                </p>
+            </div>
+
+            {/* RIGHT OUTER FRAMING CARD (HIGH POSITION FLANKING CTA) */}
+            <div className="absolute right-[2%] xl:right-[4%] top-[24%] lg:top-[26%] w-[180px] lg:w-[200px] xl:w-[220px] side-glass-card p-4 lg:p-5 text-left hidden md:block animate-float-2 z-30 pointer-events-auto">
+                <div className="flex items-center -space-x-2 mb-3">
+                    <img src="https://i.pravatar.cc/100?img=4" className="w-7 h-7 rounded-full border-2 border-white shadow-sm" alt="User 1" />
+                    <img src="https://i.pravatar.cc/100?img=5" className="w-7 h-7 rounded-full border-2 border-white shadow-sm" alt="User 2" />
+                    <div className="w-7 h-7 rounded-full border-2 border-white bg-zinc-100 flex items-center justify-center text-[10px] font-bold">
+                        +
+                    </div>
+                </div>
+                <h3 className="font-bold text-[14px] lg:text-[15px] leading-[1.2] mb-1.5 text-[#111]">
+                    Global creative<br/>
+                    collaboration.
+                </h3>
+                <p className="text-[11px] lg:text-[12px] text-zinc-500 font-medium leading-[1.4]">
+                    Scale your brand's visual identity easily.
+                </p>
+            </div>
+
+            {/* CENTER HERO CONTENT (TEXT + CTA) */}
+            <div className="relative w-full max-w-[1000px] mx-auto px-6 flex flex-col items-center text-center z-40 reveal active shrink-0">
+                <div className="flex items-center gap-2.5 mb-2 font-mono text-[11px] uppercase tracking-[0.1em] text-[#111] font-bold">
+                    <div className="w-2 h-2 rounded-full bg-[#8B7CFF] shadow-[0_0_0_5px_rgba(139,124,255,0.12)] live-dot"></div>
+                    AI CREATIVE STUDIO / GROTON AI
+                </div>
+                <h1 className="font-sans text-[38px] md:text-[50px] lg:text-[62px] xl:text-[72px] leading-[0.96] tracking-[-0.04em] font-bold text-[#111] max-w-[850px] relative">
+                    A clearer vision<br/>
+                    <span className="font-light italic text-zinc-500" style={{ letterSpacing: "-0.02em" }}>
+                        for a brighter
+                    </span> brand.
+                </h1>
+                <p className="mt-2 max-w-[480px] text-[13px] lg:text-[14.5px] leading-[1.5] text-zinc-500 font-medium">
+                    GROTON is an AI-powered creative studio building high-end visual systems,
+                    campaigns, and commercial imagery.
+                </p>
+                <div className="flex items-center justify-center gap-4 mt-2.5">
+                    <a href="#" className="h-[42px] px-[22px] rounded-full flex items-center gap-2.5 text-[12px] font-bold bg-[#111] text-white shadow-[0_10px_24px_rgba(0,0,0,0.14)] hover:-translate-y-0.5 transition-all duration-300 pointer-events-auto">
+                        Explore work
+                        <div className="w-[19px] h-[19px] rounded-full flex items-center justify-center bg-[#8B7CFF] text-[#111] text-[10.5px] leading-none">
+                            ↗
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            {/* DEDICATED VISUAL STAGE (MODEL + 3D HALO) */}
+            <div className="relative w-full flex-1 min-h-0 flex items-center justify-center perspective-container pointer-events-none mt-1 z-20">
+                
+                {/* BOUNDED CENTRAL SYSTEM */}
+                <div className="relative w-full max-w-[850px] h-full flex items-center justify-center transform-style-3d">
+
+                    {/* CENTRAL MODEL — Scaled to prominent bust/portrait presence */}
+                    <div className="relative h-[112%] max-h-[530px] w-auto flex items-center justify-center transform-style-3d pointer-events-none" style={{ transform: "translateZ(0px)" }}>
+                        {/* NATURAL GROUNDED CONTACT SHADOW BENEATH FEET */}
+                        <div
+                            aria-hidden="true"
+                            className="absolute pointer-events-none select-none flex items-center justify-center"
+                            style={{
+                                bottom: '2.0%',
+                                left: '49%',
+                                transform: 'translateX(-50%)',
+                                width: '54%',
+                                height: '28px',
+                                zIndex: 0,
+                            }}
+                        >
+                            {/* Wide, very soft ambient floor diffusion */}
+                            <div
+                                className="absolute w-full h-full rounded-[100%] opacity-20 mix-blend-multiply blur-[16px]"
+                                style={{
+                                    background: 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.10) 45%, transparent 75%)',
+                                }}
+                            />
+                            {/* Smooth transitional floor occlusion */}
+                            <div
+                                className="absolute w-[72%] h-[18px] rounded-[100%] opacity-25 mix-blend-multiply blur-[9px]"
+                                style={{
+                                    bottom: '3px',
+                                    background: 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.12) 50%, transparent 80%)',
+                                }}
+                            />
+                            {/* Slightly more density directly beneath the feet without hard edges */}
+                            <div
+                                className="absolute w-[44%] h-[10px] rounded-[100%] opacity-30 mix-blend-multiply blur-[5px]"
+                                style={{
+                                    bottom: '5px',
+                                    background: 'radial-gradient(ellipse at center, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.15) 55%, transparent 80%)',
+                                }}
+                            />
+                        </div>
+
+                        <CmsMedia
+                            media={cmsImages.hero_main}
+                            fallback="/campaign-worlds/groton-home-hero-model.png"
+                            className="relative z-10 h-full w-auto object-contain mix-blend-multiply drop-shadow-2xl"
+                            style={{ filter: "contrast(1.05) brightness(0.98)" }}
+                            alt="Center Model"
+                            width={800}
+                            height={1000}
+                            priority
+                            sizes="(max-height: 768px) 55vh, 550px"
+                        />
+                    </div>
+
+                    {/* 3D ORBIT HALO — Positioned just below face / upper chest */}
+                    <div id="scroll-orbit-ring" className="absolute left-1/2 w-0 h-0 transform-style-3d pointer-events-none" style={{ top: "calc(38% + 30px)" }}>
+                        
+                        {/* CARD 1 — 0° (AI POWERED) */}
+                        <div className="absolute w-[var(--orbit-card-w)] p-2.5 lg:p-3 rounded-[16px] orbit-glass-card flex items-center gap-2.5 lg:gap-3 transform-style-3d pointer-events-auto" style={{ transform: "translate(-50%, -50%) rotateY(0deg) translateZ(var(--orbit-radius)) rotateY(calc(0deg - var(--ring-rotate-y, 0deg))) scale(var(--card-scale-0, 1))", opacity: "var(--card-op-0, 1)" }}>
+                            <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-[10px] bg-gradient-to-br from-[#8B7CFF] to-[#c4ff38] flex items-center justify-center shadow-inner shrink-0">
+                                <Image
+                                    src="/logo.png"
+                                    alt="GROTON AI Logo"
+                                    width={26}
+                                    height={26}
+                                    className="w-6 h-6 lg:w-[26px] lg:h-[26px] object-contain"
+                                    priority
+                                />
+                            </div>
+                            <div className="text-left min-w-0">
+                                <h4 className="font-bold text-[12.5px] lg:text-[13px] text-[#111] truncate">AI Powered</h4>
+                                <p className="text-[9.5px] lg:text-[10px] text-zinc-500 font-medium truncate">Generative workflow</p>
+                            </div>
+                        </div>
+
+                        {/* CARD 2 — 72° (PRODUCT) */}
+                        <div className="absolute w-[var(--orbit-card-w)] p-2.5 lg:p-3 rounded-[16px] orbit-glass-card flex items-center gap-2.5 lg:gap-3 transform-style-3d pointer-events-auto" style={{ transform: "translate(-50%, -50%) rotateY(72deg) translateZ(var(--orbit-radius)) rotateY(calc(-72deg - var(--ring-rotate-y, 0deg))) scale(var(--card-scale-1, 1))", opacity: "var(--card-op-1, 1)" }}>
+                            <div className="relative w-10 h-10 lg:w-11 lg:h-11 rounded-[10px] overflow-hidden bg-[#f2f2f2] shrink-0">
+                                <CmsMedia media={cmsImages.hero_support_1} fallback="/campaign-worlds/groton-home-hero-floating-shoes-3x4.webp" fill className="object-cover mix-blend-darken" sizes="10vw" />
+                            </div>
+                            <div className="text-left min-w-0">
+                                <h4 className="font-bold text-[12.5px] lg:text-[13px] text-[#111] truncate">Product</h4>
+                                <p className="text-[9.5px] lg:text-[10px] text-zinc-500 font-medium truncate">Clean visual capture</p>
+                            </div>
+                        </div>
+
+                        {/* CARD 3 — 144° (APPAREL) */}
+                        <div className="absolute w-[var(--orbit-card-w)] p-2.5 lg:p-3 rounded-[16px] orbit-glass-card flex items-center gap-2.5 lg:gap-3 transform-style-3d pointer-events-auto" style={{ transform: "translate(-50%, -50%) rotateY(144deg) translateZ(var(--orbit-radius)) rotateY(calc(-144deg - var(--ring-rotate-y, 0deg))) scale(var(--card-scale-2, 1))", opacity: "var(--card-op-2, 1)" }}>
+                            <div className="relative w-10 h-10 lg:w-11 lg:h-11 rounded-[10px] overflow-hidden bg-[#f2f2f2] shrink-0">
+                                <CmsMedia media={cmsImages.hero_support_2} fallback="/campaign-worlds/groton-home-hero-floating-tshirt-3x4.webp" fill className="object-cover mix-blend-darken" sizes="10vw" />
+                            </div>
+                            <div className="text-left min-w-0">
+                                <h4 className="font-bold text-[12.5px] lg:text-[13px] text-[#111] truncate">Apparel</h4>
+                                <p className="text-[9.5px] lg:text-[10px] text-zinc-500 font-medium truncate">Fashion collection</p>
+                            </div>
+                        </div>
+
+                        {/* CARD 4 — 216° (EYEWEAR) */}
+                        <div className="absolute w-[var(--orbit-card-w)] p-2.5 lg:p-3 rounded-[16px] orbit-glass-card flex items-center gap-2.5 lg:gap-3 transform-style-3d pointer-events-auto" style={{ transform: "translate(-50%, -50%) rotateY(216deg) translateZ(var(--orbit-radius)) rotateY(calc(-216deg - var(--ring-rotate-y, 0deg))) scale(var(--card-scale-3, 1))", opacity: "var(--card-op-3, 1)" }}>
+                            <div className="relative w-10 h-10 lg:w-11 lg:h-11 rounded-[10px] overflow-hidden bg-[#f2f2f2] shrink-0">
+                                <CmsMedia media={cmsImages.hero_support_3} fallback="/campaign-worlds/groton-home-hero-floating-sunglasses-3x4.webp" fill className="object-cover mix-blend-darken" sizes="10vw" />
+                            </div>
+                            <div className="text-left min-w-0">
+                                <h4 className="font-bold text-[12.5px] lg:text-[13px] text-[#111] truncate">Eyewear</h4>
+                                <p className="text-[9.5px] lg:text-[10px] text-zinc-500 font-medium truncate">Premium accessories</p>
+                            </div>
+                        </div>
+
+                        {/* CARD 5 — 288° (CAMPAIGN) */}
+                        <div className="absolute w-[var(--orbit-card-w)] p-2.5 lg:p-3 rounded-[16px] orbit-glass-card flex items-center gap-2.5 lg:gap-3 transform-style-3d pointer-events-auto" style={{ transform: "translate(-50%, -50%) rotateY(288deg) translateZ(var(--orbit-radius)) rotateY(calc(-288deg - var(--ring-rotate-y, 0deg))) scale(var(--card-scale-4, 1))", opacity: "var(--card-op-4, 1)" }}>
+                            <div className="relative w-10 h-10 lg:w-11 lg:h-11 rounded-[10px] overflow-hidden bg-[#f2f2f2] shrink-0">
+                                <CmsMedia media={cmsImages.hero_support_4} fallback="/campaign-worlds/groton-home-hero-floating-jacket-3x4.webp" fill className="object-cover mix-blend-darken" sizes="10vw" />
+                            </div>
+                            <div className="text-left min-w-0">
+                                <h4 className="font-bold text-[12.5px] lg:text-[13px] text-[#111] truncate">Campaign</h4>
+                                <p className="text-[9.5px] lg:text-[10px] text-zinc-500 font-medium truncate">Art directed visuals</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+
 export default function Home() {
   const [cmsImages, setCmsImages] = useState<Record<string, any>>({});
   useEffect(() => { fetch('/api/studio/cms', { cache: 'no-store' }).then(r => r.json()).then(data => { const map = data.reduce((acc: any, img: any) => ({ ...acc, [img.id]: { src: img.src, mediaType: img.mediaType || 'image' } }), {}); setCmsImages(map); }).catch(() => {}); }, []);
@@ -114,7 +589,7 @@ export default function Home() {
   }, [mouseX, mouseY]);
 
   return (
-    <div className="relative bg-[#F9F8F6] overflow-x-hidden flex flex-col font-sans text-black selection:bg-black selection:text-white">
+    <div className="relative bg-[#F9F8F6] overflow-x-clip [overflow-x:clip] flex flex-col font-sans text-black selection:bg-black selection:text-white">
 
       {/* NAVIGATION */}
       <motion.header 
@@ -184,179 +659,22 @@ export default function Home() {
       )}
 
       {/* 1. HERO SECTION - REDESIGNED */}
-      <section className="relative min-h-[100svh] w-full flex items-center pt-[120px] pb-[80px] lg:pt-[150px] lg:pb-[100px] overflow-hidden bg-[#f3f0ea] z-20">
-        
-        {/* Grid Background */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            backgroundImage: `
-              linear-gradient(
-                to right,
-                rgba(0, 0, 0, 0.035) 1px,
-                transparent 1px
-              ),
-              linear-gradient(
-                to bottom,
-                rgba(0, 0, 0, 0.035) 1px,
-                transparent 1px
-              )
-            `,
-            backgroundSize: "80px 80px",
-            maskImage: "linear-gradient(to bottom, black, transparent 90%)",
-            WebkitMaskImage: "linear-gradient(to bottom, black, transparent 90%)",
-          }}
-        />
-
-        <div className="relative w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col lg:flex-row items-center justify-between z-10">
-          
-          {/* Left Content */}
-          <div className="w-full lg:w-[45%] flex flex-col justify-center lg:items-start text-left relative z-30 pt-10 lg:pt-0">
-             
-             <motion.div 
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-               className="flex items-center gap-2.5 mb-6 lg:mb-8 font-mono text-[11px] uppercase tracking-[0.08em] text-[#111]"
-             >
-               <style>{`
-                 @keyframes live-pulse {
-                   0%, 100% { box-shadow: 0 0 0 5px rgba(139, 124, 255, 0.12); }
-                   50% { box-shadow: 0 0 0 8px rgba(139, 124, 255, 0.25), 0 0 12px rgba(139, 124, 255, 0.4); }
-                 }
-                 @media (prefers-reduced-motion: no-preference) {
-                   .live-dot { animation: live-pulse 2s ease-in-out infinite; }
-                 }
-               `}</style>
-               <div className="w-2 h-2 rounded-full bg-[#8B7CFF] shadow-[0_0_0_5px_rgba(139,124,255,0.12)] live-dot"></div>
-               <CmsText cmsId="home.hero.kicker" fallback="AI CREATIVE STUDIO / GROTON AI" />
-             </motion.div>
-
-             <CmsText
-               cmsId="home.hero.heading"
-               as={motion.h1}
-               initial={{ opacity: 0, y: 30 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ duration: 1.0, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-               className="font-sans text-[50px] md:text-[65px] lg:text-[75px] xl:text-[85px] leading-[0.9] tracking-[-0.04em] font-bold text-[#111]"
-               fallback={<>Product visuals<br/><span className="text-transparent" style={{ WebkitTextStroke: '1.4px #171714' }}>that make brands</span><br/>look better.</>}
-             />
-
-             <CmsText
-               cmsId="home.hero.desc"
-               as={motion.p}
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-               className="mt-8 lg:mt-11 max-w-[450px] lg:ml-[8%] text-[15px] lg:text-[16px] leading-[1.7] text-[#66635d]"
-               fallback="GROTON is an AI-powered creative studio building high-end visual systems, campaigns and digital experiences for modern brands."
-             />
-
-             <motion.div 
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ duration: 1.0, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-               className="flex flex-wrap items-center gap-3.5 mt-8 lg:mt-10 lg:ml-[8%]"
-             >
-                <MagneticButton href="/work" className="h-[54px] px-[25px] rounded-full flex items-center gap-3 text-[12px] font-bold bg-[#111] text-white shadow-[0_15px_35px_rgba(0,0,0,0.18)] hover:-translate-y-1 hover:shadow-[0_25px_50px_rgba(0,0,0,0.23)] transition-all duration-[0.45s]">
-                  <CmsText cmsId="home.hero.cta.primary" fallback="Explore work" />
-                  <div className="w-[23px] h-[23px] rounded-full flex items-center justify-center bg-[#8B7CFF] text-[#111] text-[13px] leading-none">↗</div>
-                </MagneticButton>
-                
-                <MagneticButton href="/contact" className="h-[54px] px-[25px] rounded-full flex items-center gap-3 text-[12px] font-bold border border-[rgba(17,17,15,0.13)] bg-[rgba(255,255,255,0.38)] text-[#111] hover:bg-white hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)] transition-all duration-[0.45s]">
-                  <CmsText cmsId="home.hero.cta.secondary" fallback="Start a project" />
-                </MagneticButton>
-             </motion.div>
-          </div>
-
-          {/* Right Content - Image Composition */}
-          <div className="w-full lg:w-[50%] relative mt-24 lg:mt-0 flex justify-center items-center h-[500px] sm:h-[600px] lg:h-[700px] xl:h-[800px] z-20 pointer-events-none">
-            
-            <div className="relative w-full h-full flex items-center justify-center pointer-events-auto max-w-[440px] xl:max-w-[560px]">
-              
-              {/* Primary - Activewear Model */}
-              <motion.div 
-                style={{ x: p1x, y: p1y }}
-                className="relative z-10 w-[65%] sm:w-[60%] lg:w-[70%] xl:w-[75%] max-w-[380px] aspect-[735/1000] group"
-              >
-                <motion.div
-                  style={{ y: useTransform(smoothScrollY, [0, 1000], [0, -60]) }}
-                  className="w-full h-full shadow-[0_25px_55px_rgba(0,0,0,0.09)] rounded-[16px] lg:rounded-[20px] pointer-events-auto"
-                >
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1.5, delay: 0, ease: [0.16, 1, 0.3, 1] }}
-                    className="w-full h-full relative overflow-hidden bg-white rounded-[16px] lg:rounded-[20px] p-[10px] lg:p-[12px]"
-                    data-cursor="view"
-                  >
-                     <div className="relative w-full h-full flex items-center justify-center bg-[#f4f4f4] rounded-[6px] lg:rounded-[8px] overflow-hidden isolate">
-                       <motion.div className="w-full h-full relative flex items-center justify-center" whileHover={{ scale: 1.03 }} transition={{ duration: 0.8, ease: "easeOut" }}>
-                         <CmsMedia media={cmsImages.hero_main} fallback="/campaign-worlds/groton-home-hero-primary-model-3x4.webp" alt="Activewear Model Campaign" fill className="object-cover object-center mix-blend-darken pointer-events-none" priority sizes="(max-width: 768px) 100vw, 50vw" />
-                       </motion.div>
-                     </div>
-                  </motion.div>
-                </motion.div>
-              </motion.div>
-
-              {/* Secondary 1 - Top Left (Shoes) */}
-              <FloatingHeroCard 
-                media={cmsImages.hero_support_1} fallback="/campaign-worlds/groton-home-hero-floating-shoes-3x4.webp"
-                alt="Floating Asset 1 - Shoes"
-                className="-left-[5%] sm:-left-[10%] lg:-left-[14%] xl:-left-[18%] top-[8%] lg:top-[15%]"
-                
-                px={p2x} py={p2y}
-                scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -100])}
-                initial={{ opacity: 0, x: -30, y: -20 }}
-                delay={0.7}
-              />
-
-              {/* Secondary 2 - Bottom Left (T-shirt) */}
-              <FloatingHeroCard 
-                media={cmsImages.hero_support_2} fallback="/campaign-worlds/groton-home-hero-floating-tshirt-3x4.webp"
-                alt="Floating Asset 2 - T-shirt"
-                className="-left-[2%] sm:-left-[5%] lg:-left-[10%] xl:-left-[14%] bottom-[0%] lg:bottom-[6%]"
-                
-                px={p3x} py={p3y}
-                scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -60])}
-                initial={{ opacity: 0, x: -30, y: 20 }}
-                delay={0.9}
-              />
-
-              {/* Secondary 3 - Top Right (Sunglasses) */}
-              <FloatingHeroCard 
-                media={cmsImages.hero_support_3} fallback="/campaign-worlds/groton-home-hero-floating-sunglasses-3x4.webp"
-                alt="Floating Asset 3 - Sunglasses"
-                className="-right-[5%] sm:-right-[10%] lg:-right-[14%] xl:-right-[18%] top-[15%] lg:top-[22%]"
-                
-                px={p3x} py={p3y}
-                scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -120])}
-                initial={{ opacity: 0, x: 30, y: -20 }}
-                delay={0.8}
-              />
-
-              {/* Secondary 4 - Bottom Right (Jacket + Pants) */}
-              <FloatingHeroCard 
-                media={cmsImages.hero_support_4} fallback="/campaign-worlds/groton-home-hero-floating-jacket-3x4.webp"
-                alt="Floating Asset 4 - Jacket"
-                className="-right-[2%] sm:-right-[5%] lg:-right-[10%] xl:-right-[14%] bottom-[5%] lg:bottom-[10%]"
-                
-                px={p2x} py={p2y}
-                scrollYTransform={useTransform(smoothScrollY, [0, 1000], [0, -80])}
-                initial={{ opacity: 0, x: 30, y: 20 }}
-                delay={1.0}
-              />
-
-            </div>
-          </div>
-
-        </div>
-      </section>
+      <HeroReference cmsImages={cmsImages} />
 
       {/* 2. CAPABILITIES */}
-      <section className="relative w-full z-10 bg-[#f3f0ea] pt-[150px] pb-[150px] px-6 lg:px-20 border-t border-[rgba(0,0,0,0.05)] overflow-hidden">
-        <div className="max-w-[1440px] mx-auto">
+      <section className="relative w-full z-10 bg-[#F9F8F6] pt-[150px] pb-[150px] px-6 lg:px-20 overflow-hidden">
+        <div 
+          aria-hidden="true" 
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }}
+        />
+        <div className="max-w-[1440px] mx-auto relative z-10">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-[100px]">
              <div className="max-w-[700px]">
                 <CmsText cmsId="home.cap.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" fallback="Capabilities" />
@@ -411,8 +729,19 @@ export default function Home() {
       </section>
 
       {/* 3. PRODUCT COLLECTION GALLERY */}
-      <section className="relative w-full z-10 bg-[#f3f0ea] py-[150px] px-6 lg:px-20 overflow-hidden border-t border-[rgba(0,0,0,0.05)]">
-        <div className="max-w-[1440px] mx-auto">
+      <section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] px-6 lg:px-20 overflow-hidden">
+        <div 
+          aria-hidden="true" 
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }}
+        />
+        <div className="max-w-[1440px] mx-auto relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-[80px]">
             <div>
                <CmsText cmsId="home.archive.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" fallback="Editorial Archive" />
@@ -585,14 +914,25 @@ export default function Home() {
         </section>
 
         {/* 5. FASHION & APPAREL */}
-      <section className="relative w-full z-10 bg-[#f3f0ea] py-[150px] px-6 lg:px-20 overflow-hidden border-t border-[rgba(0,0,0,0.05)]">
-        <div className="max-w-[1440px] mx-auto mb-[100px]">
+      <section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] px-6 lg:px-20 overflow-hidden">
+        <div 
+          aria-hidden="true" 
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }}
+        />
+        <div className="max-w-[1440px] mx-auto mb-[100px] relative z-10">
           <CmsText cmsId="home.focus.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" fallback="Focus" />
           <CmsText cmsId="home.focus.heading" as="h2" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold" fallback="Fashion & Apparel." />
         </div>
         
-        <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10">
-           <div className="w-full aspect-[3/4] relative bg-[#f3f0ea] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]" data-cursor="view">
+        <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10 relative z-10">
+           <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]" data-cursor="view">
              <CmsMedia media={cmsImages.fashion_1} fallback="/campaign-worlds/groton-home-fashion-black-hoodie-3x4.webp" alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 33vw" />
            </div>
            <div className="w-full aspect-[3/4] relative bg-[#e8e5df] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] md:mt-[80px]" data-cursor="view">
@@ -605,7 +945,7 @@ export default function Home() {
       </section>
 
       {/* 6. HOME & LIFESTYLE */}
-      {false && (<section className="relative w-full z-10 bg-[#f3f0ea] py-[150px] px-6 lg:px-20 border-t border-[rgba(0,0,0,0.05)]">
+      {false && (<section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] px-6 lg:px-20 border-t border-[rgba(0,0,0,0.05)]">
         <div className="max-w-[1440px] mx-auto mb-16 text-right">
           <span className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6">Focus</span>
           <h2 className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold">Home & Lifestyle.</h2>
@@ -626,7 +966,7 @@ export default function Home() {
       </section>)}
 
       {/* 7. HORIZONTAL GALLERY - PORTFOLIO / SELECTED WORK */}
-      {false && (<section className="relative w-full z-10 bg-[#f3f0ea] py-[150px] overflow-hidden border-t border-[rgba(0,0,0,0.05)]">
+      {false && (<section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] overflow-hidden border-t border-[rgba(0,0,0,0.05)]">
         <div className="px-6 md:px-12 lg:px-24 mb-16 max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
           <div>
             <span className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6">Selected Work</span>
@@ -658,8 +998,19 @@ export default function Home() {
       </section>)}
 
       {/* 8. PROCESS */}
-      <section className="relative w-full z-10 bg-[#f3f0ea] py-[150px] px-6 lg:px-20 border-t border-[rgba(0,0,0,0.05)]">
-        <div className="max-w-[1200px] mx-auto">
+      <section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] px-6 lg:px-20 overflow-hidden">
+        <div 
+          aria-hidden="true" 
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }}
+        />
+        <div className="max-w-[1200px] mx-auto relative z-10">
           <div className="mb-[100px] text-left">
             <span className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6">Our Process</span>
             <h2 className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold">How we produce.</h2>
@@ -692,8 +1043,19 @@ export default function Home() {
       </section>
 
       {/* 9. WHY GROTON */}
-      <section className="relative w-full z-10 bg-[#f3f0ea] py-[150px] px-6 lg:px-20 border-t border-[rgba(0,0,0,0.05)]">
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-[150px]">
+      <section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] px-6 lg:px-20 overflow-hidden">
+        <div 
+          aria-hidden="true" 
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }}
+        />
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-[150px] relative z-10">
           <div className="w-full lg:w-[40%]">
             <div className="sticky top-32">
                <CmsText cmsId="home.why.heading" as="h2" brClassName="" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold" fallback={"Built for\nE-commerce."} />
@@ -716,8 +1078,19 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="w-full bg-[#f3f0ea] border-t border-[rgba(0,0,0,0.05)] mt-auto">
-        <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16">
+      <footer className="relative w-full bg-[#F9F8F6] border-t border-[rgba(0,0,0,0.05)] mt-auto overflow-hidden">
+        <div 
+          aria-hidden="true" 
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }}
+        />
+        <div className="max-w-[1400px] mx-auto p-8 md:p-16 flex flex-col gap-16 relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
             <CmsText cmsId="global.footer.brand" as="h3" className="font-sans font-bold tracking-[0.3em] text-xl md:text-2xl uppercase text-black" fallback="GROTON AI STUDIO" />
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 md:gap-x-8 text-[11px] md:text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">
