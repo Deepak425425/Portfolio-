@@ -116,13 +116,14 @@ function buildHandDrawnBranch(p0: Point, p3: Point, branchIndex: number): string
   ].join(" ");
 }
 
-// Pre-calculated desktop coordinates for initial SSR render
+// Pre-calculated desktop coordinates for initial SSR render (extended behind cards)
+const EXTENSION_Y = 28;
 const DEFAULT_ORIGIN: Point = { x: 616.5, y: 420.3 };
 const DEFAULT_TARGETS: Point[] = [
-  { x: 142.1, y: 503.8 },
-  { x: 458.4, y: 498.3 },
-  { x: 774.6, y: 503.8 },
-  { x: 1090.9, y: 503.8 },
+  { x: 142.1, y: 531.8 },
+  { x: 458.4, y: 526.3 },
+  { x: 774.6, y: 531.8 },
+  { x: 1090.9, y: 531.8 },
 ];
 
 export default function TeamConnectorWires() {
@@ -144,34 +145,28 @@ export default function TeamConnectorWires() {
 
       const cRect = container.getBoundingClientRect();
       const fRect = founderAnchor.getBoundingClientRect();
-      const p0Rect = pin0.getBoundingClientRect();
-      const p1Rect = pin1.getBoundingClientRect();
-      const p2Rect = pin2.getBoundingClientRect();
-      const p3Rect = pin3.getBoundingClientRect();
 
       const origin: Point = {
         x: fRect.left + fRect.width / 2 - cRect.left,
         y: fRect.top + fRect.height / 2 - cRect.top,
       };
 
-      const targets: Point[] = [
-        {
-          x: p0Rect.left + p0Rect.width / 2 - cRect.left,
-          y: p0Rect.top + p0Rect.height / 2 - cRect.top,
-        },
-        {
-          x: p1Rect.left + p1Rect.width / 2 - cRect.left,
-          y: p1Rect.top + p1Rect.height / 2 - cRect.top,
-        },
-        {
-          x: p2Rect.left + p2Rect.width / 2 - cRect.left,
-          y: p2Rect.top + p2Rect.height / 2 - cRect.top,
-        },
-        {
-          x: p3Rect.left + p3Rect.width / 2 - cRect.left,
-          y: p3Rect.top + p3Rect.height / 2 - cRect.top,
-        },
-      ];
+      const pins = [pin0, pin1, pin2, pin3];
+      const targets: Point[] = pins.map((pinEl) => {
+        const cardEl = pinEl.parentElement;
+        const cardRect = cardEl ? cardEl.getBoundingClientRect() : null;
+        const pinRect = pinEl.getBoundingClientRect();
+
+        const centerX = cardRect
+          ? cardRect.left + cardRect.width / 2
+          : pinRect.left + pinRect.width / 2;
+        const topY = cardRect ? cardRect.top : pinRect.bottom;
+
+        return {
+          x: centerX - cRect.left,
+          y: topY + EXTENSION_Y - cRect.top,
+        };
+      });
 
       targets.forEach((target, i) => {
         const pathEl = pathRefs.current[i];
@@ -210,7 +205,7 @@ export default function TeamConnectorWires() {
   return (
     <svg
       ref={svgRef}
-      className="hidden lg:block pointer-events-none absolute inset-0 w-full h-full z-20 overflow-visible"
+      className="hidden lg:block pointer-events-none absolute inset-0 w-full h-full z-0 overflow-visible"
       aria-hidden="true"
     >
       <defs>
