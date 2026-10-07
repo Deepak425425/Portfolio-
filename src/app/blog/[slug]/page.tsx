@@ -102,27 +102,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       />
       <Header />
       
-      <main className="flex-1 w-full max-w-[1200px] mx-auto px-6 md:px-12 py-16 md:py-24">
+      <main className="flex-1 w-full max-w-[1240px] xl:max-w-[1360px] 2xl:max-w-[1480px] mx-auto px-6 md:px-12 pt-32 sm:pt-40 md:pt-48 pb-16 md:pb-24">
         
         {/* ARTICLE HEADER */}
-        <div className="max-w-3xl mx-auto mb-12">
-          <Link href="/blog" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500 hover:text-black transition-colors mb-8 inline-flex items-center gap-2">
+        <div className="max-w-3xl xl:max-w-4xl mx-auto mb-10 sm:mb-12">
+          <Link href="/blog" className="text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-bold text-zinc-500 hover:text-black transition-colors mb-6 sm:mb-8 inline-flex items-center gap-2">
             <CmsText cmsId="blog.post.back" fallback="&larr; Back to Journal" />
           </Link>
-          <div className="mt-8 mb-6 flex items-center gap-4 text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">
+          <div className="mt-6 sm:mt-8 mb-4 sm:mb-6 flex flex-wrap items-center gap-3 sm:gap-4 text-[10px] sm:text-[11px] tracking-[0.2em] uppercase font-bold text-zinc-400">
             <span>{post.category}</span>
             <span>&middot;</span>
             <span>{post.datePublished}</span>
             <span>&middot;</span>
             <span>{post.readingTime}</span>
           </div>
-          <h1 className="font-sans font-bold tracking-[-0.05em] text-4xl md:text-5xl lg:text-6xl tracking-tight leading-tight mb-8">
+          <h1 className="font-sans font-bold tracking-[-0.05em] text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-[64px] leading-tight mb-6 sm:mb-8">
             {post.title}
           </h1>
         </div>
 
         {/* COVER IMAGE */}
-        <div className="w-full aspect-[16/9] md:aspect-[21/9] relative mb-16 bg-zinc-100 overflow-hidden">
+        <div className="w-full aspect-[16/9] md:aspect-[21/9] max-h-[640px] relative mb-12 sm:mb-16 bg-zinc-100 rounded-2xl overflow-hidden shadow-sm">
           <Image 
             src={post.coverImage} 
             alt={post.title} 
@@ -133,7 +133,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
 
         {/* ARTICLE BODY */}
-        <article className="max-w-2xl mx-auto">
+        <article className="max-w-2xl xl:max-w-3xl mx-auto text-base md:text-lg leading-relaxed">
           {post.content}
           
           <div className="mt-16 pt-8 border-t border-border-color">

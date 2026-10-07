@@ -43,7 +43,7 @@ export default function PricingPage() {
       <Header />
 
       {/* PRICING CONTENT */}
-      <main className="flex-1 flex flex-col items-center justify-center py-24 md:py-32 px-6 md:px-12 lg:px-24 relative z-10 pt-[160px] pb-[80px]">
+      <main className="flex-1 flex flex-col items-center justify-center pt-32 sm:pt-40 md:pt-48 lg:pt-[200px] pb-16 sm:pb-20 md:pb-28 px-6 md:px-12 lg:px-16 xl:px-20 relative z-10">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-10"
@@ -58,17 +58,17 @@ export default function PricingPage() {
           }}
         />
   
-        <div className="max-w-[1200px] w-full">
-          <div className="text-center mb-16 md:mb-24">
-            <CmsText cmsId="pricing.hero.heading" as="h1" className="font-sans font-bold tracking-[-0.05em] text-5xl md:text-6xl lg:text-7xl mb-8" fallback="Transparent Engagement." />
-            <CmsText cmsId="pricing.hero.desc" as="p" className="text-base text-zinc-500 font-light max-w-2xl mx-auto leading-relaxed" fallback="We operate on clear, project-based tiers depending on the complexity of creative direction, required variations, and the volume of visual deliverables." />
+        <div className="max-w-[1240px] xl:max-w-[1360px] 2xl:max-w-[1480px] w-full">
+          <div className="text-center mb-12 sm:mb-16 md:mb-20">
+            <CmsText cmsId="pricing.hero.heading" as="h1" className="font-sans font-bold tracking-[-0.05em] text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[76px] leading-[0.95] mb-6 sm:mb-8" fallback="Transparent Engagement." />
+            <CmsText cmsId="pricing.hero.desc" as="p" className="text-base md:text-lg text-zinc-500 font-light max-w-2xl mx-auto leading-relaxed" fallback="We operate on clear, project-based tiers depending on the complexity of creative direction, required variations, and the volume of visual deliverables." />
           </div>
           
           <PricingCards />
           
-          <div className="mt-16 text-center">
-            <CmsText cmsId="pricing.notes" as="p" className="text-[10px] text-zinc-400 tracking-[0.15em] uppercase font-bold max-w-3xl mx-auto leading-loose mb-12" fallback="Pricing applies to standard e-commerce/product imagery. Product-on-model, lifestyle, advanced compositing and campaign visuals are quoted separately." />
-            <Link href="/contact" className="inline-block px-12 py-5 bg-black text-white text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-zinc-800 transition-colors">
+          <div className="mt-12 sm:mt-16 text-center">
+            <CmsText cmsId="pricing.notes" as="p" className="text-[10px] sm:text-[11px] text-zinc-400 tracking-[0.15em] uppercase font-bold max-w-3xl mx-auto leading-loose mb-8 sm:mb-12" fallback="Pricing applies to standard e-commerce/product imagery. Product-on-model, lifestyle, advanced compositing and campaign visuals are quoted separately." />
+            <Link href="/contact" className="inline-block px-10 sm:px-12 py-4 sm:py-5 bg-black text-white text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-bold hover:bg-zinc-800 transition-colors rounded-full shadow-[0_10px_24px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 duration-200">
               <CmsText cmsId="pricing.cta.btn" fallback="Start A Project" />
             </Link>
           </div>

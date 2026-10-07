@@ -185,7 +185,7 @@ export default function ToolsLandingPage() {
 
       <Header isNightMode={isNightMode} />
       
-      <div className="flex-1 w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 py-16 md:py-24 z-10 pt-[160px]">
+      <div className="flex-1 w-full max-w-[1440px] 2xl:max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16 xl:px-20 pt-32 sm:pt-40 md:pt-48 pb-16 md:pb-24 z-10">
         
         {/* TOP CONTROLS: SOUND TOGGLE & LIGHT/DARK TOGGLE */}
         <div className="w-full flex justify-end items-center gap-2.5 mb-4">
@@ -204,13 +204,13 @@ export default function ToolsLandingPage() {
         </div>
         
         {/* HERO */}
-        <div className="flex flex-col items-center justify-center text-center gap-4 mb-24 w-full relative z-10">
+        <div className="flex flex-col items-center justify-center text-center gap-4 mb-16 sm:mb-20 md:mb-24 w-full relative z-10">
             <CmsText cmsId="tools.hero.label" as="span" className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#8B7CFF]" fallback="GROTON AI / TOOLS" />
-            <CmsText cmsId="tools.hero.heading" as="h1" className={`text-4xl md:text-6xl lg:text-7xl font-sans font-bold tracking-[-0.05em] leading-tight max-w-4xl ${isNightMode ? 'text-white' : 'text-black'}`} fallback="Save the time. Keep the creativity." />
+            <CmsText cmsId="tools.hero.heading" as="h1" className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[76px] font-sans font-bold tracking-[-0.05em] leading-tight max-w-4xl ${isNightMode ? 'text-white' : 'text-black'}`} fallback="Save the time. Keep the creativity." />
             <CmsText cmsId="tools.hero.desc" as="p" className={`text-base md:text-lg mt-2 font-light tracking-wide max-w-2xl ${isNightMode ? 'text-zinc-400' : 'text-zinc-500'}`} fallback="Built to make your creative workflow faster." />
             
             {/* Single Premium Search Bar */}
-            <div className={`relative group mt-10 w-full max-w-lg mx-auto rounded-full overflow-hidden p-[1px] transition-shadow duration-700 hover:shadow-[0_8px_30px_rgba(139,124,255,0.15)] focus-within:shadow-[0_8px_30px_rgba(139,124,255,0.2)]`}>
+            <div className={`relative group mt-8 sm:mt-10 w-full max-w-lg xl:max-w-xl mx-auto rounded-full overflow-hidden p-[1px] transition-shadow duration-700 hover:shadow-[0_8px_30px_rgba(139,124,255,0.15)] focus-within:shadow-[0_8px_30px_rgba(139,124,255,0.2)]`}>
               
               {/* Animated Gradient Border Layer */}
               <div className="absolute inset-0 z-0 overflow-hidden rounded-full opacity-80 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-700">
@@ -276,7 +276,11 @@ export default function ToolsLandingPage() {
               if (tools.length === 0) return null;
               
               return (
-                <section key={idx} className="flex flex-col gap-8">
+                <section 
+                  key={idx} 
+                  id={section.title === "Image Tools" ? "image-tools" : undefined} 
+                  className="flex flex-col gap-8 scroll-mt-24 md:scroll-mt-32"
+                >
                   <h2 className={`text-[10px] uppercase tracking-[0.2em] font-bold ${isNightMode ? 'text-zinc-500' : 'text-zinc-400'}`}>{section.title}</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {tools.map((tool: any) => (

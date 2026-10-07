@@ -445,13 +445,12 @@ export default function TeamPage() {
             Minimal start of the creative working board with editorial accents
         ───────────────────────────────────────────────────────────── */}
         <section
-          style={{ paddingTop: "150px" }}
-          className="pb-10 md:pb-14 px-5 sm:px-8 md:px-12 lg:px-24 relative"
+          className="pt-32 sm:pt-40 md:pt-48 lg:pt-[190px] pb-8 sm:pb-10 md:pb-14 px-5 sm:px-8 md:px-12 lg:px-20 xl:px-24 relative"
         >
-          <div className="max-w-[1240px] mx-auto">
+          <div className="max-w-[1280px] xl:max-w-[1380px] 2xl:max-w-[1500px] mx-auto">
             
             {/* Board category marker with hand-drawn orange loop */}
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <HandDrawnCircle color="#FF5C26">
                 <div className="inline-flex items-center gap-2 px-3 py-1 select-none">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#FF5C26]" />
@@ -462,9 +461,9 @@ export default function TeamPage() {
               </HandDrawnCircle>
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-black/[0.07]">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 sm:pb-8 border-b border-black/[0.07]">
               <div>
-                <h1 className="font-sans font-bold tracking-[-0.05em] text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] leading-[1.05] text-black max-w-2xl break-words relative">
+                <h1 className="font-sans font-bold tracking-[-0.05em] text-3xl sm:text-5xl md:text-6xl lg:text-[4.25rem] 2xl:text-[4.75rem] leading-[1.05] text-black max-w-2xl break-words relative">
                   The people behind the{" "}
                   <span className="relative inline-block">
                     <HighlighterMark color="yellow">visual system.</HighlighterMark>
@@ -494,14 +493,14 @@ export default function TeamPage() {
             2. CREATIVE WORKING BOARD: FOUNDER + TEAM PLACEHOLDERS
             Tactile floating cards with 3D colorful pins, soft shadows, and subtle connector lines
         ───────────────────────────────────────────────────────────── */}
-        <section className="py-6 md:py-10 px-5 sm:px-8 md:px-12 lg:px-24">
-          <div id="working-board-container" className="max-w-[1240px] mx-auto relative">
+        <section className="py-6 md:py-10 px-5 sm:px-8 md:px-12 lg:px-20 xl:px-24">
+          <div id="working-board-container" className="max-w-[1280px] xl:max-w-[1380px] 2xl:max-w-[1500px] mx-auto relative">
 
             {/* DYNAMIC HAND-DRAWN EDITORIAL CONNECTOR WIRES */}
             <TeamConnectorWires />
 
             {/* 2A. PRIMARY FEATURE: FOUNDER CARD (Deepak Kumawat) */}
-            <div className="max-w-[980px] mx-auto relative z-10 mb-6 md:mb-8 pt-4">
+            <div className="max-w-[980px] xl:max-w-[1040px] 2xl:max-w-[1100px] mx-auto relative z-10 mb-6 md:mb-8 pt-4">
               
               {/* 3D Translucent Orange Pushpin holding Founder Card */}
               <div className="absolute top-1 left-1/2 -translate-x-1/2 z-30">
@@ -763,9 +762,9 @@ export default function TeamPage() {
             3. JOIN OUR TEAM (Only at bottom of page)
             Strong, compact carbon black recruitment area with WhatsApp CTA
         ───────────────────────────────────────────────────────────── */}
-        <section className="px-5 sm:px-8 md:px-12 lg:px-24 py-16 md:py-24">
+        <section className="px-5 sm:px-8 md:px-12 lg:px-20 xl:px-24 py-16 md:py-24">
           <div
-            className="max-w-[1240px] mx-auto text-white rounded-[28px] md:rounded-[34px] p-6 sm:p-12 md:p-16 relative overflow-hidden text-center shadow-2xl border border-white/10"
+            className="max-w-[1280px] xl:max-w-[1380px] 2xl:max-w-[1500px] mx-auto text-white rounded-[28px] md:rounded-[34px] p-6 sm:p-12 md:p-16 relative overflow-hidden text-center shadow-2xl border border-white/10"
             style={{ backgroundColor: '#0D0D0D' }}
           >
             {/* Fine editorial corner crosshairs */}

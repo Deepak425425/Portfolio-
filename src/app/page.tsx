@@ -373,69 +373,72 @@ const HeroReference = ({ cmsImages }: { cmsImages: any }) => {
                 <path id="hero-right-wire-path" fill="none" stroke="#dedcd5" strokeWidth="1.2" strokeLinecap="round" />
             </svg>
 
-            {/* LEFT STATIC DETAIL (BOTTOM CORNER) */}
-            <div className="hidden lg:flex absolute left-[3%] xl:left-[4%] bottom-[4%] flex-col gap-2 reveal delay-100 z-30 pointer-events-none">
-                <div className="w-8 h-[1px] bg-zinc-300"></div>
-                <p className="text-[12px] text-zinc-500 font-medium max-w-[150px] leading-tight">
-                    Trusted by top-tier modern brands.
-                </p>
-                <div className="flex items-center -space-x-2 mt-0.5">
-                    <img src="https://i.pravatar.cc/100?img=11" className="w-7 h-7 rounded-full border-2 border-[#F9F8F6]" alt="Client 1" />
-                    <img src="https://i.pravatar.cc/100?img=32" className="w-7 h-7 rounded-full border-2 border-[#F9F8F6]" alt="Client 2" />
-                    <img src="https://i.pravatar.cc/100?img=12" className="w-7 h-7 rounded-full border-2 border-[#F9F8F6]" alt="Client 3" />
-                    <div className="w-7 h-7 rounded-full border-2 border-[#F9F8F6] bg-white flex items-center justify-center text-[10px] font-bold text-zinc-500">
-                        +
-                    </div>
-                </div>
-            </div>
+            {/* RESPONSIVE HERO FRAMING LAYER */}
+            <div className="absolute inset-0 max-w-[1520px] 2xl:max-w-[1680px] mx-auto w-full h-full pointer-events-none z-30">
+              {/* LEFT STATIC DETAIL (BOTTOM CORNER) */}
+              <div className="hidden lg:flex absolute left-6 xl:left-8 bottom-[4%] flex-col gap-2 reveal delay-100 z-30 pointer-events-none">
+                  <div className="w-8 h-[1px] bg-zinc-300"></div>
+                  <p className="text-[12px] text-zinc-500 font-medium max-w-[150px] leading-tight">
+                      Trusted by top-tier modern brands.
+                  </p>
+                  <div className="flex items-center -space-x-2 mt-0.5">
+                      <img src="https://i.pravatar.cc/100?img=11" className="w-7 h-7 rounded-full border-2 border-[#F9F8F6]" alt="Client 1" />
+                      <img src="https://i.pravatar.cc/100?img=32" className="w-7 h-7 rounded-full border-2 border-[#F9F8F6]" alt="Client 2" />
+                      <img src="https://i.pravatar.cc/100?img=12" className="w-7 h-7 rounded-full border-2 border-[#F9F8F6]" alt="Client 3" />
+                      <div className="w-7 h-7 rounded-full border-2 border-[#F9F8F6] bg-white flex items-center justify-center text-[10px] font-bold text-zinc-500">
+                          +
+                      </div>
+                  </div>
+              </div>
 
-            {/* RIGHT STATIC DETAIL (BOTTOM CORNER) */}
-            <div className="hidden lg:flex absolute right-[3%] xl:right-[4%] bottom-[4%] text-right reveal delay-100 z-30 pointer-events-none">
-                <p className="text-[12px] text-zinc-500 font-medium leading-tight">
-                    Creative partner with<br/>
-                    <a
-                        href="https://graflystudio.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="pointer-events-auto text-[#8B7CFF] hover:text-black hover:underline underline-offset-2 transition-colors"
-                    >
-                        Grafly Studio.
-                    </a>
-                </p>
-            </div>
+              {/* RIGHT STATIC DETAIL (BOTTOM CORNER) */}
+              <div className="hidden lg:flex absolute right-6 xl:right-8 bottom-[4%] text-right reveal delay-100 z-30 pointer-events-none">
+                  <p className="text-[12px] text-zinc-500 font-medium leading-tight">
+                      Creative partner with<br/>
+                      <a
+                          href="https://graflystudio.com"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="pointer-events-auto text-[#8B7CFF] hover:text-black hover:underline underline-offset-2 transition-colors"
+                      >
+                          Grafly Studio.
+                      </a>
+                  </p>
+              </div>
 
-            {/* LEFT OUTER FRAMING CARD (HIGH POSITION FLANKING HEADLINE) */}
-            <div className="absolute left-[2%] xl:left-[4%] top-[18%] lg:top-[20%] w-[190px] lg:w-[210px] xl:w-[230px] side-glass-card p-4 lg:p-5 text-left hidden md:block animate-float-1 z-30 pointer-events-auto">
-                <div className="w-9 h-9 bg-zinc-100 rounded-[10px] flex items-center justify-center mb-3">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2">
-                        <path d="M12 4v16m-4-12v8m8-10v12"/>
-                    </svg>
-                </div>
-                <h3 className="font-bold text-[14px] lg:text-[15px] leading-[1.2] mb-1.5 text-[#111]">
-                    Generate ideas<br/>
-                    into reality.
-                </h3>
-                <p className="text-[11px] lg:text-[12px] text-zinc-500 font-medium leading-[1.4]">
-                    Rapid prototyping and final commercial renders.
-                </p>
-            </div>
+              {/* LEFT OUTER FRAMING CARD (HIGH POSITION FLANKING HEADLINE) */}
+              <div className="absolute left-4 lg:left-6 xl:left-8 top-[18%] lg:top-[20%] w-[190px] lg:w-[210px] xl:w-[230px] side-glass-card p-4 lg:p-5 text-left hidden md:block animate-float-1 z-30 pointer-events-auto">
+                  <div className="w-9 h-9 bg-zinc-100 rounded-[10px] flex items-center justify-center mb-3">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2">
+                          <path d="M12 4v16m-4-12v8m8-10v12"/>
+                      </svg>
+                  </div>
+                  <h3 className="font-bold text-[14px] lg:text-[15px] leading-[1.2] mb-1.5 text-[#111]">
+                      Generate ideas<br/>
+                      into reality.
+                  </h3>
+                  <p className="text-[11px] lg:text-[12px] text-zinc-500 font-medium leading-[1.4]">
+                      Rapid prototyping and final commercial renders.
+                  </p>
+              </div>
 
-            {/* RIGHT OUTER FRAMING CARD (HIGH POSITION FLANKING CTA) */}
-            <div className="absolute right-[2%] xl:right-[4%] top-[24%] lg:top-[26%] w-[180px] lg:w-[200px] xl:w-[220px] side-glass-card p-4 lg:p-5 text-left hidden md:block animate-float-2 z-30 pointer-events-auto">
-                <div className="flex items-center -space-x-2 mb-3">
-                    <img src="https://i.pravatar.cc/100?img=4" className="w-7 h-7 rounded-full border-2 border-white shadow-sm" alt="User 1" />
-                    <img src="https://i.pravatar.cc/100?img=5" className="w-7 h-7 rounded-full border-2 border-white shadow-sm" alt="User 2" />
-                    <div className="w-7 h-7 rounded-full border-2 border-white bg-zinc-100 flex items-center justify-center text-[10px] font-bold">
-                        +
-                    </div>
-                </div>
-                <h3 className="font-bold text-[14px] lg:text-[15px] leading-[1.2] mb-1.5 text-[#111]">
-                    Global creative<br/>
-                    collaboration.
-                </h3>
-                <p className="text-[11px] lg:text-[12px] text-zinc-500 font-medium leading-[1.4]">
-                    Scale your brand's visual identity easily.
-                </p>
+              {/* RIGHT OUTER FRAMING CARD (HIGH POSITION FLANKING CTA) */}
+              <div className="absolute right-4 lg:right-6 xl:right-8 top-[24%] lg:top-[26%] w-[180px] lg:w-[200px] xl:w-[220px] side-glass-card p-4 lg:p-5 text-left hidden md:block animate-float-2 z-30 pointer-events-auto">
+                  <div className="flex items-center -space-x-2 mb-3">
+                      <img src="https://i.pravatar.cc/100?img=4" className="w-7 h-7 rounded-full border-2 border-white shadow-sm" alt="User 1" />
+                      <img src="https://i.pravatar.cc/100?img=5" className="w-7 h-7 rounded-full border-2 border-white shadow-sm" alt="User 2" />
+                      <div className="w-7 h-7 rounded-full border-2 border-white bg-zinc-100 flex items-center justify-center text-[10px] font-bold">
+                          +
+                      </div>
+                  </div>
+                  <h3 className="font-bold text-[14px] lg:text-[15px] leading-[1.2] mb-1.5 text-[#111]">
+                      Global creative<br/>
+                      collaboration.
+                  </h3>
+                  <p className="text-[11px] lg:text-[12px] text-zinc-500 font-medium leading-[1.4]">
+                      Scale your brand's visual identity easily.
+                  </p>
+              </div>
             </div>
 
             {/* CENTER HERO CONTENT (TEXT + CTA) */}
@@ -444,7 +447,7 @@ const HeroReference = ({ cmsImages }: { cmsImages: any }) => {
                     <div className="w-2 h-2 rounded-full bg-[#8B7CFF] shadow-[0_0_0_5px_rgba(139,124,255,0.12)] live-dot"></div>
                     AI CREATIVE STUDIO / GROTON AI
                 </div>
-                <h1 className="font-sans text-[38px] md:text-[50px] lg:text-[62px] xl:text-[72px] leading-[0.96] tracking-[-0.04em] font-bold text-[#111] max-w-[850px] relative">
+                <h1 className="font-sans text-[32px] sm:text-[44px] md:text-[54px] lg:text-[64px] xl:text-[72px] 2xl:text-[78px] leading-[0.96] tracking-[-0.04em] font-bold text-[#111] max-w-[850px] relative">
                     A clearer vision<br/>
                     <span className="font-light italic text-zinc-500" style={{ letterSpacing: "-0.02em" }}>
                         for a brighter
@@ -466,7 +469,7 @@ const HeroReference = ({ cmsImages }: { cmsImages: any }) => {
                 <div className="relative w-full max-w-[850px] h-full flex items-center justify-center transform-style-3d">
 
                     {/* CENTRAL MODEL — Scaled to prominent bust/portrait presence */}
-                    <div className="relative h-[112%] max-h-[530px] w-auto flex items-center justify-center transform-style-3d pointer-events-none" style={{ transform: "translateZ(0px)" }}>
+                    <div className="relative h-[112%] max-h-[min(530px,58vh)] 2xl:max-h-[min(620px,60vh)] w-auto flex items-center justify-center transform-style-3d pointer-events-none" style={{ transform: "translateZ(0px)" }}>
                         {/* NATURAL GROUNDED CONTACT SHADOW BENEATH FEET */}
                         <div
                             aria-hidden="true"
@@ -730,9 +733,9 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
       style={{ height: '300vh' }}
     >
       <div className="sticky top-0 h-screen w-full flex flex-col items-center pt-[104px] lg:pt-[clamp(104px,13vh,112px)] pb-6 lg:pb-8 px-6 lg:px-20 overflow-visible">
-        <div className="max-w-[1440px] w-full mx-auto mt-0 mb-auto flex flex-col items-center text-center">
+        <div className="max-w-[1440px] 2xl:max-w-[1600px] w-full mx-auto mt-0 mb-auto flex flex-col items-center text-center">
           <CmsText cmsId="home.process.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-400 uppercase mb-2 lg:mb-2.5" fallback="The Process" />
-          <CmsText cmsId="home.process.heading" as="h2" brClassName="" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] font-bold mb-6 lg:mb-[clamp(14px,2.2vh,28px)]" fallback={"From Product\nto Campaign."} />
+          <CmsText cmsId="home.process.heading" as="h2" brClassName="" className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[80px] leading-[0.9] tracking-[-0.05em] font-bold mb-6 lg:mb-[clamp(14px,2.2vh,28px)]" fallback={"From Product\nto Campaign."} />
 
           <div 
             className="w-full flex flex-col lg:flex-row items-center lg:items-center justify-between gap-12 lg:gap-4 relative transition-transform duration-500 ease-out"
@@ -1202,7 +1205,7 @@ const TypewriterHeading = ({ cmsId = "home.why.heading", fallback = "Built for\n
   const lines = displayedText.split('\n');
 
   return (
-    <h2 className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold relative">
+    <h2 className="font-sans text-[34px] sm:text-[46px] md:text-[60px] lg:text-[76px] 2xl:text-[84px] leading-[0.92] tracking-[-0.05em] text-black font-bold relative">
       {/* Invisible layout preserver: guarantees identical dimensions, lines and zero layout shift */}
       <span style={{ visibility: 'hidden', userSelect: 'none', pointerEvents: 'none', display: 'block' }} aria-hidden="true">
         {targetText.split('\n').map((line, idx, arr) => (
@@ -1306,12 +1309,12 @@ export default function Home() {
       <motion.header 
         className="fixed z-50 flex flex-row justify-between items-center transition-all"
         style={{
-          top: "18px",
+          top: "clamp(12px, 2vh, 18px)",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "min(1400px, calc(100% - 36px))",
-          height: "64px",
-          padding: "0 10px 0 22px",
+          width: "min(1560px, calc(100% - clamp(16px, 4vw, 36px)))",
+          height: "clamp(56px, 6vh, 64px)",
+          padding: "0 clamp(6px, 1.5vw, 10px) 0 clamp(12px, 2vw, 22px)",
           background: "rgba(248, 246, 241, 0.72)",
           backdropFilter: "blur(22px)",
           WebkitBackdropFilter: "blur(22px)",
@@ -1320,7 +1323,7 @@ export default function Home() {
           boxShadow: "0 12px 35px rgba(0, 0, 0, 0.07), inset 0 1px rgba(255, 255, 255, 0.9)"
         }}
       >
-        <Link href="/" className="font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase text-black">
+        <Link href="/" className="font-sans font-bold tracking-[0.16em] sm:tracking-[0.25em] md:tracking-[0.3em] text-[11px] sm:text-sm md:text-base uppercase text-black whitespace-nowrap">
           <CmsText cmsId="global.nav.brand" fallback="GROTON AI STUDIO" />
         </Link>
         <div className="flex items-center gap-4 lg:gap-8 h-full">
@@ -1373,7 +1376,7 @@ export default function Home() {
       <HeroReference cmsImages={cmsImages} />
 
       {/* 2. CAPABILITIES */}
-      <section className="relative w-full z-10 bg-[#F9F8F6] pt-[150px] pb-[150px] px-6 lg:px-20 overflow-hidden">
+      <section className="relative w-full z-10 bg-[#F9F8F6] py-16 sm:py-20 md:py-28 lg:py-36 2xl:py-[150px] px-6 md:px-12 lg:px-16 xl:px-20 overflow-hidden">
         <div 
           aria-hidden="true" 
           className="pointer-events-none absolute inset-0 z-0"
@@ -1385,18 +1388,18 @@ export default function Home() {
             backgroundSize: '60px 60px',
           }}
         />
-        <div className="max-w-[1440px] mx-auto relative z-10">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-[100px]">
+        <div className="max-w-[1440px] 2xl:max-w-[1600px] mx-auto relative z-10">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-12 sm:mb-16 md:mb-20 lg:mb-[100px]">
              <div className="max-w-[700px]">
-                <CmsText cmsId="home.cap.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" fallback="CAPABILITIES" />
-                <CmsText cmsId="home.cap.heading" as="h2" brClassName="" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold" fallback={'E-commerce\nvisuals,\nelevated.'} />
+                <CmsText cmsId="home.cap.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-4 sm:mb-6" fallback="CAPABILITIES" />
+                <CmsText cmsId="home.cap.heading" as="h2" brClassName="" className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[80px] leading-[0.92] tracking-[-0.05em] text-black font-bold" fallback={'E-commerce\nvisuals,\nelevated.'} />
              </div>
-             <CmsText cmsId="home.cap.desc" as="p" className="font-sans text-[15px] lg:text-[16px] leading-[1.7] text-zinc-500 max-w-[350px] mt-8 lg:mt-0" fallback={"We specialize in creating premium product\nimagery for e-commerce brands. From clean\ncatalog shots to highly art-directed campaign\nvisuals, we ensure your products look their\nabsolute best."} />
+             <CmsText cmsId="home.cap.desc" as="p" className="font-sans text-[14px] sm:text-[15px] lg:text-[16px] leading-[1.7] text-zinc-500 max-w-[350px] mt-6 lg:mt-0" fallback={"We specialize in creating premium product\nimagery for e-commerce brands. From clean\ncatalog shots to highly art-directed campaign\nvisuals, we ensure your products look their\nabsolute best."} />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-             <div className="relative flex flex-col gap-6 lg:mt-0 group cursor-pointer" data-cursor="view">
-                <div className="w-full aspect-[4/5] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+             <div className="relative flex flex-col gap-5 sm:gap-6 lg:mt-0 group cursor-pointer" data-cursor="view">
+                <div className="w-full aspect-[4/5] max-h-[460px] 2xl:max-h-[520px] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]">
                   <CmsMedia media={cmsImages.capability_product} fallback="/campaign-worlds/groton-home-capability-product-4x5.webp" alt="Premium e-commerce product imagery for campaigns" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img1.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="PRODUCT IMAGERY" /></div>
                 </div>
@@ -1405,8 +1408,8 @@ export default function Home() {
                    <CmsText cmsId="home.cap.item1.desc" as="p" className="font-sans text-[14px] text-zinc-500" fallback="— Studio & Lifestyle" />
                 </div>
              </div>
-             <div className="relative flex flex-col gap-6 lg:mt-[60px] group cursor-pointer" data-cursor="view">
-                <div className="w-full aspect-[4/5] relative bg-[#dad7d0] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
+             <div className="relative flex flex-col gap-5 sm:gap-6 lg:mt-[60px] group cursor-pointer" data-cursor="view">
+                <div className="w-full aspect-[4/5] max-h-[460px] 2xl:max-h-[520px] relative bg-[#dad7d0] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
                   <CmsMedia media={cmsImages.capability_model} fallback="/campaign-worlds/groton-home-capability-model-4x5.webp" alt="Product-on-Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img2.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="PRODUCT-ON-MODEL" /></div>
                 </div>
@@ -1415,8 +1418,8 @@ export default function Home() {
                    <CmsText cmsId="home.cap.item2.desc" as="p" className="font-sans text-[14px] text-zinc-500" fallback="— Fashion & Apparel" />
                 </div>
              </div>
-             <div className="relative flex flex-col gap-6 lg:mt-[120px] group cursor-pointer" data-cursor="view">
-                <div className="w-full aspect-[4/5] relative bg-[#d1cec7] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
+             <div className="relative flex flex-col gap-5 sm:gap-6 lg:mt-[120px] group cursor-pointer" data-cursor="view">
+                <div className="w-full aspect-[4/5] max-h-[460px] 2xl:max-h-[520px] relative bg-[#d1cec7] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
                   <CmsMedia media={cmsImages.capability_apparel} fallback="/campaign-worlds/groton-1.jpg" alt="Fashion Apparel" fill className="object-cover object-top group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img3.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="FASHION & APPAREL" /></div>
                 </div>
@@ -1425,8 +1428,8 @@ export default function Home() {
                    <CmsText cmsId="home.cap.item3.desc" as="p" className="font-sans text-[14px] text-zinc-500" fallback="— Catalog & Collection" />
                 </div>
              </div>
-             <div className="relative flex flex-col gap-6 lg:mt-[180px] group cursor-pointer" data-cursor="view">
-                <div className="w-full aspect-[4/5] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
+             <div className="relative flex flex-col gap-5 sm:gap-6 lg:mt-[180px] group cursor-pointer" data-cursor="view">
+                <div className="w-full aspect-[4/5] max-h-[460px] 2xl:max-h-[520px] relative bg-[#e8e5df] overflow-hidden rounded-[20px] shadow-sm transition-transform duration-700 group-hover:-translate-y-2 group-hover:shadow-lg">
                   <CmsMedia media={cmsImages.capability_editorial} fallback="/campaign-worlds/groton-home-capability-editorial-4x5.webp" alt="Editorial" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6"><CmsText cmsId="home.cap.img4.label" as="span" className="font-mono text-[10px] font-bold text-white uppercase tracking-[0.08em]" fallback="EDITORIAL" /></div>
                 </div>
@@ -1442,8 +1445,7 @@ export default function Home() {
       {/* 3. PRODUCT COLLECTION / EDITORIAL ARCHIVE */}
       <section 
         id="archive-section" 
-        className="relative w-full z-10 bg-[#F9F8F6] py-[120px] lg:py-[160px] pb-12 lg:pb-14 px-6 lg:px-20 overflow-hidden"
-        style={{ paddingBottom: '50px' }}
+        className="relative w-full z-10 bg-[#F9F8F6] py-16 md:py-24 lg:py-32 2xl:py-[140px] px-6 md:px-12 lg:px-16 xl:px-20 overflow-hidden"
       >
         <div 
           aria-hidden="true" 
@@ -1456,23 +1458,23 @@ export default function Home() {
             backgroundSize: '60px 60px',
           }}
         />
-        <div className="max-w-[1440px] mx-auto relative z-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 xl:gap-20">
+        <div className="max-w-[1440px] 2xl:max-w-[1600px] mx-auto relative z-10">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-10 md:gap-14 lg:gap-16 xl:gap-20">
             
             {/* LEFT SIDE: EDITORIAL COPY */}
             <div className="w-full lg:w-1/2 max-w-[640px] flex flex-col justify-center">
               <CmsText 
                 cmsId="home.archive.label" 
                 as="span" 
-                className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" 
+                className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-4 sm:mb-6" 
                 fallback="Editorial Archive" 
               />
               
               <CmsText 
                 cmsId="home.archive.heading" 
                 as="h2" 
-                className="font-sans font-bold text-black tracking-[-0.05em] mb-8" 
-                style={{ fontSize: 'clamp(40px, 4.2vw, 64px)', lineHeight: 0.96 }}
+                className="font-sans font-bold text-black tracking-[-0.05em] mb-6 sm:mb-8" 
+                style={{ fontSize: 'clamp(32px, 3.8vw, 64px)', lineHeight: 0.98 }}
                 fallback="Multiple Models. Multiple Products. Endless Possibilities." 
               />
               
@@ -1489,7 +1491,7 @@ export default function Home() {
               <div 
                 className="w-full aspect-square relative bg-[#dad7d0] rounded-[24px] md:rounded-[32px] overflow-hidden group" 
                 style={{ 
-                  maxWidth: '520px',
+                  maxWidth: 'min(520px, 100%)',
                   boxShadow: '0 20px 50px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.03)'
                 }} 
                 data-cursor="view"
@@ -1513,8 +1515,8 @@ export default function Home() {
       {/* 4. PRODUCT TRANSFORMATION */}
       <ProcessSection cmsImages={cmsImages} shouldReduceMotion={shouldReduceMotion} />
 
-        {/* 5. FASHION & APPAREL */}
-      <section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] px-6 lg:px-20 overflow-hidden">
+      {/* 5. FASHION & APPAREL */}
+      <section className="relative w-full z-10 bg-[#F9F8F6] py-16 sm:py-20 md:py-28 lg:py-36 2xl:py-[150px] px-6 md:px-12 lg:px-16 xl:px-20 overflow-hidden">
         <div 
           aria-hidden="true" 
           className="pointer-events-none absolute inset-0 z-0"
@@ -1526,19 +1528,19 @@ export default function Home() {
             backgroundSize: '60px 60px',
           }}
         />
-        <div className="max-w-[1440px] mx-auto mb-[100px] relative z-10">
-          <CmsText cmsId="home.focus.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6" fallback="Focus" />
-          <CmsText cmsId="home.focus.heading" as="h2" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold" fallback="Fashion & Apparel." />
+        <div className="max-w-[1440px] 2xl:max-w-[1600px] mx-auto mb-12 sm:mb-16 md:mb-20 lg:mb-[100px] relative z-10">
+          <CmsText cmsId="home.focus.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-4 sm:mb-6" fallback="Focus" />
+          <CmsText cmsId="home.focus.heading" as="h2" className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[80px] leading-[0.92] tracking-[-0.05em] text-black font-bold" fallback="Fashion & Apparel." />
         </div>
         
-        <div className="max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10 relative z-10">
-           <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]" data-cursor="view">
+        <div className="max-w-[1440px] 2xl:max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 xl:gap-10 relative z-10">
+           <div className="w-full aspect-[3/4] max-h-[580px] 2xl:max-h-[660px] relative bg-[#dad7d0] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)]" data-cursor="view">
              <CmsMedia media={cmsImages.fashion_1} fallback="/campaign-worlds/groton-home-fashion-black-hoodie-3x4.webp" alt="Black Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 33vw" />
            </div>
-           <div className="w-full aspect-[3/4] relative bg-[#e8e5df] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] md:mt-[80px]" data-cursor="view">
+           <div className="w-full aspect-[3/4] max-h-[580px] 2xl:max-h-[660px] relative bg-[#e8e5df] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] md:mt-[60px] lg:mt-[80px]" data-cursor="view">
              <CmsMedia media={cmsImages.fashion_2} fallback="/campaign-worlds/groton-home-fashion-striped-shirt-3x4.webp" alt="Striped Shirt" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 33vw" />
            </div>
-           <div className="w-full aspect-[3/4] relative bg-[#dad7d0] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] md:mt-[160px]" data-cursor="view">
+           <div className="w-full aspect-[3/4] max-h-[580px] 2xl:max-h-[660px] relative bg-[#dad7d0] rounded-[24px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.10)] transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] md:mt-[120px] lg:mt-[160px]" data-cursor="view">
              <CmsMedia media={cmsImages.fashion_3} fallback="/campaign-worlds/groton-home-fashion-blue-hoodie-3x4.webp" alt="Blue Hoodie Model" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 100vw, 33vw" />
            </div>
         </div>
@@ -1598,7 +1600,7 @@ export default function Home() {
       </section>)}
 
       {/* 8. PROCESS */}
-      <section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] px-6 lg:px-20 overflow-hidden">
+      <section className="relative w-full z-10 bg-[#F9F8F6] py-16 sm:py-20 md:py-28 lg:py-36 2xl:py-[150px] px-6 md:px-12 lg:px-16 xl:px-20 overflow-hidden">
         <div 
           aria-hidden="true" 
           className="pointer-events-none absolute inset-0 z-0"
@@ -1610,10 +1612,10 @@ export default function Home() {
             backgroundSize: '60px 60px',
           }}
         />
-        <div className="max-w-[1200px] mx-auto relative z-10">
-          <div className="mb-[100px] text-left">
-            <span className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-6">Our Process</span>
-            <h2 className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold">How we produce.</h2>
+        <div className="max-w-[1240px] xl:max-w-[1360px] 2xl:max-w-[1480px] mx-auto relative z-10">
+          <div className="mb-12 sm:mb-16 md:mb-20 lg:mb-[100px] text-left">
+            <span className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-500 uppercase block mb-4 sm:mb-6">Our Process</span>
+            <h2 className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold">How we produce.</h2>
           </div>
 
           <div className="flex flex-col border-t border-[rgba(0,0,0,0.1)]">
@@ -1630,12 +1632,12 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.9, delay: shouldReduceMotion ? 0 : idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                className="relative flex flex-col md:flex-row md:items-center gap-6 md:gap-16 py-10 lg:py-14 border-b border-[rgba(0,0,0,0.1)] group transition-colors duration-500 hover:bg-[rgba(0,0,0,0.02)] px-4 -mx-4 rounded-xl"
+                className="relative flex flex-col md:flex-row md:items-center gap-6 md:gap-16 py-8 sm:py-10 lg:py-14 border-b border-[rgba(0,0,0,0.1)] group transition-colors duration-500 hover:bg-[rgba(0,0,0,0.02)] px-4 -mx-4 rounded-xl"
               >
                 <div className="absolute left-0 bottom-[-1px] h-[1px] w-0 bg-black transition-all duration-[0.6s] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:w-full z-10" aria-hidden="true" />
-                <span className="font-mono text-[24px] md:text-[32px] text-zinc-300 md:w-[100px] transition-colors duration-500 group-hover:text-black">{item.step}</span>
-                <CmsText cmsId={`home.process.${item.id}.title`} as="h4" className="font-sans font-bold text-[24px] md:text-[32px] tracking-[-0.03em] text-black flex-1" fallback={item.title} />
-                <CmsText cmsId={`home.process.${item.id}.desc`} as="p" className="font-sans text-[15px] lg:text-[16px] text-zinc-500 md:w-[350px] leading-[1.7]" fallback={item.desc} />
+                <span className="font-mono text-2xl sm:text-3xl lg:text-4xl text-zinc-300 md:w-[100px] transition-colors duration-500 group-hover:text-black">{item.step}</span>
+                <CmsText cmsId={`home.process.${item.id}.title`} as="h4" className="font-sans font-bold text-xl sm:text-2xl md:text-3xl lg:text-[32px] tracking-[-0.03em] text-black flex-1" fallback={item.title} />
+                <CmsText cmsId={`home.process.${item.id}.desc`} as="p" className="font-sans text-[14px] sm:text-[15px] lg:text-[16px] text-zinc-500 md:w-[350px] leading-[1.7]" fallback={item.desc} />
               </motion.div>
             ))}
           </div>
@@ -1643,7 +1645,7 @@ export default function Home() {
       </section>
 
       {/* 9. WHY GROTON */}
-      <section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] px-6 lg:px-20 overflow-hidden">
+      <section className="relative w-full z-10 bg-[#F9F8F6] py-16 sm:py-20 md:py-28 lg:py-36 2xl:py-[150px] px-6 md:px-12 lg:px-16 xl:px-20 overflow-hidden">
         <div 
           aria-hidden="true" 
           className="pointer-events-none absolute inset-0 z-0"
@@ -1655,13 +1657,13 @@ export default function Home() {
             backgroundSize: '60px 60px',
           }}
         />
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-[150px] relative z-10">
+        <div className="max-w-[1440px] 2xl:max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-12 lg:gap-24 xl:gap-[140px] relative z-10">
           <div className="w-full lg:w-[40%]">
             <div className="sticky top-32">
                <TypewriterHeading cmsId="home.why.heading" fallback={"Built for\nE-commerce."} />
             </div>
           </div>
-          <div className="w-full lg:w-[60%] grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-[80px]">
+          <div className="w-full lg:w-[60%] grid grid-cols-1 md:grid-cols-2 gap-x-10 lg:gap-x-14 gap-y-10 sm:gap-y-12 lg:gap-y-[70px]">
             {[
               { id: "item1", title: "Consistent Presentation", desc: "Maintain a unified visual language across your entire product catalog, ensuring brand consistency on every product page." },
               { id: "item2", title: "Premium Aesthetic", desc: "Elevate your brand perception with lighting, framing, and compositions that rival top-tier physical studio productions." },
@@ -1669,8 +1671,8 @@ export default function Home() {
               { id: "item4", title: "Flexible Directions", desc: "Pivot from clean white-background catalog shots to moody, editorial campaign visuals using the same core product assets." }
             ].map((item, idx) => (
               <div key={idx} className="flex flex-col gap-4">
-                <CmsText cmsId={`home.why.${item.id}.title`} as="h4" className="font-sans font-bold text-[20px] tracking-[-0.02em] text-black" fallback={item.title} />
-                <CmsText cmsId={`home.why.${item.id}.desc`} as="p" className="font-sans text-[15px] leading-[1.7] text-zinc-500" fallback={item.desc} />
+                <CmsText cmsId={`home.why.${item.id}.title`} as="h4" className="font-sans font-bold text-[18px] sm:text-[20px] tracking-[-0.02em] text-black" fallback={item.title} />
+                <CmsText cmsId={`home.why.${item.id}.desc`} as="p" className="font-sans text-[14px] sm:text-[15px] leading-[1.7] text-zinc-500" fallback={item.desc} />
               </div>
             ))}
           </div>

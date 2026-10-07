@@ -23,12 +23,12 @@ export default function Header({ isNightMode = false }: HeaderProps) {
       <motion.header 
         className="fixed z-50 flex flex-row justify-between items-center transition-all duration-300"
         style={{
-          top: "18px",
+          top: "clamp(12px, 2vh, 18px)",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "min(1400px, calc(100% - 36px))",
-          height: "64px",
-          padding: "0 10px 0 22px",
+          width: "min(1560px, calc(100% - clamp(16px, 4vw, 36px)))",
+          height: "clamp(56px, 6vh, 64px)",
+          padding: "0 clamp(6px, 1.5vw, 10px) 0 clamp(12px, 2vw, 22px)",
           background: isNightMode ? "rgba(20, 20, 20, 0.72)" : "rgba(248, 246, 241, 0.72)",
           backdropFilter: "blur(22px)",
           WebkitBackdropFilter: "blur(22px)",
@@ -37,7 +37,7 @@ export default function Header({ isNightMode = false }: HeaderProps) {
           boxShadow: isNightMode ? "0 12px 35px rgba(0, 0, 0, 0.3), inset 0 1px rgba(255, 255, 255, 0.05)" : "0 12px 35px rgba(0, 0, 0, 0.07), inset 0 1px rgba(255, 255, 255, 0.9)"
         }}
       >
-        <Link href="/" className={`font-sans font-bold tracking-[0.3em] text-sm md:text-base uppercase ${isNightMode ? 'text-white' : 'text-black'}`}>
+        <Link href="/" className={`font-sans font-bold tracking-[0.16em] sm:tracking-[0.25em] md:tracking-[0.3em] text-[11px] sm:text-sm md:text-base uppercase whitespace-nowrap ${isNightMode ? 'text-white' : 'text-black'}`}>
           <CmsText cmsId="global.nav.brand" fallback="GROTON AI STUDIO" />
         </Link>
         <div className="flex items-center gap-4 lg:gap-8 h-full">
@@ -46,6 +46,7 @@ export default function Header({ isNightMode = false }: HeaderProps) {
             <Link href="/services" className={`transition-colors ${pathname === '/services' ? activeColor : hoverColor}`}><CmsText cmsId="global.nav.services" fallback="Services" /></Link>
             <Link href="/pricing" className={`transition-colors ${pathname === '/pricing' ? activeColor : hoverColor}`}><CmsText cmsId="global.nav.pricing" fallback="Pricing" /></Link>
             <Link href="/tools" className={`transition-colors ${pathname?.startsWith('/tools') ? activeColor : hoverColor}`}><CmsText cmsId="global.nav.tools" fallback="Tools" /></Link>
+            <Link href="/blog" className={`transition-colors ${pathname?.startsWith('/blog') ? activeColor : hoverColor}`}><CmsText cmsId="global.nav.insights" fallback="Insights" /></Link>
             <Link href="/about" className={`transition-colors ${pathname === '/about' ? activeColor : hoverColor}`}><CmsText cmsId="global.nav.about" fallback="About" /></Link>
           </nav>
           <MagneticButton href="/contact" className={`hidden lg:flex h-[44px] items-center justify-center rounded-full px-6 text-[10px] uppercase tracking-widest font-bold transition-colors ${isNightMode ? 'bg-white text-black hover:bg-zinc-200' : 'bg-black text-white hover:bg-zinc-800'}`}>
@@ -75,6 +76,7 @@ export default function Header({ isNightMode = false }: HeaderProps) {
               <Link href="/services" onClick={() => setMobileMenuOpen(false)} className={`transition-colors ${pathname === '/services' ? activeColor : hoverColor}`}>Services</Link>
               <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className={`transition-colors ${pathname === '/pricing' ? activeColor : hoverColor}`}>Pricing</Link>
               <Link href="/tools" onClick={() => setMobileMenuOpen(false)} className={`transition-colors ${pathname?.startsWith('/tools') ? activeColor : hoverColor}`}>Tools</Link>
+              <Link href="/blog" onClick={() => setMobileMenuOpen(false)} className={`transition-colors ${pathname?.startsWith('/blog') ? activeColor : hoverColor}`}>Insights</Link>
               <Link href="/about" onClick={() => setMobileMenuOpen(false)} className={`transition-colors ${pathname === '/about' ? activeColor : hoverColor}`}>About</Link>
            </nav>
            <div className="mt-auto pt-12">
