@@ -595,7 +595,7 @@ export default function TeamPage() {
 
             {/* 2C. 4 FLOATING TEAM PLACEHOLDER CARDS */}
             {/* Clean pinned notes with colorful pushpins & subtle working notes */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 pt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 pt-4 relative z-10">
               {[
                 {
                   id: "02",
