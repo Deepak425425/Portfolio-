@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Meme Generator — Add Text to Images Online",
     description: "Create memes online quickly. Add classic impact font, custom text, and captions to any image. Free browser-based image editor.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

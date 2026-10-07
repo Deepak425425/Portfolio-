@@ -30,6 +30,12 @@ export const metadata: Metadata = {
     url: 'https://groton.in',
     images: [
       {
+        url: 'https://groton.in/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Groton — Image Tools & Creative Image Production',
+      },
+      {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
@@ -41,7 +47,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Groton — Image Tools & Creative Image Production',
     description: 'Groton AI provides powerful online image tools for editing, formatting, comparing, enhancing and preparing images for creative and e-commerce workflows.',
-    images: ['/og-image.jpg'],
+    images: ['https://groton.in/og-image.jpg'],
   },
   alternates: {
     canonical: '/',

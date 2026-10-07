@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Bulk Image Renamer — Rename Multiple Files Online",
     description: "Rename hundreds of images at once with custom patterns, sequential numbering, and find-and-replace rules. A powerful online utility for photographers.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

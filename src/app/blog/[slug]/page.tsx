@@ -21,6 +21,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return { title: "Article Not Found" };
   }
 
+  const coverUrl = post.coverImage.startsWith("http")
+    ? post.coverImage
+    : `https://groton.in${post.coverImage}`;
+
   return {
     title: `${post.title} — GROTON AI`,
     description: post.excerpt,
@@ -32,9 +36,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: post.excerpt,
       url: `https://groton.in/blog/${post.slug}`,
       siteName: "GROTON AI",
+      locale: "en_US",
       images: [
         {
-          url: post.coverImage,
+          url: coverUrl,
           width: 1200,
           height: 800,
           alt: post.title,
@@ -42,6 +47,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       ],
       type: "article",
       publishedTime: post.datePublished,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: [coverUrl],
     },
   };
 }

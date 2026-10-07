@@ -58,6 +58,15 @@ body {
   animation: float-delayed 25s ease-in-out infinite;
 }
 
+@keyframes subtleCaretBlink {
+  0%, 100% { opacity: 0.95; }
+  50% { opacity: 0.15; }
+}
+
+.animate-subtle-caret {
+  animation: subtleCaretBlink 0.9s ease-in-out infinite;
+}
+
 @layer utilities {
   .perspective-\[1200px\] {
     perspective: 1200px;

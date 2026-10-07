@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Watermark Creator — Protect Your Images Online",
     description: "Add repeating text or logo watermarks to your photos to protect your intellectual property. A free and secure online watermark tool.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

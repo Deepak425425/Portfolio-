@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Quality Checker — Analyze Resolution & DPI",
     description: "Analyze images for print and web suitability. Check resolution, DPI, dimensions, and compression artifacts with Groton's free online image tool.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

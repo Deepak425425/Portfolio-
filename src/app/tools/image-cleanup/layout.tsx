@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Cleanup Tool — Remove Unwanted Elements",
     description: "Clean up photos, remove dust, scratches, and minor imperfections online using advanced browser-based tools by Groton AI.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

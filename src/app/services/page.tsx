@@ -8,6 +8,37 @@ import CmsText from "@/components/CmsText";
 export const metadata: Metadata = {
   title: "Services — GROTON AI STUDIO",
   description: "Premium e-commerce visual production and creative direction.",
+  alternates: {
+    canonical: "/services",
+  },
+  openGraph: {
+    title: "Services — GROTON AI STUDIO",
+    description: "Premium e-commerce visual production and creative direction.",
+    url: "https://groton.in/services",
+    siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "https://groton.in/campaign-worlds/groton-services-ai-product-3x4.webp",
+        width: 1200,
+        height: 1600,
+        alt: "Services — GROTON AI STUDIO",
+      },
+      {
+        url: "https://groton.in/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "GROTON AI STUDIO",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Services — GROTON AI STUDIO",
+    description: "Premium e-commerce visual production and creative direction.",
+    images: ["https://groton.in/og-image.jpg"],
+  },
 };
 
 const services = [

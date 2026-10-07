@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Converter — Change Format to JPG, PNG, WebP",
     description: "Convert images between JPG, PNG, WebP, and other formats instantly in your browser. Free online image converter by Groton AI.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

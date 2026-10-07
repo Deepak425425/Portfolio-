@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Collage Maker — Create Photo Grids & Layouts Online",
     description: "Combine multiple photos into beautiful grids and collages. Customizable layouts, spacing, and dimensions. A free online image collage maker by Groton.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

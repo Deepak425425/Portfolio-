@@ -112,6 +112,15 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     description: "Transparent curved corners.",
     keywords: ["rounded", "corners", "curved", "border radius", "round image", "gol edge", "rounded corners"] 
   },
+  { 
+    id: "hex-to-color", 
+    name: "HEX → Color", 
+    route: "/tools/hex-to-color", 
+    category: "utility",
+    visual: "#",
+    description: "Convert HEX codes to RGB & HSL with live preview.",
+    keywords: ["hex", "color", "hex to color", "hex to rgb", "hex to hsl", "hex code", "color converter", "rgb", "hsl", "color code", "hex color", "colour", "hex to color converter"] 
+  },
 
   // ==========================================
   // SPECIALIZED TOOLS

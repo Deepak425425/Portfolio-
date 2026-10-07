@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Color Palette Generator — Extract Colors from Image",
     description: "Automatically generate a color palette from any image. Extract dominant HEX colors and create aesthetic mood boards with Groton AI's free tool.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

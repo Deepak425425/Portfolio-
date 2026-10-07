@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Comparison Tool — Compare Two Images Online",
     description: "Visually compare two images with interactive sliders, side-by-side views, and difference highlighting. The best before after image comparison tool.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

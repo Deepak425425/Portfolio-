@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useReducedMotion, useMotionValue } from "framer-motion";
@@ -40,6 +40,74 @@ const MagneticButton = ({ children, href, className }: { children: React.ReactNo
     >
       {children}
     </MotionLink>
+  );
+};
+
+const ExploreWorkButton = () => {
+  const btnRef = useRef<HTMLAnchorElement>(null);
+  const arrowRef = useRef<SVGSVGElement>(null);
+  const angleRef = useRef<number>(0);
+
+  useEffect(() => {
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!btnRef.current || !arrowRef.current) return;
+      const rect = btnRef.current.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+
+      // When cursor is virtually right at the button center (< 2px), keep current angle
+      if (Math.hypot(dx, dy) < 2) return;
+
+      const angleRad = Math.atan2(dy, dx);
+      // Math.atan2 gives 0° for right, 90° for down, -90° for up, -45° for upper-right
+      // Since base arrow points upper-right (-45°), target rotation offset is +45°
+      const targetDeg = (angleRad * 180 / Math.PI) + 45;
+
+      // Shortest-path angular wrapping to prevent 360° flips when crossing boundary
+      const prev = angleRef.current;
+      let diff = (targetDeg - (prev % 360));
+      diff = ((diff + 180) % 360 + 360) % 360 - 180;
+      const nextAngle = prev + diff;
+      angleRef.current = nextAngle;
+
+      arrowRef.current.style.transform = `rotate(${nextAngle}deg)`;
+    };
+
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+    };
+  }, []);
+
+  return (
+    <a 
+      ref={btnRef}
+      href="https://www.groton.in/work" 
+      className="h-[42px] px-[22px] rounded-full flex items-center gap-2.5 text-[12px] font-bold bg-[#111] text-white shadow-[0_10px_24px_rgba(0,0,0,0.14)] hover:-translate-y-0.5 transition-all duration-300 pointer-events-auto"
+    >
+      Explore work
+      <div className="w-[19px] h-[19px] rounded-full flex items-center justify-center bg-[#8B7CFF] text-[#111] leading-none select-none">
+        <svg 
+          ref={arrowRef}
+          width="10" 
+          height="10" 
+          viewBox="0 0 10 10" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="1.3" 
+          strokeLinecap="round" 
+          strokeLinejoin="round"
+          className="w-[10px] h-[10px] transition-transform duration-75 ease-out will-change-transform"
+          style={{ transformOrigin: "5px 5px" }}
+          aria-hidden="true"
+        >
+          <line x1="2" y1="8" x2="8" y2="2" />
+          <polyline points="3.5 2 8 2 8 6.5" />
+        </svg>
+      </div>
+    </a>
   );
 };
 
@@ -387,12 +455,7 @@ const HeroReference = ({ cmsImages }: { cmsImages: any }) => {
                     campaigns, and commercial imagery.
                 </p>
                 <div className="flex items-center justify-center gap-4 mt-2.5">
-                    <a href="https://www.groton.in/work" className="h-[42px] px-[22px] rounded-full flex items-center gap-2.5 text-[12px] font-bold bg-[#111] text-white shadow-[0_10px_24px_rgba(0,0,0,0.14)] hover:-translate-y-0.5 transition-all duration-300 pointer-events-auto">
-                        Explore work
-                        <div className="w-[19px] h-[19px] rounded-full flex items-center justify-center bg-[#8B7CFF] text-[#111] text-[10.5px] leading-none">
-                            ↗
-                        </div>
-                    </a>
+                    <ExploreWorkButton />
                 </div>
             </div>
 
@@ -526,6 +589,654 @@ const HeroReference = ({ cmsImages }: { cmsImages: any }) => {
         </div>
       </section>
     </>
+  );
+};
+
+const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; shouldReduceMotion: boolean | null }) => {
+  const containerRef = useRef<HTMLElement>(null);
+  const desktopPathRef = useRef<SVGPathElement>(null);
+  const desktopBleedRef = useRef<SVGPathElement>(null);
+  const desktopStartDotRef = useRef<SVGCircleElement>(null);
+  const desktopDotRef = useRef<SVGCircleElement>(null);
+  const mobilePathRef = useRef<SVGPathElement>(null);
+  const mobileBleedRef = useRef<SVGPathElement>(null);
+  const mobileStartDotRef = useRef<SVGCircleElement>(null);
+  const mobileDotRef = useRef<SVGCircleElement>(null);
+
+  const [activeStage, setActiveStage] = useState(0);
+  const stageRef = useRef(0);
+  stageRef.current = activeStage;
+  const [isMobile, setIsMobile] = useState(false);
+
+  const getStageScrollY = (stageIndex: number) => {
+    if (!containerRef.current) return 0;
+    const container = containerRef.current;
+    const containerTop = container.getBoundingClientRect().top + window.scrollY;
+    const scrollableDistance = container.offsetHeight - window.innerHeight;
+    if (scrollableDistance <= 0) return containerTop;
+    return containerTop + (scrollableDistance * (stageIndex / 3));
+  };
+
+  const goToStage = (targetStage: number) => {
+    if (targetStage < 0 || targetStage > 3) return;
+    stageRef.current = targetStage;
+    setActiveStage(targetStage);
+    const targetY = getStageScrollY(targetStage);
+    window.scrollTo({ top: targetY, behavior: shouldReduceMotion ? 'auto' : 'smooth' });
+  };
+
+  useEffect(() => {
+    const updateMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    updateMobile();
+    window.addEventListener('resize', updateMobile);
+    return () => window.removeEventListener('resize', updateMobile);
+  }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const updatePathProgress = (progress: number) => {
+      // Desktop: total = 1504, initial segment = 120, traveling segment = 380 (~25% of path)
+      const deskL = 1504;
+      const deskStart = 120;
+      const deskSegment = 380;
+      const deskFront = deskStart + progress * (deskL - deskStart);
+      const deskRear = Math.max(0, deskFront - deskSegment);
+      const deskLen = deskFront - deskRear;
+      const deskDashArray = `${deskLen} 5000`;
+      const deskDashOffset = `${-deskRear}px`;
+
+      if (desktopPathRef.current) {
+        desktopPathRef.current.style.strokeDasharray = deskDashArray;
+        desktopPathRef.current.style.strokeDashoffset = deskDashOffset;
+      }
+      if (desktopBleedRef.current) {
+        desktopBleedRef.current.style.strokeDasharray = deskDashArray;
+        desktopBleedRef.current.style.strokeDashoffset = deskDashOffset;
+      }
+      if (desktopStartDotRef.current) {
+        desktopStartDotRef.current.style.opacity = deskRear <= 15 ? `${1 - deskRear / 15}` : '0';
+      }
+      if (desktopDotRef.current) {
+        desktopDotRef.current.style.opacity = progress >= 0.98 ? '1' : '0';
+      }
+
+      // Mobile: total = 1170, initial segment = 90, traveling segment = 290 (~25% of path)
+      const mobL = 1170;
+      const mobStart = 90;
+      const mobSegment = 290;
+      const mobFront = mobStart + progress * (mobL - mobStart);
+      const mobRear = Math.max(0, mobFront - mobSegment);
+      const mobLen = mobFront - mobRear;
+      const mobDashArray = `${mobLen} 4000`;
+      const mobDashOffset = `${-mobRear}px`;
+
+      if (mobilePathRef.current) {
+        mobilePathRef.current.style.strokeDasharray = mobDashArray;
+        mobilePathRef.current.style.strokeDashoffset = mobDashOffset;
+      }
+      if (mobileBleedRef.current) {
+        mobileBleedRef.current.style.strokeDasharray = mobDashArray;
+        mobileBleedRef.current.style.strokeDashoffset = mobDashOffset;
+      }
+      if (mobileStartDotRef.current) {
+        mobileStartDotRef.current.style.opacity = mobRear <= 15 ? `${1 - mobRear / 15}` : '0';
+      }
+      if (mobileDotRef.current) {
+        mobileDotRef.current.style.opacity = progress >= 0.98 ? '1' : '0';
+      }
+    };
+
+    const onScroll = () => {
+      const rect = container.getBoundingClientRect();
+      const scrollableDistance = container.offsetHeight - window.innerHeight;
+      if (scrollableDistance <= 0) return;
+
+      const scrolled = -rect.top;
+      const progress = Math.min(1, Math.max(0, scrolled / scrollableDistance));
+
+      updatePathProgress(progress);
+
+      let stage = 0;
+      if (progress < 0.25) stage = 0;
+      else if (progress < 0.50) stage = 1;
+      else if (progress < 0.75) stage = 2;
+      else stage = 3;
+
+      if (stage !== stageRef.current) {
+        stageRef.current = stage;
+        setActiveStage(stage);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
+  return (
+    <section 
+      ref={containerRef} 
+      id="process-pin-container"
+      className="relative w-full z-10 bg-[#111] text-white border-t border-zinc-900"
+      style={{ height: '300vh' }}
+    >
+      <div className="sticky top-0 h-screen w-full flex flex-col items-center pt-[104px] lg:pt-[clamp(104px,13vh,112px)] pb-6 lg:pb-8 px-6 lg:px-20 overflow-visible">
+        <div className="max-w-[1440px] w-full mx-auto mt-0 mb-auto flex flex-col items-center text-center">
+          <CmsText cmsId="home.process.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-400 uppercase mb-2 lg:mb-2.5" fallback="The Process" />
+          <CmsText cmsId="home.process.heading" as="h2" brClassName="" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] font-bold mb-6 lg:mb-[clamp(14px,2.2vh,28px)]" fallback={"From Product\nto Campaign."} />
+
+          <div 
+            className="w-full flex flex-col lg:flex-row items-center lg:items-center justify-between gap-12 lg:gap-4 relative transition-transform duration-500 ease-out"
+            style={{
+              transform: isMobile 
+                ? `translateY(-${[0, 180, 360, 560][activeStage]}px)` 
+                : 'scale(min(1, max(0.72, calc((100vh - 315px) / 460px))))',
+              transformOrigin: 'top center'
+            }}
+          >
+            {/* CONTINUOUS EDITORIAL PURPLE HAND-DRAWN MARKER STROKE (DESKTOP) */}
+            <svg 
+              className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible hidden lg:block"
+              viewBox="0 0 1250 460"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <defs>
+                <filter id="purple-marker-softness" x="-10%" y="-10%" width="120%" height="120%">
+                  <feGaussianBlur stdDeviation="1.0" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Soft organic ink bleed underlayer */}
+              <path
+                ref={desktopBleedRef}
+                d="M 75,210 C 50,245 40,295 46,335 C 52,365 88,382 135,382 C 180,382 215,368 250,352 C 285,338 325,332 370,332 C 415,332 455,336 485,345 C 520,355 555,368 590,365 C 630,362 665,350 705,345 C 745,342 785,346 825,358 C 865,370 905,392 945,412 C 990,432 1045,442 1105,442 C 1160,440 1205,425 1230,398 C 1250,372 1258,330 1252,275"
+                fill="none"
+                stroke="rgba(139, 124, 255, 0.18)"
+                strokeWidth="7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                filter="url(#purple-marker-softness)"
+                strokeDasharray="120 5000"
+                strokeDashoffset={0}
+                style={{
+                  strokeDasharray: '120 5000',
+                  strokeDashoffset: '0px',
+                  transition: 'none'
+                }}
+              />
+
+              {/* Refined core purple marker stroke */}
+              <path
+                ref={desktopPathRef}
+                d="M 75,210 C 50,245 40,295 46,335 C 52,365 88,382 135,382 C 180,382 215,368 250,352 C 285,338 325,332 370,332 C 415,332 455,336 485,345 C 520,355 555,368 590,365 C 630,362 665,350 705,345 C 745,342 785,346 825,358 C 865,370 905,392 945,412 C 990,432 1045,442 1105,442 C 1160,440 1205,425 1230,398 C 1250,372 1258,330 1252,275"
+                fill="none"
+                stroke="rgba(139, 124, 255, 0.80)"
+                strokeWidth="3.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="120 5000"
+                strokeDashoffset={0}
+                style={{
+                  strokeDasharray: '120 5000',
+                  strokeDashoffset: '0px',
+                  transition: 'none'
+                }}
+              />
+
+              {/* Natural start anchor at PRODUCT */}
+              <circle
+                ref={desktopStartDotRef}
+                cx="75"
+                cy="210"
+                r="3"
+                fill="rgba(139, 124, 255, 0.85)"
+                style={{
+                  transition: 'opacity 0.15s ease-out'
+                }}
+              />
+
+              {/* Intentional finished marker endpoint beyond CAMPAIGN */}
+              <circle
+                ref={desktopDotRef}
+                cx="1252"
+                cy="275"
+                r="3.8"
+                fill="rgba(139, 124, 255, 0.95)"
+                style={{
+                  opacity: 0,
+                  transition: 'opacity 0.2s ease-out'
+                }}
+              />
+            </svg>
+
+            {/* CONTINUOUS EDITORIAL PURPLE HAND-DRAWN MARKER STROKE (MOBILE) */}
+            <svg 
+              className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible block lg:hidden"
+              viewBox="0 0 360 1040"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <defs>
+                <filter id="purple-marker-softness-mobile" x="-10%" y="-10%" width="120%" height="120%">
+                  <feGaussianBlur stdDeviation="1.0" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Soft organic ink bleed underlayer */}
+              <path
+                ref={mobileBleedRef}
+                d="M 95,95 C 75,135 68,185 105,215 C 145,235 185,230 205,210 C 230,190 235,260 215,305 C 190,345 160,370 175,410 C 190,450 230,490 205,550 C 180,610 150,630 165,670 C 180,710 220,770 200,840 C 180,910 150,960 180,995 C 205,1020 235,1030 250,1015"
+                fill="none"
+                stroke="rgba(139, 124, 255, 0.18)"
+                strokeWidth="6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                filter="url(#purple-marker-softness-mobile)"
+                strokeDasharray="90 4000"
+                strokeDashoffset={0}
+                style={{
+                  strokeDasharray: '90 4000',
+                  strokeDashoffset: '0px',
+                  transition: 'none'
+                }}
+              />
+
+              {/* Refined core purple marker stroke */}
+              <path
+                ref={mobilePathRef}
+                d="M 95,95 C 75,135 68,185 105,215 C 145,235 185,230 205,210 C 230,190 235,260 215,305 C 190,345 160,370 175,410 C 190,450 230,490 205,550 C 180,610 150,630 165,670 C 180,710 220,770 200,840 C 180,910 150,960 180,995 C 205,1020 235,1030 250,1015"
+                fill="none"
+                stroke="rgba(139, 124, 255, 0.80)"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray="90 4000"
+                strokeDashoffset={0}
+                style={{
+                  strokeDasharray: '90 4000',
+                  strokeDashoffset: '0px',
+                  transition: 'none'
+                }}
+              />
+
+              {/* Natural start anchor at PRODUCT */}
+              <circle
+                ref={mobileStartDotRef}
+                cx="95"
+                cy="95"
+                r="2.8"
+                fill="rgba(139, 124, 255, 0.85)"
+                style={{
+                  transition: 'opacity 0.15s ease-out'
+                }}
+              />
+
+              {/* Intentional finished marker endpoint beyond CAMPAIGN */}
+              <circle
+                ref={mobileDotRef}
+                cx="250"
+                cy="1015"
+                r="3.5"
+                fill="rgba(139, 124, 255, 0.95)"
+                style={{
+                  opacity: 0,
+                  transition: 'opacity 0.2s ease-out'
+                }}
+              />
+            </svg>
+            
+            {/* STAGE 01 - PRODUCT */}
+            <div 
+              onClick={() => goToStage(0)}
+              className={`w-full lg:w-[22%] flex flex-col items-center text-center relative z-10 group cursor-pointer transition-all duration-500 ${
+                activeStage === 0 
+                  ? "opacity-100 scale-100" 
+                  : "opacity-60 scale-[0.98] hover:opacity-90"
+              }`}
+            >
+              <div className="flex flex-col items-center gap-4 mb-6">
+                <span className="font-mono text-[10px] text-zinc-400 group-hover:text-white transition-colors duration-300">01</span>
+                <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest">Product</span>
+                <span className="font-sans text-[13px] text-zinc-400">Raw Product</span>
+              </div>
+              <div className={`w-[80%] max-w-[200px] aspect-square relative overflow-hidden rounded-[16px] transition-all duration-500 ${
+                activeStage === 0
+                  ? "bg-zinc-900/70 border border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.5)]"
+                  : "bg-zinc-900/50 border border-zinc-800/50"
+              }`}>
+                <CmsMedia 
+                  media={cmsImages.process_raw} 
+                  fallback="/campaign-worlds/groton-home-process-raw-1x1.webp" 
+                  alt="Raw Product Input" 
+                  fill 
+                  className={`object-contain p-6 transition-all duration-700 ${
+                    activeStage === 0 
+                      ? "opacity-95 mix-blend-normal" 
+                      : "opacity-60 mix-blend-luminosity group-hover:opacity-90 group-hover:mix-blend-normal"
+                  }`} 
+                  sizes="(max-width: 768px) 50vw, 20vw" 
+                />
+              </div>
+            </div>
+
+            {/* ARROW 1 -> 2 */}
+            <div className="flex flex-col lg:flex-row items-center justify-center relative z-10 text-zinc-700">
+              {/* Mobile Arrow */}
+              <div className={`lg:hidden h-8 w-[1px] relative my-2 transition-colors duration-500 ${
+                activeStage >= 1 ? "bg-zinc-500" : "bg-zinc-700"
+              }`}>
+                <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b border-r rotate-45 translate-y-[2px] transition-colors duration-500 ${
+                  activeStage >= 1 ? "border-zinc-500" : "border-zinc-700"
+                }`}></div>
+              </div>
+              {/* Desktop Arrow */}
+              <div className={`hidden lg:block w-8 lg:w-12 h-[1px] relative transition-colors duration-500 ${
+                activeStage >= 1 ? "bg-zinc-500" : "bg-zinc-700"
+              }`}>
+                <div className={`absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t border-r rotate-45 translate-x-[2px] transition-colors duration-500 ${
+                  activeStage >= 1 ? "border-zinc-500" : "border-zinc-700"
+                }`}></div>
+              </div>
+            </div>
+
+            {/* STAGE 02 - MODEL */}
+            <div 
+              onClick={() => goToStage(1)}
+              className={`w-full lg:w-[18%] flex flex-col items-center text-center relative z-10 group cursor-pointer transition-all duration-500 ${
+                activeStage === 1 
+                  ? "opacity-100 scale-100" 
+                  : "opacity-60 scale-[0.98] hover:opacity-90"
+              }`}
+            >
+              <div className="flex flex-col items-center gap-4 mb-6">
+                <span className="font-mono text-[10px] text-zinc-400 group-hover:text-white transition-colors duration-300">02</span>
+                <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest">Model</span>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <span className={`font-sans text-[14px] transition-colors duration-300 ${activeStage === 1 ? "text-white font-medium" : "text-zinc-300"}`}>Male</span>
+                <span className={`font-sans text-[14px] transition-colors duration-300 ${activeStage === 1 ? "text-white font-medium" : "text-zinc-300"}`}>Editorial Pose</span>
+                <span className={`font-sans text-[14px] transition-colors duration-300 ${activeStage === 1 ? "text-white font-medium" : "text-zinc-300"}`}>Casual Styling</span>
+              </div>
+            </div>
+
+            {/* ARROW 2 -> 3 */}
+            <div className="flex flex-col lg:flex-row items-center justify-center relative z-10 text-zinc-700">
+              <div className={`lg:hidden h-8 w-[1px] relative my-2 transition-colors duration-500 ${
+                activeStage >= 2 ? "bg-zinc-500" : "bg-zinc-700"
+              }`}>
+                <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b border-r rotate-45 translate-y-[2px] transition-colors duration-500 ${
+                  activeStage >= 2 ? "border-zinc-500" : "border-zinc-700"
+                }`}></div>
+              </div>
+              <div className={`hidden lg:block w-8 lg:w-12 h-[1px] relative transition-colors duration-500 ${
+                activeStage >= 2 ? "bg-zinc-500" : "bg-zinc-700"
+              }`}>
+                <div className={`absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t border-r rotate-45 translate-x-[2px] transition-colors duration-500 ${
+                  activeStage >= 2 ? "border-zinc-500" : "border-zinc-700"
+                }`}></div>
+              </div>
+            </div>
+
+            {/* STAGE 03 - ART DIRECTION */}
+            <div 
+              onClick={() => goToStage(2)}
+              className={`w-full lg:w-[18%] flex flex-col items-center text-center relative z-10 group cursor-pointer transition-all duration-500 ${
+                activeStage === 2 
+                  ? "opacity-100 scale-100" 
+                  : "opacity-60 scale-[0.98] hover:opacity-90"
+              }`}
+            >
+              <div className="flex flex-col items-center gap-4 mb-6">
+                <span className="font-mono text-[10px] text-zinc-400 group-hover:text-white transition-colors duration-300">03</span>
+                <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest">Art Direction</span>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <span className={`font-sans text-[14px] transition-colors duration-300 ${activeStage === 2 ? "text-white font-medium" : "text-zinc-300"}`}>Soft Lighting</span>
+                <span className={`font-sans text-[14px] transition-colors duration-300 ${activeStage === 2 ? "text-white font-medium" : "text-zinc-300"}`}>50mm Camera</span>
+                <span className={`font-sans text-[14px] transition-colors duration-300 ${activeStage === 2 ? "text-white font-medium" : "text-zinc-300"}`}>Clean Background</span>
+                <span className={`font-sans text-[14px] transition-colors duration-300 ${activeStage === 2 ? "text-white font-medium" : "text-zinc-300"}`}>Editorial Composition</span>
+              </div>
+            </div>
+
+            {/* ARROW 3 -> 4 */}
+            <div className="flex flex-col lg:flex-row items-center justify-center relative z-10 text-zinc-700">
+              <div className={`lg:hidden h-8 w-[1px] relative my-2 transition-colors duration-500 ${
+                activeStage >= 3 ? "bg-zinc-500" : "bg-zinc-700"
+              }`}>
+                <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b border-r rotate-45 translate-y-[2px] transition-colors duration-500 ${
+                  activeStage >= 3 ? "border-zinc-500" : "border-zinc-700"
+                }`}></div>
+              </div>
+              <div className={`hidden lg:block w-8 lg:w-12 h-[1px] relative transition-colors duration-500 ${
+                activeStage >= 3 ? "bg-zinc-500" : "bg-zinc-700"
+              }`}>
+                <div className={`absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t border-r rotate-45 translate-x-[2px] transition-colors duration-500 ${
+                  activeStage >= 3 ? "border-zinc-500" : "border-zinc-700"
+                }`}></div>
+              </div>
+            </div>
+
+            {/* STAGE 04 - CAMPAIGN */}
+            <div 
+              onClick={() => goToStage(3)}
+              className={`w-full lg:w-[28%] flex flex-col items-center text-center relative z-10 group cursor-pointer transition-all duration-500 ${
+                activeStage === 3 
+                  ? "opacity-100 scale-100" 
+                  : "opacity-60 scale-[0.98] hover:opacity-90"
+              }`}
+            >
+              <div className="flex flex-col items-center gap-4 mb-6">
+                <span className="font-mono text-[10px] text-zinc-400 group-hover:text-white transition-colors duration-300">04</span>
+                <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest">Campaign</span>
+                <span className="font-sans text-[13px] text-zinc-400">Final Campaign Visual</span>
+              </div>
+              <div className={`w-[90%] lg:w-full max-w-[280px] aspect-[4/5] relative overflow-hidden rounded-[20px] transition-all duration-500 ${
+                activeStage === 3 
+                  ? "shadow-[0_20px_50px_rgba(0,0,0,0.50)] border border-white/20" 
+                  : "shadow-[0_18px_40px_rgba(0,0,0,0.30)] border border-zinc-800/50"
+              }`}>
+                <CmsMedia 
+                  media={cmsImages.process_final} 
+                  fallback="/campaign-worlds/groton-home-process-final-4x5.webp" 
+                  alt="Final Campaign Visual" 
+                  fill 
+                  className={`object-cover group-hover:scale-105 transition-all duration-700 ${
+                    activeStage === 3 
+                      ? "opacity-100" 
+                      : "opacity-75 mix-blend-luminosity group-hover:opacity-100 group-hover:mix-blend-normal"
+                  }`} 
+                  sizes="(max-width: 768px) 80vw, 30vw" 
+                />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const TypewriterHeading = ({ cmsId = "home.why.heading", fallback = "Built for\nE-commerce." }: { cmsId?: string; fallback?: string }) => {
+  const [targetText, setTargetText] = useState(fallback);
+  const [displayedText, setDisplayedText] = useState("");
+  const [showCaret, setShowCaret] = useState(true);
+
+  // Fetch CMS text if published override exists
+  useEffect(() => {
+    let isPreview = false;
+    if (typeof window !== 'undefined') {
+      if (window.location.search.includes('preview=true') || sessionStorage.getItem('groton_preview') === 'true') {
+        isPreview = true;
+      }
+    }
+    const apiUrl = isPreview ? '/api/studio/cms-text?preview=true' : '/api/studio/cms-text';
+    fetch(apiUrl, { cache: 'no-store' })
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const item = data.find((i: any) => i.id === cmsId);
+          if (item?.publishedValue) {
+            setTargetText(item.publishedValue);
+          }
+        }
+      })
+      .catch(() => {});
+  }, [cmsId]);
+
+  useEffect(() => {
+    const fullText = targetText;
+    const steps: { text: string; duration: number; showCaret: boolean }[] = [];
+
+    // 1. Start with the heading empty (~0.8s)
+    steps.push({ text: "", duration: 800, showCaret: true });
+
+    if (fullText.includes("E-commerce")) {
+      // 2. Type normally until: "Built for\nE" (~1.2s)
+      const part1 = "Built for\nE";
+      for (let i = 1; i <= part1.length; i++) {
+        steps.push({ text: part1.slice(0, i), duration: 110, showCaret: true });
+      }
+
+      // 3. Continue typing "shop" after "E" -> "Built for\nEshop"
+      const typoChars = ["s", "h", "o", "p"];
+      let typoStr = "Built for\nE";
+      for (const ch of typoChars) {
+        typoStr += ch;
+        steps.push({ text: typoStr, duration: 110, showCaret: true });
+      }
+
+      // 4. Hold "Built for\nEshop" very briefly so the typo is visible (~0.45s)
+      steps.push({ text: "Built for\nEshop", duration: 450, showCaret: true });
+
+      // 5. Backspace ONLY the incorrectly typed "shop", one character at a time:
+      // "Eshop" -> "Esho" -> "Esh" -> "Es" -> "E"
+      const backspaces = [
+        "Built for\nEsho",
+        "Built for\nEsh",
+        "Built for\nEs",
+        "Built for\nE",
+      ];
+      for (const str of backspaces) {
+        steps.push({ text: str, duration: 130, showCaret: true });
+      }
+
+      // Brief hesitation after returning to "Built for\nE" (~0.2s)
+      steps.push({ text: "Built for\nE", duration: 200, showCaret: true });
+
+      // 6. Continue typing correct remaining text: "-commerce." character by character (~1.1s)
+      const remaining = "-commerce.";
+      let correctStr = "Built for\nE";
+      for (let i = 0; i < remaining.length; i++) {
+        correctStr += remaining[i];
+        steps.push({ text: correctStr, duration: 110, showCaret: true });
+      }
+    } else {
+      for (let i = 1; i <= fullText.length; i++) {
+        steps.push({ text: fullText.slice(0, i), duration: 110, showCaret: true });
+      }
+    }
+
+    // 7. Hold final correct heading using existing hold duration (~2.8s)
+    steps.push({ text: fullText, duration: 2800, showCaret: true });
+
+    // 8. Delete final text from right to left (~1.6s)
+    for (let i = fullText.length - 1; i >= 1; i--) {
+      steps.push({ text: fullText.slice(0, i), duration: 75, showCaret: true });
+    }
+
+    // Precalculate cumulative end times
+    const cumulativeTimes: number[] = [];
+    let total = 0;
+    for (const s of steps) {
+      total += s.duration;
+      cumulativeTimes.push(total);
+    }
+
+    let rafId: number;
+    let currentStepIndex = -1;
+    const startTime = performance.now();
+
+    const loop = (now: number) => {
+      const elapsed = (now - startTime) % total;
+
+      // Find active step
+      let stepIdx = 0;
+      for (let i = 0; i < cumulativeTimes.length; i++) {
+        if (elapsed < cumulativeTimes[i]) {
+          stepIdx = i;
+          break;
+        }
+      }
+
+      if (stepIdx !== currentStepIndex) {
+        currentStepIndex = stepIdx;
+        const s = steps[stepIdx];
+        setDisplayedText(s.text);
+        setShowCaret(s.showCaret);
+      }
+
+      rafId = requestAnimationFrame(loop);
+    };
+
+    rafId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(rafId);
+  }, [targetText]);
+
+  const lines = displayedText.split('\n');
+
+  return (
+    <h2 className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold relative">
+      {/* Invisible layout preserver: guarantees identical dimensions, lines and zero layout shift */}
+      <span style={{ visibility: 'hidden', userSelect: 'none', pointerEvents: 'none', display: 'block' }} aria-hidden="true">
+        {targetText.split('\n').map((line, idx, arr) => (
+          <React.Fragment key={idx}>
+            <span className="whitespace-nowrap">{line}</span>
+            {idx < arr.length - 1 && <br className="" />}
+          </React.Fragment>
+        ))}
+      </span>
+
+      {/* Live typewriter layer */}
+      <span style={{ position: 'absolute', inset: 0, userSelect: 'none', display: 'block' }} aria-hidden="true">
+        {lines.map((line, idx) => {
+          const isLastLine = idx === lines.length - 1;
+          return (
+            <React.Fragment key={idx}>
+              <span className="whitespace-nowrap">
+                {line}
+                {isLastLine && showCaret && (
+                  <span 
+                    className="inline-block w-[0.045em] h-[0.82em] bg-current align-[-0.05em] ml-[0.06em] mr-[-0.2em] rounded-[1px] animate-subtle-caret"
+                    style={{ animation: 'subtleCaretBlink 0.9s ease-in-out infinite' }}
+                  />
+                )}
+              </span>
+              {idx < lines.length - 1 && <br className="" />}
+            </React.Fragment>
+          );
+        })}
+      </span>
+
+      {/* Accessible text for screen readers & SEO */}
+      <span className="sr-only">{targetText.replace('\n', ' ')}</span>
+    </h2>
   );
 };
 
@@ -800,141 +1511,7 @@ export default function Home() {
       </section>
 
       {/* 4. PRODUCT TRANSFORMATION */}
-        <section className="relative w-full z-10 bg-[#111] text-white py-[100px] lg:py-[150px] px-6 lg:px-20 overflow-hidden border-t border-zinc-900">
-          <div className="max-w-[1440px] mx-auto flex flex-col items-center text-center">
-            <CmsText cmsId="home.process.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-400 uppercase mb-6" fallback="The Process" />
-            <CmsText cmsId="home.process.heading" as="h2" brClassName="" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] font-bold mb-[80px] lg:mb-[120px]" fallback={"From Product\nto Campaign."} />
-
-            <div className="w-full flex flex-col lg:flex-row items-center lg:items-center justify-between gap-12 lg:gap-4 relative">
-              
-              {/* STAGE 01 - PRODUCT */}
-              <motion.div 
-                initial={{ opacity: shouldReduceMotion ? 1 : 0.4 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
-                transition={{ duration: 0.8 }}
-                className="w-full lg:w-[22%] flex flex-col items-center text-center relative group"
-              >
-                <div className="flex flex-col items-center gap-4 mb-6">
-                  <span className="font-mono text-[10px] text-zinc-500 group-hover:text-[#8B7CFF] transition-colors duration-500">01</span>
-                  <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest group-hover:text-[#8B7CFF] transition-colors duration-500">Product</span>
-                  <span className="font-sans text-[13px] text-zinc-400">Raw Product</span>
-                </div>
-                <div className="w-[80%] max-w-[200px] aspect-square relative overflow-hidden rounded-[16px] bg-zinc-900/50 border border-zinc-800/50">
-                  <CmsMedia media={cmsImages.process_raw} fallback="/campaign-worlds/groton-home-process-raw-1x1.webp" alt="Raw Product Input" fill className="object-contain p-6 mix-blend-luminosity opacity-70 group-hover:opacity-100 group-hover:mix-blend-normal transition-all duration-700" sizes="(max-width: 768px) 50vw, 20vw" />
-                </div>
-              </motion.div>
-
-              {/* ARROW 1 -> 2 */}
-              <motion.div 
-                initial={{ opacity: shouldReduceMotion ? 1 : 0.2 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-                className="flex flex-col lg:flex-row items-center justify-center text-zinc-700"
-              >
-                {/* Mobile Arrow */}
-                <div className="lg:hidden h-8 w-[1px] bg-zinc-700 relative my-2">
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b border-r border-zinc-700 rotate-45 translate-y-[2px]"></div>
-                </div>
-                {/* Desktop Arrow */}
-                <div className="hidden lg:block w-8 lg:w-12 h-[1px] bg-zinc-700 relative">
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t border-r border-zinc-700 rotate-45 translate-x-[2px]"></div>
-                </div>
-              </motion.div>
-
-              {/* STAGE 02 - MODEL */}
-              <motion.div 
-                initial={{ opacity: shouldReduceMotion ? 1 : 0.4 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
-                transition={{ duration: 0.8, delay: shouldReduceMotion ? 0 : 0.2 }}
-                className="w-full lg:w-[18%] flex flex-col items-center text-center relative group"
-              >
-                <div className="flex flex-col items-center gap-4 mb-6">
-                  <span className="font-mono text-[10px] text-zinc-500 group-hover:text-[#8B7CFF] transition-colors duration-500">02</span>
-                  <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest group-hover:text-[#8B7CFF] transition-colors duration-500">Model</span>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                  <span className="font-sans text-[14px] text-zinc-300">Male</span>
-                  <span className="font-sans text-[14px] text-zinc-300">Editorial Pose</span>
-                  <span className="font-sans text-[14px] text-zinc-300">Casual Styling</span>
-                </div>
-              </motion.div>
-
-              {/* ARROW 2 -> 3 */}
-              <motion.div 
-                initial={{ opacity: shouldReduceMotion ? 1 : 0.2 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="flex flex-col lg:flex-row items-center justify-center text-zinc-700"
-              >
-                <div className="lg:hidden h-8 w-[1px] bg-zinc-700 relative my-2">
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b border-r border-zinc-700 rotate-45 translate-y-[2px]"></div>
-                </div>
-                <div className="hidden lg:block w-8 lg:w-12 h-[1px] bg-zinc-700 relative">
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t border-r border-zinc-700 rotate-45 translate-x-[2px]"></div>
-                </div>
-              </motion.div>
-
-              {/* STAGE 03 - ART DIRECTION */}
-              <motion.div 
-                initial={{ opacity: shouldReduceMotion ? 1 : 0.4 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
-                transition={{ duration: 0.8, delay: shouldReduceMotion ? 0 : 0.4 }}
-                className="w-full lg:w-[18%] flex flex-col items-center text-center relative group"
-              >
-                <div className="flex flex-col items-center gap-4 mb-6">
-                  <span className="font-mono text-[10px] text-zinc-500 group-hover:text-[#8B7CFF] transition-colors duration-500">03</span>
-                  <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest group-hover:text-[#8B7CFF] transition-colors duration-500">Art Direction</span>
-                </div>
-                <div className="flex flex-col items-center gap-2">
-                  <span className="font-sans text-[14px] text-zinc-300">Soft Lighting</span>
-                  <span className="font-sans text-[14px] text-zinc-300">50mm Camera</span>
-                  <span className="font-sans text-[14px] text-zinc-300">Clean Background</span>
-                  <span className="font-sans text-[14px] text-zinc-300">Editorial Composition</span>
-                </div>
-              </motion.div>
-
-              {/* ARROW 3 -> 4 */}
-              <motion.div 
-                initial={{ opacity: shouldReduceMotion ? 1 : 0.2 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className="flex flex-col lg:flex-row items-center justify-center text-zinc-700"
-              >
-                <div className="lg:hidden h-8 w-[1px] bg-zinc-700 relative my-2">
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 border-b border-r border-zinc-700 rotate-45 translate-y-[2px]"></div>
-                </div>
-                <div className="hidden lg:block w-8 lg:w-12 h-[1px] bg-zinc-700 relative">
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 border-t border-r border-zinc-700 rotate-45 translate-x-[2px]"></div>
-                </div>
-              </motion.div>
-
-              {/* STAGE 04 - CAMPAIGN */}
-              <motion.div 
-                initial={{ opacity: shouldReduceMotion ? 1 : 0.4 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: false, margin: "-20% 0px -20% 0px" }}
-                transition={{ duration: 0.8, delay: shouldReduceMotion ? 0 : 0.6 }}
-                className="w-full lg:w-[28%] flex flex-col items-center text-center relative group"
-              >
-                <div className="flex flex-col items-center gap-4 mb-6">
-                  <span className="font-mono text-[10px] text-[#8B7CFF]">04</span>
-                  <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest text-[#8B7CFF]">Campaign</span>
-                  <span className="font-sans text-[13px] text-zinc-400">Final Campaign Visual</span>
-                </div>
-                <div className="w-[90%] lg:w-full max-w-[280px] aspect-[4/5] relative overflow-hidden rounded-[20px] shadow-[0_18px_40px_rgba(0,0,0,0.30)]">
-                  <CmsMedia media={cmsImages.process_final} fallback="/campaign-worlds/groton-home-process-final-4x5.webp" alt="Final Campaign Visual" fill className="object-cover group-hover:scale-105 transition-transform duration-1000" sizes="(max-width: 768px) 80vw, 30vw" />
-                </div>
-              </motion.div>
-
-            </div>
-          </div>
-        </section>
+      <ProcessSection cmsImages={cmsImages} shouldReduceMotion={shouldReduceMotion} />
 
         {/* 5. FASHION & APPAREL */}
       <section className="relative w-full z-10 bg-[#F9F8F6] py-[150px] px-6 lg:px-20 overflow-hidden">
@@ -1081,7 +1658,7 @@ export default function Home() {
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-[150px] relative z-10">
           <div className="w-full lg:w-[40%]">
             <div className="sticky top-32">
-               <CmsText cmsId="home.why.heading" as="h2" brClassName="" className="font-sans text-[42px] md:text-[60px] lg:text-[80px] leading-[0.9] tracking-[-0.05em] text-black font-bold" fallback={"Built for\nE-commerce."} />
+               <TypewriterHeading cmsId="home.why.heading" fallback={"Built for\nE-commerce."} />
             </div>
           </div>
           <div className="w-full lg:w-[60%] grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-[80px]">

@@ -6,6 +6,31 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Terms & Conditions — GROTON AI STUDIO",
   description: "GROTON terms of service and usage conditions.",
+  alternates: {
+    canonical: "/terms-and-conditions",
+  },
+  openGraph: {
+    title: "Terms & Conditions — GROTON AI STUDIO",
+    description: "GROTON terms of service and usage conditions.",
+    url: "https://groton.in/terms-and-conditions",
+    siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "https://groton.in/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "GROTON AI Terms & Conditions",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms & Conditions — GROTON AI STUDIO",
+    description: "GROTON terms of service and usage conditions.",
+    images: ["https://groton.in/og-image.jpg"],
+  },
 };
 
 export default function TermsPage() {

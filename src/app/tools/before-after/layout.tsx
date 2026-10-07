@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Before & After Image Tool — Create Comparison Sliders Online",
     description: "Generate interactive before and after image comparison sliders. Perfect for showcasing retouching, editing, and transformations. Free online image tool by Groton AI.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Resizer — Change Image Dimensions Online",
     description: "Resize images online with precise pixel dimensions, percentage scaling, and aspect ratio locks. Perfect for e-commerce and social media.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 
