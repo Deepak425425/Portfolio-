@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "EXIF Metadata Remover — Strip Image Data for Privacy",
     description: "Remove EXIF data, GPS location, and camera metadata from photos online. Protect your privacy before sharing images with Groton's free tool.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Canvas Resizer — Add Padding & Margins Online",
     description: "Expand the canvas of your image, add colored padding, margins, or transparent space without cropping. Prepare images for Instagram and e-commerce.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

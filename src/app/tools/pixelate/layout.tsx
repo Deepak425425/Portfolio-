@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Pixelator — Censor Photos & Create 8-Bit Art",
     description: "Pixelate faces, censor sensitive information, or create retro 8-bit aesthetic art online. A fast and free image editor by Groton AI.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

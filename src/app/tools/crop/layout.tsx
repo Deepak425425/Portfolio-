@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Cropper — Crop Photos Online for Free",
     description: "Crop images precisely with custom aspect ratios, freeform cropping, and high-resolution export. A fast and free online image cropper by Groton.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

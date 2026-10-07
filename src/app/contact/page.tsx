@@ -140,9 +140,9 @@ ${data.details}`;
                   <div className="relative">
                     <select required id="budget" name="budget" defaultValue="" className="w-full border-b border-zinc-300 py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
                       <option value="" disabled>Select a range...</option>
-                      <option value="Starter">Starter — 25 Images — ₹2,499+</option>
-                      <option value="Growth">Growth — 50 Images — ₹4,499+</option>
-                      <option value="Scale">Scale — 100 Images — ₹7,999+</option>
+                      <option value="Starter">Starter — 25 Images — ₹1,999+</option>
+                      <option value="Growth">Growth — 50 Images — ₹3,499+</option>
+                      <option value="Scale">Scale — 100 Images — ₹5,999+</option>
                       <option value="Custom">Custom / Not Sure</option>
                     </select>
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400">

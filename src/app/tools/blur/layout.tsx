@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Blur Tool — Blur Photos & Hide Information Online",
     description: "Apply gaussian blur, obscure sensitive information, or create soft depth-of-field effects online. A free and fast image editor by Groton AI.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

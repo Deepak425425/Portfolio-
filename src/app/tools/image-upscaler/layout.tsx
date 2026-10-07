@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Upscaler — Increase Image Resolution Online",
     description: "Upscale images and increase resolution without losing quality. Perfect for improving low-res e-commerce product photos and graphics.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

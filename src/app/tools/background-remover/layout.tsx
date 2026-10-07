@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Background Remover — Isolate Subjects & Remove Backgrounds Online",
     description: "Instantly remove backgrounds from images online. Isolate subjects, create transparent PNGs, and prepare product images for e-commerce with Groton AI's free image tool.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

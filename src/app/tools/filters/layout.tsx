@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Filters & Colour Grading — Professional Photo Effects",
     description: "Apply cinematic image effects, film looks, editorial filters and professional colour grading directly in your browser with Groton's creative studio.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

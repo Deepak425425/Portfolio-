@@ -6,6 +6,31 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Privacy Policy — GROTON AI STUDIO",
   description: "GROTON privacy policy and data usage terms.",
+  alternates: {
+    canonical: "/privacy-policy",
+  },
+  openGraph: {
+    title: "Privacy Policy — GROTON AI STUDIO",
+    description: "GROTON privacy policy and data usage terms.",
+    url: "https://groton.in/privacy-policy",
+    siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "https://groton.in/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "GROTON AI Privacy Policy",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Policy — GROTON AI STUDIO",
+    description: "GROTON privacy policy and data usage terms.",
+    images: ["https://groton.in/og-image.jpg"],
+  },
 };
 
 export default function PrivacyPolicyPage() {

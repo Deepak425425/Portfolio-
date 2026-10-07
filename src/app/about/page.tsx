@@ -9,6 +9,31 @@ import CmsText from "@/components/CmsText";
 export const metadata: Metadata = {
   title: "About — GROTON AI STUDIO",
   description: "A modern visual production studio merging art direction with AI generation.",
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: "About — GROTON AI STUDIO",
+    description: "A modern visual production studio merging art direction with AI generation.",
+    url: "https://groton.in/about",
+    siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "https://groton.in/campaign-worlds/groton-about-main-visual-16x9.webp",
+        width: 1200,
+        height: 675,
+        alt: "About GROTON AI Studio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About — GROTON AI STUDIO",
+    description: "A modern visual production studio merging art direction with AI generation.",
+    images: ["https://groton.in/campaign-worlds/groton-about-main-visual-16x9.webp"],
+  },
 };
 
 export default function AboutPage() {

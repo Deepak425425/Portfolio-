@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Passport Photo Maker — Create ID Photos Online",
     description: "Format and crop photos to standard passport, visa, and ID dimensions. Generate print-ready sheets with Groton's online passport photo maker.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { TOOL_REGISTRY } from "@/lib/registry/tools";
 import CmsText from "@/components/CmsText";
 import AskAIAssistant from "@/components/tools/AskAIAssistant";
+import ScrollMechanicalSound from "@/components/tools/ScrollMechanicalSound";
 
 const ToolCard = ({ tool, isNightMode }: { tool: any, isNightMode: boolean }) => (
   <Link 
@@ -28,12 +29,71 @@ const ToolCard = ({ tool, isNightMode }: { tool: any, isNightMode: boolean }) =>
   </Link>
 );
 
+const SEARCH_PLACEHOLDER_PHRASES = [
+  "Search tools...",
+  "Search image tools...",
+  "Search background remover...",
+  "Search tools..."
+];
+const BASE_SEARCH_PREFIX = "Search";
+
+function useSearchPlaceholderTypewriter(isPaused: boolean) {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [currentText, setCurrentText] = useState(SEARCH_PLACEHOLDER_PHRASES[0]);
+  const [phase, setPhase] = useState<'holding' | 'deleting' | 'pause_before_type' | 'typing'>('holding');
+
+  React.useEffect(() => {
+    if (isPaused) return;
+
+    let timeoutId: NodeJS.Timeout;
+
+    if (phase === 'holding') {
+      timeoutId = setTimeout(() => {
+        setPhase('deleting');
+      }, 2100);
+    } else if (phase === 'deleting') {
+      if (currentText.length > BASE_SEARCH_PREFIX.length) {
+        timeoutId = setTimeout(() => {
+          setCurrentText(prev => prev.slice(0, -1));
+        }, 55);
+      } else {
+        timeoutId = setTimeout(() => {
+          setPhase('pause_before_type');
+        }, 320);
+      }
+    } else if (phase === 'pause_before_type') {
+      timeoutId = setTimeout(() => {
+        setPhraseIndex(prev => (prev + 1) % SEARCH_PLACEHOLDER_PHRASES.length);
+        setPhase('typing');
+      }, 80);
+    } else if (phase === 'typing') {
+      const target = SEARCH_PLACEHOLDER_PHRASES[phraseIndex];
+      if (currentText.length < target.length) {
+        timeoutId = setTimeout(() => {
+          setCurrentText(target.slice(0, currentText.length + 1));
+        }, 85);
+      } else {
+        timeoutId = setTimeout(() => {
+          setPhase('holding');
+        }, 2100);
+      }
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [isPaused, phase, currentText, phraseIndex]);
+
+  return currentText;
+}
+
 const ASK_AI_ENABLED = false;
 
 export default function ToolsLandingPage() {
   const [search, setSearch] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
   const [isNightMode, setIsNightMode] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  const placeholderText = useSearchPlaceholderTypewriter(!mounted || isFocused || search.length > 0);
 
   React.useEffect(() => {
     setMounted(true);
@@ -72,7 +132,7 @@ export default function ToolsLandingPage() {
       ids: [
         "resize", "crop", "compressor", "convert", "rotate-flip", "rounded-image",
         "canvas", "grid-cutter", "social-resizer", "passport-photo",
-        "filters", "blur", "pixelate", "color-palette", "color-picker", "watermark",
+        "filters", "blur", "pixelate", "color-palette", "color-picker", "hex-to-color", "watermark",
         "favicon", "meme"
       ]
     },
@@ -127,24 +187,27 @@ export default function ToolsLandingPage() {
       
       <div className="flex-1 w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24 py-16 md:py-24 z-10 pt-[160px]">
         
-        {/* LIGHT/DARK TOGGLE */}
-        <div className="w-full flex justify-end mb-4">
+        {/* TOP CONTROLS: SOUND TOGGLE & LIGHT/DARK TOGGLE */}
+        <div className="w-full flex justify-end items-center gap-2.5 mb-4">
            {mounted && (
-             <button 
-               onClick={toggleNightMode}
-               className={`flex items-center gap-2 px-4 py-2 border rounded-full text-[10px] uppercase tracking-widest font-bold transition-colors shadow-sm ${isNightMode ? 'bg-[#18181A] border-white/10 hover:bg-[#222] text-zinc-300' : 'border-[rgba(0,0,0,0.05)] bg-white hover:bg-zinc-50 text-black'}`}
-               title="Toggle Night Mode"
-             >
-               {isNightMode ? '☀ LIGHT' : '☾ DARK'}
-             </button>
+             <>
+               <ScrollMechanicalSound isNightMode={isNightMode} />
+               <button 
+                 onClick={toggleNightMode}
+                 className={`flex items-center gap-2 px-4 py-2 border rounded-full text-[10px] uppercase tracking-widest font-bold transition-colors shadow-sm ${isNightMode ? 'bg-[#18181A] border-white/10 hover:bg-[#222] text-zinc-300' : 'border-[rgba(0,0,0,0.05)] bg-white hover:bg-zinc-50 text-black'}`}
+                 title="Toggle Night Mode"
+               >
+                 {isNightMode ? '☀ LIGHT' : '☾ DARK'}
+               </button>
+             </>
            )}
         </div>
         
         {/* HERO */}
         <div className="flex flex-col items-center justify-center text-center gap-4 mb-24 w-full relative z-10">
             <CmsText cmsId="tools.hero.label" as="span" className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#8B7CFF]" fallback="GROTON AI / TOOLS" />
-            <CmsText cmsId="tools.hero.heading" as="h1" className={`text-4xl md:text-6xl lg:text-7xl font-sans font-bold tracking-[-0.05em] leading-tight max-w-4xl ${isNightMode ? 'text-white' : 'text-black'}`} fallback="Image tools, without the busywork." />
-            <CmsText cmsId="tools.hero.desc" as="p" className={`text-base md:text-lg mt-2 font-light tracking-wide max-w-2xl ${isNightMode ? 'text-zinc-400' : 'text-zinc-500'}`} fallback="Small tools. Serious image work." />
+            <CmsText cmsId="tools.hero.heading" as="h1" className={`text-4xl md:text-6xl lg:text-7xl font-sans font-bold tracking-[-0.05em] leading-tight max-w-4xl ${isNightMode ? 'text-white' : 'text-black'}`} fallback="Save the time. Keep the creativity." />
+            <CmsText cmsId="tools.hero.desc" as="p" className={`text-base md:text-lg mt-2 font-light tracking-wide max-w-2xl ${isNightMode ? 'text-zinc-400' : 'text-zinc-500'}`} fallback="Built to make your creative workflow faster." />
             
             {/* Single Premium Search Bar */}
             <div className={`relative group mt-10 w-full max-w-lg mx-auto rounded-full overflow-hidden p-[1px] transition-shadow duration-700 hover:shadow-[0_8px_30px_rgba(139,124,255,0.15)] focus-within:shadow-[0_8px_30px_rgba(139,124,255,0.2)]`}>
@@ -164,8 +227,11 @@ export default function ToolsLandingPage() {
               {/* Inner Input Area (Opaque to mask center) */}
               <input 
                 type="text" 
-                placeholder="Search tools..."
+                aria-label="Search tools"
+                placeholder={!mounted ? "Search tools..." : ""}
                 value={search}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
                 onChange={e => setSearch(e.target.value)}
                 className={`relative z-10 w-full rounded-full outline-none px-8 py-5 text-sm transition-all ${
                   isNightMode 
@@ -173,6 +239,21 @@ export default function ToolsLandingPage() {
                     : 'bg-white text-black placeholder:text-zinc-400'
                 }`}
               />
+
+              {/* Animated Typewriter Placeholder Layer */}
+              {mounted && !isFocused && !search && (
+                <div 
+                  className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 z-20 flex items-center text-sm font-sans select-none overflow-hidden max-w-[calc(100%-64px)] whitespace-nowrap transition-opacity duration-150 group-focus-within:opacity-0"
+                  aria-hidden="true"
+                >
+                  <span className={`transition-colors duration-500 ${isNightMode ? 'text-zinc-500' : 'text-zinc-400'}`}>
+                    {placeholderText}
+                  </span>
+                  <span 
+                    className="inline-block w-[1.5px] h-[14px] bg-[#8B7CFF] ml-[2px] rounded-[1px] animate-subtle-caret" 
+                  />
+                </div>
+              )}
             </div>
         </div>
 

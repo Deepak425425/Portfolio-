@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Cinematic Focus Engine — Optical Blur & Film Effects",
     description: "Create cinematic focus, radial blur, tilt-shift, and editorial film looks online. A professional grade visual effects tool by Groton AI.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

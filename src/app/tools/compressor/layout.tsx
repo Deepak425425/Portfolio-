@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Compressor — Reduce File Size Online",
     description: "Compress JPG, PNG, and WebP images online without losing visible quality. Optimize web performance and reduce file sizes easily with Groton.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

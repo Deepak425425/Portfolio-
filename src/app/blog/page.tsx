@@ -14,19 +14,32 @@ export const metadata: Metadata = {
     canonical: "/blog",
   },
   openGraph: {
-    title: "GROTON Journal",
+    title: "GROTON Journal — E-commerce Visuals, AI Imagery & Creative Production",
     description: "Insights on product imagery, e-commerce visuals, creative production and modern brand content.",
     url: "https://groton.in/blog",
     siteName: "GROTON AI",
+    locale: "en_US",
     images: [
+      {
+        url: "https://groton.in/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "GROTON Journal",
+      },
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "GROTON AI",
+        alt: "GROTON Journal",
       },
     ],
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GROTON Journal — E-commerce Visuals, AI Imagery & Creative Production",
+    description: "Insights on product imagery, e-commerce visuals, creative production and modern brand content.",
+    images: ["https://groton.in/og-image.jpg"],
   },
 };
 

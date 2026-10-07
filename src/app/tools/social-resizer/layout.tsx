@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Social Media Image Resizer — Format for All Platforms",
     description: "Instantly resize and format images for Instagram, Twitter, Facebook, YouTube, and LinkedIn. A free online image tool by Groton AI.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

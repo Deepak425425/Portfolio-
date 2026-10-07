@@ -169,19 +169,19 @@ const DEFAULT_TEXT: CmsTextRecord[] = [
   { id: 'pricing.hero.desc', page: 'PRICING', section: 'Hero', type: 'multi-line', label: 'Description', defaultValue: 'We operate on clear, project-based tiers depending on the complexity of creative direction, required variations, and the volume of visual deliverables.' },
   { id: 'pricing.t1.name', page: 'PRICING', section: 'Tier 1', type: 'single-line', label: 'Name', defaultValue: 'Starter' },
   { id: 'pricing.t1.volume', page: 'PRICING', section: 'Tier 1', type: 'single-line', label: 'Volume', defaultValue: '25 Images' },
-  { id: 'pricing.t1.price', page: 'PRICING', section: 'Tier 1', type: 'single-line', label: 'Price', defaultValue: '₹2,499' },
-  { id: 'pricing.t1.unit', page: 'PRICING', section: 'Tier 1', type: 'single-line', label: 'Unit', defaultValue: '₹100 / Image' },
+  { id: 'pricing.t1.price', page: 'PRICING', section: 'Tier 1', type: 'single-line', label: 'Price', defaultValue: '₹1,999' },
+  { id: 'pricing.t1.unit', page: 'PRICING', section: 'Tier 1', type: 'single-line', label: 'Unit', defaultValue: '₹80 / Image' },
   { id: 'pricing.t1.desc', page: 'PRICING', section: 'Tier 1', type: 'multi-line', label: 'Description', defaultValue: 'Perfect for a foundational collection of high-quality product assets, clean catalog shots, or launching a new small capsule.' },
   { id: 'pricing.t2.badge', page: 'PRICING', section: 'Tier 2', type: 'single-line', label: 'Badge', defaultValue: 'Recommended' },
   { id: 'pricing.t2.name', page: 'PRICING', section: 'Tier 2', type: 'single-line', label: 'Name', defaultValue: 'Growth' },
   { id: 'pricing.t2.volume', page: 'PRICING', section: 'Tier 2', type: 'single-line', label: 'Volume', defaultValue: '50 Images' },
-  { id: 'pricing.t2.price', page: 'PRICING', section: 'Tier 2', type: 'single-line', label: 'Price', defaultValue: '₹4,499' },
-  { id: 'pricing.t2.unit', page: 'PRICING', section: 'Tier 2', type: 'single-line', label: 'Unit', defaultValue: '₹90 / Image' },
+  { id: 'pricing.t2.price', page: 'PRICING', section: 'Tier 2', type: 'single-line', label: 'Price', defaultValue: '₹3,499' },
+  { id: 'pricing.t2.unit', page: 'PRICING', section: 'Tier 2', type: 'single-line', label: 'Unit', defaultValue: '₹70 / Image' },
   { id: 'pricing.t2.desc', page: 'PRICING', section: 'Tier 2', type: 'multi-line', label: 'Description', defaultValue: 'The ideal volume for comprehensive e-commerce listings, dynamic social media batches, and cohesive brand storytelling.' },
   { id: 'pricing.t3.name', page: 'PRICING', section: 'Tier 3', type: 'single-line', label: 'Name', defaultValue: 'Scale' },
   { id: 'pricing.t3.volume', page: 'PRICING', section: 'Tier 3', type: 'single-line', label: 'Volume', defaultValue: '100 Images' },
-  { id: 'pricing.t3.price', page: 'PRICING', section: 'Tier 3', type: 'single-line', label: 'Price', defaultValue: '₹7,999' },
-  { id: 'pricing.t3.unit', page: 'PRICING', section: 'Tier 3', type: 'single-line', label: 'Unit', defaultValue: '₹80 / Image' },
+  { id: 'pricing.t3.price', page: 'PRICING', section: 'Tier 3', type: 'single-line', label: 'Price', defaultValue: '₹5,999' },
+  { id: 'pricing.t3.unit', page: 'PRICING', section: 'Tier 3', type: 'single-line', label: 'Unit', defaultValue: '₹60 / Image' },
   { id: 'pricing.t3.desc', page: 'PRICING', section: 'Tier 3', type: 'multi-line', label: 'Description', defaultValue: 'Built for high-volume catalogs, robust digital marketing campaigns, and brands scaling their entire visual inventory.' },
   { id: 'pricing.notes', page: 'PRICING', section: 'Notes', type: 'multi-line', label: 'Notes', defaultValue: 'Pricing applies to standard e-commerce/product imagery. Product-on-model, lifestyle, advanced compositing and campaign visuals are quoted separately.' },
   { id: 'pricing.cta.btn', page: 'PRICING', section: 'CTA', type: 'single-line', label: 'Button', defaultValue: 'Start A Project' },
@@ -196,8 +196,8 @@ const DEFAULT_TEXT: CmsTextRecord[] = [
 
   // --- TOOLS PAGE ---
   { id: 'tools.hero.label', page: 'TOOLS', section: 'Hero', type: 'single-line', label: 'Label', defaultValue: 'GROTON AI / TOOLS' },
-  { id: 'tools.hero.heading', page: 'TOOLS', section: 'Hero', type: 'single-line', label: 'Heading', defaultValue: 'Image tools, without the busywork.' },
-  { id: 'tools.hero.desc', page: 'TOOLS', section: 'Hero', type: 'single-line', label: 'Description', defaultValue: 'Small tools. Serious image work.' },
+  { id: 'tools.hero.heading', page: 'TOOLS', section: 'Hero', type: 'single-line', label: 'Heading', defaultValue: 'Save the time. Keep the creativity.' },
+  { id: 'tools.hero.desc', page: 'TOOLS', section: 'Hero', type: 'single-line', label: 'Description', defaultValue: 'Built to make your creative workflow faster.' },
 
 ];
 

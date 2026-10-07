@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Face Blur Tool — Anonymize Photos Online",
     description: "Automatically detect and blur faces in photos for privacy and anonymity. A secure, browser-based online image tool.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

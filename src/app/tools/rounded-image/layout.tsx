@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Rounded Image Tool — Add Curved Corners to Photos",
     description: "Add smooth rounded corners to your images and export as transparent PNGs online. A modern and free image formatting tool.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

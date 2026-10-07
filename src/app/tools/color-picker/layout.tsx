@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Color Picker — Sample Exact Pixel Colors Online",
     description: "Upload an image and click anywhere to extract the exact HEX, RGB, and HSL color values. A fast and precise online image tool.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

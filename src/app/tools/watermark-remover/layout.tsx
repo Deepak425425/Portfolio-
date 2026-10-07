@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Watermark Remover — Content-Aware Object Removal",
     description: "Remove unwanted marks, objects, text and watermarks from images using intelligent browser-side inpainting by Groton AI.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 
