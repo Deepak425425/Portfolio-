@@ -1,29 +1,27 @@
-import Link from "next/link";
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Image from "next/image";
-import type { Metadata } from "next";
-import CmsImage from "@/components/CmsImage";
-import CmsText from "@/components/CmsText";
 
 export const metadata: Metadata = {
   title: "About — GROTON AI STUDIO",
-  description: "A modern visual production studio merging art direction with AI generation.",
+  description:
+    "GROTON AI is a visual production studio helping e-commerce brands create premium product visuals and campaign-ready content using AI — faster and at scale.",
   alternates: {
     canonical: "/about",
   },
   openGraph: {
     title: "About — GROTON AI STUDIO",
-    description: "A modern visual production studio merging art direction with AI generation.",
+    description:
+      "GROTON AI is a visual production studio helping e-commerce brands create premium product visuals and campaign-ready content using AI — faster and at scale.",
     url: "https://groton.in/about",
     siteName: "GROTON AI",
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: "https://groton.in/campaign-worlds/groton-about-main-visual-16x9.webp",
+        url: "https://groton.in/og-image.jpg",
         width: 1200,
-        height: 675,
+        height: 630,
         alt: "About GROTON AI Studio",
       },
     ],
@@ -31,8 +29,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "About — GROTON AI STUDIO",
-    description: "A modern visual production studio merging art direction with AI generation.",
-    images: ["https://groton.in/campaign-worlds/groton-about-main-visual-16x9.webp"],
+    description:
+      "GROTON AI is a visual production studio helping e-commerce brands create premium product visuals and campaign-ready content using AI — faster and at scale.",
+    images: ["https://groton.in/og-image.jpg"],
   },
 };
 
@@ -43,9 +42,8 @@ export default function AboutPage() {
       <Header />
 
       {/* ABOUT CONTENT */}
-      <main className="flex-1 w-full bg-[#F9F8F6]">
-        <section className="py-24 md:py-32 lg:py-48 px-6 md:px-12 lg:px-24 text-center relative z-10 pt-[160px] pb-[80px]">
-
+      <main className="flex-1 w-full bg-[#F9F8F6] relative z-10">
+        {/* Subtle grid background matching GROTON visual language */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 -z-10"
@@ -59,60 +57,82 @@ export default function AboutPage() {
             WebkitMaskImage: "linear-gradient(to bottom, black, transparent 90%)",
           }}
         />
-  
-          <CmsText
-            cmsId="about.hero.heading"
-            as="h1"
-            brClassName=""
-            className="font-sans font-bold tracking-[-0.05em] text-5xl md:text-6xl lg:text-7xl mb-12 max-w-4xl mx-auto leading-tight"
-            fallback={'Art direction meets\nalgorithmic scale.'}
-          />
-          <CmsText
-            cmsId="about.hero.desc"
-            as="p"
-            className="font-sans text-lg md:text-xl text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light"
-            fallback="GROTON is a premium visual production studio designed for modern brands. We engineer hyper-realistic, campaign-ready visual assets that blur the line between traditional photography and artificial intelligence."
-          />
-        </section>
 
-        <section className="w-full h-[60vh] md:h-[80vh] relative">
-          <CmsImage cmsId="about_main_visual" fallbackSrc="/campaign-worlds/groton-about-main-visual-16x9.webp" alt="GROTON AI STUDIO aesthetic" fill className="object-cover object-center" />
-        </section>
+        <div className="max-w-[1240px] xl:max-w-[1360px] 2xl:max-w-[1480px] w-full mx-auto px-6 md:px-12 lg:px-16">
+          {/* HERO / INTRO */}
+          <section className="pt-32 sm:pt-40 md:pt-48 lg:pt-[210px] pb-12 sm:pb-16 md:pb-24">
+            <div className="max-w-4xl xl:max-w-5xl">
+              <span className="text-[11px] md:text-xs tracking-[0.25em] uppercase font-bold text-zinc-400 block mb-4 sm:mb-6">
+                ABOUT GROTON
+              </span>
+              <h1 className="font-sans font-bold tracking-[-0.05em] text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[80px] leading-[1.05] text-black mb-6 sm:mb-8">
+                Built for e-commerce brands.
+              </h1>
+              <p className="font-sans text-base sm:text-xl md:text-2xl text-zinc-500 leading-relaxed font-light max-w-3xl">
+                GROTON AI is a visual production studio helping e-commerce brands create premium product visuals and campaign-ready content using AI — faster and at scale.
+              </p>
+            </div>
+          </section>
 
-        <section className="py-24 md:py-32 px-6 md:px-12 lg:px-24 bg-[#F9F8F6] border-b border-[rgba(0,0,0,0.05)]">
-          <div className="max-w-4xl mx-auto flex flex-col gap-16 md:gap-24">
-            
-            <div className="flex flex-col md:flex-row gap-8 md:gap-16">
-              <div className="w-full md:w-1/3">
-                <CmsText cmsId="about.prob.label" as="h3" className="font-sans text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400" fallback="The Problem" />
+          {/* COMPACT 3-COLUMN INFORMATION SECTION */}
+          <section className="border-t border-black/[0.08] py-12 sm:py-16 md:py-24">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 lg:gap-14">
+              {/* 01 — OUR PURPOSE */}
+              <div className="flex flex-col">
+                <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.2em] uppercase font-bold text-zinc-400 mb-3 sm:mb-4 block">
+                  01 — OUR PURPOSE
+                </span>
+                <h2 className="font-sans font-bold tracking-[-0.03em] text-lg sm:text-xl lg:text-2xl text-black mb-3 sm:mb-4 leading-snug">
+                  Better visuals for bigger growth.
+                </h2>
+                <p className="font-sans text-sm sm:text-[15px] 2xl:text-base text-zinc-500 font-light leading-relaxed">
+                  We help e-commerce brands create premium visual content that helps their products stand out and grow.
+                </p>
               </div>
-              <div className="w-full md:w-2/3">
-                <CmsText cmsId="about.prob.heading" as="h2" className="font-sans font-bold tracking-[-0.05em] text-3xl md:text-4xl mb-6" fallback="Traditional production is too slow. AI is too generic." />
-                <CmsText cmsId="about.prob.p1" as="p" className="text-sm text-zinc-500 font-light leading-relaxed mb-4" fallback="Modern brands require a massive volume of visual content—from e-commerce hero shots to social media campaigns and display advertising. Traditional physical photoshoots involve heavy logistics, locations, permits, and rigid timelines." />
-                <CmsText cmsId="about.prob.p2" as="p" className="text-sm text-zinc-500 font-light leading-relaxed" fallback="Conversely, standard AI generation often produces generic, unpredictable, or off-brand results that fail to meet premium brand standards." />
+
+              {/* 02 — WHAT WE DO */}
+              <div className="flex flex-col">
+                <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.2em] uppercase font-bold text-zinc-400 mb-3 sm:mb-4 block">
+                  02 — WHAT WE DO
+                </span>
+                <h2 className="font-sans font-bold tracking-[-0.03em] text-lg sm:text-xl lg:text-2xl text-black mb-3 sm:mb-4 leading-snug">
+                  Product visuals, made easier.
+                </h2>
+                <p className="font-sans text-sm sm:text-[15px] 2xl:text-base text-zinc-500 font-light leading-relaxed">
+                  From product imagery and product-on-model visuals to campaign creatives, we create high-quality visual assets for modern commerce.
+                </p>
+              </div>
+
+              {/* 03 — WHO WE WORK WITH */}
+              <div className="flex flex-col">
+                <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.2em] uppercase font-bold text-zinc-400 mb-3 sm:mb-4 block">
+                  03 — WHO WE WORK WITH
+                </span>
+                <h2 className="font-sans font-bold tracking-[-0.03em] text-lg sm:text-xl lg:text-2xl text-black mb-3 sm:mb-4 leading-snug">
+                  Modern e-commerce brands.
+                </h2>
+                <p className="font-sans text-sm sm:text-[15px] 2xl:text-base text-zinc-500 font-light leading-relaxed">
+                  We work with fashion, jewelry, beauty, lifestyle, D2C, and other product-led e-commerce brands.
+                </p>
               </div>
             </div>
+          </section>
 
-            <div className="flex flex-col md:flex-row gap-8 md:gap-16">
-              <div className="w-full md:w-1/3">
-                <CmsText cmsId="about.appr.label" as="h3" className="font-sans text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400" fallback="Our Approach" />
-              </div>
-              <div className="w-full md:w-2/3">
-                <CmsText cmsId="about.appr.heading" as="h2" className="font-sans font-bold tracking-[-0.05em] text-3xl md:text-4xl mb-6" fallback="Directed Generation." />
-                <CmsText cmsId="about.appr.p1" as="p" className="text-sm text-zinc-500 font-light leading-relaxed mb-4" fallback="We solve this by placing experienced creative directors at the helm of advanced AI synthesis. We don't just type prompts; we establish visual systems. We define the lighting logic, the color theory, the material textures, and the compositional hierarchy." />
-                <CmsText cmsId="about.appr.p2" as="p" className="text-sm text-zinc-500 font-light leading-relaxed" fallback="This hybrid approach allows us to deliver production-grade realism and brand consistency at a scale and speed that traditional studios cannot match." />
-              </div>
+          {/* COMPACT VISION SECTION */}
+          <section className="border-t border-black/[0.08] pt-12 sm:pt-16 md:pt-24 pb-20 sm:pb-28 md:pb-36">
+            <div className="max-w-4xl xl:max-w-5xl">
+              <span className="text-[10px] sm:text-[11px] md:text-xs tracking-[0.25em] uppercase font-bold text-zinc-400 block mb-4 sm:mb-6">
+                OUR VISION
+              </span>
+              <h2 className="font-sans font-bold tracking-[-0.04em] text-2xl sm:text-4xl md:text-5xl lg:text-[54px] 2xl:text-[60px] leading-[1.12] text-black mb-6 sm:mb-8">
+                To make premium visual production more accessible, scalable, and effective for every e-commerce brand.
+              </h2>
+              <p className="font-sans text-sm sm:text-base md:text-lg text-zinc-500 font-light tracking-[-0.01em]">
+                Less complexity. More creativity. Better results.
+              </p>
             </div>
-
-          </div>
-        </section>
-
-        <section className="py-24 md:py-32 px-6 text-center bg-black text-white">
-          <CmsText cmsId="about.cta.heading" as="h2" className="font-sans font-bold tracking-[-0.05em] text-3xl md:text-4xl lg:text-5xl mb-8 max-w-2xl mx-auto leading-tight" fallback="Elevate your visual language." />
-          <Link href="/contact" className="inline-block px-10 py-5 bg-white text-black text-xs uppercase tracking-[0.2em] font-bold hover:bg-zinc-200 transition-colors mt-8 rounded-full">
-            <CmsText cmsId="about.cta.btn" fallback="Start A Project" />
-          </Link>
-        </section>
+          </section>
+        </div>
       </main>
 
       {/* FOOTER */}

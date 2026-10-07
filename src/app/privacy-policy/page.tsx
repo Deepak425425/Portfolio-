@@ -40,9 +40,9 @@ export default function PrivacyPolicyPage() {
       <Header />
 
       {/* CONTENT */}
-      <main className="flex-1 w-full flex flex-col py-24 md:py-32 px-6 md:px-12 lg:px-24 max-w-4xl mx-auto">
-        <div className="mb-16 border-b border-[rgba(0,0,0,0.05)] pb-12">
-          <h1 className="font-sans font-bold tracking-[-0.05em] text-4xl md:text-5xl lg:text-6xl mb-6">Privacy Policy</h1>
+      <main className="flex-1 w-full flex flex-col pt-32 sm:pt-40 md:pt-48 pb-16 md:pb-24 px-6 md:px-12 lg:px-20 max-w-4xl xl:max-w-5xl mx-auto">
+        <div className="mb-12 sm:mb-16 border-b border-[rgba(0,0,0,0.05)] pb-8 sm:pb-12">
+          <h1 className="font-sans font-bold tracking-[-0.05em] text-3xl sm:text-5xl md:text-6xl mb-4 sm:mb-6">Privacy Policy</h1>
           <p className="text-sm text-zinc-500 font-light">Last updated: September 29, 2026</p>
         </div>
 

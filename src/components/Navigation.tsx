@@ -20,6 +20,7 @@ export default function Navigation() {
             <Link href="/services" className={`hover:text-foreground transition-colors ${pathname === '/services' ? 'text-foreground' : ''}`}>Services</Link>
             <Link href="/pricing" className={`hover:text-foreground transition-colors ${pathname === '/pricing' ? 'text-foreground' : ''}`}>Pricing</Link>
             <Link href="/tools" className={`hover:text-foreground transition-colors ${pathname?.startsWith('/tools') ? 'text-foreground' : ''}`}>Tools</Link>
+            <Link href="/blog" className={`hover:text-foreground transition-colors ${pathname?.startsWith('/blog') ? 'text-foreground' : ''}`}>Insights</Link>
             <Link href="/about" className={`hover:text-foreground transition-colors ${pathname === '/about' ? 'text-foreground' : ''}`}>About</Link>
           </nav>
           
@@ -52,6 +53,7 @@ export default function Navigation() {
               <Link href="/services" onClick={() => setMobileMenuOpen(false)} className={`hover:text-foreground transition-colors ${pathname === '/services' ? 'text-foreground' : ''}`}>Services</Link>
               <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className={`hover:text-foreground transition-colors ${pathname === '/pricing' ? 'text-foreground' : ''}`}>Pricing</Link>
               <Link href="/tools" onClick={() => setMobileMenuOpen(false)} className={`hover:text-foreground transition-colors ${pathname?.startsWith('/tools') ? 'text-foreground' : ''}`}>Tools</Link>
+              <Link href="/blog" onClick={() => setMobileMenuOpen(false)} className={`hover:text-foreground transition-colors ${pathname?.startsWith('/blog') ? 'text-foreground' : ''}`}>Insights</Link>
               <Link href="/about" onClick={() => setMobileMenuOpen(false)} className={`hover:text-foreground transition-colors ${pathname === '/about' ? 'text-foreground' : ''}`}>About</Link>
            </nav>
            <div className="mt-auto pt-12">

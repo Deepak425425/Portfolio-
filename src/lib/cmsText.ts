@@ -21,6 +21,7 @@ const DEFAULT_TEXT: CmsTextRecord[] = [
   { id: 'global.nav.services', page: 'GLOBAL', section: 'Navigation', type: 'single-line', label: 'Services Link', defaultValue: 'Services' },
   { id: 'global.nav.pricing', page: 'GLOBAL', section: 'Navigation', type: 'single-line', label: 'Pricing Link', defaultValue: 'Pricing' },
   { id: 'global.nav.tools', page: 'GLOBAL', section: 'Navigation', type: 'single-line', label: 'Tools Link', defaultValue: 'Tools' },
+  { id: 'global.nav.insights', page: 'GLOBAL', section: 'Navigation', type: 'single-line', label: 'Insights Link', defaultValue: 'Insights' },
   { id: 'global.nav.about', page: 'GLOBAL', section: 'Navigation', type: 'single-line', label: 'About Link', defaultValue: 'About' },
   { id: 'global.nav.contact', page: 'GLOBAL', section: 'Navigation', type: 'single-line', label: 'Contact Button', defaultValue: 'Contact' },
 
@@ -188,8 +189,8 @@ const DEFAULT_TEXT: CmsTextRecord[] = [
 
   // --- BLOG PAGE ---
   { id: 'blog.hero.label', page: 'BLOG', section: 'Hero', type: 'single-line', label: 'Label', defaultValue: 'GROTON JOURNAL' },
-  { id: 'blog.hero.heading', page: 'BLOG', section: 'Hero', type: 'multi-line', label: 'Heading', defaultValue: 'Insights on product\nimagery and brand\nvisuals.' },
-  { id: 'blog.hero.desc', page: 'BLOG', section: 'Hero', type: 'multi-line', label: 'Description', defaultValue: 'Thoughts, guides, and creative workflows for modern e-commerce brands, creative directors, and digital studios.' },
+  { id: 'blog.hero.heading', page: 'BLOG', section: 'Hero', type: 'multi-line', label: 'Heading', defaultValue: 'Insights for modern e-commerce.' },
+  { id: 'blog.hero.desc', page: 'BLOG', section: 'Hero', type: 'multi-line', label: 'Description', defaultValue: 'Practical insights, visual workflows, and ideas for brands creating better product content at scale.' },
   { id: 'blog.post.back', page: 'BLOG', section: 'Post', type: 'single-line', label: 'Back Link', defaultValue: '&larr; Back to Journal' },
   { id: 'blog.post.share', page: 'BLOG', section: 'Post', type: 'single-line', label: 'Share Heading', defaultValue: 'Share this article' },
   { id: 'blog.post.related', page: 'BLOG', section: 'Post', type: 'single-line', label: 'Related Heading', defaultValue: 'Related Articles' },
