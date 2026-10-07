@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import TeamConnectorWires from "@/components/TeamConnectorWires";
 
 export const metadata: Metadata = {
   title: "Team — GROTON AI STUDIO",
@@ -427,9 +428,9 @@ export default function TeamPage() {
             {/* Board category marker with hand-drawn orange loop */}
             <div className="mb-6">
               <HandDrawnCircle color="#FF5C26">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+                <div className="inline-flex items-center gap-2 px-3 py-1 select-none">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#FF5C26]" />
-                  <span className="font-mono text-[9px] tracking-[0.25em] font-bold text-zinc-700 uppercase">
+                  <span className="font-mono text-[9px] sm:text-[9.5px] tracking-[0.25em] font-bold text-zinc-800 uppercase">
                     THE COLLECTIVE
                   </span>
                 </div>
@@ -469,7 +470,10 @@ export default function TeamPage() {
             Tactile floating cards with 3D colorful pins, soft shadows, and subtle connector lines
         ───────────────────────────────────────────────────────────── */}
         <section className="py-6 md:py-10 px-5 sm:px-8 md:px-12 lg:px-24">
-          <div className="max-w-[1240px] mx-auto">
+          <div id="working-board-container" className="max-w-[1240px] mx-auto relative">
+
+            {/* DYNAMIC HAND-DRAWN EDITORIAL CONNECTOR WIRES */}
+            <TeamConnectorWires />
 
             {/* 2A. PRIMARY FEATURE: FOUNDER CARD (Deepak Kumawat) */}
             <div className="max-w-[980px] mx-auto relative z-10 mb-6 md:mb-8 pt-4">
@@ -570,27 +574,24 @@ export default function TeamPage() {
                   </div>
 
                 </div>
+
+                {/* Founder Connector Anchor Point (origin for hand-drawn editorial connector lines) */}
+                <div
+                  id="founder-connector-anchor"
+                  data-founder-anchor="true"
+                  className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 z-20 pointer-events-none flex items-center justify-center"
+                >
+                  <div className="w-5 h-5 rounded-full bg-[#FAF8F5] border border-black/25 shadow-[0_1.5px_3.5px_rgba(0,0,0,0.08)] flex items-center justify-center">
+                    <div className="w-2 h-2 rounded-full bg-zinc-700 shadow-[inset_0_1px_1px_rgba(0,0,0,0.5)]" />
+                  </div>
+                </div>
+
               </div>
             </div>
 
             {/* 2B. SUBTLE EDITORIAL CONNECTOR TRACE */}
-            {/* Graceful dotted connector line linking founder card down to collective benches */}
-            <div className="hidden lg:flex justify-center my-6 relative z-0 pointer-events-none" aria-hidden="true">
-              <svg width="860" height="60" viewBox="0 0 860 60" fill="none" className="overflow-visible w-full max-w-[860px]">
-                <path
-                  d="M430 0 C 430 35, 110 15, 110 60 M430 20 C 430 40, 325 25, 325 60 M430 20 C 430 40, 535 25, 535 60 M430 0 C 430 35, 750 15, 750 60"
-                  stroke="rgba(0,0,0,0.13)"
-                  strokeWidth="1.2"
-                  strokeDasharray="4 6"
-                  strokeLinecap="round"
-                />
-                <circle cx="430" cy="0" r="2.5" fill="rgba(0,0,0,0.25)" />
-                <circle cx="110" cy="60" r="2" fill="rgba(0,0,0,0.2)" />
-                <circle cx="325" cy="60" r="2" fill="rgba(0,0,0,0.2)" />
-                <circle cx="535" cy="60" r="2" fill="rgba(0,0,0,0.2)" />
-                <circle cx="750" cy="60" r="2" fill="rgba(0,0,0,0.2)" />
-              </svg>
-            </div>
+            {/* Spacing element maintaining exact page structure */}
+            <div className="hidden lg:block my-6 h-[60px]" aria-hidden="true" />
 
             {/* 2C. 4 FLOATING TEAM PLACEHOLDER CARDS */}
             {/* Clean pinned notes with colorful pushpins & subtle working notes */}
@@ -655,12 +656,20 @@ export default function TeamPage() {
                 >
                   {/* Pushpin at top center (used selectively) */}
                   {bench.hasPin ? (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30">
+                    <div
+                      id={`team-pin-${bench.id}`}
+                      data-team-pin={bench.id}
+                      className="absolute -top-3 left-1/2 -translate-x-1/2 z-30"
+                    >
                       <TactilePushpin color={bench.pinColor} />
                     </div>
                   ) : (
                     /* Subtle paper tape clip for Bench 03 */
-                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-30 w-8 h-3 bg-[#F0EAD6]/90 border border-[#DCD3BE] rounded-[2px] -rotate-2 shadow-[0_1px_2px_rgba(0,0,0,0.06)]" />
+                    <div
+                      id={`team-pin-${bench.id}`}
+                      data-team-pin={bench.id}
+                      className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-30 w-8 h-3 bg-[#F0EAD6]/90 border border-[#DCD3BE] rounded-[2px] -rotate-2 shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
+                    />
                   )}
 
                   {/* Image Placeholder */}

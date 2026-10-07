@@ -775,7 +775,14 @@ export default function Home() {
 
             {/* RIGHT SIDE: ONE LARGE 1:1 SQUARE IMAGE (FUTURE 1:1 VIDEO) */}
             <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
-              <div className="w-full aspect-square relative bg-[#dad7d0] rounded-[24px] md:rounded-[32px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.08)] group" style={{ maxWidth: '520px' }} data-cursor="view">
+              <div 
+                className="w-full aspect-square relative bg-[#dad7d0] rounded-[24px] md:rounded-[32px] overflow-hidden group" 
+                style={{ 
+                  maxWidth: '520px',
+                  boxShadow: '0 20px 50px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.03)'
+                }} 
+                data-cursor="view"
+              >
                 <CmsMedia 
                   media={cmsImages.archive_hero || cmsImages.gallery_1} 
                   fallback="/campaign-worlds/How to style Cat Print T shirts.jpeg" 
