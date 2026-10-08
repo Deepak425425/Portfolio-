@@ -60,6 +60,13 @@ const DEFAULT_IMAGES: CmsImage[] = [
   // --- CONTACT PAGE ---
   { id: 'contact_visual', name: 'Contact Editorial Visual', src: '/campaign-worlds/groton-contact-visual-4x5.webp', page: 'CONTACT', section: 'Contact Visual' },
 
+  // --- TEAM PAGE ---
+  { id: 'team_founder', name: 'Founder Profile — Deepak Kumawat', src: '', page: 'TEAM', section: 'Founder Card' },
+  { id: 'team_bench_01', name: 'Bench 01 — Generative Art & AI', src: '', page: 'TEAM', section: 'Team Cards' },
+  { id: 'team_bench_02', name: 'Bench 02 — Creative & Art Direction', src: '', page: 'TEAM', section: 'Team Cards' },
+  { id: 'team_bench_03', name: 'Bench 03 — Visual Research & 3D', src: '', page: 'TEAM', section: 'Team Cards' },
+  { id: 'team_bench_04', name: 'Bench 04 — Retouching & Finishing', src: '', page: 'TEAM', section: 'Team Cards' },
+
   // --- BLOG / INSIGHTS (All 30 Articles) ---
   ...BLOG_POSTS.map(post => ({
     id: `blog_${post.slug}`,

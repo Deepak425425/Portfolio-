@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, Fragment } from "react";
+import React, { useState, useEffect, useRef, Fragment, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useReducedMotion, useMotionValue } from "framer-motion";
@@ -615,10 +615,18 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
   const mobileStartDotRef = useRef<SVGCircleElement>(null);
   const mobileDotRef = useRef<SVGCircleElement>(null);
 
+  const stage0Ref = useRef<HTMLDivElement>(null);
+  const stage1Ref = useRef<HTMLDivElement>(null);
+  const stage2Ref = useRef<HTMLDivElement>(null);
+  const stage3Ref = useRef<HTMLDivElement>(null);
+  const stagesWrapperRef = useRef<HTMLDivElement>(null);
+
   const [activeStage, setActiveStage] = useState(0);
   const stageRef = useRef(0);
   stageRef.current = activeStage;
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileOffsets, setMobileOffsets] = useState<number[]>([0, 453, 749, 1074]);
+  const [wrapperHeight, setWrapperHeight] = useState<number>(0);
 
   const getStageScrollY = (stageIndex: number) => {
     if (!containerRef.current) return 0;
@@ -638,13 +646,35 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
   };
 
   useEffect(() => {
-    const updateMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
+    const updateDimensions = () => {
+      const mob = window.innerWidth < 1024;
+      setIsMobile(mob);
+      if (mob) {
+        if (stagesWrapperRef.current) {
+          setWrapperHeight(stagesWrapperRef.current.offsetHeight);
+        }
+        const s0 = stage0Ref.current?.offsetTop ?? 0;
+        const s1 = stage1Ref.current?.offsetTop ?? 453;
+        const s2 = stage2Ref.current?.offsetTop ?? 749;
+        const s3 = stage3Ref.current?.offsetTop ?? 1074;
+        setMobileOffsets([s0, s1, s2, s3]);
+      }
     };
-    updateMobile();
-    window.addEventListener('resize', updateMobile);
-    return () => window.removeEventListener('resize', updateMobile);
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
   }, []);
+
+  const currentMobileTranslate = useMemo(() => {
+    const baseOffset = mobileOffsets[activeStage] ?? [0, 453, 749, 1074][activeStage] ?? 0;
+    if (activeStage === 3 && stage3Ref.current && wrapperHeight > 0) {
+      const s3Height = stage3Ref.current.offsetHeight;
+      if (s3Height > wrapperHeight) {
+        return baseOffset + (s3Height - wrapperHeight);
+      }
+    }
+    return baseOffset;
+  }, [activeStage, mobileOffsets, wrapperHeight]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -741,20 +771,24 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
       className="relative w-full z-10 bg-[#111] text-white border-t border-zinc-900"
       style={{ height: '300vh' }}
     >
-      <div className="sticky top-0 h-screen w-full flex flex-col items-center pt-[104px] lg:pt-[clamp(104px,13vh,112px)] pb-6 lg:pb-8 px-6 lg:px-20 overflow-visible">
-        <div className="max-w-[1440px] 2xl:max-w-[1600px] w-full mx-auto mt-0 mb-auto flex flex-col items-center text-center">
-          <CmsText cmsId="home.process.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-400 uppercase mb-2 lg:mb-2.5" fallback="The Process" />
-          <CmsText cmsId="home.process.heading" as="h2" brClassName="" className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[80px] leading-[0.9] tracking-[-0.05em] font-bold mb-6 lg:mb-[clamp(14px,2.2vh,28px)]" fallback={"From Product\nto Campaign."} />
+      <div className="sticky top-0 h-screen w-full flex flex-col items-center pt-[clamp(88px,11vh,104px)] lg:pt-[clamp(104px,13vh,112px)] pb-6 lg:pb-8 px-6 lg:px-20 overflow-visible">
+        <div className="max-w-[1440px] 2xl:max-w-[1600px] w-full mx-auto mt-0 mb-auto flex flex-col items-center text-center flex-1 lg:flex-initial min-h-0">
+          <CmsText cmsId="home.process.label" as="span" className="font-mono text-[10px] tracking-[0.08em] font-bold text-zinc-400 uppercase mb-2 lg:mb-2.5 flex-shrink-0" fallback="The Process" />
+          <CmsText cmsId="home.process.heading" as="h2" brClassName="" className="font-sans text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[80px] leading-[0.9] tracking-[-0.05em] font-bold mb-4 sm:mb-6 lg:mb-[clamp(14px,2.2vh,28px)] flex-shrink-0" fallback={"From Product\nto Campaign."} />
 
           <div 
-            className="w-full flex flex-col lg:flex-row items-center lg:items-center justify-between gap-12 lg:gap-4 relative transition-transform duration-500 ease-out"
-            style={{
-              transform: isMobile 
-                ? `translateY(-${[0, 180, 360, 560][activeStage]}px)` 
-                : 'scale(min(1, max(0.72, calc((100vh - 315px) / 460px))))',
-              transformOrigin: 'top center'
-            }}
+            ref={stagesWrapperRef}
+            className="w-full relative overflow-hidden lg:overflow-visible flex flex-col items-center flex-1 lg:flex-initial min-h-0"
           >
+            <div 
+              className="w-full flex flex-col lg:flex-row items-center lg:items-center justify-between gap-12 lg:gap-4 relative transition-transform duration-500 ease-out"
+              style={{
+                transform: isMobile 
+                  ? `translateY(-${currentMobileTranslate}px)` 
+                  : 'scale(min(1, max(0.72, calc((100vh - 315px) / 460px))))',
+                transformOrigin: 'top center'
+              }}
+            >
             {/* CONTINUOUS EDITORIAL PURPLE HAND-DRAWN MARKER STROKE (DESKTOP) */}
             <svg 
               className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-visible hidden lg:block"
@@ -915,6 +949,7 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
             
             {/* STAGE 01 - PRODUCT */}
             <div 
+              ref={stage0Ref}
               onClick={() => goToStage(0)}
               className={`w-full lg:w-[22%] flex flex-col items-center text-center relative z-10 group cursor-pointer transition-all duration-500 ${
                 activeStage === 0 
@@ -928,8 +963,8 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
                 <span className="font-sans text-[13px] text-zinc-400">Raw Product</span>
               </div>
               <div className={`w-[80%] max-w-[200px] aspect-square relative overflow-hidden rounded-[16px] transition-all duration-500 ${
-                activeStage === 0
-                  ? "bg-zinc-900/70 border border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.5)]"
+                activeStage === 0 
+                  ? "bg-zinc-900/70 border border-white/20 shadow-[0_8px_30px_rgba(0,0,0,0.5)]" 
                   : "bg-zinc-900/50 border border-zinc-800/50"
               }`}>
                 <CmsMedia 
@@ -969,6 +1004,7 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
 
             {/* STAGE 02 - MODEL */}
             <div 
+              ref={stage1Ref}
               onClick={() => goToStage(1)}
               className={`w-full lg:w-[18%] flex flex-col items-center text-center relative z-10 group cursor-pointer transition-all duration-500 ${
                 activeStage === 1 
@@ -1007,6 +1043,7 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
 
             {/* STAGE 03 - ART DIRECTION */}
             <div 
+              ref={stage2Ref}
               onClick={() => goToStage(2)}
               className={`w-full lg:w-[18%] flex flex-col items-center text-center relative z-10 group cursor-pointer transition-all duration-500 ${
                 activeStage === 2 
@@ -1046,6 +1083,7 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
 
             {/* STAGE 04 - CAMPAIGN */}
             <div 
+              ref={stage3Ref}
               onClick={() => goToStage(3)}
               className={`w-full lg:w-[28%] flex flex-col items-center text-center relative z-10 group cursor-pointer transition-all duration-500 ${
                 activeStage === 3 
@@ -1058,7 +1096,7 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
                 <span className="font-mono text-[12px] font-bold text-white uppercase tracking-widest">Campaign</span>
                 <span className="font-sans text-[13px] text-zinc-400">Final Campaign Visual</span>
               </div>
-              <div className={`w-[90%] lg:w-full max-w-[280px] aspect-[4/5] relative overflow-hidden rounded-[20px] transition-all duration-500 ${
+              <div className={`w-[90%] lg:w-full max-w-[270px] sm:max-w-[280px] aspect-[4/5] relative overflow-hidden rounded-[20px] transition-all duration-500 ${
                 activeStage === 3 
                   ? "shadow-[0_20px_50px_rgba(0,0,0,0.50)] border border-white/20" 
                   : "shadow-[0_18px_40px_rgba(0,0,0,0.30)] border border-zinc-800/50"
@@ -1078,6 +1116,7 @@ const ProcessSection = ({ cmsImages, shouldReduceMotion }: { cmsImages: any; sho
               </div>
             </div>
 
+            </div>
           </div>
         </div>
       </div>

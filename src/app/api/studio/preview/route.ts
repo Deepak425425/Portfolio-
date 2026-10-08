@@ -6,9 +6,9 @@ const PREVIEW_PATH = process.env.VERCEL === '1' ? '/tmp/preview.json' : path.joi
 
 export async function POST(req: Request) {
   try {
-    const { images, textPlacements } = await req.json();
+    const { images, textPlacements, teamData } = await req.json();
     
-    const previewData = { images, textPlacements };
+    const previewData = { images, textPlacements, teamData };
     
     // Ensure directory exists
     const dir = path.dirname(PREVIEW_PATH);

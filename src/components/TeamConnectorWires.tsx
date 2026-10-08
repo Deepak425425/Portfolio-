@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface Point {
   x: number;
@@ -129,18 +129,21 @@ const DEFAULT_TARGETS: Point[] = [
 export default function TeamConnectorWires() {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const pathRefs = useRef<(SVGPathElement | null)[]>([]);
+  const [wireCount, setWireCount] = useState<number>(4);
 
   useEffect(() => {
     const updateWires = () => {
       const container = document.getElementById("working-board-container");
       const founderAnchor = document.getElementById("founder-connector-anchor");
-      const pin0 = document.getElementById("team-pin-02");
-      const pin1 = document.getElementById("team-pin-03");
-      const pin2 = document.getElementById("team-pin-04");
-      const pin3 = document.getElementById("team-pin-05");
+      if (!container || !founderAnchor) return;
 
-      if (!container || !founderAnchor || !pin0 || !pin1 || !pin2 || !pin3) {
+      const pinElements = Array.from(container.querySelectorAll<HTMLElement>("[data-team-pin]"));
+      if (pinElements.length === 0) {
         return;
+      }
+
+      if (pinElements.length !== wireCount) {
+        setWireCount(pinElements.length);
       }
 
       const cRect = container.getBoundingClientRect();
@@ -151,8 +154,7 @@ export default function TeamConnectorWires() {
         y: fRect.top + fRect.height / 2 - cRect.top,
       };
 
-      const pins = [pin0, pin1, pin2, pin3];
-      const targets: Point[] = pins.map((pinEl) => {
+      const targets: Point[] = pinElements.map((pinEl) => {
         const cardEl = pinEl.parentElement;
         const cardRect = cardEl ? cardEl.getBoundingClientRect() : null;
         const pinRect = pinEl.getBoundingClientRect();
@@ -171,7 +173,7 @@ export default function TeamConnectorWires() {
       targets.forEach((target, i) => {
         const pathEl = pathRefs.current[i];
         if (pathEl) {
-          const d = buildHandDrawnBranch(origin, target, i);
+          const d = buildHandDrawnBranch(origin, target, i % 4);
           pathEl.setAttribute("d", d);
         }
       });
@@ -227,22 +229,25 @@ export default function TeamConnectorWires() {
         </filter>
       </defs>
 
-      {/* 4 Hand-drawn editorial connector lines linking founder card to each team card */}
-      {DEFAULT_TARGETS.map((target, i) => (
-        <path
-          key={i}
-          ref={(el) => {
-            pathRefs.current[i] = el;
-          }}
-          d={buildHandDrawnBranch(DEFAULT_ORIGIN, target, i)}
-          fill="none"
-          stroke="rgba(0, 0, 0, 0.22)"
-          strokeWidth="1.25"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          filter="url(#hand-drawn-pen-grain)"
-        />
-      ))}
+      {/* Hand-drawn editorial connector lines linking founder card to each team card */}
+      {Array.from({ length: wireCount }).map((_, i) => {
+        const fallbackTarget = DEFAULT_TARGETS[i] || DEFAULT_TARGETS[DEFAULT_TARGETS.length - 1];
+        return (
+          <path
+            key={i}
+            ref={(el) => {
+              pathRefs.current[i] = el;
+            }}
+            d={buildHandDrawnBranch(DEFAULT_ORIGIN, fallbackTarget, i % 4)}
+            fill="none"
+            stroke="rgba(0, 0, 0, 0.22)"
+            strokeWidth="1.25"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            filter="url(#hand-drawn-pen-grain)"
+          />
+        );
+      })}
     </svg>
   );
 }

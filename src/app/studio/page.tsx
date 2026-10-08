@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, Suspense } from 'react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import TeamEditor from '@/components/studio/TeamEditor';
 
 type CmsImage = { id: string; name: string; src: string; page: string; section: string; mediaType?: "image" | "video"; mimeType?: string; };
 
@@ -30,6 +31,7 @@ function StudioContent() {
   const [images, setImages] = useState<CmsImage[]>([]);
   const [textPlacements, setTextPlacements] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [mediaPickerCallback, setMediaPickerCallback] = useState<((url: string) => void) | null>(null);
   const [mediaLibrary, setMediaLibrary] = useState<MediaRecord[]>([]);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [previewMedia, setPreviewMedia] = useState<MediaRecord | null>(null);
@@ -85,7 +87,15 @@ function StudioContent() {
   };
 
   const handleReplaceClick = (id: string) => {
+    setMediaPickerCallback(null);
     setEditingId(id);
+    setIsMediaModalOpen(true);
+    loadMedia();
+  };
+
+  const handleOpenTeamMediaPicker = (onSelect: (url: string) => void) => {
+    setEditingId(null);
+    setMediaPickerCallback(() => onSelect);
     setIsMediaModalOpen(true);
     loadMedia();
   };
@@ -124,6 +134,12 @@ function StudioContent() {
   };
 
   const selectMedia = async (src: string, mediaType?: "image" | "video", mimeType?: string) => {
+    if (mediaPickerCallback) {
+      mediaPickerCallback(src);
+      setMediaPickerCallback(null);
+      setIsMediaModalOpen(false);
+      return;
+    }
     if (!editingId) return;
     const determinedType: "image" | "video" = mediaType || (isVideoMedia(src) ? 'video' : 'image');
     setImages(prev => prev.map(img => img.id === editingId ? { ...img, src, mediaType: determinedType, mimeType } : img));
@@ -429,6 +445,104 @@ function StudioContent() {
           )}
         </div>
       </div>
+    );
+  }
+
+  if (pageFilter === 'TEAM') {
+    return (
+      <>
+        <TeamEditor onOpenMediaPicker={handleOpenTeamMediaPicker} />
+        {isMediaModalOpen && (
+          <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-6 backdrop-blur-sm">
+            <div className="bg-[#0d0d0d] border border-zinc-800 rounded-2xl w-full max-w-4xl max-h-[85vh] flex flex-col shadow-2xl">
+              <div className="p-6 border-b border-zinc-800 flex justify-between items-center">
+                <h3 className="text-xl font-bold">Media Library <span className="text-zinc-500 text-lg ml-2">{mediaLibrary.length}</span></h3>
+                <button onClick={() => { setIsMediaModalOpen(false); setMediaPickerCallback(null); }} className="text-zinc-500 hover:text-white">✕</button>
+              </div>
+              <div className="p-6 overflow-y-auto flex-1">
+                <div className="mb-8 p-6 border-2 border-dashed border-zinc-800 rounded-xl text-center">
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleUpload} 
+                    className="hidden" 
+                    accept="image/png, image/jpeg, image/webp, image/svg+xml, video/mp4, video/webm, video/quicktime, video/*, image/*" 
+                  />
+                  <button 
+                    onClick={() => fileInputRef.current?.click()} 
+                    disabled={isUploading}
+                    className="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 rounded-lg text-sm font-medium flex items-center justify-center gap-2 mx-auto transition-colors"
+                  >
+                    {isUploading ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        <span>Uploading Media...</span>
+                      </>
+                    ) : (
+                      'Upload New Media'
+                    )}
+                  </button>
+                  <p className="text-xs text-zinc-500 mt-3">JPG, PNG, WEBP, SVG, MP4, WebM allowed.</p>
+                </div>
+
+                <div className="flex gap-4 mb-6">
+                  <input
+                    type="text"
+                    placeholder="Search media..."
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-sm w-full md:w-64 text-white outline-none focus:border-[#8B7CFF]"
+                  />
+                  <select
+                    value={sourceFilter}
+                    onChange={e => setSourceFilter(e.target.value)}
+                    className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-sm text-white outline-none focus:border-[#8B7CFF]"
+                  >
+                    <option value="ALL">ALL SOURCES</option>
+                    <option value="EXISTING">EXISTING</option>
+                    <option value="UPLOADED">UPLOADED</option>
+                  </select>
+                  <select
+                    value={mediaPageFilter}
+                    onChange={e => setMediaPageFilter(e.target.value)}
+                    className="bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2 text-sm text-white outline-none focus:border-[#8B7CFF]"
+                  >
+                    <option value="ALL">ALL PAGES</option>
+                    {pagesWithMedia.map(p => <option key={p} value={p}>{p}</option>)}
+                  </select>
+                </div>
+
+                <h4 className="text-sm font-medium text-zinc-400 mb-4 uppercase tracking-widest">Select Existing</h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {filteredMediaLibrary.map(media => {
+                    const isVideo = isVideoMedia(media.publicUrl, media.mediaType);
+                    return (
+                      <button
+                        key={media.id}
+                        onClick={() => selectMedia(media.publicUrl, media.mediaType, media.mimeType)}
+                        className="relative aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-[#8B7CFF] transition-all group"
+                      >
+                        {isVideo ? (
+                          <video src={media.publicUrl} muted playsInline className="w-full h-full object-cover pointer-events-none" />
+                        ) : (
+                          <Image src={media.publicUrl} alt={media.displayName} fill className="object-cover" />
+                        )}
+                        <div className="absolute inset-0 bg-[#8B7CFF]/20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2">
+                          <span className="bg-black/80 text-white text-xs px-3 py-1.5 rounded-full font-medium mb-2">
+                            {isVideo ? 'USE VIDEO' : 'USE IMAGE'}
+                          </span>
+                          <span className="text-[10px] text-white text-center drop-shadow-md truncate w-full">{media.displayName}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                  {filteredMediaLibrary.length === 0 && <p className="col-span-full text-zinc-500 text-sm py-10 text-center">No media found.</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
     );
   }
 
