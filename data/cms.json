@@ -1,0 +1,397 @@
+[
+  {
+    "id": "hero_main",
+    "name": "Hero Center Model",
+    "src": "/campaign-worlds/groton-home-hero-model.png",
+    "page": "HOME",
+    "section": "Hero (Orbit Center)",
+    "mediaType": "image"
+  },
+  {
+    "id": "hero_support_1",
+    "name": "Orbit Card — Product (Footwear)",
+    "src": "/campaign-worlds/groton-home-hero-floating-shoes-3x4.webp",
+    "page": "HOME",
+    "section": "Hero (3D Orbit)"
+  },
+  {
+    "id": "hero_support_2",
+    "name": "Orbit Card — Apparel (T-Shirt)",
+    "src": "/campaign-worlds/groton-home-hero-floating-tshirt-3x4.webp",
+    "page": "HOME",
+    "section": "Hero (3D Orbit)"
+  },
+  {
+    "id": "hero_support_3",
+    "name": "Orbit Card — Eyewear (Sunglasses)",
+    "src": "/campaign-worlds/groton-home-hero-floating-sunglasses-3x4.webp",
+    "page": "HOME",
+    "section": "Hero (3D Orbit)"
+  },
+  {
+    "id": "hero_support_4",
+    "name": "Orbit Card — Campaign (Jacket)",
+    "src": "/campaign-worlds/groton-home-hero-floating-jacket-3x4.webp",
+    "page": "HOME",
+    "section": "Hero (3D Orbit)"
+  },
+  {
+    "id": "process_raw",
+    "name": "Raw Product Input (Stage 01)",
+    "src": "/campaign-worlds/groton-home-process-raw-1x1.webp",
+    "page": "HOME",
+    "section": "Process Transformation"
+  },
+  {
+    "id": "process_final",
+    "name": "Final Campaign Visual (Stage 05)",
+    "src": "/campaign-worlds/groton-home-process-final-4x5.webp",
+    "page": "HOME",
+    "section": "Process Transformation"
+  },
+  {
+    "id": "capability_product",
+    "name": "Product Photography Card",
+    "src": "/campaign-worlds/groton-home-capability-product-4x5.webp",
+    "page": "HOME",
+    "section": "Capabilities"
+  },
+  {
+    "id": "capability_model",
+    "name": "Product-on-Model Card",
+    "src": "/campaign-worlds/groton-home-capability-model-4x5.webp",
+    "page": "HOME",
+    "section": "Capabilities"
+  },
+  {
+    "id": "capability_apparel",
+    "name": "Fashion Apparel Card",
+    "src": "/campaign-worlds/groton-1.jpg",
+    "page": "HOME",
+    "section": "Capabilities"
+  },
+  {
+    "id": "capability_editorial",
+    "name": "Editorial Catalog Card",
+    "src": "/campaign-worlds/groton-home-capability-editorial-4x5.webp",
+    "page": "HOME",
+    "section": "Capabilities"
+  },
+  {
+    "id": "archive_hero",
+    "name": "Editorial Showcase Visual",
+    "src": "/uploads/studio/1791455117941-on-model_groton-groton_Compress.mp4",
+    "page": "HOME",
+    "section": "Editorial Archive",
+    "mediaType": "video"
+  },
+  {
+    "id": "fashion_1",
+    "name": "Fashion Focus 1 — Black Hoodie",
+    "src": "/campaign-worlds/groton-home-fashion-black-hoodie-3x4.webp",
+    "page": "HOME",
+    "section": "Fashion & Apparel"
+  },
+  {
+    "id": "fashion_2",
+    "name": "Fashion Focus 2 — Striped Shirt",
+    "src": "/campaign-worlds/groton-home-fashion-striped-shirt-3x4.webp",
+    "page": "HOME",
+    "section": "Fashion & Apparel"
+  },
+  {
+    "id": "fashion_3",
+    "name": "Fashion Focus 3 — Blue Hoodie",
+    "src": "/campaign-worlds/groton-home-fashion-blue-hoodie-3x4.webp",
+    "page": "HOME",
+    "section": "Fashion & Apparel"
+  },
+  {
+    "id": "service_ecommerce_pdp",
+    "name": "01 — E-commerce & PDP Visuals",
+    "src": "/campaign-worlds/groton-services-advertising-3x4.webp",
+    "page": "SERVICES",
+    "section": "E-commerce & PDP"
+  },
+  {
+    "id": "service_product_on_model",
+    "name": "02 — Product-on-Model",
+    "src": "/uploads/studio/1791455117941-on-model_groton-groton_Compress.mp4",
+    "page": "SERVICES",
+    "section": "Product-on-Model",
+    "mediaType": "video"
+  },
+  {
+    "id": "service_lifestyle_editorial",
+    "name": "03 — Lifestyle & Editorial",
+    "src": "/campaign-worlds/groton-services-lifestyle-3x4.webp",
+    "page": "SERVICES",
+    "section": "Lifestyle & Editorial"
+  },
+  {
+    "id": "service_campaign_advertising",
+    "name": "04 — Campaign & Advertising",
+    "src": "/campaign-worlds/groton-services-creative-direction-3x4.webp",
+    "page": "SERVICES",
+    "section": "Campaign & Advertising"
+  },
+  {
+    "id": "work_1",
+    "name": "01 — Streetwear Comfort",
+    "src": "/campaign-worlds/GROTON-work-selected-streetwear-742x556.webp",
+    "page": "WORK",
+    "section": "Portfolio (Fashion)"
+  },
+  {
+    "id": "work_2",
+    "name": "02 — Sherpa Outerwear",
+    "src": "/campaign-worlds/GROTON-work-selected-sherpa-outerwear-742x990.webp",
+    "page": "WORK",
+    "section": "Portfolio (Fashion)"
+  },
+  {
+    "id": "work_3",
+    "name": "03 — Modern Elegance",
+    "src": "/campaign-worlds/GROTON-work-selected-modern-elegance-742x928.webp",
+    "page": "WORK",
+    "section": "Portfolio (Fashion)"
+  },
+  {
+    "id": "work_4",
+    "name": "04 — High-Angle Editorial",
+    "src": "/campaign-worlds/GROTON-work-selected-high-angle-editorial-742x742.webp",
+    "page": "WORK",
+    "section": "Portfolio (Editorial)"
+  },
+  {
+    "id": "work_5",
+    "name": "05 — Cat Print Styling",
+    "src": "/campaign-worlds/GROTON-work-selected-cat-print-742x418.webp",
+    "page": "WORK",
+    "section": "Portfolio (Fashion)"
+  },
+  {
+    "id": "work_6",
+    "name": "06 — Editorial Lifestyle",
+    "src": "/campaign-worlds/GROTON-work-selected-editorial-lifestyle-742x990.webp",
+    "page": "WORK",
+    "section": "Portfolio (Fashion)"
+  },
+  {
+    "id": "contact_visual",
+    "name": "Contact Editorial Visual",
+    "src": "/campaign-worlds/groton-contact-visual-4x5.webp",
+    "page": "CONTACT",
+    "section": "Contact Visual"
+  },
+  {
+    "id": "blog_how-to-create-better-product-images-for-ecommerce",
+    "name": "How to Create Better Product Images for E-commerce",
+    "src": "/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg",
+    "page": "BLOG",
+    "section": "Article: E-COMMERCE"
+  },
+  {
+    "id": "blog_product-photography-vs-ai-product-imagery",
+    "name": "Product Photography vs AI Product Imagery: What's the Difference?",
+    "src": "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg",
+    "page": "BLOG",
+    "section": "Article: AI VISUALS"
+  },
+  {
+    "id": "blog_ecommerce-image-size-and-resolution",
+    "name": "What Image Size and Resolution Should You Use for E-commerce?",
+    "src": "/campaign-worlds/Sunglasses_product_photography_2K_20260929162056.jpg",
+    "page": "BLOG",
+    "section": "Article: E-COMMERCE"
+  },
+  {
+    "id": "blog_jpg-vs-png-vs-webp",
+    "name": "JPG vs PNG vs WebP: Which Image Format Should You Use?",
+    "src": "/campaign-worlds/6610031H658_BYE260114.webp",
+    "page": "BLOG",
+    "section": "Article: IMAGE TOOLS"
+  },
+  {
+    "id": "blog_consistent-product-images-online-store",
+    "name": "How Consistent Product Images Improve an Online Store",
+    "src": "/campaign-worlds/groton-6.jpg",
+    "page": "BLOG",
+    "section": "Article: E-COMMERCE"
+  },
+  {
+    "id": "blog_prepare-product-images-for-marketplaces",
+    "name": "How to Prepare Product Images for Amazon, Shopify & Other Marketplaces",
+    "src": "/campaign-worlds/groton-1.jpg",
+    "page": "BLOG",
+    "section": "Article: E-COMMERCE"
+  },
+  {
+    "id": "blog_image-compression-ecommerce-speed",
+    "name": "How Image Compression Affects E-commerce Website Speed",
+    "src": "/campaign-worlds/groton-5.jpg",
+    "page": "BLOG",
+    "section": "Article: IMAGE TOOLS"
+  },
+  {
+    "id": "blog_product-on-model-images-without-photoshoot",
+    "name": "How to Create Product-on-Model Images Without a Traditional Photoshoot",
+    "src": "/campaign-worlds/groton-3.jpg",
+    "page": "BLOG",
+    "section": "Article: AI VISUALS"
+  },
+  {
+    "id": "blog_ecommerce-product-image-workflow",
+    "name": "The Complete E-commerce Product Image Workflow: From Product to Final Upload",
+    "src": "/campaign-worlds/Jacket_and_pants_fashion_display_2K_20260929162053.jpg",
+    "page": "BLOG",
+    "section": "Article: CREATIVE PRODUCTION"
+  },
+  {
+    "id": "blog_ai-product-images-what-brands-should-know",
+    "name": "AI Product Images: What Brands Should Know Before Using Them",
+    "src": "/campaign-worlds/1368386.jpg",
+    "page": "BLOG",
+    "section": "Article: AI VISUALS"
+  },
+  {
+    "id": "blog_ai-product-photography-practical-guide",
+    "name": "AI Product Photography for E-commerce: A Practical Guide for Modern Brands",
+    "src": "/campaign-worlds/groton-1.jpg",
+    "page": "BLOG",
+    "section": "Article: AI & PRODUCTION"
+  },
+  {
+    "id": "blog_consistent-product-images-ecommerce-catalog",
+    "name": "How to Create Consistent Product Images Across an E-commerce Catalog",
+    "src": "/campaign-worlds/groton-3.jpg",
+    "page": "BLOG",
+    "section": "Article: E-COMMERCE"
+  },
+  {
+    "id": "blog_product-on-model-images-ecommerce-complexity",
+    "name": "Product-on-Model Images: How E-commerce Brands Can Reduce Photoshoot Complexity",
+    "src": "/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg",
+    "page": "BLOG",
+    "section": "Article: FASHION & APPAREL"
+  },
+  {
+    "id": "blog_marketplace-product-image-prep-guide",
+    "name": "How to Prepare Product Images for Amazon, Shopify and Other Marketplaces",
+    "src": "/campaign-worlds/6610031H658_BYE260114.webp",
+    "page": "BLOG",
+    "section": "Article: MARKETPLACES"
+  },
+  {
+    "id": "blog_white-vs-lifestyle-backgrounds",
+    "name": "Product Image Backgrounds: White Background vs Lifestyle Background",
+    "src": "/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg",
+    "page": "BLOG",
+    "section": "Article: PHOTOGRAPHY"
+  },
+  {
+    "id": "blog_image-size-compression-conversion",
+    "name": "How Image Size and Compression Affect E-commerce Conversion and Page Speed",
+    "src": "/campaign-worlds/groton-5.jpg",
+    "page": "BLOG",
+    "section": "Article: OPTIMIZATION"
+  },
+  {
+    "id": "blog_jpg-png-webp-avif-comparison",
+    "name": "JPG vs PNG vs WebP vs AVIF: Which Image Format Should You Use?",
+    "src": "/campaign-worlds/groton-6.jpg",
+    "page": "BLOG",
+    "section": "Article: TECHNICAL"
+  },
+  {
+    "id": "blog_resizing-product-images-quality",
+    "name": "How to Resize Product Images Without Losing Visual Quality",
+    "src": "/campaign-worlds/Sunglasses_product_photography_2K_20260929162056.jpg",
+    "page": "BLOG",
+    "section": "Article: EDITING"
+  },
+  {
+    "id": "blog_ecommerce-listing-image-workflow",
+    "name": "A Complete E-commerce Image Workflow: From Product Upload to Final Listing",
+    "src": "/campaign-worlds/Jacket_and_pants_fashion_display_2K_20260929162053.jpg",
+    "page": "BLOG",
+    "section": "Article: WORKFLOW"
+  },
+  {
+    "id": "blog_scaling-product-visual-production",
+    "name": "How Brands Can Build a Scalable Product Visual Production System",
+    "src": "/campaign-worlds/1368386.jpg",
+    "page": "BLOG",
+    "section": "Article: AI & PRODUCTION"
+  },
+  {
+    "id": "blog_what-is-pdp-photography",
+    "name": "What Is PDP Photography? A Complete Guide for E-commerce Brands",
+    "src": "/campaign-worlds/groton-home-capability-product-4x5.webp",
+    "page": "BLOG",
+    "section": "Article: E-COMMERCE"
+  },
+  {
+    "id": "blog_product-on-model-photography-fashion-brands",
+    "name": "Product-on-Model Photography: Why Fashion Brands Are Moving Beyond Traditional Shoots",
+    "src": "/campaign-worlds/groton-home-capability-model-4x5.webp",
+    "page": "BLOG",
+    "section": "Article: FASHION & APPAREL"
+  },
+  {
+    "id": "blog_ai-product-photography-ecommerce",
+    "name": "How AI Product Photography Is Changing E-commerce Visual Production",
+    "src": "/campaign-worlds/groton-services-ai-product-3x4.webp",
+    "page": "BLOG",
+    "section": "Article: AI & PRODUCTION"
+  },
+  {
+    "id": "blog_consistent-product-images-large-ecommerce-catalog",
+    "name": "How to Create Consistent Product Images Across a Large E-commerce Catalog",
+    "src": "/campaign-worlds/groton-home-capability-apparel-4x5.webp",
+    "page": "BLOG",
+    "section": "Article: E-COMMERCE"
+  },
+  {
+    "id": "blog_ai-vs-traditional-product-photography",
+    "name": "AI vs Traditional Product Photography: Which Is Better for E-commerce?",
+    "src": "/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg",
+    "page": "BLOG",
+    "section": "Article: AI VISUALS"
+  },
+  {
+    "id": "blog_product-on-model-images-fashion-ecommerce",
+    "name": "Why Product-on-Model Images Matter for Fashion E-commerce",
+    "src": "/campaign-worlds/groton-home-fashion-black-hoodie-3x4.webp",
+    "page": "BLOG",
+    "section": "Article: FASHION & APPAREL"
+  },
+  {
+    "id": "blog_ecommerce-product-images-that-sell",
+    "name": "How to Create E-commerce Product Images That Actually Help Products Sell",
+    "src": "/campaign-worlds/groton-home-gallery-footwear-4x5.webp",
+    "page": "BLOG",
+    "section": "Article: CREATIVE PRODUCTION"
+  },
+  {
+    "id": "blog_why-i-built-groton-ai-studio",
+    "name": "Why I Built GROTON AI Studio: A Vision for the Future of E-commerce Visual Production",
+    "src": "/campaign-worlds/groton-about-main-visual-16x9.webp",
+    "page": "BLOG",
+    "section": "Article: FOUNDER"
+  },
+  {
+    "id": "blog_premium-ecommerce-visuals-lower-production-cost",
+    "name": "Why Premium E-commerce Visuals Shouldn't Cost Like a Traditional Photoshoot",
+    "src": "/campaign-worlds/groton-home-capability-editorial-4x5.webp",
+    "page": "BLOG",
+    "section": "Article: PRODUCTION VISION"
+  },
+  {
+    "id": "blog_from-grafly-studio-to-groton-ai-studio",
+    "name": "From Grafly Studio to GROTON AI Studio: The Journey Behind the Vision",
+    "src": "/campaign-worlds/groton-contact-visual-4x5.webp",
+    "page": "BLOG",
+    "section": "Article: FOUNDER JOURNEY"
+  }
+]

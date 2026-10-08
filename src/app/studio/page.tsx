@@ -16,6 +16,12 @@ type MediaRecord = {
   usages: { page: string; section: string }[];
 };
 
+function isVideoMedia(url?: string, mediaType?: "image" | "video"): boolean {
+  if (mediaType === 'video') return true;
+  if (!url) return false;
+  return /\.(mp4|webm|mov|quicktime)($|\?)/i.test(url);
+}
+
 function StudioContent() {
   const searchParams = useSearchParams();
   const pageFilter = searchParams.get('page') || 'HOME';
@@ -27,6 +33,7 @@ function StudioContent() {
   const [mediaLibrary, setMediaLibrary] = useState<MediaRecord[]>([]);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [previewMedia, setPreviewMedia] = useState<MediaRecord | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [testingUsers, setTestingUsers] = useState<any[]>([]);
@@ -69,8 +76,12 @@ function StudioContent() {
     }
   }, [view]);
 
-  const loadMedia = () => {
-    fetch('/api/studio/media', { cache: 'no-store' }).then(r => r.json()).then(setMediaLibrary);
+  const loadMedia = async () => {
+    const res = await fetch('/api/studio/media', { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      setMediaLibrary(data);
+    }
   };
 
   const handleReplaceClick = (id: string) => {
@@ -80,35 +91,53 @@ function StudioContent() {
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.[0]) return;
+    const inputEl = e.target;
+    if (!inputEl.files?.[0]) return;
+    const file = inputEl.files[0];
     const formData = new FormData();
-    formData.append('file', e.target.files[0]);
+    formData.append('file', file);
     try {
-      const res = await fetch('/api/studio/media', { method: 'POST', body: formData });
+      setIsUploading(true);
+      const res = await fetch('/api/studio/media', {
+        method: 'POST',
+        credentials: 'same-origin',
+        body: formData,
+      });
       if (res.ok) {
-        loadMedia(); // reload library
+        await loadMedia(); // reload library
       } else {
-        const data = await res.json();
-        alert(data.error || 'Upload failed');
+        let errorMsg = 'Upload failed';
+        try {
+          const data = await res.json();
+          errorMsg = data.error || errorMsg;
+        } catch {
+          errorMsg = `Server error (${res.status}: ${res.statusText || 'Upload failed'})`;
+        }
+        alert(errorMsg);
       }
-    } catch (error) {
-      alert('Upload request failed');
+    } catch (error: any) {
+      alert(`Upload request failed: ${error?.message || 'Network error'}`);
+    } finally {
+      setIsUploading(false);
+      if (inputEl) inputEl.value = '';
     }
   };
 
   const selectMedia = async (src: string, mediaType?: "image" | "video", mimeType?: string) => {
     if (!editingId) return;
-    setImages(prev => prev.map(img => img.id === editingId ? { ...img, src, mediaType, mimeType } : img));
+    const determinedType: "image" | "video" = mediaType || (isVideoMedia(src) ? 'video' : 'image');
+    setImages(prev => prev.map(img => img.id === editingId ? { ...img, src, mediaType: determinedType, mimeType } : img));
     setIsMediaModalOpen(false);
   };
 
   const saveChanges = async (id: string) => {
     const img = images.find(i => i.id === id);
     if (!img) return;
+    const determinedType: "image" | "video" = img.mediaType || (isVideoMedia(img.src) ? 'video' : 'image');
     await fetch('/api/studio/cms', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: img.id, src: img.src, mediaType: img.mediaType, mimeType: img.mimeType })
+      body: JSON.stringify({ id: img.id, src: img.src, mediaType: determinedType, mimeType: img.mimeType })
     });
     alert('Media successfully updated and published to the live site!');
   };
@@ -173,10 +202,27 @@ function StudioContent() {
             <h2 className="text-3xl font-bold tracking-tight">Media Library <span className="text-zinc-500 text-2xl ml-2">{mediaLibrary.length}</span></h2>
             <p className="text-zinc-500 mt-2 text-sm">Manage all uploaded assets across the website</p>
           </div>
-          <button onClick={() => fileInputRef.current?.click()} className="px-4 py-2 bg-[#8B7CFF] hover:bg-[#7a6ce0] text-white text-sm font-medium rounded-lg transition-colors">
-            Upload New Media
+          <button 
+            onClick={() => fileInputRef.current?.click()} 
+            disabled={isUploading}
+            className="px-4 py-2 bg-[#8B7CFF] hover:bg-[#7a6ce0] disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2"
+          >
+            {isUploading ? (
+              <>
+                <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                <span>Uploading...</span>
+              </>
+            ) : (
+              'Upload New Media'
+            )}
           </button>
-          <input type="file" ref={fileInputRef} onChange={handleUpload} className="hidden" accept="image/png, image/jpeg, image/webp, video/mp4, video/webm, video/quicktime" />
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleUpload} 
+            className="hidden" 
+            accept="image/png, image/jpeg, image/webp, image/svg+xml, video/mp4, video/webm, video/quicktime, video/*, image/*" 
+          />
         </header>
 
         <div className="flex gap-4 mb-8">
@@ -207,34 +253,37 @@ function StudioContent() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {filteredMediaLibrary.map(media => (
-            <div key={media.id} className="flex flex-col gap-3 group">
-              <button onClick={() => setPreviewMedia(media)} className="relative aspect-square rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#8B7CFF]">
-                {media.mediaType === 'video' ? (
-                  <video src={media.publicUrl} muted playsInline className="object-cover w-full h-full transition-transform group-hover:scale-105 pointer-events-none" />
-                ) : (
-                  <Image src={media.publicUrl} alt={media.displayName} fill className="object-cover transition-transform group-hover:scale-105" />
-                )}
-              </button>
-              <div className="flex flex-col gap-1 px-1">
-                <p className="text-xs text-white font-medium truncate">{media.displayName}</p>
-                <div className="flex justify-between items-center mt-1">
-                  <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded flex items-center gap-1">
-                    {media.sourceType}
-                    {media.mediaType === 'video' && <span className="bg-[#8B7CFF]/20 text-[#8B7CFF] px-1.5 py-0.5 rounded text-[8px] font-bold">VIDEO</span>}
-                  </span>
-                  <span className="text-[10px] text-zinc-500 font-mono truncate">{media.publicUrl.split('.').pop()?.toUpperCase()}</span>
-                </div>
-                {media.usages.length > 0 && (
-                  <div className="mt-2 flex flex-col gap-1">
-                    {media.usages.map((u, i) => (
-                      <span key={i} className="text-[10px] text-zinc-400 truncate w-full">Used in: {u.page} / {u.section}</span>
-                    ))}
+          {filteredMediaLibrary.map(media => {
+            const isVideo = isVideoMedia(media.publicUrl, media.mediaType);
+            return (
+              <div key={media.id} className="flex flex-col gap-3 group">
+                <button onClick={() => setPreviewMedia(media)} className="relative aspect-square rounded-xl overflow-hidden border border-zinc-800 bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#8B7CFF]">
+                  {isVideo ? (
+                    <video src={media.publicUrl} muted playsInline className="object-cover w-full h-full transition-transform group-hover:scale-105 pointer-events-none" />
+                  ) : (
+                    <Image src={media.publicUrl} alt={media.displayName} fill className="object-cover transition-transform group-hover:scale-105" />
+                  )}
+                </button>
+                <div className="flex flex-col gap-1 px-1">
+                  <p className="text-xs text-white font-medium truncate">{media.displayName}</p>
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-900 px-2 py-0.5 rounded flex items-center gap-1">
+                      {media.sourceType}
+                      {isVideo && <span className="bg-[#8B7CFF]/20 text-[#8B7CFF] px-1.5 py-0.5 rounded text-[8px] font-bold">VIDEO</span>}
+                    </span>
+                    <span className="text-[10px] text-zinc-500 font-mono truncate">{media.publicUrl.split('.').pop()?.toUpperCase()}</span>
                   </div>
-                )}
+                  {media.usages.length > 0 && (
+                    <div className="mt-2 flex flex-col gap-1">
+                      {media.usages.map((u, i) => (
+                        <span key={i} className="text-[10px] text-zinc-400 truncate w-full">Used in: {u.page} / {u.section}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
           {filteredMediaLibrary.length === 0 && <p className="col-span-full text-zinc-500 text-sm py-10 text-center">No media found.</p>}
         </div>
 
@@ -243,8 +292,8 @@ function StudioContent() {
           <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-6 backdrop-blur-md">
             <div className="bg-[#0d0d0d] border border-zinc-800 rounded-2xl w-full max-w-5xl h-[80vh] flex shadow-2xl overflow-hidden">
               <div className="w-2/3 h-full bg-zinc-950 relative border-r border-zinc-800">
-                {previewMedia.mediaType === 'video' ? (
-                  <video src={previewMedia.publicUrl} controls playsInline className="w-full h-full object-contain" />
+                {isVideoMedia(previewMedia.publicUrl, previewMedia.mediaType) ? (
+                  <video src={previewMedia.publicUrl} controls playsInline autoPlay className="w-full h-full object-contain" />
                 ) : (
                   <Image src={previewMedia.publicUrl} alt={previewMedia.displayName} fill className="object-contain" />
                 )}
@@ -378,46 +427,65 @@ function StudioContent() {
     <div className="p-10 max-w-5xl mx-auto">
       <header className="flex justify-between items-end mb-10 pb-6 border-b border-zinc-800">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">{pageFilter} Editor</h2>
-          <p className="text-zinc-500 mt-2 text-sm">Manage dynamic images for the {pageFilter} page</p>
+          <h2 className="text-3xl font-bold tracking-tight">{pageFilter === 'BLOG' ? 'INSIGHTS / BLOG' : pageFilter} Editor</h2>
+          <p className="text-zinc-500 mt-2 text-sm">Manage dynamic content for the {pageFilter === 'BLOG' ? 'Insights & Blog' : pageFilter} page</p>
         </div>
-        <a href={pageFilter === 'HOME' ? '/' : '/' + pageFilter.toLowerCase()} target="_blank" className="text-sm font-medium text-[#8B7CFF] hover:underline">View Live Page +'</a>
+        <a 
+          href={pageFilter === 'HOME' || pageFilter === 'GLOBAL' ? '/' : pageFilter === 'BLOG' ? '/blog' : '/' + pageFilter.toLowerCase()} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-sm font-medium text-[#8B7CFF] hover:underline flex items-center gap-1.5"
+        >
+          View Live Page ↗
+        </a>
       </header>
 
       {filteredImages.length > 0 && (
         <div className="mt-8 mb-6 border-b border-zinc-800 pb-4">
-          <h3 className="text-lg font-bold tracking-widest text-zinc-400 uppercase">Image Placements</h3>
+          <h3 className="text-lg font-bold tracking-widest text-zinc-400 uppercase">Visual Media Placements</h3>
         </div>
       )}
       <div className="space-y-8">
-        {filteredImages.map(img => (
-          <div key={img.id} className="flex flex-col md:flex-row gap-6 p-6 bg-zinc-900/50 border border-zinc-800/50 rounded-xl">
-            <div className="w-full md:w-64 h-40 relative rounded-lg overflow-hidden bg-zinc-950 flex-shrink-0">
-              <Image src={img.src} alt={img.name} fill className="object-cover" />
-            </div>
-            <div className="flex-1 flex flex-col justify-center">
-              <div className="text-xs font-bold text-[#8B7CFF] tracking-widest uppercase mb-1">{img.section}</div>
-              <h3 className="text-lg font-medium text-white mb-2">{img.name}</h3>
-              <p className="text-xs text-zinc-500 mb-6 font-mono break-all">{img.src}</p>
+        {filteredImages.map(img => {
+          const isVideo = isVideoMedia(img.src, img.mediaType);
+          return (
+            <div key={img.id} className="flex flex-col md:flex-row gap-6 p-6 bg-zinc-900/50 border border-zinc-800/50 rounded-xl">
+              <div className="w-full md:w-64 h-40 relative rounded-lg overflow-hidden bg-zinc-950 flex-shrink-0 flex items-center justify-center">
+                {isVideo ? (
+                  <video src={img.src} muted loop playsInline autoPlay className="w-full h-full object-cover" />
+                ) : (
+                  <Image src={img.src} alt={img.name} fill className="object-cover" />
+                )}
+                {isVideo && (
+                  <span className="absolute top-2 right-2 bg-black/80 text-[#8B7CFF] text-[9px] font-bold px-2 py-0.5 rounded tracking-wider border border-[#8B7CFF]/30">
+                    VIDEO
+                  </span>
+                )}
+              </div>
+              <div className="flex-1 flex flex-col justify-center">
+                <div className="text-xs font-bold text-[#8B7CFF] tracking-widest uppercase mb-1">{img.section}</div>
+                <h3 className="text-lg font-medium text-white mb-2">{img.name}</h3>
+                <p className="text-xs text-zinc-500 mb-6 font-mono break-all">{img.src}</p>
 
-              <div className="flex gap-3">
-                <button
-                  onClick={() => handleReplaceClick(img.id)}
-                  className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-sm font-medium rounded-lg transition-colors"
-                >
-                  Replace Image
-                </button>
-                <button
-                  onClick={() => saveChanges(img.id)}
-                  className="px-4 py-2 bg-[#8B7CFF] hover:bg-[#7a6ce0] text-white text-sm font-medium rounded-lg transition-colors"
-                >
-                  Save & Publish
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => handleReplaceClick(img.id)}
+                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-sm font-medium rounded-lg transition-colors"
+                  >
+                    {isVideo ? 'Replace Video' : 'Replace Image'}
+                  </button>
+                  <button
+                    onClick={() => saveChanges(img.id)}
+                    className="px-4 py-2 bg-[#8B7CFF] hover:bg-[#7a6ce0] text-white text-sm font-medium rounded-lg transition-colors"
+                  >
+                    Save & Publish
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-        {filteredImages.length === 0 && <p className="text-zinc-500 py-10 text-center">No images mapped for this page yet.</p>}
+          );
+        })}
+        {filteredImages.length === 0 && <p className="text-zinc-500 py-10 text-center">No media placements mapped for this page yet.</p>}
       </div>
 
       {filteredTextPlacements.length > 0 && (
@@ -440,11 +508,28 @@ function StudioContent() {
             </div>
             <div className="p-6 overflow-y-auto flex-1">
               <div className="mb-8 p-6 border-2 border-dashed border-zinc-800 rounded-xl text-center">
-                <input type="file" ref={fileInputRef} onChange={handleUpload} className="hidden" accept="image/png, image/jpeg, image/webp" />
-                <button onClick={() => fileInputRef.current?.click()} className="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-lg text-sm font-medium">
-                  Upload New Image
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  onChange={handleUpload} 
+                  className="hidden" 
+                  accept="image/png, image/jpeg, image/webp, image/svg+xml, video/mp4, video/webm, video/quicktime, video/*, image/*" 
+                />
+                <button 
+                  onClick={() => fileInputRef.current?.click()} 
+                  disabled={isUploading}
+                  className="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 rounded-lg text-sm font-medium flex items-center justify-center gap-2 mx-auto transition-colors"
+                >
+                  {isUploading ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                      <span>Uploading Media...</span>
+                    </>
+                  ) : (
+                    'Upload New Media'
+                  )}
                 </button>
-                <p className="text-xs text-zinc-500 mt-3">JPG, PNG, WEBP allowed.</p>
+                <p className="text-xs text-zinc-500 mt-3">JPG, PNG, WEBP, SVG, MP4, WebM allowed.</p>
               </div>
 
               <div className="flex gap-4 mb-6">
@@ -476,20 +561,29 @@ function StudioContent() {
 
               <h4 className="text-sm font-medium text-zinc-400 mb-4 uppercase tracking-widest">Select Existing</h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {filteredMediaLibrary.map(media => (
-                  <button
-                    key={media.id}
-                    onClick={() => selectMedia(media.publicUrl, media.mediaType, media.mimeType)}
-                    className="relative aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-[#8B7CFF] transition-all group"
-                  >
-                    <Image src={media.publicUrl} alt={media.displayName} fill className="object-cover" />
-                    <div className="absolute inset-0 bg-[#8B7CFF]/20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2">
-                      <span className="bg-black/80 text-white text-xs px-3 py-1.5 rounded-full font-medium mb-2">USE IMAGE</span>
-                      <span className="text-[10px] text-white text-center drop-shadow-md truncate w-full">{media.displayName}</span>
-                    </div>
-                  </button>
-                ))}
-                {filteredMediaLibrary.length === 0 && <p className="col-span-full text-zinc-500 text-sm py-10 text-center">No images found.</p>}
+                {filteredMediaLibrary.map(media => {
+                  const isVideo = isVideoMedia(media.publicUrl, media.mediaType);
+                  return (
+                    <button
+                      key={media.id}
+                      onClick={() => selectMedia(media.publicUrl, media.mediaType, media.mimeType)}
+                      className="relative aspect-square rounded-lg overflow-hidden border-2 border-transparent hover:border-[#8B7CFF] transition-all group"
+                    >
+                      {isVideo ? (
+                        <video src={media.publicUrl} muted playsInline className="w-full h-full object-cover pointer-events-none" />
+                      ) : (
+                        <Image src={media.publicUrl} alt={media.displayName} fill className="object-cover" />
+                      )}
+                      <div className="absolute inset-0 bg-[#8B7CFF]/20 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2">
+                        <span className="bg-black/80 text-white text-xs px-3 py-1.5 rounded-full font-medium mb-2">
+                          {isVideo ? 'USE VIDEO' : 'USE IMAGE'}
+                        </span>
+                        <span className="text-[10px] text-white text-center drop-shadow-md truncate w-full">{media.displayName}</span>
+                      </div>
+                    </button>
+                  );
+                })}
+                {filteredMediaLibrary.length === 0 && <p className="col-span-full text-zinc-500 text-sm py-10 text-center">No media found.</p>}
               </div>
             </div>
           </div>

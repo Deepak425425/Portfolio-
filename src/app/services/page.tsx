@@ -3,6 +3,8 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CmsImage from "@/components/CmsImage";
+import CmsText from "@/components/CmsText";
 
 export const metadata: Metadata = {
   title: "Services — GROTON AI STUDIO",
@@ -48,6 +50,10 @@ const capabilities = [
 const services = [
   {
     id: "ecommerce-pdp",
+    cmsId: "service_ecommerce_pdp",
+    categoryCmsId: "services.s1.category",
+    titleCmsId: "services.s1.title",
+    descCmsId: "services.s1.desc",
     category: "01 — E-COMMERCE / PDP",
     title: "E-commerce & PDP Visuals",
     description:
@@ -63,6 +69,10 @@ const services = [
   },
   {
     id: "product-on-model",
+    cmsId: "service_product_on_model",
+    categoryCmsId: "services.s2.category",
+    titleCmsId: "services.s2.title",
+    descCmsId: "services.s2.desc",
     category: "02 — PRODUCT-ON-MODEL",
     title: "Product-on-Model",
     description:
@@ -78,6 +88,10 @@ const services = [
   },
   {
     id: "lifestyle-editorial",
+    cmsId: "service_lifestyle_editorial",
+    categoryCmsId: "services.s3.category",
+    titleCmsId: "services.s3.title",
+    descCmsId: "services.s3.desc",
     category: "03 — LIFESTYLE",
     title: "Lifestyle & Editorial",
     description:
@@ -93,6 +107,10 @@ const services = [
   },
   {
     id: "campaign-advertising",
+    cmsId: "service_campaign_advertising",
+    categoryCmsId: "services.s4.category",
+    titleCmsId: "services.s4.title",
+    descCmsId: "services.s4.desc",
     category: "04 — CAMPAIGN",
     title: "Campaign & Advertising",
     description:
@@ -136,15 +154,24 @@ export default function ServicesPage() {
           {/* PAGE HERO */}
           <section className="pt-32 sm:pt-40 md:pt-48 lg:pt-[210px] pb-12 sm:pb-16 md:pb-20">
             <div className="max-w-4xl xl:max-w-5xl">
-              <span className="text-[11px] md:text-xs tracking-[0.25em] uppercase font-bold text-zinc-400 block mb-4 sm:mb-6">
-                VISUAL PRODUCTION
-              </span>
-              <h1 className="font-sans font-bold tracking-[-0.05em] text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[80px] leading-[1.05] text-black mb-6 sm:mb-8 break-words">
-                Visuals built for modern commerce.
-              </h1>
-              <p className="font-sans text-base sm:text-xl md:text-2xl text-zinc-500 leading-relaxed font-light max-w-3xl">
-                From PDP and product-on-model imagery to lifestyle and campaign visuals, GROTON creates premium visual content built for e-commerce brands.
-              </p>
+              <CmsText
+                cmsId="services.hero.label"
+                as="span"
+                className="text-[11px] md:text-xs tracking-[0.25em] uppercase font-bold text-zinc-400 block mb-4 sm:mb-6"
+                fallback="VISUAL PRODUCTION"
+              />
+              <CmsText
+                cmsId="services.hero.heading"
+                as="h1"
+                className="font-sans font-bold tracking-[-0.05em] text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[80px] leading-[1.05] text-black mb-6 sm:mb-8 break-words"
+                fallback="Visuals built for modern commerce."
+              />
+              <CmsText
+                cmsId="services.hero.desc"
+                as="p"
+                className="font-sans text-base sm:text-xl md:text-2xl text-zinc-500 leading-relaxed font-light max-w-3xl"
+                fallback="From PDP and product-on-model imagery to lifestyle and campaign visuals, GROTON creates premium visual content built for e-commerce brands."
+              />
             </div>
           </section>
 
@@ -174,15 +201,24 @@ export default function ServicesPage() {
                     index % 2 !== 0 ? "lg:order-2" : ""
                   }`}
                 >
-                  <span className="text-[10px] sm:text-[11px] font-mono tracking-[0.2em] font-bold text-zinc-400 uppercase mb-3 sm:mb-4 block">
-                    {service.category}
-                  </span>
-                  <h2 className="font-sans font-bold tracking-[-0.04em] text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-4 sm:mb-5 text-black">
-                    {service.title}
-                  </h2>
-                  <p className="font-sans text-sm sm:text-base md:text-lg text-zinc-600 font-light leading-relaxed mb-6 sm:mb-8">
-                    {service.description}
-                  </p>
+                  <CmsText
+                    cmsId={service.categoryCmsId}
+                    as="span"
+                    className="text-[10px] sm:text-[11px] font-mono tracking-[0.2em] font-bold text-zinc-400 uppercase mb-3 sm:mb-4 block"
+                    fallback={service.category}
+                  />
+                  <CmsText
+                    cmsId={service.titleCmsId}
+                    as="h2"
+                    className="font-sans font-bold tracking-[-0.04em] text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-4 sm:mb-5 text-black"
+                    fallback={service.title}
+                  />
+                  <CmsText
+                    cmsId={service.descCmsId}
+                    as="p"
+                    className="font-sans text-sm sm:text-base md:text-lg text-zinc-600 font-light leading-relaxed mb-6 sm:mb-8"
+                    fallback={service.description}
+                  />
 
                   {/* Deliverables */}
                   <div className="mb-8 sm:mb-10">
@@ -219,8 +255,9 @@ export default function ServicesPage() {
                     index % 2 !== 0 ? "lg:order-1" : ""
                   }`}
                 >
-                  <Image
-                    src={service.image}
+                  <CmsImage
+                    cmsId={service.cmsId}
+                    fallbackSrc={service.image}
                     alt={service.alt}
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"

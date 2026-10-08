@@ -545,9 +545,11 @@ export default function TeamPage() {
                     </h2>
 
                     <p className="font-sans text-sm sm:text-base text-zinc-600 font-light leading-relaxed mb-6">
-                      Deepak spearheads the creative vision and visual architecture across GROTON AI Studio and Grafly Studio. Bridging{" "}
-                      <HighlighterMark color="pink">editorial art direction</HighlighterMark>{" "}
-                      with proprietary AI synthesis pipelines, he orchestrates the lighting systems, photographic realism, and brand aesthetics that elevate modern visual production.
+                      Deepak founded{" "}
+                      <HighlighterMark color="pink">GROTON AI Studio and Grafly Studio</HighlighterMark>{" "}
+                      to{" "}
+                      <HighlighterMark color="pink">help emerging and modern brands grow</HighlighterMark>{" "}
+                      through stronger visual communication. His vision is to make premium creative production more accessible, efficient, and scalable — combining creative direction, AI-powered visual production, and a strong understanding of commercial imagery.
                     </p>
 
                     {/* Directorial Disciplines */}
@@ -638,7 +640,7 @@ export default function TeamPage() {
                   id: "03",
                   role: "Creative & Art Direction",
                   ref: "BENCH // 02",
-                  hasPin: false,
+                  hasPin: true,
                   pinColor: "dark" as PinColor,
                   tag: "DIRECTION",
                   bg: "#F4F1EA",

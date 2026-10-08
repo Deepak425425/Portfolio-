@@ -1464,6 +1464,1033 @@ export const BLOG_POSTS: BlogPost[] = [
       </>
     )
   }
+  ,
+  {
+    slug: "what-is-pdp-photography",
+    title: "What Is PDP Photography? A Complete Guide for E-commerce Brands",
+    excerpt: "Learn what PDP photography is, why product detail page images matter, and how e-commerce brands can create clear, consistent and premium product visuals at scale.",
+    coverImage: "/campaign-worlds/groton-home-capability-product-4x5.webp",
+    category: "E-COMMERCE",
+    datePublished: "2026-10-07",
+    readingTime: "6 min read",
+    seoTitle: "What Is PDP Photography? A Complete Guide for E-commerce Brands — GROTON AI Studio",
+    metaDesc: "Learn what PDP photography is, why product detail page images matter, and how e-commerce brands can create clear, consistent and premium product visuals at scale.",
+    content: (
+      <>
+        <p className="mb-4 text-zinc-600 leading-relaxed text-lg font-light">
+          When customers shop online, they cannot physically touch, try, or inspect a product. Product Detail Page photography helps bridge that gap.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          PDP photography refers to the images used on an e-commerce product page to show customers what a product looks like, how it is designed, and what they can expect when they purchase it.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          For fashion, apparel, jewellery, beauty, lifestyle, and other product-led brands, these images are a major part of the buying experience.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          A good PDP image does not necessarily need to be dramatic. It needs to be clear, accurate, consistent, and visually strong.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Why PDP Images Matter</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          A product page can have excellent copy, pricing, and reviews, but weak imagery can still reduce customer confidence.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          Strong PDP photography helps customers understand:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Product shape and proportions</li>
+          <li>Material and texture</li>
+          <li>Colour and finish</li>
+          <li>Details and construction</li>
+          <li>Fit and styling</li>
+          <li>Different product angles</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The goal is simple: reduce uncertainty before the customer makes a purchase.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">What Should a PDP Image Set Include?</h2>
+        <p className="mb-6 text-zinc-600 leading-relaxed">
+          A strong PDP system can include several types of images depending on the product category.
+        </p>
+        <div className="space-y-4 mb-8">
+          <div className="bg-zinc-50 p-5 rounded-xl border border-zinc-200">
+            <h3 className="font-bold text-black text-sm uppercase tracking-wider mb-1">Hero Image</h3>
+            <p className="text-sm text-zinc-600 leading-relaxed">The primary image that introduces the product, setting immediate visual expectations.</p>
+          </div>
+          <div className="bg-zinc-50 p-5 rounded-xl border border-zinc-200">
+            <h3 className="font-bold text-black text-sm uppercase tracking-wider mb-1">Multiple Angles</h3>
+            <p className="text-sm text-zinc-600 leading-relaxed">Useful for showing the product from different perspectives, revealing silhouette and depth.</p>
+          </div>
+          <div className="bg-zinc-50 p-5 rounded-xl border border-zinc-200">
+            <h3 className="font-bold text-black text-sm uppercase tracking-wider mb-1">Detail Images</h3>
+            <p className="text-sm text-zinc-600 leading-relaxed">Close-ups that communicate material, texture, construction, stitching, hardware, or other important craft details.</p>
+          </div>
+          <div className="bg-zinc-50 p-5 rounded-xl border border-zinc-200">
+            <h3 className="font-bold text-black text-sm uppercase tracking-wider mb-1">Lifestyle Imagery</h3>
+            <p className="text-sm text-zinc-600 leading-relaxed">Helps customers understand how the product exists in a real context and environment.</p>
+          </div>
+          <div className="bg-zinc-50 p-5 rounded-xl border border-zinc-200">
+            <h3 className="font-bold text-black text-sm uppercase tracking-wider mb-1">Product-on-Model Imagery</h3>
+            <p className="text-sm text-zinc-600 leading-relaxed">Especially useful for apparel, fashion, accessories, and jewellery to communicate fit, drape, and human scale.</p>
+          </div>
+        </div>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The exact combination depends on the category and the product.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The Challenge of Scaling PDP Photography</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Creating one strong product image is relatively simple. Creating hundreds or thousands of consistent product images is a completely different challenge.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          Large e-commerce catalogs need:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Consistent composition</li>
+          <li>Consistent product scale</li>
+          <li>Consistent framing</li>
+          <li>Consistent visual treatment</li>
+          <li>Multiple products and variations</li>
+          <li>Frequent updates</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          At this point, photography becomes a production system rather than a one-off shoot.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Where AI Can Help</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          AI-powered visual production can help brands build and expand these systems faster. Instead of treating every product as a completely new production, brands can establish visual rules and apply them across a larger catalog.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          At GROTON AI Studio, the focus is not simply generating an image.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The focus is creating commercially useful product visuals that maintain visual consistency while reducing unnecessary production complexity.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Final Takeaway</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          PDP photography is ultimately about helping customers understand the product.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          For modern e-commerce brands, the strongest PDP systems combine clarity, consistency, quality, and scalability.
+        </p>
+      </>
+    )
+  },
+  {
+    slug: "product-on-model-photography-fashion-brands",
+    title: "Product-on-Model Photography: Why Fashion Brands Are Moving Beyond Traditional Shoots",
+    excerpt: "Discover why product-on-model imagery is becoming essential for fashion e-commerce and how AI-powered visual production can make model imagery more scalable.",
+    coverImage: "/campaign-worlds/groton-home-capability-model-4x5.webp",
+    category: "FASHION & APPAREL",
+    datePublished: "2026-10-07",
+    readingTime: "6 min read",
+    seoTitle: "Product-on-Model Photography: Why Fashion Brands Are Moving Beyond Traditional Shoots — GROTON AI Studio",
+    metaDesc: "Discover why product-on-model imagery is becoming essential for fashion e-commerce and how AI-powered visual production can make model imagery more scalable.",
+    content: (
+      <>
+        <p className="mb-4 text-zinc-600 leading-relaxed text-lg font-light">
+          A product image tells customers what a product looks like. A product-on-model image shows them how that product can look when worn.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          That difference is particularly important in fashion e-commerce. Customers want to understand fit, proportion, silhouette, styling, and overall appearance before purchasing.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          Product-on-model imagery gives them that context.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Beyond the Flat Product Image</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Imagine looking at a shirt on a plain background. You can understand its colour and basic shape.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Now imagine seeing the same shirt worn by a model. Suddenly, you can understand its proportions, styling, silhouette, and relationship to the human body.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The second image communicates more information.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Why Traditional Shoots Can Become Difficult to Scale</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Traditional fashion photography can produce exceptional results. But every production can involve:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Models</li>
+          <li>Locations</li>
+          <li>Photographers</li>
+          <li>Styling</li>
+          <li>Makeup</li>
+          <li>Lighting</li>
+          <li>Samples</li>
+          <li>Logistics</li>
+          <li>Production time</li>
+        </ul>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          For a campaign, this can make sense.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          For a brand constantly launching products, repeating the entire process can become expensive and slow.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">AI-Powered Product-on-Model Production</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          AI introduces another way to approach the problem. Brands can create and explore model-based visual directions without rebuilding every physical production from scratch.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          This can be useful for:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Product pages</li>
+          <li>Collection pages</li>
+          <li>Social content</li>
+          <li>Advertising</li>
+          <li>Campaign concepts</li>
+          <li>Catalog expansion</li>
+        </ul>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          However, AI does not remove the need for creative direction.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The product still needs to look accurate.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The model, styling, pose, framing, and visual language need to feel intentional.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Building a Consistent Model System</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          For a large fashion catalog, consistency becomes important. Brands can define a visual language around:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Model appearance</li>
+          <li>Pose</li>
+          <li>Framing</li>
+          <li>Camera perspective</li>
+          <li>Styling</li>
+          <li>Product positioning</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The result feels like one brand rather than a collection of unrelated images.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The GROTON AI Studio Approach</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          GROTON AI Studio treats product-on-model imagery as part of a larger visual production system.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The objective is to combine AI flexibility with creative direction and quality control.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The result should feel like premium commercial imagery — not simply an AI-generated picture.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Final Takeaway</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Product-on-model imagery connects the product with the customer.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          For fashion e-commerce, that connection can be one of the most valuable parts of the visual shopping experience.
+        </p>
+      </>
+    )
+  },
+  {
+    slug: "ai-product-photography-ecommerce",
+    title: "How AI Product Photography Is Changing E-commerce Visual Production",
+    excerpt: "Explore how AI product photography is changing e-commerce visual production through faster workflows, greater creative flexibility and scalable content production.",
+    coverImage: "/campaign-worlds/groton-services-ai-product-3x4.webp",
+    category: "AI & PRODUCTION",
+    datePublished: "2026-10-07",
+    readingTime: "5 min read",
+    seoTitle: "How AI Product Photography Is Changing E-commerce Visual Production — GROTON AI Studio",
+    metaDesc: "Explore how AI product photography is changing e-commerce visual production through faster workflows, greater creative flexibility and scalable content production.",
+    content: (
+      <>
+        <p className="mb-4 text-zinc-600 leading-relaxed text-lg font-light">
+          Modern brands need imagery everywhere.
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-6">
+          <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-center text-xs font-bold text-zinc-700 uppercase tracking-wider">Product pages</div>
+          <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-center text-xs font-bold text-zinc-700 uppercase tracking-wider">Marketplaces</div>
+          <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-center text-xs font-bold text-zinc-700 uppercase tracking-wider">Advertising</div>
+          <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-center text-xs font-bold text-zinc-700 uppercase tracking-wider">Social media</div>
+          <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-center text-xs font-bold text-zinc-700 uppercase tracking-wider">New collections</div>
+          <div className="bg-zinc-50 border border-zinc-200 p-3 rounded-lg text-center text-xs font-bold text-zinc-700 uppercase tracking-wider">Campaigns</div>
+        </div>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The traditional photoshoot model was largely designed around individual productions.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          Modern e-commerce increasingly requires continuous visual production.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">What AI Actually Changes</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          AI does not simply make image creation faster. It changes the production model.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          Depending on the requirement, brands can use AI-powered workflows to explore:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Product-on-model imagery</li>
+          <li>Lifestyle scenes</li>
+          <li>Product environments</li>
+          <li>Campaign concepts</li>
+          <li>Creative variations</li>
+          <li>Catalog imagery</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          This gives creative teams more flexibility.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Speed Is Only One Advantage</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Speed gets most of the attention when people talk about AI. But flexibility may be even more valuable.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          A traditional production may require days or weeks of planning before the camera is even switched on. AI-assisted workflows can allow teams to explore visual directions much earlier in the process.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          That makes experimentation easier.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Product Accuracy Still Matters</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          A beautiful image is not automatically a good e-commerce image.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The product needs to remain accurate. Its shape, proportions, construction, colour, materials, and important details need to be represented properly.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          This is why creative direction and quality control remain essential.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">From Image Generation to Visual Production</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          At GROTON AI Studio, the distinction is important.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          We do not see AI as a tool for producing random “AI art.” We see it as a production technology.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          The objective is to create visuals that are:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Commercially useful</li>
+          <li>Brand-consistent</li>
+          <li>Product-focused</li>
+          <li>Premium</li>
+          <li>Scalable</li>
+        </ul>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The Future of E-commerce Visual Production</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          As brands produce more content, the production system behind that content becomes increasingly important.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          AI can remove some of the traditional production limitations. That gives creative teams more room to focus on direction, storytelling, and brand development.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed font-serif text-lg font-bold">
+          Final Takeaway: AI product photography is not about creating more images for the sake of creating more images. It is about making high-quality visual production more flexible and scalable.
+        </p>
+      </>
+    )
+  },
+  {
+    slug: "consistent-product-images-large-ecommerce-catalog",
+    title: "How to Create Consistent Product Images Across a Large E-commerce Catalog",
+    excerpt: "Learn how e-commerce brands can create consistent product imagery across large catalogs, multiple categories and frequent product launches.",
+    coverImage: "/campaign-worlds/groton-home-capability-apparel-4x5.webp",
+    category: "E-COMMERCE",
+    datePublished: "2026-10-07",
+    readingTime: "5 min read",
+    seoTitle: "How to Create Consistent Product Images Across a Large E-commerce Catalog — GROTON AI Studio",
+    metaDesc: "Learn how e-commerce brands can create consistent product imagery across large catalogs, multiple categories and frequent product launches.",
+    content: (
+      <>
+        <p className="mb-4 text-zinc-600 leading-relaxed text-lg font-light">
+          A large e-commerce catalog can quickly become visually inconsistent.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          One product may have a different framing. Another may use a different scale. Another may have a completely different visual treatment.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Each image might look good individually.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          Together, they may not feel like the same brand.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Build a Visual System</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Consistency starts before production. Brands should define rules around:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Product scale</li>
+          <li>Framing</li>
+          <li>Camera perspective</li>
+          <li>Background treatment</li>
+          <li>Lighting</li>
+          <li>Model positioning</li>
+          <li>Crop</li>
+          <li>Styling</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          These rules create a visual foundation for the catalog.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Consistency Is More Than the Background</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Using the same background is not enough. The product should occupy a predictable amount of space. Models should follow related framing. Camera perspectives should feel connected. Lighting should communicate the same visual world. Even whitespace matters.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Why Scaling Makes This Difficult</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          A catalog is constantly changing. New products arrive. Old products are updated. New colours are introduced. Collections expand. Campaigns launch.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          If every new product requires a completely new creative decision, maintaining consistency becomes difficult.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">AI as a Production System</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          AI-powered visual production can help brands reproduce established visual rules across larger volumes of content.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          But AI alone does not create consistency. It needs:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Strong references</li>
+          <li>Clear creative direction</li>
+          <li>Production standards</li>
+          <li>Product accuracy checks</li>
+          <li>Quality control</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          That combination is what turns AI from experimentation into a production workflow.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The GROTON AI Studio Perspective</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          At GROTON AI Studio, the goal is to create visual systems rather than isolated images.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          A product should look like part of the same brand whether it appears on a PDP, collection page, social campaign, or advertising creative.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Final Takeaway</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          A consistent catalog makes a brand feel more professional and trustworthy.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The goal is not to make every image identical. The goal is to make every image feel like it belongs to the same visual world.
+        </p>
+      </>
+    )
+  },
+  {
+    slug: "ai-vs-traditional-product-photography",
+    title: "AI vs Traditional Product Photography: Which Is Better for E-commerce?",
+    excerpt: "AI vs traditional product photography for e-commerce: compare production cost, speed, flexibility, creative control, quality and scalability.",
+    coverImage: "/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg",
+    category: "AI VISUALS",
+    datePublished: "2026-10-07",
+    readingTime: "5 min read",
+    seoTitle: "AI vs Traditional Product Photography: Which Is Better for E-commerce? — GROTON AI Studio",
+    metaDesc: "AI vs traditional product photography for e-commerce: compare production cost, speed, flexibility, creative control, quality and scalability.",
+    content: (
+      <>
+        <p className="mb-4 text-zinc-600 leading-relaxed text-lg font-light">
+          The AI versus traditional photography debate is often presented as if one must replace the other.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The reality is more nuanced. The better question is: <strong>Which production approach is best for the specific visual requirement?</strong>
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Traditional photography remains extremely valuable. AI introduces a new production option.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          For many brands, both can have a place.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Traditional Photography</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Traditional production provides direct physical control.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The product, model, location, lighting, styling, and camera all exist physically in the production environment. This can be extremely valuable when exact physical representation is critical.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">AI-Powered Visual Production</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          AI introduces flexibility. Brands can explore visual directions without organising a complete physical production for every concept.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          This can be particularly useful for:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Product-on-model imagery</li>
+          <li>Lifestyle visuals</li>
+          <li>Catalog expansion</li>
+          <li>Campaign concepts</li>
+          <li>Creative variations</li>
+          <li>Social advertising</li>
+        </ul>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The Real Question Is Production Efficiency</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          For a small campaign, a traditional photoshoot may be exactly what a brand needs.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          For a growing e-commerce catalog, however, the cost and time of repeating physical production can become a significant limitation.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          AI can reduce some of that production overhead.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Quality Still Comes First</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The biggest mistake would be assuming that faster automatically means better.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          A commercially useful image still needs to represent the product accurately. It needs to fit the brand. It needs to communicate the right message. It needs to look intentional.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The GROTON AI Studio Approach</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          GROTON AI Studio is built around the idea that AI should improve the visual production process, not lower the creative standard.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The goal is premium visual output with greater speed, flexibility, and scalability.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Final Takeaway</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          AI and traditional photography do not necessarily need to compete. They are different production approaches.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The right choice depends on the product, objective, scale, budget, timeline, and creative requirement.
+        </p>
+      </>
+    )
+  },
+  {
+    slug: "product-on-model-images-fashion-ecommerce",
+    title: "Why Product-on-Model Images Matter for Fashion E-commerce",
+    excerpt: "Learn why product-on-model imagery is important for fashion e-commerce and how it helps customers understand fit, styling, proportion and product context.",
+    coverImage: "/campaign-worlds/groton-home-fashion-black-hoodie-3x4.webp",
+    category: "FASHION & APPAREL",
+    datePublished: "2026-10-07",
+    readingTime: "5 min read",
+    seoTitle: "Why Product-on-Model Images Matter for Fashion E-commerce — GROTON AI Studio",
+    metaDesc: "Learn why product-on-model imagery is important for fashion e-commerce and how it helps customers understand fit, styling, proportion and product context.",
+    content: (
+      <>
+        <p className="mb-4 text-zinc-600 leading-relaxed text-lg font-light">
+          Fashion is not only about the product. It is about how the product looks when worn.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          A garment photographed by itself can communicate colour, shape, and construction. A model wearing it communicates much more.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          It shows:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Silhouette</li>
+          <li>Proportion</li>
+          <li>Fit</li>
+          <li>Styling</li>
+          <li>Scale</li>
+          <li>Overall visual identity</li>
+        </ul>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Helping Customers Visualize the Product</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Online customers cannot try a garment before purchasing it. Product-on-model imagery gives them a reference.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          They can understand how a garment falls on a body, how it fits, and how it can be styled. That additional context makes the product easier to understand.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">It Also Builds Brand Identity</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Model imagery is not only functional. It is also branding.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Different brands can present the same type of product in completely different ways. A minimalist brand may use restrained compositions. A streetwear brand may use dynamic styling. A luxury brand may use a more controlled editorial approach.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The model becomes part of the brand's visual language.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The Production Challenge</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Producing model imagery for every product traditionally requires significant resources.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Models, photographers, locations, styling, samples, and logistics all add to production. For growing catalogs, that can become difficult to maintain.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          AI-powered visual production creates an alternative workflow for suitable use cases.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Beyond the Product Page</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Product-on-model imagery can support:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>PDPs</li>
+          <li>Collection pages</li>
+          <li>Social media</li>
+          <li>Paid advertising</li>
+          <li>Lookbooks</li>
+          <li>Campaigns</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          One visual system can therefore support multiple parts of the customer journey.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">GROTON AI Studio</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          GROTON AI Studio focuses on making this type of premium visual production more accessible and scalable for modern e-commerce brands.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The objective is not simply to create a model image. It is to create imagery that fits the product, brand, and commercial purpose.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed font-serif text-lg font-bold">
+          Final Takeaway: Product-on-model imagery connects a product with the person buying it. For fashion e-commerce, that connection can make the difference between simply showing a product and actually communicating it.
+        </p>
+      </>
+    )
+  },
+  {
+    slug: "ecommerce-product-images-that-sell",
+    title: "How to Create E-commerce Product Images That Actually Help Products Sell",
+    excerpt: "Discover how to create e-commerce product images that communicate product value, build trust and help customers make better purchase decisions.",
+    coverImage: "/campaign-worlds/groton-home-gallery-footwear-4x5.webp",
+    category: "CREATIVE PRODUCTION",
+    datePublished: "2026-10-07",
+    readingTime: "5 min read",
+    seoTitle: "How to Create E-commerce Product Images That Actually Help Products Sell — GROTON AI Studio",
+    metaDesc: "Discover how to create e-commerce product images that communicate product value, build trust and help customers make better purchase decisions.",
+    content: (
+      <>
+        <p className="mb-4 text-zinc-600 leading-relaxed text-lg font-light">
+          An e-commerce image can look impressive and still fail commercially. Why? Because e-commerce imagery has a job.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          It needs to help customers understand the product and make a purchasing decision.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Start With the Product</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The product should remain the visual priority. Ask:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Can customers clearly understand what they are looking at?</li>
+          <li>Can they see important details?</li>
+          <li>Does the image accurately represent the product?</li>
+          <li>Is the product easy to understand from multiple angles?</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          These questions should come before decorative decisions.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Use Different Images for Different Jobs</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          A strong product page can use several visual formats.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The hero image creates the first impression. Detail images communicate construction and material. Alternative angles provide additional information. Lifestyle images provide context. Product-on-model imagery communicates fit and styling.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          Together, they create a more complete product story.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Consistency Builds Trust</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Customers notice visual inconsistency. When every product has different framing, scale, lighting, and presentation, the store can feel less organised.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          A consistent visual system creates a stronger shopping experience.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Creative Direction Still Matters</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          AI can make production faster. It cannot automatically decide what the brand should communicate.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          Someone still needs to determine:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>What should the customer notice first?</li>
+          <li>What visual language represents the brand?</li>
+          <li>What should the image communicate?</li>
+          <li>How should the product be presented?</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          That is where creative direction becomes important.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The GROTON AI Studio Approach</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          GROTON AI Studio combines AI-powered production with creative direction and quality control.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-bold text-black">
+          The goal is straightforward: Better product presentation without unnecessary production complexity.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The best e-commerce image is not necessarily the most artistic image. It is the image that helps customers understand, trust, and want the product.
+        </p>
+      </>
+    )
+  },
+  {
+    slug: "why-i-built-groton-ai-studio",
+    title: "Why I Built GROTON AI Studio: A Vision for the Future of E-commerce Visual Production",
+    excerpt: "Why Deepak Kumawat built GROTON AI Studio and his vision for making premium e-commerce visual production faster, scalable and more accessible.",
+    coverImage: "/campaign-worlds/groton-about-main-visual-16x9.webp",
+    category: "FOUNDER",
+    datePublished: "2026-10-08",
+    readingTime: "6 min read",
+    seoTitle: "Why I Built GROTON AI Studio: A Vision for the Future of E-commerce Visual Production — GROTON AI Studio",
+    metaDesc: "Why Deepak Kumawat built GROTON AI Studio and his vision for making premium e-commerce visual production faster, scalable and more accessible.",
+    content: (
+      <>
+        <div className="border-l-2 border-black pl-6 py-2 my-8 italic text-zinc-800 text-xl font-serif">
+          “E-commerce brands should not have to choose between premium visual quality and the speed required to grow.”
+        </div>
+        <p className="mb-4 text-zinc-600 leading-relaxed text-lg font-light">
+          Modern brands need visual content constantly. Products change. Collections launch. Ads need fresh creative. Marketplaces need product imagery. Social channels need new content.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Traditional production can deliver excellent quality, but scaling that quality continuously can become expensive and slow.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          That is the problem I wanted to work on.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The Gap I Saw</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The challenge was never a lack of creativity. There are incredible photographers, stylists, models, retouchers, art directors, and production teams.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The challenge is the production overhead required to bring all of them together repeatedly.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          For a growing e-commerce brand, every new product can potentially mean another production requirement. That creates a difficult choice:
+        </p>
+        <p className="mb-4 text-zinc-800 font-bold leading-relaxed">
+          Spend more to maintain premium quality, or produce faster and accept compromises.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          I believe brands should have another option.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">What AI Changes</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          AI can change the economics of visual production. Instead of rebuilding every production physically, certain visual requirements can be produced through AI-assisted workflows.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          This can significantly reduce the cost and time associated with:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Models</li>
+          <li>Studio production</li>
+          <li>Locations</li>
+          <li>Physical setups</li>
+          <li>Production logistics</li>
+          <li>Creative iterations</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          But reducing cost should never mean reducing quality.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">My Vision for GROTON</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          My vision is to use AI to deliver <strong>premium, studio-quality visual output at a fraction of traditional production cost</strong>.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          For suitable visual-production workflows, GROTON AI Studio aims to reduce production costs by <strong>up to 90%</strong> compared with traditional production.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The point is not to make imagery look cheap. The point is to remove unnecessary production costs while maintaining a premium visual standard.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">From PDP to Campaign</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          GROTON is being built around the complete e-commerce visual journey:
+        </p>
+        <p className="mb-4 font-mono text-sm tracking-wider uppercase text-zinc-800 font-bold bg-zinc-50 border border-zinc-200 p-4 rounded-xl">
+          Product &rarr; Product-on-Model &rarr; Lifestyle &rarr; Campaign
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          A brand should not need completely separate visual systems for every stage. The product should remain recognisable. The brand language should remain consistent. The creative direction should carry through.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Where This Is Going</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          I believe AI will not remove creativity from visual production. It will change where creativity is spent. Less time can go into repetitive production logistics.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          More time can go into:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Creative direction</li>
+          <li>Art direction</li>
+          <li>Brand storytelling</li>
+          <li>Product presentation</li>
+          <li>Campaign thinking</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          That is the future I want to build toward with GROTON AI Studio.
+        </p>
+
+        <div className="bg-zinc-50 border border-zinc-200 p-8 rounded-2xl my-8">
+          <p className="text-zinc-600 leading-relaxed mb-4">
+            The goal is not simply to make AI images. The goal is to make <strong>premium visual production more accessible to modern e-commerce brands</strong>.
+          </p>
+          <p className="text-zinc-600 leading-relaxed mb-6 font-medium">
+            Better quality. Lower production overhead. Faster execution. More creative possibilities. That is why I built GROTON AI Studio.
+          </p>
+          <div className="border-t border-zinc-200 pt-4">
+            <p className="font-bold text-black uppercase tracking-wider text-xs">Deepak Kumawat</p>
+            <p className="text-xs text-zinc-400 uppercase tracking-widest mt-0.5">Founder & Creative Director, GROTON AI Studio</p>
+          </div>
+        </div>
+      </>
+    )
+  },
+  {
+    slug: "premium-ecommerce-visuals-lower-production-cost",
+    title: "Why Premium E-commerce Visuals Shouldn't Cost Like a Traditional Photoshoot",
+    excerpt: "Explore how AI-powered visual production can help e-commerce brands achieve premium model and studio-quality imagery at significantly lower production costs.",
+    coverImage: "/campaign-worlds/groton-home-capability-editorial-4x5.webp",
+    category: "PRODUCTION VISION",
+    datePublished: "2026-10-08",
+    readingTime: "6 min read",
+    seoTitle: "Why Premium E-commerce Visuals Shouldn't Cost Like a Traditional Photoshoot — GROTON AI Studio",
+    metaDesc: "Explore how AI-powered visual production can help e-commerce brands achieve premium model and studio-quality imagery at significantly lower production costs.",
+    content: (
+      <>
+        <p className="mb-4 text-zinc-600 leading-relaxed text-lg font-light">
+          When people think about a photoshoot, they often think about the camera. But the camera is only one part of the production.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          A traditional commercial photoshoot can involve:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Models</li>
+          <li>Studio rental</li>
+          <li>Photographer</li>
+          <li>Lighting equipment</li>
+          <li>Styling</li>
+          <li>Makeup</li>
+          <li>Location</li>
+          <li>Product logistics</li>
+          <li>Crew</li>
+          <li>Retouching</li>
+          <li>Production management</li>
+        </ul>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Each element adds cost. And when a brand needs new visuals every few weeks, those costs compound quickly.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The Quality-Cost Problem</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Historically, premium imagery came with premium production costs.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          If you wanted a professional model, physical studio, controlled lighting, professional crew, and high-end retouching, you had to pay for the production infrastructure behind them. AI creates an opportunity to rethink that equation.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">What If Studio Quality Didn't Require a Full Studio?</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          This is one of the ideas behind GROTON AI Studio. The objective is not to recreate every physical production literally. It is to recreate the <strong>visual result</strong> that the production was intended to deliver.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed font-medium text-black">
+          That can include:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>Premium model presentation</li>
+          <li>Controlled compositions</li>
+          <li>Professional-looking environments</li>
+          <li>Product-focused framing</li>
+          <li>Editorial art direction</li>
+          <li>Campaign-ready imagery</li>
+        </ul>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Lower Cost Does Not Mean Lower Quality</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          There is a major difference between inexpensive imagery and efficient production.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Cheap production often reduces quality. Efficient production removes unnecessary cost.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          That distinction is central to GROTON's philosophy. The goal is to use AI where it can replace expensive production overhead without compromising the visual standard expected by a premium e-commerce brand.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The 90% Cost Vision</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          For suitable visual-production workflows, GROTON AI Studio aims to deliver comparable premium visual outcomes at <strong>up to 90% lower production cost</strong> than traditional production.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The exact saving depends on the product, creative requirements, volume, and workflow.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed font-bold text-black">
+          The larger idea is more important: Premium visual production should not always require premium production overhead.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Why This Matters for Smaller Brands</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Large brands can often afford repeated studio productions. Smaller and growing e-commerce brands may not have the same resources.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          If AI can lower the production barrier, more brands can access stronger visual content. That can mean better PDPs, better advertising, better product launches, better social content, and more frequent creative testing.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The Future of Visual Production</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The future may not be traditional photography versus AI. It may be a hybrid production ecosystem where physical production is used when it adds unique value and AI is used where it can deliver the desired result faster and more efficiently.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          GROTON AI Studio is being built for that future.
+        </p>
+
+        <div className="border-t border-black/[0.08] pt-6 my-8">
+          <p className="font-serif text-lg font-bold text-black mb-2">
+            Final Takeaway
+          </p>
+          <p className="text-zinc-600 leading-relaxed">
+            The objective is not to make premium visual production cheaper by making it worse. It is to make it more affordable by removing unnecessary production overhead.
+          </p>
+          <p className="font-bold text-black tracking-wide uppercase text-sm mt-3">
+            Premium visuals. Smarter production. A radically different cost structure.
+          </p>
+        </div>
+      </>
+    )
+  },
+  {
+    slug: "from-grafly-studio-to-groton-ai-studio",
+    title: "From Grafly Studio to GROTON AI Studio: The Journey Behind the Vision",
+    excerpt: "The story of Deepak Kumawat's journey from founding Grafly Studio in 2025 to building GROTON AI Studio in 2026 for AI-powered e-commerce visual production.",
+    coverImage: "/campaign-worlds/groton-contact-visual-4x5.webp",
+    category: "FOUNDER JOURNEY",
+    datePublished: "2026-10-08",
+    readingTime: "6 min read",
+    seoTitle: "From Grafly Studio to GROTON AI Studio: The Journey Behind the Vision — GROTON AI Studio",
+    metaDesc: "The story of Deepak Kumawat's journey from founding Grafly Studio in 2025 to building GROTON AI Studio in 2026 for AI-powered e-commerce visual production.",
+    content: (
+      <>
+        <p className="mb-4 text-zinc-600 leading-relaxed text-lg font-light">
+          Before GROTON AI Studio, there was Grafly Studio.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          In <strong>2025</strong>, I started Grafly Studio as a creative studio built around visual design, motion, video, and emerging AI-powered creative workflows.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          At that stage, the focus was broader. I was exploring how technology could change the way creative work is produced while continuing to work with real brands and real visual requirements.
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          Grafly Studio became an important part of that journey. It was where many of the ideas, skills, workflows, and experiences that eventually shaped GROTON began developing.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Learning From Creative Production</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Working across creative projects made one thing increasingly clear. Creating a good visual is one challenge. Creating a large volume of good visuals consistently is a completely different challenge.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          For e-commerce brands, this difference becomes even more important. They do not need one beautiful image. They need hundreds of useful images.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          They need PDP imagery. They need product-on-model visuals. They need lifestyle content. They need campaigns. And they often need all of it quickly.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">The Question That Changed the Direction</h2>
+        <div className="border-l-2 border-black pl-6 py-2 my-8 italic text-zinc-800 text-lg font-serif">
+          “Can AI make premium visual production significantly faster and more affordable without making it look cheaper?”
+        </div>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          That question eventually led to GROTON.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">2026: GROTON AI Studio</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          In <strong>2026</strong>, I started building GROTON AI Studio with a much more focused direction.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Instead of being a broad creative studio, GROTON is focused specifically on <strong>AI-powered visual production for modern e-commerce brands.</strong>
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The idea is to build a production system around the way e-commerce actually works. Products move quickly. Catalogs grow. Campaigns change. Brands need content continuously. Visual production needs to keep up.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Why the Direction Became More Focused</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Grafly Studio was an important beginning. But GROTON AI Studio represents a more specific vision. It is not simply about offering creative services. It is about building a modern visual production model around AI.
+        </p>
+        <p className="mb-4 font-mono text-sm tracking-wider uppercase text-zinc-800 font-bold bg-zinc-50 border border-zinc-200 p-4 rounded-xl">
+          Product &rarr; Model &rarr; Lifestyle &rarr; Campaign
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          A connected visual system rather than isolated creative assets.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">What I Want GROTON to Become</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          I want GROTON AI Studio to make premium visual production more accessible to e-commerce brands. That means combining:
+        </p>
+        <ul className="list-disc pl-8 mb-6 text-zinc-600 space-y-2.5">
+          <li>AI technology</li>
+          <li>Creative direction</li>
+          <li>Visual design</li>
+          <li>Product understanding</li>
+          <li>Quality control</li>
+          <li>Scalable production</li>
+        </ul>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          The goal is not to remove creativity from the process. It is to remove unnecessary limitations around it.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">From 2025 to 2026</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          Grafly Studio was the beginning. It was where I explored creative production, technology, and new workflows.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          GROTON AI Studio is the next step. It is a more focused vision built around one problem:
+        </p>
+        <p className="mb-4 text-zinc-800 font-bold leading-relaxed">
+          How can modern e-commerce brands get premium visual production faster, more consistently, and at a dramatically lower production cost?
+        </p>
+        <p className="mb-8 text-zinc-600 leading-relaxed">
+          That is the question GROTON is being built to answer.
+        </p>
+
+        <h2 className="text-2xl font-bold mt-12 mb-6 font-serif">Looking Ahead</h2>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The journey from Grafly Studio to GROTON AI Studio is not about abandoning the past. It is about building on it.
+        </p>
+        <p className="mb-4 text-zinc-600 leading-relaxed">
+          The creative foundation remains. The technology has evolved. The ambition has become more focused. And the next chapter is about building a better way for e-commerce brands to produce visual content.
+        </p>
+        
+        <div className="bg-zinc-50 border border-zinc-200 p-8 rounded-2xl my-8">
+          <p className="font-serif text-lg font-bold text-black mb-2">
+            Grafly Studio was the beginning of the journey.<br />
+            GROTON AI Studio is the direction.
+          </p>
+          <div className="border-t border-zinc-200 pt-4 mt-6">
+            <p className="font-bold text-black uppercase tracking-wider text-xs">Deepak Kumawat</p>
+            <p className="text-xs text-zinc-400 uppercase tracking-widest mt-0.5">Founder & Creative Director, GROTON AI Studio</p>
+          </div>
+        </div>
+      </>
+    )
+  }
 ];
 
 export const getBlogPost = (slug: string) => {

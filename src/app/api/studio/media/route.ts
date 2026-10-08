@@ -72,6 +72,33 @@ export async function GET() {
       });
     }
 
+    const scanDirs = [
+      { dir: path.join(process.cwd(), 'public/campaign-worlds'), prefix: '/campaign-worlds/' },
+      { dir: path.join(process.cwd(), 'public/images'), prefix: '/images/' },
+      { dir: path.join(process.cwd(), 'public/work'), prefix: '/work/' }
+    ];
+
+    scanDirs.forEach(({ dir, prefix }) => {
+      if (fs.existsSync(dir)) {
+        const files = fs.readdirSync(dir);
+        files.forEach(f => {
+          if (f.endsWith('.mp3')) return;
+          const src = prefix + f;
+          if (!mediaMap.has(src)) {
+            mediaMap.set(src, {
+              id: src,
+              sourceType: 'existing',
+              originalPath: src,
+              publicUrl: src,
+              displayName: f,
+              mediaType: getMediaType(f, undefined),
+              usages: []
+            });
+          }
+        });
+      }
+    });
+
     if (process.env.BLOB_READ_WRITE_TOKEN) {
       try {
         const { blobs } = await list({ prefix: 'studio/' });
@@ -102,27 +129,64 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const formData = await req.formData();
-  const file = formData.get('file') as File;
-  if (!file) return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
-  
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const filename = Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-  const mimeType = file.type;
-  const mediaType = mimeType.startsWith('video/') ? 'video' : 'image';
-  
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  try {
+    const formData = await req.formData();
+    const file = formData.get('file') as File;
+    if (!file) return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
+    
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const safeName = file.name ? file.name.replace(/[^a-zA-Z0-9.-]/g, '_') : 'unnamed-file';
+    const filename = Date.now() + '-' + safeName;
+    const ext = filename.split('.').pop()?.toLowerCase() || '';
+    
+    // Accurately determine mediaType from MIME or extension
+    const mediaType = getMediaType(filename, file.type);
+    const mimeType = file.type || (
+      ext === 'mp4' ? 'video/mp4' :
+      ext === 'webm' ? 'video/webm' :
+      ext === 'mov' ? 'video/quicktime' :
+      ext === 'png' ? 'image/png' :
+      ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' :
+      ext === 'webp' ? 'image/webp' :
+      ext === 'svg' ? 'image/svg+xml' : 'application/octet-stream'
+    );
+    
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      try {
+        const blob = await put(`studio/${filename}`, file, {
+          access: 'public',
+          addRandomSuffix: false
+        });
+        
+        const mediaRecord = {
+          id: blob.url,
+          sourceType: 'uploaded' as const,
+          originalPath: blob.url,
+          publicUrl: blob.url,
+          displayName: filename,
+          mediaType,
+          mimeType,
+          usages: []
+        };
+        
+        return NextResponse.json(mediaRecord);
+      } catch (error) {
+        console.error('Blob upload failed:', error);
+        return NextResponse.json({ error: 'Storage failure: Failed to upload to Vercel Blob.' }, { status: 500 });
+      }
+    }
+
     try {
-      const blob = await put(`studio/${filename}`, file, {
-        access: 'public',
-        addRandomSuffix: false
-      });
+      const dir = path.join(process.cwd(), 'public/uploads/studio');
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(path.join(dir, filename), buffer);
       
+      const url = '/uploads/studio/' + filename;
       const mediaRecord = {
-        id: blob.url,
-        sourceType: 'uploaded',
-        originalPath: blob.url,
-        publicUrl: blob.url,
+        id: url,
+        sourceType: 'uploaded' as const,
+        originalPath: url,
+        publicUrl: url,
         displayName: filename,
         mediaType,
         mimeType,
@@ -130,33 +194,13 @@ export async function POST(req: Request) {
       };
       
       return NextResponse.json(mediaRecord);
-    } catch (error) {
-      console.error('Blob upload failed:', error);
-      return NextResponse.json({ error: 'Storage failure: Failed to upload to Vercel Blob.' }, { status: 500 });
+    } catch (e: any) {
+      console.warn('Filesystem read-only or write error', e);
+      return NextResponse.json({ error: e?.message || 'Storage error: Unable to save uploaded file locally.' }, { status: 500 });
     }
-  }
-
-  try {
-    const dir = path.join(process.cwd(), 'public/uploads/studio');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, filename), buffer);
-    
-    const url = '/uploads/studio/' + filename;
-    const mediaRecord = {
-      id: url,
-      sourceType: 'uploaded',
-      originalPath: url,
-      publicUrl: url,
-      displayName: filename,
-      mediaType,
-      mimeType,
-      usages: []
-    };
-    
-    return NextResponse.json(mediaRecord);
-  } catch (e) {
-    console.warn('Filesystem read-only', e);
-    return NextResponse.json({ error: 'Missing Storage Configuration: Vercel requires BLOB_READ_WRITE_TOKEN to persist uploaded files.' }, { status: 500 });
+  } catch (err: any) {
+    console.error('Failed to parse upload request:', err);
+    return NextResponse.json({ error: err?.message || 'Failed to process file upload.' }, { status: 500 });
   }
 }
 

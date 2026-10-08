@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { BLOG_POSTS } from "@/lib/blog/data";
 import CmsText from "@/components/CmsText";
+import CmsImage from "@/components/CmsImage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -113,8 +114,9 @@ export default function BlogLandingPage() {
                 >
                   {/* SUPPORTING COVER IMAGE - Controlled scale, restrained height */}
                   <div className="relative w-full aspect-[16/10] bg-zinc-100 mb-5 overflow-hidden rounded-xl border border-black/[0.06]">
-                    <Image 
-                      src={post.coverImage} 
+                    <CmsImage 
+                      cmsId={`blog_${post.slug}`}
+                      fallbackSrc={post.coverImage} 
                       alt={post.title} 
                       fill 
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"

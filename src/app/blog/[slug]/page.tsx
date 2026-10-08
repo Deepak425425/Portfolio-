@@ -6,6 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BLOG_POSTS, getBlogPost } from "@/lib/blog/data";
 import CmsText from "@/components/CmsText";
+import CmsImage from "@/components/CmsImage";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -123,8 +124,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         {/* COVER IMAGE */}
         <div className="w-full aspect-[16/9] md:aspect-[21/9] max-h-[640px] relative mb-12 sm:mb-16 bg-zinc-100 rounded-2xl overflow-hidden shadow-sm">
-          <Image 
-            src={post.coverImage} 
+          <CmsImage 
+            cmsId={`blog_${post.slug}`}
+            fallbackSrc={post.coverImage} 
             alt={post.title} 
             fill 
             priority
@@ -152,8 +154,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             {BLOG_POSTS.filter(p => p.slug !== post.slug).slice(0, 3).map(relatedPost => (
               <Link key={relatedPost.slug} href={`/blog/${relatedPost.slug}`} className="group flex flex-col">
                 <div className="relative w-full aspect-[4/5] bg-zinc-100 mb-4 overflow-hidden">
-                  <Image 
-                    src={relatedPost.coverImage} 
+                  <CmsImage 
+                    cmsId={`blog_${relatedPost.slug}`}
+                    fallbackSrc={relatedPost.coverImage} 
                     alt={relatedPost.title} 
                     fill 
                     sizes="(max-width: 768px) 100vw, 33vw"
