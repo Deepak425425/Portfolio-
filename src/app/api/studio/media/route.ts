@@ -18,7 +18,7 @@ function getMediaType(filename: string, mimeType?: string) {
 
 export async function GET() {
   try {
-    const cmsData: any[] = getCmsData() || [];
+    const cmsData: any[] = (await getCmsData()) || [];
     const mediaMap = new Map();
 
         cmsData.forEach(img => {

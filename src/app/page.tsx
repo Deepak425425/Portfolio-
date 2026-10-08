@@ -5,6 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useReducedMotion, useMotionValue } from "framer-motion";
 import CmsText from "@/components/CmsText";
+import initialCmsData from '../../data/cms.json';
+
+const initialCmsMap: Record<string, any> = (initialCmsData as any[]).reduce((acc: any, img: any) => {
+  const isVid = img.mediaType === 'video' || (typeof img.src === 'string' && /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(img.src));
+  return {
+    ...acc,
+    [img.id]: { src: img.src, mediaType: isVid ? 'video' : (img.mediaType || 'image') }
+  };
+}, {});
 
 const revealVariants: any = {
   hidden: { opacity: 0, y: 30 },
@@ -1245,7 +1254,7 @@ const TypewriterHeading = ({ cmsId = "home.why.heading", fallback = "Built for\n
 
 
 export default function Home() {
-  const [cmsImages, setCmsImages] = useState<Record<string, any>>({});
+  const [cmsImages, setCmsImages] = useState<Record<string, any>>(initialCmsMap);
   useEffect(() => {
     let isPreview = false;
     if (typeof window !== 'undefined') {
@@ -1256,7 +1265,8 @@ export default function Home() {
         isPreview = true;
       }
     }
-    const apiUrl = isPreview ? '/api/studio/cms?preview=true' : '/api/studio/cms';
+    const cacheBuster = Date.now();
+    const apiUrl = isPreview ? `/api/studio/cms?preview=true&_t=${cacheBuster}` : `/api/studio/cms?_t=${cacheBuster}`;
 
     fetch(apiUrl, { cache: 'no-store' })
       .then(r => r.json())
@@ -1523,7 +1533,7 @@ export default function Home() {
                 data-cursor="view"
               >
                 <CmsMedia 
-                  media={cmsImages.archive_hero || cmsImages.gallery_1} 
+                  media={cmsImages.archive_hero} 
                   fallback="/campaign-worlds/How to style Cat Print T shirts.jpeg" 
                   alt="Multiple Models. Multiple Products. Endless Possibilities." 
                   fill 
