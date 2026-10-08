@@ -83,7 +83,8 @@
     "src": "/uploads/studio/1791455117941-on-model_groton-groton_Compress.mp4",
     "page": "HOME",
     "section": "Editorial Archive",
-    "mediaType": "video"
+    "mediaType": "video",
+    "mimeType": "video/mp4"
   },
   {
     "id": "fashion_1",

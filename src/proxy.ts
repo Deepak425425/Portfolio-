@@ -15,6 +15,15 @@ export default function proxy(request: NextRequest) {
 
   if (isStudioApi) {
     if (request.nextUrl.pathname === '/api/studio/auth') return NextResponse.next();
+    
+    // Allow public read access to CMS media and text so the website renders published content
+    const isPublicCmsRead = request.method === 'GET' && (
+      request.nextUrl.pathname === '/api/studio/cms' ||
+      request.nextUrl.pathname === '/api/studio/cms-text' ||
+      request.nextUrl.pathname === '/api/studio/preview'
+    );
+    if (isPublicCmsRead) return NextResponse.next();
+
     const token = request.cookies.get('groton_auth_token')?.value;
     if (token !== 'secure_admin_token_2026') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

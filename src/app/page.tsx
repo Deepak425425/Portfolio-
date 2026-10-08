@@ -5,6 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useReducedMotion, useMotionValue } from "framer-motion";
 import CmsText from "@/components/CmsText";
+import initialCmsData from '../../data/cms.json';
+
+const initialCmsMap: Record<string, any> = (initialCmsData as any[]).reduce((acc: any, img: any) => {
+  const isVid = img.mediaType === 'video' || (typeof img.src === 'string' && /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(img.src));
+  return {
+    ...acc,
+    [img.id]: { src: img.src, mediaType: isVid ? 'video' : (img.mediaType || 'image') }
+  };
+}, {});
 
 const revealVariants: any = {
   hidden: { opacity: 0, y: 30 },
@@ -114,9 +123,9 @@ const ExploreWorkButton = () => {
 
 const CmsMedia = ({ media, fallback, alt, fill, className, priority, sizes, style, ...props }: any) => {
   const src = media?.src || fallback;
-  const type = media?.mediaType || (src && src.match(/\.(mp4|webm|mov)$/i) ? 'video' : 'image');
+  const isVideo = media?.mediaType === 'video' || (typeof src === 'string' && /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(src));
   
-  if (type === 'video') {
+  if (isVideo) {
     const videoStyle = fill ? { objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, ...style } : style;
     return <video src={src} autoPlay muted loop playsInline className={className} style={videoStyle} {...props} />;
   }
@@ -1245,8 +1254,36 @@ const TypewriterHeading = ({ cmsId = "home.why.heading", fallback = "Built for\n
 
 
 export default function Home() {
-  const [cmsImages, setCmsImages] = useState<Record<string, any>>({});
-  useEffect(() => { fetch('/api/studio/cms', { cache: 'no-store' }).then(r => r.json()).then(data => { const map = data.reduce((acc: any, img: any) => ({ ...acc, [img.id]: { src: img.src, mediaType: img.mediaType || 'image' } }), {}); setCmsImages(map); }).catch(() => {}); }, []);
+  const [cmsImages, setCmsImages] = useState<Record<string, any>>(initialCmsMap);
+  useEffect(() => {
+    let isPreview = false;
+    if (typeof window !== 'undefined') {
+      if (window.location.search.includes('preview=true')) {
+        sessionStorage.setItem('groton_preview', 'true');
+        isPreview = true;
+      } else if (sessionStorage.getItem('groton_preview') === 'true') {
+        isPreview = true;
+      }
+    }
+    const cacheBuster = Date.now();
+    const apiUrl = isPreview ? `/api/studio/cms?preview=true&_t=${cacheBuster}` : `/api/studio/cms?_t=${cacheBuster}`;
+
+    fetch(apiUrl, { cache: 'no-store' })
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const map = data.reduce((acc: any, img: any) => {
+            const isVid = img.mediaType === 'video' || (typeof img.src === 'string' && /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(img.src));
+            return {
+              ...acc,
+              [img.id]: { src: img.src, mediaType: isVid ? 'video' : (img.mediaType || 'image') }
+            };
+          }, {});
+          setCmsImages(map);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -1496,7 +1533,7 @@ export default function Home() {
                 data-cursor="view"
               >
                 <CmsMedia 
-                  media={cmsImages.archive_hero || cmsImages.gallery_1} 
+                  media={cmsImages.archive_hero} 
                   fallback="/campaign-worlds/How to style Cat Print T shirts.jpeg" 
                   alt="Multiple Models. Multiple Products. Endless Possibilities." 
                   fill 

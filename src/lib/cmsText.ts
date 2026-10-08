@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import { put, list } from '@vercel/blob';
 
 const isVercel = process.env.VERCEL === '1';
-const CMS_TEXT_PATH = isVercel ? '/tmp/cmsText.json' : path.join(process.cwd(), 'data', 'cmsText.json');
 
 export type CmsTextRecord = {
   id: string;
@@ -208,44 +208,125 @@ const DEFAULT_TEXT: CmsTextRecord[] = [
 
 let memoryCache: CmsTextRecord[] | null = null;
 
-export function getCmsText(): CmsTextRecord[] {
-  if (memoryCache) return memoryCache;
-
-  if (!fs.existsSync(CMS_TEXT_PATH)) {
-    try {
-      if (!fs.existsSync(path.dirname(CMS_TEXT_PATH))) {
-        fs.mkdirSync(path.dirname(CMS_TEXT_PATH), { recursive: true });
-      }
-      fs.writeFileSync(CMS_TEXT_PATH, JSON.stringify(DEFAULT_TEXT, null, 2));
-    } catch (e) {
-      console.warn('Could not write CMS text file, using memory cache.', e);
-      memoryCache = DEFAULT_TEXT;
-      return memoryCache;
-    }
-    return DEFAULT_TEXT;
-  }
-  try {
-    const saved = JSON.parse(fs.readFileSync(CMS_TEXT_PATH, 'utf-8'));
-    const merged = [...saved];
-    DEFAULT_TEXT.forEach(def => {
-      if (!merged.find(m => m.id === def.id)) merged.push(def);
-    });
-    return merged;
-  } catch (e) {
-    return DEFAULT_TEXT;
-  }
+function mergeWithDefaults(saved: CmsTextRecord[]): CmsTextRecord[] {
+  const merged = [...saved];
+  DEFAULT_TEXT.forEach(def => {
+    if (!merged.find(m => m.id === def.id)) merged.push(def);
+  });
+  return merged;
 }
 
-export function updateCmsText(id: string, newText: string) {
-  const data = getCmsText();
-  const updated = data.map(item => item.id === id ? { ...item, publishedValue: newText } : item);
-  
-  try {
-    fs.writeFileSync(CMS_TEXT_PATH, JSON.stringify(updated, null, 2));
-  } catch (e) {
-    console.warn('Could not write CMS text file, updating memory cache only.', e);
+export async function getCmsText(): Promise<CmsTextRecord[]> {
+  if (memoryCache) return memoryCache;
+
+  // 1. Try Vercel Blob if token is set
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      const { blobs } = await list({ prefix: 'studio/cmsText.json' });
+      if (blobs.length > 0) {
+        const res = await fetch(blobs[0].url, { cache: 'no-store' });
+        if (res.ok) {
+          const blobData = await res.json();
+          if (Array.isArray(blobData) && blobData.length > 0) {
+            const merged = mergeWithDefaults(blobData);
+            memoryCache = merged;
+            return merged;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Could not read cmsText.json from Blob:', e);
+    }
   }
-  
+
+  // 2. Try /tmp/cmsText.json on Vercel
+  const tmpPath = path.join('/tmp', 'cmsText.json');
+  if (isVercel && fs.existsSync(tmpPath)) {
+    try {
+      const saved = JSON.parse(fs.readFileSync(tmpPath, 'utf-8'));
+      if (Array.isArray(saved) && saved.length > 0) {
+        const merged = mergeWithDefaults(saved);
+        memoryCache = merged;
+        return merged;
+      }
+    } catch {}
+  }
+
+  // 3. Try bundled data/cmsText.json
+  const bundledPath = path.join(process.cwd(), 'data', 'cmsText.json');
+  if (fs.existsSync(bundledPath)) {
+    try {
+      const saved = JSON.parse(fs.readFileSync(bundledPath, 'utf-8'));
+      if (Array.isArray(saved) && saved.length > 0) {
+        const merged = mergeWithDefaults(saved);
+        memoryCache = merged;
+        return merged;
+      }
+    } catch {}
+  }
+
+  memoryCache = DEFAULT_TEXT;
+  return DEFAULT_TEXT;
+}
+
+export function getCmsTextSync(): CmsTextRecord[] {
+  if (memoryCache) return memoryCache;
+
+  const tmpPath = path.join('/tmp', 'cmsText.json');
+  if (isVercel && fs.existsSync(tmpPath)) {
+    try {
+      const saved = JSON.parse(fs.readFileSync(tmpPath, 'utf-8'));
+      if (Array.isArray(saved) && saved.length > 0) return mergeWithDefaults(saved);
+    } catch {}
+  }
+
+  const bundledPath = path.join(process.cwd(), 'data', 'cmsText.json');
+  if (fs.existsSync(bundledPath)) {
+    try {
+      const saved = JSON.parse(fs.readFileSync(bundledPath, 'utf-8'));
+      if (Array.isArray(saved) && saved.length > 0) return mergeWithDefaults(saved);
+    } catch {}
+  }
+
+  return DEFAULT_TEXT;
+}
+
+export async function updateCmsText(id: string, newText: string): Promise<CmsTextRecord[]> {
+  const current = await getCmsText();
+  const updated = current.map(item => item.id === id ? { ...item, publishedValue: newText } : item);
+
   memoryCache = updated;
+
+  // 1. Write to /tmp/cmsText.json on Vercel
+  if (isVercel) {
+    try {
+      fs.writeFileSync(path.join('/tmp', 'cmsText.json'), JSON.stringify(updated, null, 2));
+    } catch (e) {
+      console.warn('Could not write /tmp/cmsText.json', e);
+    }
+  }
+
+  // 2. Write to bundled data/cmsText.json if writable
+  try {
+    const bundledPath = path.join(process.cwd(), 'data', 'cmsText.json');
+    if (!fs.existsSync(path.dirname(bundledPath))) {
+      fs.mkdirSync(path.dirname(bundledPath), { recursive: true });
+    }
+    fs.writeFileSync(bundledPath, JSON.stringify(updated, null, 2));
+  } catch {}
+
+  // 3. Persist to Vercel Blob if available
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      await put('studio/cmsText.json', JSON.stringify(updated, null, 2), {
+        access: 'public',
+        addRandomSuffix: false,
+        contentType: 'application/json'
+      });
+    } catch (e) {
+      console.error('Failed to persist cmsText.json to Vercel Blob:', e);
+    }
+  }
+
   return updated;
 }
