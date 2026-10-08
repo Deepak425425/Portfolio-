@@ -86,42 +86,46 @@ const DEFAULT_TEXT: CmsTextRecord[] = [
   { id: 'home.why.item4.desc', page: 'HOME', section: 'Why Us', type: 'multi-line', label: 'Item 4 Desc', defaultValue: 'Pivot from clean white-background catalog shots to moody, editorial campaign visuals using the same core product assets.' },
 
   // --- ABOUT PAGE ---
-  { id: 'about.hero.heading', page: 'ABOUT', section: 'Hero', type: 'multi-line', label: 'Heading', defaultValue: 'Art direction meets\nalgorithmic scale.' },
-  { id: 'about.hero.desc', page: 'ABOUT', section: 'Hero', type: 'multi-line', label: 'Description', defaultValue: 'GROTON is a premium visual production studio designed for modern brands. We engineer hyper-realistic, campaign-ready visual assets that blur the line between traditional photography and artificial intelligence.' },
-  { id: 'about.prob.label', page: 'ABOUT', section: 'The Problem', type: 'single-line', label: 'Section Label', defaultValue: 'The Problem' },
-  { id: 'about.prob.heading', page: 'ABOUT', section: 'The Problem', type: 'multi-line', label: 'Heading', defaultValue: 'Traditional production is too slow. AI is too generic.' },
-  { id: 'about.prob.p1', page: 'ABOUT', section: 'The Problem', type: 'multi-line', label: 'Paragraph 1', defaultValue: 'Modern brands require a massive volume of visual content—from e-commerce hero shots to social media campaigns and display advertising. Traditional physical photoshoots involve heavy logistics, locations, permits, and rigid timelines.' },
-  { id: 'about.prob.p2', page: 'ABOUT', section: 'The Problem', type: 'multi-line', label: 'Paragraph 2', defaultValue: 'Conversely, standard AI generation often produces generic, unpredictable, or off-brand results that fail to meet premium brand standards.' },
-  { id: 'about.appr.label', page: 'ABOUT', section: 'Our Approach', type: 'single-line', label: 'Section Label', defaultValue: 'Our Approach' },
-  { id: 'about.appr.heading', page: 'ABOUT', section: 'Our Approach', type: 'single-line', label: 'Heading', defaultValue: 'Directed Generation.' },
-  { id: 'about.appr.p1', page: 'ABOUT', section: 'Our Approach', type: 'multi-line', label: 'Paragraph 1', defaultValue: 'We solve this by placing experienced creative directors at the helm of advanced AI synthesis. We don\'t just type prompts; we establish visual systems. We define the lighting logic, the color theory, the material textures, and the compositional hierarchy.' },
-  { id: 'about.appr.p2', page: 'ABOUT', section: 'Our Approach', type: 'multi-line', label: 'Paragraph 2', defaultValue: 'This hybrid approach allows us to deliver production-grade realism and brand consistency at a scale and speed that traditional studios cannot match.' },
-  { id: 'about.cta.heading', page: 'ABOUT', section: 'CTA', type: 'multi-line', label: 'Heading', defaultValue: 'Elevate your visual language.' },
-  { id: 'about.cta.btn', page: 'ABOUT', section: 'CTA', type: 'single-line', label: 'Button', defaultValue: 'Start A Project' },
+  { id: 'about.hero.label', page: 'ABOUT', section: 'Hero', type: 'single-line', label: 'Section Label', defaultValue: 'ABOUT GROTON' },
+  { id: 'about.hero.heading', page: 'ABOUT', section: 'Hero', type: 'multi-line', label: 'Heading', defaultValue: 'Built for e-commerce brands.' },
+  { id: 'about.hero.desc', page: 'ABOUT', section: 'Hero', type: 'multi-line', label: 'Description', defaultValue: 'GROTON AI is a visual production studio helping e-commerce brands create premium product visuals and campaign-ready content using AI — faster and at scale.' },
+  
+  { id: 'about.p1.label', page: 'ABOUT', section: '01 — Purpose', type: 'single-line', label: 'Label', defaultValue: '01 — OUR PURPOSE' },
+  { id: 'about.p1.title', page: 'ABOUT', section: '01 — Purpose', type: 'single-line', label: 'Title', defaultValue: 'Better visuals for bigger growth.' },
+  { id: 'about.p1.desc', page: 'ABOUT', section: '01 — Purpose', type: 'multi-line', label: 'Description', defaultValue: 'We help e-commerce brands create premium visual content that helps their products stand out and grow.' },
+  
+  { id: 'about.p2.label', page: 'ABOUT', section: '02 — What We Do', type: 'single-line', label: 'Label', defaultValue: '02 — WHAT WE DO' },
+  { id: 'about.p2.title', page: 'ABOUT', section: '02 — What We Do', type: 'single-line', label: 'Title', defaultValue: 'Product visuals, made easier.' },
+  { id: 'about.p2.desc', page: 'ABOUT', section: '02 — What We Do', type: 'multi-line', label: 'Description', defaultValue: 'From product imagery and product-on-model visuals to campaign creatives, we create high-quality visual assets for modern commerce.' },
+  
+  { id: 'about.p3.label', page: 'ABOUT', section: '03 — Who We Work With', type: 'single-line', label: 'Label', defaultValue: '03 — WHO WE WORK WITH' },
+  { id: 'about.p3.title', page: 'ABOUT', section: '03 — Who We Work With', type: 'single-line', label: 'Title', defaultValue: 'Modern e-commerce brands.' },
+  { id: 'about.p3.desc', page: 'ABOUT', section: '03 — Who We Work With', type: 'multi-line', label: 'Description', defaultValue: 'We work with fashion, jewelry, beauty, lifestyle, D2C, and other product-led e-commerce brands.' },
+  
+  { id: 'about.vision.label', page: 'ABOUT', section: 'Vision', type: 'single-line', label: 'Label', defaultValue: 'OUR VISION' },
+  { id: 'about.vision.heading', page: 'ABOUT', section: 'Vision', type: 'multi-line', label: 'Heading', defaultValue: 'To make premium visual production more accessible, scalable, and effective for every e-commerce brand.' },
+  { id: 'about.vision.desc', page: 'ABOUT', section: 'Vision', type: 'single-line', label: 'Subtext', defaultValue: 'Less complexity. More creativity. Better results.' },
 
   // --- SERVICES PAGE ---
-  { id: 'services.hero.heading', page: 'SERVICES', section: 'Hero', type: 'multi-line', label: 'Heading', defaultValue: 'Production Capabilities.' },
-  { id: 'services.hero.desc', page: 'SERVICES', section: 'Hero', type: 'multi-line', label: 'Description', defaultValue: 'A comprehensive suite of visual generation services, combining sophisticated art direction with the scale and speed of artificial intelligence.' },
+  { id: 'services.hero.label', page: 'SERVICES', section: 'Hero', type: 'single-line', label: 'Label', defaultValue: 'VISUAL PRODUCTION' },
+  { id: 'services.hero.heading', page: 'SERVICES', section: 'Hero', type: 'multi-line', label: 'Heading', defaultValue: 'Visuals built for modern commerce.' },
+  { id: 'services.hero.desc', page: 'SERVICES', section: 'Hero', type: 'multi-line', label: 'Description', defaultValue: 'From PDP and product-on-model imagery to lifestyle and campaign visuals, GROTON creates premium visual content built for e-commerce brands.' },
   
-  { id: 'services.s1.title', page: 'SERVICES', section: 'Service 01', type: 'single-line', label: 'Title', defaultValue: 'AI Product Images' },
-  { id: 'services.s1.desc', page: 'SERVICES', section: 'Service 01', type: 'multi-line', label: 'Description', defaultValue: 'Premium product visuals designed for e-commerce, campaigns and brand communication.' },
-  { id: 'services.s1.details', page: 'SERVICES', section: 'Service 01', type: 'multi-line', label: 'Details', defaultValue: 'We ingest your physical products or existing photography and synthesize them into high-fidelity, photorealistic environments. By controlling lighting, materials, and composition algorithmically, we bypass the logistical constraints of physical sets while maintaining absolute realism.' },
+  { id: 'services.s1.category', page: 'SERVICES', section: 'Service 01 — PDP', type: 'single-line', label: 'Category', defaultValue: '01 — E-COMMERCE / PDP' },
+  { id: 'services.s1.title', page: 'SERVICES', section: 'Service 01 — PDP', type: 'single-line', label: 'Title', defaultValue: 'E-commerce & PDP Visuals' },
+  { id: 'services.s1.desc', page: 'SERVICES', section: 'Service 01 — PDP', type: 'multi-line', label: 'Description', defaultValue: 'Commerce-ready visuals built for product pages, marketplaces, catalogs, and online stores.' },
   
-  { id: 'services.s2.title', page: 'SERVICES', section: 'Service 02', type: 'single-line', label: 'Title', defaultValue: 'Lifestyle Product Imagery' },
-  { id: 'services.s2.desc', page: 'SERVICES', section: 'Service 02', type: 'multi-line', label: 'Description', defaultValue: 'Editorial and lifestyle scenes created around your products.' },
-  { id: 'services.s2.details', page: 'SERVICES', section: 'Service 02', type: 'multi-line', label: 'Details', defaultValue: 'We place your products in aspirational, photorealistic environments that tell a brand story. From sun-drenched interiors to high-end architectural spaces, we create contextual imagery without the need for location scouting or physical sets.' },
+  { id: 'services.s2.category', page: 'SERVICES', section: 'Service 02 — Model', type: 'single-line', label: 'Category', defaultValue: '02 — PRODUCT-ON-MODEL' },
+  { id: 'services.s2.title', page: 'SERVICES', section: 'Service 02 — Model', type: 'single-line', label: 'Title', defaultValue: 'Product-on-Model' },
+  { id: 'services.s2.desc', page: 'SERVICES', section: 'Service 02 — Model', type: 'multi-line', label: 'Description', defaultValue: 'Realistic product-on-model imagery for fashion, apparel, jewellery, accessories, and other product-led brands.' },
 
-  { id: 'services.s3.title', page: 'SERVICES', section: 'Service 03', type: 'single-line', label: 'Title', defaultValue: 'Advertising Creatives' },
-  { id: 'services.s3.desc', page: 'SERVICES', section: 'Service 03', type: 'multi-line', label: 'Description', defaultValue: 'Performance-focused visual concepts for paid social and digital campaigns.' },
-  { id: 'services.s3.details', page: 'SERVICES', section: 'Service 03', type: 'multi-line', label: 'Details', defaultValue: 'Data-driven creative for digital advertising. We generate vast variations of visual concepts, allowing brands to test multiple visual angles, environments, and compositions for paid acquisition campaigns without blowing out the production budget.' },
+  { id: 'services.s3.category', page: 'SERVICES', section: 'Service 03 — Lifestyle', type: 'single-line', label: 'Category', defaultValue: '03 — LIFESTYLE' },
+  { id: 'services.s3.title', page: 'SERVICES', section: 'Service 03 — Lifestyle', type: 'single-line', label: 'Title', defaultValue: 'Lifestyle & Editorial' },
+  { id: 'services.s3.desc', page: 'SERVICES', section: 'Service 03 — Lifestyle', type: 'multi-line', label: 'Description', defaultValue: 'Art-directed product visuals that place products into premium lifestyle and editorial contexts.' },
 
-  { id: 'services.s4.title', page: 'SERVICES', section: 'Service 04', type: 'single-line', label: 'Title', defaultValue: 'Social Media Content' },
-  { id: 'services.s4.desc', page: 'SERVICES', section: 'Service 04', type: 'multi-line', label: 'Description', defaultValue: 'High-quality visual systems for consistent brand communication.' },
-  { id: 'services.s4.details', page: 'SERVICES', section: 'Service 04', type: 'multi-line', label: 'Details', defaultValue: 'Maintaining a premium social feed requires volume without sacrificing art direction. We build visual systems and generate batches of cohesive, on-brand imagery to fuel your organic social media strategy for months at a time.' },
-
-  { id: 'services.s5.title', page: 'SERVICES', section: 'Service 05', type: 'single-line', label: 'Title', defaultValue: 'Creative Direction' },
-  { id: 'services.s5.desc', page: 'SERVICES', section: 'Service 05', type: 'multi-line', label: 'Description', defaultValue: 'Concept development, visual direction, art direction and campaign thinking.' },
-  { id: 'services.s5.details', page: 'SERVICES', section: 'Service 05', type: 'multi-line', label: 'Details', defaultValue: 'AI is a tool; art direction is the differentiator. Our creative directors work with you to establish the visual language, lighting logic, color theory, and conceptual framework before a single pixel is generated.' },
+  { id: 'services.s4.category', page: 'SERVICES', section: 'Service 04 — Campaign', type: 'single-line', label: 'Category', defaultValue: '04 — CAMPAIGN' },
+  { id: 'services.s4.title', page: 'SERVICES', section: 'Service 04 — Campaign', type: 'single-line', label: 'Title', defaultValue: 'Campaign & Advertising' },
+  { id: 'services.s4.desc', page: 'SERVICES', section: 'Service 04 — Campaign', type: 'multi-line', label: 'Description', defaultValue: 'High-impact visual assets for product launches, campaigns, advertising, and digital brand communication.' },
 
   // --- WORK PAGE ---
   { id: 'work.hero.heading', page: 'WORK', section: 'Hero', type: 'single-line', label: 'Heading', defaultValue: 'Selected Work.' },

@@ -18,9 +18,9 @@ export default function Footer() {
         }}
       />
 
-      <div className="max-w-[1440px] 2xl:max-w-[1600px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16 pt-8 sm:pt-10 md:pt-12 pb-6 sm:pb-8 flex flex-col relative z-10">
+      <div className="max-w-[1440px] 2xl:max-w-[1600px] mx-auto px-6 sm:px-8 md:px-12 lg:px-16 pt-6 sm:pt-7 md:pt-8 pb-4 sm:pb-5 flex flex-col relative z-10">
         {/* BRAND ROW */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 sm:mb-9 md:mb-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-5 sm:mb-6 md:mb-6">
           <Link href="/" className="inline-block">
             <CmsText 
               cmsId="global.footer.brand" 
@@ -32,9 +32,9 @@ export default function Footer() {
         </div>
 
         {/* 4 BALANCED COLUMNS: SERVICES | COMPANY | TOOLS | CONNECT */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-8 md:gap-8 lg:gap-12 items-start h-fit">
           {/* COLUMN 01 — SERVICES */}
-          <div className="flex flex-col">
+          <div className="flex flex-col h-fit self-start md:col-start-3">
             <span className="text-[10px] md:text-[11px] tracking-[0.25em] uppercase font-bold text-black mb-4">
               SERVICES
             </span>
@@ -67,7 +67,7 @@ export default function Footer() {
           </div>
 
           {/* COLUMN 02 — COMPANY */}
-          <div className="flex flex-col">
+          <div className="flex flex-col h-fit self-start">
             <span className="text-[10px] md:text-[11px] tracking-[0.25em] uppercase font-bold text-black mb-4">
               COMPANY
             </span>
@@ -106,7 +106,7 @@ export default function Footer() {
           </div>
 
           {/* COLUMN 03 — TOOLS */}
-          <div className="flex flex-col">
+          <div className="flex flex-col h-fit self-start">
             <span className="text-[10px] md:text-[11px] tracking-[0.25em] uppercase font-bold text-black mb-4">
               TOOLS
             </span>
@@ -127,7 +127,7 @@ export default function Footer() {
           </div>
 
           {/* COLUMN 04 — CONNECT */}
-          <div className="flex flex-col">
+          <div className="flex flex-col h-fit self-start">
             <span className="text-[10px] md:text-[11px] tracking-[0.25em] uppercase font-bold text-black mb-4">
               CONNECT
             </span>
@@ -161,7 +161,7 @@ export default function Footer() {
         </div>
 
         {/* LEGAL / BOTTOM ROW */}
-        <div className="mt-8 sm:mt-10 md:mt-10 pt-5 sm:pt-6 border-t border-zinc-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 text-[10px] tracking-[0.2em] uppercase font-bold">
+        <div className="mt-3 pt-3 border-t border-zinc-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 text-[10px] tracking-[0.2em] uppercase font-bold">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 text-zinc-400">
             <CmsText cmsId="global.footer.copyright" as="p" fallback="© 2026 GROTON AI STUDIO" />
             <div className="flex items-center gap-4 sm:gap-6">

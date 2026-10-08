@@ -1489,10 +1489,9 @@ export default function Home() {
             {/* RIGHT SIDE: ONE LARGE 1:1 SQUARE IMAGE (FUTURE 1:1 VIDEO) */}
             <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
               <div 
-                className="w-full aspect-square relative bg-[#dad7d0] rounded-[24px] md:rounded-[32px] overflow-hidden group" 
+                className="w-full aspect-square relative bg-[#dad7d0] rounded-[24px] md:rounded-[32px] overflow-hidden group shadow-[0_18px_40px_rgba(0,0,0,0.08)]" 
                 style={{ 
-                  maxWidth: 'min(520px, 100%)',
-                  boxShadow: '0 20px 50px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.03)'
+                  maxWidth: 'min(520px, 100%)'
                 }} 
                 data-cursor="view"
               >

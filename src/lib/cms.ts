@@ -14,57 +14,60 @@ export type CmsImage = {
   mimeType?: string;
 };
 
+import { BLOG_POSTS } from '@/lib/blog/data';
+
 const DEFAULT_IMAGES: CmsImage[] = [
-  // HERO
-  { id: 'hero_main', name: 'Hero Main Image', src: '/campaign-worlds/download (22).jpeg', page: 'HOME', section: 'Hero' },
-  { id: 'hero_support_1', name: 'Hero Supporting Image 1', src: '/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg', page: 'HOME', section: 'Hero' },
-  { id: 'hero_support_2', name: 'Hero Supporting Image 2', src: '/campaign-worlds/Create_vertical_e-commerce_produ…_2K_20260929162058.jpg', page: 'HOME', section: 'Hero' },
-  { id: 'hero_support_3', name: 'Hero Supporting Image 3', src: '/campaign-worlds/Sunglasses_product_photography_2K_20260929162056.jpg', page: 'HOME', section: 'Hero' },
-  { id: 'hero_support_4', name: 'Hero Supporting Image 4', src: '/campaign-worlds/Jacket_and_pants_fashion_display_2K_20260929162053.jpg', page: 'HOME', section: 'Hero' },
+  // --- HOME PAGE ---
+  // HERO (3D Orbit Center & Rotating Cards)
+  { id: 'hero_main', name: 'Hero Center Model', src: '/campaign-worlds/groton-home-hero-model.png', page: 'HOME', section: 'Hero (Orbit Center)' },
+  { id: 'hero_support_1', name: 'Orbit Card — Product (Footwear)', src: '/campaign-worlds/groton-home-hero-floating-shoes-3x4.webp', page: 'HOME', section: 'Hero (3D Orbit)' },
+  { id: 'hero_support_2', name: 'Orbit Card — Apparel (T-Shirt)', src: '/campaign-worlds/groton-home-hero-floating-tshirt-3x4.webp', page: 'HOME', section: 'Hero (3D Orbit)' },
+  { id: 'hero_support_3', name: 'Orbit Card — Eyewear (Sunglasses)', src: '/campaign-worlds/groton-home-hero-floating-sunglasses-3x4.webp', page: 'HOME', section: 'Hero (3D Orbit)' },
+  { id: 'hero_support_4', name: 'Orbit Card — Campaign (Jacket)', src: '/campaign-worlds/groton-home-hero-floating-jacket-3x4.webp', page: 'HOME', section: 'Hero (3D Orbit)' },
+
+  // PROCESS (Transformation Stages)
+  { id: 'process_raw', name: 'Raw Product Input (Stage 01)', src: '/campaign-worlds/groton-home-process-raw-1x1.webp', page: 'HOME', section: 'Process Transformation' },
+  { id: 'process_final', name: 'Final Campaign Visual (Stage 05)', src: '/campaign-worlds/groton-home-process-final-4x5.webp', page: 'HOME', section: 'Process Transformation' },
 
   // CAPABILITIES
-  { id: 'capability_product', name: 'Product Imagery', src: '/campaign-worlds/LOGO DESIGN _ IDENTITY DESIGN _ ЛОГОТИП.jpeg', page: 'HOME', section: 'Capabilities' },
-  { id: 'capability_model', name: 'Product-on-Model', src: '/campaign-worlds/groton-9.jpg', page: 'HOME', section: 'Capabilities' },
-  { id: 'capability_apparel', name: 'Fashion Apparel', src: '/campaign-worlds/groton-1.jpg', page: 'HOME', section: 'Capabilities' },
-  { id: 'capability_editorial', name: 'Editorial', src: '/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg', page: 'HOME', section: 'Capabilities' },
+  { id: 'capability_product', name: 'Product Photography Card', src: '/campaign-worlds/groton-home-capability-product-4x5.webp', page: 'HOME', section: 'Capabilities' },
+  { id: 'capability_model', name: 'Product-on-Model Card', src: '/campaign-worlds/groton-home-capability-model-4x5.webp', page: 'HOME', section: 'Capabilities' },
+  { id: 'capability_apparel', name: 'Fashion Apparel Card', src: '/campaign-worlds/groton-1.jpg', page: 'HOME', section: 'Capabilities' },
+  { id: 'capability_editorial', name: 'Editorial Catalog Card', src: '/campaign-worlds/groton-home-capability-editorial-4x5.webp', page: 'HOME', section: 'Capabilities' },
 
-  // ARCHIVE (1:1 Visual Showcase)
-  { id: 'archive_hero', name: 'Archive Main Visual', src: '/campaign-worlds/How to style Cat Print T shirts.jpeg', page: 'HOME', section: 'Editorial Archive' },
-  { id: 'gallery_1', name: 'Editorial Archive 1', src: '/campaign-worlds/GROTON-work-selected-cat-print-742x418.webp', page: 'HOME', section: 'Editorial Archive' },
-  { id: 'gallery_2', name: 'Editorial Archive 2', src: '/campaign-worlds/How to style Cat Print T shirts.jpeg', page: 'HOME', section: 'Editorial Archive' },
-  { id: 'gallery_3', name: 'Editorial Archive 3', src: '/campaign-worlds/download (27).jpeg', page: 'HOME', section: 'Editorial Archive' },
-  { id: 'gallery_4', name: 'Editorial Archive 4', src: '/campaign-worlds/Mali džentlmen, veliki stil_ 🎨.jpeg', page: 'HOME', section: 'Editorial Archive' },
-  { id: 'gallery_5', name: 'Editorial Archive 5', src: '/campaign-worlds/mu_forart_.jpeg', page: 'HOME', section: 'Editorial Archive' },
+  // EDITORIAL ARCHIVE
+  { id: 'archive_hero', name: 'Editorial Showcase Visual', src: '/campaign-worlds/How to style Cat Print T shirts.jpeg', page: 'HOME', section: 'Editorial Archive' },
 
-  // PROCESS
-  { id: 'process_raw', name: 'Raw Product Input', src: '/campaign-worlds/ghgh.jpeg', page: 'HOME', section: 'Process' },
-  { id: 'process_final', name: 'Final Campaign Visual', src: '/campaign-worlds/1368386.jpg', page: 'HOME', section: 'Process' },
+  // FASHION & APPAREL FOCUS
+  { id: 'fashion_1', name: 'Fashion Focus 1 — Black Hoodie', src: '/campaign-worlds/groton-home-fashion-black-hoodie-3x4.webp', page: 'HOME', section: 'Fashion & Apparel' },
+  { id: 'fashion_2', name: 'Fashion Focus 2 — Striped Shirt', src: '/campaign-worlds/groton-home-fashion-striped-shirt-3x4.webp', page: 'HOME', section: 'Fashion & Apparel' },
+  { id: 'fashion_3', name: 'Fashion Focus 3 — Blue Hoodie', src: '/campaign-worlds/groton-home-fashion-blue-hoodie-3x4.webp', page: 'HOME', section: 'Fashion & Apparel' },
 
-  // FASHION & APPAREL
-  { id: 'fashion_1', name: 'Fashion Focus 1', src: '/campaign-worlds/groton-15.jpg', page: 'HOME', section: 'Fashion & Apparel' },
-  { id: 'fashion_2', name: 'Fashion Focus 2', src: '/campaign-worlds/groton-12.jpg', page: 'HOME', section: 'Fashion & Apparel' },
-  { id: 'fashion_3', name: 'Fashion Focus 3', src: '/campaign-worlds/groton-9.jpg', page: 'HOME', section: 'Fashion & Apparel' },
+  // --- SERVICES PAGE ---
+  { id: 'service_ecommerce_pdp', name: '01 — E-commerce & PDP Visuals', src: '/campaign-worlds/groton-services-advertising-3x4.webp', page: 'SERVICES', section: 'E-commerce & PDP' },
+  { id: 'service_product_on_model', name: '02 — Product-on-Model', src: '/campaign-worlds/groton-services-ai-product-3x4.webp', page: 'SERVICES', section: 'Product-on-Model' },
+  { id: 'service_lifestyle_editorial', name: '03 — Lifestyle & Editorial', src: '/campaign-worlds/groton-services-lifestyle-3x4.webp', page: 'SERVICES', section: 'Lifestyle & Editorial' },
+  { id: 'service_campaign_advertising', name: '04 — Campaign & Advertising', src: '/campaign-worlds/groton-services-creative-direction-3x4.webp', page: 'SERVICES', section: 'Campaign & Advertising' },
 
-  // ABOUT
-  { id: 'about_main_visual', name: 'About Main Visual', src: '/campaign-worlds/6610031H658_BYE260114.webp', page: 'ABOUT', section: 'Main Visual' },
-  
-  // SERVICES
-  { id: 'service_ai_product', name: 'AI Product Images', src: '/campaign-worlds/groton-14.jpg', page: 'SERVICES', section: 'Services List' },
-  { id: 'service_lifestyle', name: 'Lifestyle Product Imagery', src: '/campaign-worlds/groton-10.jpg', page: 'SERVICES', section: 'Services List' },
-  { id: 'service_advertising', name: 'Advertising Creatives', src: '/campaign-worlds/groton-17.jpg', page: 'SERVICES', section: 'Services List' },
-  { id: 'service_social', name: 'Social Media Content', src: '/campaign-worlds/groton-3.jpg', page: 'SERVICES', section: 'Services List' },
-  { id: 'service_creative', name: 'Creative Direction', src: '/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg', page: 'SERVICES', section: 'Services List' },
-  
-  // WORK
-  { id: 'work_1', name: 'Streetwear Comfort', src: '/campaign-worlds/download (27).jpeg', page: 'WORK', section: 'Portfolio' },
-  { id: 'work_2', name: 'Sherpa Outerwear', src: '/campaign-worlds/Caffeine is culture ☕️.jpeg', page: 'WORK', section: 'Portfolio' },
-  { id: 'work_3', name: 'Modern Elegance', src: '/campaign-worlds/groton-3.jpg', page: 'WORK', section: 'Portfolio' },
-  { id: 'work_4', name: 'High-Angle Editorial', src: '/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg', page: 'WORK', section: 'Portfolio' },
-  { id: 'work_5', name: 'Cat Print Styling', src: '/campaign-worlds/How to style Cat Print T shirts.jpeg', page: 'WORK', section: 'Portfolio' },
-  { id: 'work_6', name: 'Editorial Lifestyle', src: '/campaign-worlds/mu_forart_.jpeg', page: 'WORK', section: 'Portfolio' },
-  
-  // CONTACT
-  { id: 'contact_visual', name: 'Contact Visual', src: '/campaign-worlds/High-Angle Editorial Fashion Portrait (1).jpeg', page: 'CONTACT', section: 'Contact Form' },
+  // --- WORK PAGE ---
+  { id: 'work_1', name: '01 — Streetwear Comfort', src: '/campaign-worlds/GROTON-work-selected-streetwear-742x556.webp', page: 'WORK', section: 'Portfolio (Fashion)' },
+  { id: 'work_2', name: '02 — Sherpa Outerwear', src: '/campaign-worlds/GROTON-work-selected-sherpa-outerwear-742x990.webp', page: 'WORK', section: 'Portfolio (Fashion)' },
+  { id: 'work_3', name: '03 — Modern Elegance', src: '/campaign-worlds/GROTON-work-selected-modern-elegance-742x928.webp', page: 'WORK', section: 'Portfolio (Fashion)' },
+  { id: 'work_4', name: '04 — High-Angle Editorial', src: '/campaign-worlds/GROTON-work-selected-high-angle-editorial-742x742.webp', page: 'WORK', section: 'Portfolio (Editorial)' },
+  { id: 'work_5', name: '05 — Cat Print Styling', src: '/campaign-worlds/GROTON-work-selected-cat-print-742x418.webp', page: 'WORK', section: 'Portfolio (Fashion)' },
+  { id: 'work_6', name: '06 — Editorial Lifestyle', src: '/campaign-worlds/GROTON-work-selected-editorial-lifestyle-742x990.webp', page: 'WORK', section: 'Portfolio (Fashion)' },
+
+  // --- CONTACT PAGE ---
+  { id: 'contact_visual', name: 'Contact Editorial Visual', src: '/campaign-worlds/groton-contact-visual-4x5.webp', page: 'CONTACT', section: 'Contact Visual' },
+
+  // --- BLOG / INSIGHTS (All 30 Articles) ---
+  ...BLOG_POSTS.map(post => ({
+    id: `blog_${post.slug}`,
+    name: post.title,
+    src: post.coverImage,
+    page: 'BLOG',
+    section: `Article: ${post.category}`
+  }))
 ];
 
 let memoryCache: CmsImage[] | null = null;
