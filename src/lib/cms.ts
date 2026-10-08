@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import { put, list } from '@vercel/blob';
 
 const isVercel = process.env.VERCEL === '1';
-const CMS_FILE_PATH = isVercel ? '/tmp/cms.json' : path.join(process.cwd(), 'data', 'cms.json');
 
 export type CmsImage = {
   id: string;
@@ -36,7 +36,7 @@ const DEFAULT_IMAGES: CmsImage[] = [
   { id: 'capability_editorial', name: 'Editorial Catalog Card', src: '/campaign-worlds/groton-home-capability-editorial-4x5.webp', page: 'HOME', section: 'Capabilities' },
 
   // EDITORIAL ARCHIVE
-  { id: 'archive_hero', name: 'Editorial Showcase Visual', src: '/campaign-worlds/How to style Cat Print T shirts.jpeg', page: 'HOME', section: 'Editorial Archive' },
+  { id: 'archive_hero', name: 'Editorial Showcase Visual', src: '/uploads/studio/1791455117941-on-model_groton-groton_Compress.mp4', page: 'HOME', section: 'Editorial Archive', mediaType: 'video' },
 
   // FASHION & APPAREL FOCUS
   { id: 'fashion_1', name: 'Fashion Focus 1 — Black Hoodie', src: '/campaign-worlds/groton-home-fashion-black-hoodie-3x4.webp', page: 'HOME', section: 'Fashion & Apparel' },
@@ -45,7 +45,7 @@ const DEFAULT_IMAGES: CmsImage[] = [
 
   // --- SERVICES PAGE ---
   { id: 'service_ecommerce_pdp', name: '01 — E-commerce & PDP Visuals', src: '/campaign-worlds/groton-services-advertising-3x4.webp', page: 'SERVICES', section: 'E-commerce & PDP' },
-  { id: 'service_product_on_model', name: '02 — Product-on-Model', src: '/campaign-worlds/groton-services-ai-product-3x4.webp', page: 'SERVICES', section: 'Product-on-Model' },
+  { id: 'service_product_on_model', name: '02 — Product-on-Model', src: '/uploads/studio/1791455117941-on-model_groton-groton_Compress.mp4', page: 'SERVICES', section: 'Product-on-Model', mediaType: 'video' },
   { id: 'service_lifestyle_editorial', name: '03 — Lifestyle & Editorial', src: '/campaign-worlds/groton-services-lifestyle-3x4.webp', page: 'SERVICES', section: 'Lifestyle & Editorial' },
   { id: 'service_campaign_advertising', name: '04 — Campaign & Advertising', src: '/campaign-worlds/groton-services-creative-direction-3x4.webp', page: 'SERVICES', section: 'Campaign & Advertising' },
 
@@ -72,45 +72,132 @@ const DEFAULT_IMAGES: CmsImage[] = [
 
 let memoryCache: CmsImage[] | null = null;
 
-export function getCmsData(): CmsImage[] {
-  if (memoryCache) return memoryCache;
-
-  if (!fs.existsSync(CMS_FILE_PATH)) {
-    try {
-      if (!fs.existsSync(path.dirname(CMS_FILE_PATH))) {
-        fs.mkdirSync(path.dirname(CMS_FILE_PATH), { recursive: true });
-      }
-      fs.writeFileSync(CMS_FILE_PATH, JSON.stringify(DEFAULT_IMAGES, null, 2));
-    } catch (e) {
-      console.warn('Could not write CMS file, using memory cache.', e);
-      memoryCache = DEFAULT_IMAGES;
-      return memoryCache;
-    }
-    return DEFAULT_IMAGES;
-  }
-  try {
-    const saved = JSON.parse(fs.readFileSync(CMS_FILE_PATH, 'utf-8'));
-    // Merge missing defaults in case of new items
-    const merged = [...saved];
-    DEFAULT_IMAGES.forEach(def => {
-      if (!merged.find(m => m.id === def.id)) merged.push(def);
-    });
-    return merged;
-  } catch (e) {
-    return DEFAULT_IMAGES;
-  }
+function mergeWithDefaults(saved: CmsImage[]): CmsImage[] {
+  const merged = [...saved];
+  DEFAULT_IMAGES.forEach(def => {
+    if (!merged.find(m => m.id === def.id)) merged.push(def);
+  });
+  return merged;
 }
 
-export function updateCmsImage(id: string, newSrc: string, mediaType?: 'image' | 'video', mimeType?: string) {
-  const data = getCmsData();
-  const updated = data.map(img => img.id === id ? { ...img, src: newSrc, mediaType: mediaType || img.mediaType, mimeType: mimeType || img.mimeType } : img);
-  
-  try {
-    fs.writeFileSync(CMS_FILE_PATH, JSON.stringify(updated, null, 2));
-  } catch (e) {
-    console.warn('Could not write CMS file, updating memory cache only.', e);
+export async function getCmsData(): Promise<CmsImage[]> {
+  if (memoryCache) return memoryCache;
+
+  // 1. Try Vercel Blob if token is set
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      const { blobs } = await list({ prefix: 'studio/cms.json' });
+      if (blobs.length > 0) {
+        const res = await fetch(blobs[0].url, { cache: 'no-store' });
+        if (res.ok) {
+          const blobData = await res.json();
+          if (Array.isArray(blobData) && blobData.length > 0) {
+            const merged = mergeWithDefaults(blobData);
+            memoryCache = merged;
+            return merged;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Could not read cms.json from Blob:', e);
+    }
   }
+
+  // 2. Try /tmp/cms.json on Vercel
+  const tmpPath = path.join('/tmp', 'cms.json');
+  if (isVercel && fs.existsSync(tmpPath)) {
+    try {
+      const saved = JSON.parse(fs.readFileSync(tmpPath, 'utf-8'));
+      if (Array.isArray(saved) && saved.length > 0) {
+        const merged = mergeWithDefaults(saved);
+        memoryCache = merged;
+        return merged;
+      }
+    } catch {}
+  }
+
+  // 3. Try bundled data/cms.json
+  const bundledPath = path.join(process.cwd(), 'data', 'cms.json');
+  if (fs.existsSync(bundledPath)) {
+    try {
+      const saved = JSON.parse(fs.readFileSync(bundledPath, 'utf-8'));
+      if (Array.isArray(saved) && saved.length > 0) {
+        const merged = mergeWithDefaults(saved);
+        memoryCache = merged;
+        return merged;
+      }
+    } catch {}
+  }
+
+  // 4. Default fallback
+  memoryCache = DEFAULT_IMAGES;
+  return DEFAULT_IMAGES;
+}
+
+export function getCmsDataSync(): CmsImage[] {
+  if (memoryCache) return memoryCache;
+
+  const tmpPath = path.join('/tmp', 'cms.json');
+  if (isVercel && fs.existsSync(tmpPath)) {
+    try {
+      const saved = JSON.parse(fs.readFileSync(tmpPath, 'utf-8'));
+      if (Array.isArray(saved) && saved.length > 0) return mergeWithDefaults(saved);
+    } catch {}
+  }
+
+  const bundledPath = path.join(process.cwd(), 'data', 'cms.json');
+  if (fs.existsSync(bundledPath)) {
+    try {
+      const saved = JSON.parse(fs.readFileSync(bundledPath, 'utf-8'));
+      if (Array.isArray(saved) && saved.length > 0) return mergeWithDefaults(saved);
+    } catch {}
+  }
+
+  return DEFAULT_IMAGES;
+}
+
+export async function updateCmsImage(id: string, newSrc: string, mediaType?: 'image' | 'video', mimeType?: string): Promise<CmsImage[]> {
+  const current = await getCmsData();
+  const updated = current.map(img => 
+    img.id === id 
+      ? { ...img, src: newSrc, mediaType: mediaType || img.mediaType, mimeType: mimeType || img.mimeType } 
+      : img
+  );
   
   memoryCache = updated;
+
+  // 1. Write to /tmp/cms.json on Vercel
+  if (isVercel) {
+    try {
+      fs.writeFileSync(path.join('/tmp', 'cms.json'), JSON.stringify(updated, null, 2));
+    } catch (e) {
+      console.warn('Could not write /tmp/cms.json', e);
+    }
+  }
+
+  // 2. Write to bundled data/cms.json if writable
+  try {
+    const bundledPath = path.join(process.cwd(), 'data', 'cms.json');
+    if (!fs.existsSync(path.dirname(bundledPath))) {
+      fs.mkdirSync(path.dirname(bundledPath), { recursive: true });
+    }
+    fs.writeFileSync(bundledPath, JSON.stringify(updated, null, 2));
+  } catch (e) {
+    // Expected on read-only serverless filesystems
+  }
+
+  // 3. Persist to Vercel Blob if token is available
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    try {
+      await put('studio/cms.json', JSON.stringify(updated, null, 2), {
+        access: 'public',
+        addRandomSuffix: false,
+        contentType: 'application/json'
+      });
+    } catch (e) {
+      console.error('Failed to persist cms.json to Vercel Blob:', e);
+    }
+  }
+
   return updated;
 }

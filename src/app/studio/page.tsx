@@ -134,12 +134,21 @@ function StudioContent() {
     const img = images.find(i => i.id === id);
     if (!img) return;
     const determinedType: "image" | "video" = img.mediaType || (isVideoMedia(img.src) ? 'video' : 'image');
-    await fetch('/api/studio/cms', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: img.id, src: img.src, mediaType: determinedType, mimeType: img.mimeType })
-    });
-    alert('Media successfully updated and published to the live site!');
+    try {
+      const res = await fetch('/api/studio/cms', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: img.id, src: img.src, mediaType: determinedType, mimeType: img.mimeType })
+      });
+      if (res.ok) {
+        alert('Media successfully updated and published to the live site!');
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(`Publish failed: ${err.error || res.statusText || 'Server error'}`);
+      }
+    } catch (e: any) {
+      alert(`Publish request failed: ${e?.message || 'Network error'}`);
+    }
   };
 
   const deleteMedia = async (mediaId: string, url: string) => {
