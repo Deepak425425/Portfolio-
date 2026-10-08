@@ -114,9 +114,9 @@ const ExploreWorkButton = () => {
 
 const CmsMedia = ({ media, fallback, alt, fill, className, priority, sizes, style, ...props }: any) => {
   const src = media?.src || fallback;
-  const type = media?.mediaType || (src && src.match(/\.(mp4|webm|mov)$/i) ? 'video' : 'image');
+  const isVideo = media?.mediaType === 'video' || (typeof src === 'string' && /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(src));
   
-  if (type === 'video') {
+  if (isVideo) {
     const videoStyle = fill ? { objectFit: 'cover', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, ...style } : style;
     return <video src={src} autoPlay muted loop playsInline className={className} style={videoStyle} {...props} />;
   }
@@ -1246,7 +1246,34 @@ const TypewriterHeading = ({ cmsId = "home.why.heading", fallback = "Built for\n
 
 export default function Home() {
   const [cmsImages, setCmsImages] = useState<Record<string, any>>({});
-  useEffect(() => { fetch('/api/studio/cms', { cache: 'no-store' }).then(r => r.json()).then(data => { const map = data.reduce((acc: any, img: any) => ({ ...acc, [img.id]: { src: img.src, mediaType: img.mediaType || 'image' } }), {}); setCmsImages(map); }).catch(() => {}); }, []);
+  useEffect(() => {
+    let isPreview = false;
+    if (typeof window !== 'undefined') {
+      if (window.location.search.includes('preview=true')) {
+        sessionStorage.setItem('groton_preview', 'true');
+        isPreview = true;
+      } else if (sessionStorage.getItem('groton_preview') === 'true') {
+        isPreview = true;
+      }
+    }
+    const apiUrl = isPreview ? '/api/studio/cms?preview=true' : '/api/studio/cms';
+
+    fetch(apiUrl, { cache: 'no-store' })
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const map = data.reduce((acc: any, img: any) => {
+            const isVid = img.mediaType === 'video' || (typeof img.src === 'string' && /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(img.src));
+            return {
+              ...acc,
+              [img.id]: { src: img.src, mediaType: isVid ? 'video' : (img.mediaType || 'image') }
+            };
+          }, {});
+          setCmsImages(map);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
