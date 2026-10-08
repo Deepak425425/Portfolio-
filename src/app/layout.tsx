@@ -30,6 +30,12 @@ export const metadata: Metadata = {
     url: 'https://groton.in',
     images: [
       {
+        url: 'https://groton.in/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Groton — Image Tools & Creative Image Production',
+      },
+      {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
@@ -41,10 +47,15 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Groton — Image Tools & Creative Image Production',
     description: 'Groton AI provides powerful online image tools for editing, formatting, comparing, enhancing and preparing images for creative and e-commerce workflows.',
-    images: ['/og-image.jpg'],
+    images: ['https://groton.in/og-image.jpg'],
   },
   alternates: {
     canonical: '/',
+  },
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
   },
 };
 
@@ -79,24 +90,7 @@ export default function RootLayout({
             })
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebApplication",
-              name: "Groton Image Tools",
-              url: "https://groton.in/tools",
-              applicationCategory: "MultimediaApplication",
-              operatingSystem: "All",
-              offers: {
-                "@type": "Offer",
-                price: "0",
-                priceCurrency: "USD"
-              }
-            })
-          }}
-        />
+        
         <CustomCursor />
         {children}
       </body>

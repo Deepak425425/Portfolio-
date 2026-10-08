@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "PDF Contact Sheet Generator — Create Photo Galleries",
     description: "Generate professional multi-image PDF contact sheets and galleries. Choose grid layouts, margins, and paper sizes online for free.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

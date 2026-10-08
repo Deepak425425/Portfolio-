@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Splitter — Divide Photos Online",
     description: "Split an image into multiple equal pieces horizontally or vertically. Perfect for panoramas and grid posts on social media.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

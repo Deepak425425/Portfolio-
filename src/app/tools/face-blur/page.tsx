@@ -243,44 +243,128 @@ export default function FaceBlurPage() {
     if (!currentImg || !imgRef.current) return;
     setIsDetecting(true);
     try {
+      const img = imgRef.current;
+      const allRawBoxes: { x: number; y: number; w: number; h: number; score: number }[] = [];
+
+      // 1. Optional Native Shape Detection API (instant hardware-accelerated pass in Chromium)
+      if (typeof window !== "undefined" && "FaceDetector" in window) {
+        try {
+          const nativeDetector = new (window as any).FaceDetector({
+            fastMode: false,
+            maxDetectedFaces: 100
+          });
+          const nativeFaces = await nativeDetector.detect(img);
+          for (const face of nativeFaces) {
+            const bb = face.boundingBox;
+            if (bb && bb.width > 10 && bb.height > 10) {
+              const padX = bb.width * 0.16;
+              const padTop = bb.height * 0.28;
+              const padBottom = bb.height * 0.16;
+              const safeX = Math.max(0, bb.x - padX);
+              const safeY = Math.max(0, bb.y - padTop);
+              const safeW = Math.min(img.width - safeX, bb.width + padX * 2);
+              const safeH = Math.min(img.height - safeY, bb.height + padTop + padBottom);
+              allRawBoxes.push({ x: safeX, y: safeY, w: safeW, h: safeH, score: 0.9 });
+            }
+          }
+        } catch (nativeErr) {
+          // Native detector optional, continue with MediaPipe
+        }
+      }
+
+      // 2. Load MediaPipe Tasks-Vision with Full-Range & GPU/CPU Resilience
       const { FilesetResolver, FaceDetector } = await import("@mediapipe/tasks-vision");
-      
       const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
       );
-      const faceDetector = await FaceDetector.createFromOptions(vision, {
-        baseOptions: {
-          modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite",
-          delegate: "GPU"
-        },
-        runningMode: "IMAGE",
-        minDetectionConfidence: 0.4,
-        minSuppressionThreshold: 0.3
-      });
-      
-      const img = imgRef.current;
-      const allBoxes: (Box & {score: number})[] = [];
-      
-      const mapDetection = (d: any, offsetX: number, offsetY: number): (Box & {score: number}) | null => {
-        const bb = d.boundingBox;
-        if (!bb) return null;
-        // TIGHT BOUNDING BOX: 5% padding
-        const padW = bb.width * 0.05;
-        const padH = bb.height * 0.05;
-        const score = (d.categories && d.categories.length > 0) ? d.categories[0].score : 0.5;
-        
-        return {
-          id: Math.random().toString(36).substring(7),
-          x: Math.max(0, bb.originX + offsetX - padW / 2),
-          y: Math.max(0, bb.originY + offsetY - padH / 2),
-          w: bb.width + padW,
-          h: bb.height + padH,
-          score
-        };
+
+      const FULL_RANGE_MODEL = "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_full_range/float16/1/blaze_face_full_range.tflite";
+      const SHORT_RANGE_MODEL = "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite";
+
+      let faceDetector: any = null;
+
+      // Try full range model first (better for multiple people, distant faces, varying sizes)
+      try {
+        faceDetector = await FaceDetector.createFromOptions(vision, {
+          baseOptions: { modelAssetPath: FULL_RANGE_MODEL, delegate: "GPU" },
+          runningMode: "IMAGE",
+          minDetectionConfidence: 0.32,
+          minSuppressionThreshold: 0.3
+        });
+      } catch (err1) {
+        try {
+          faceDetector = await FaceDetector.createFromOptions(vision, {
+            baseOptions: { modelAssetPath: FULL_RANGE_MODEL, delegate: "CPU" },
+            runningMode: "IMAGE",
+            minDetectionConfidence: 0.32,
+            minSuppressionThreshold: 0.3
+          });
+        } catch (err2) {
+          // Fallback to short range model
+          try {
+            faceDetector = await FaceDetector.createFromOptions(vision, {
+              baseOptions: { modelAssetPath: SHORT_RANGE_MODEL, delegate: "GPU" },
+              runningMode: "IMAGE",
+              minDetectionConfidence: 0.32,
+              minSuppressionThreshold: 0.3
+            });
+          } catch (err3) {
+            faceDetector = await FaceDetector.createFromOptions(vision, {
+              baseOptions: { modelAssetPath: SHORT_RANGE_MODEL, delegate: "CPU" },
+              runningMode: "IMAGE",
+              minDetectionConfidence: 0.32,
+              minSuppressionThreshold: 0.3
+            });
+          }
+        }
+      }
+
+      if (!faceDetector) {
+        throw new Error("Unable to initialize face detector");
+      }
+
+      // Helper to process detections and apply natural head/hair/chin padding
+      const extractDetections = (
+        detections: any[],
+        scaleX: number,
+        scaleY: number,
+        offsetX: number = 0,
+        offsetY: number = 0,
+        minConf: number = 0.3
+      ) => {
+        detections.forEach((d: any) => {
+          const bb = d.boundingBox;
+          if (!bb) return;
+          const score = (d.categories && d.categories.length > 0) ? d.categories[0].score : 0.5;
+          if (score < minConf) return;
+
+          // Convert back to original image coordinates
+          const origX = bb.originX * scaleX + offsetX;
+          const origY = bb.originY * scaleY + offsetY;
+          const origW = bb.width * scaleX;
+          const origH = bb.height * scaleY;
+
+          // Natural head padding (covers forehead, temples, hair, and jaw)
+          const padX = origW * 0.16;
+          const padTop = origH * 0.28;
+          const padBottom = origH * 0.16;
+
+          const safeX = Math.max(0, origX - padX);
+          const safeY = Math.max(0, origY - padTop);
+          const safeW = Math.min(img.width - safeX, origW + padX * 2);
+          const safeH = Math.min(img.height - safeY, origH + padTop + padBottom);
+
+          if (safeW > 10 && safeH > 10) {
+            allRawBoxes.push({ x: safeX, y: safeY, w: safeW, h: safeH, score });
+          }
+        });
       };
 
       // Helper to calculate Intersection over Union (IoU)
-      const calculateIoU = (box1: Box, box2: Box) => {
+      const calculateIoU = (
+        box1: { x: number; y: number; w: number; h: number },
+        box2: { x: number; y: number; w: number; h: number }
+      ) => {
         const xA = Math.max(box1.x, box2.x);
         const yA = Math.max(box1.y, box2.y);
         const xB = Math.min(box1.x + box1.w, box2.x + box2.w);
@@ -291,98 +375,189 @@ export default function FaceBlurPage() {
         return interArea / (box1Area + box2Area - interArea);
       };
 
+      // Branch 1: Contact Sheet Metadata Scan
       if (currentImg.csMeta && currentImg.csMeta.isContactSheet && currentImg.csMeta.cells) {
-        // DETECT USING CONTACT SHEET METADATA
         const cells = currentImg.csMeta.cells;
-        
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          cells.forEach((cell: any) => {
-            canvas.width = cell.width;
-            canvas.height = cell.height;
-            ctx.clearRect(0, 0, cell.width, cell.height);
-            // Draw ONLY the clean frame cell
-            ctx.drawImage(img, cell.x, cell.y, cell.width, cell.height, 0, 0, cell.width, cell.height);
-            
-            const res = faceDetector.detect(canvas);
-            res.detections.forEach((d: any) => {
-               // Confidence filtering: Reject low confidence detections
-               const score = (d.categories && d.categories.length > 0) ? d.categories[0].score : 0.5;
-               if (score < 0.6) return;
-               
-               // Validate face size against cell size to prevent huge false positives
-               if (!d.boundingBox) return;
-               const bbRatio = (d.boundingBox.width * d.boundingBox.height) / (cell.width * cell.height);
-               if (bbRatio > 0.4) return; // A face shouldn't cover > 40% of a frame
-               
-               const box = mapDetection(d, cell.x, cell.y);
-               if (box) allBoxes.push(box);
-            });
-          });
-        }
-      } else if (img.width > 800 || img.height > 800) {
-        // FALLBACK: Process image in overlapping chunks if it's large (standard image, not a known contact sheet)
-        const windowSize = 512;
-        const step = Math.floor(windowSize * 0.6); // 40% overlap
-        
-        const canvas = document.createElement('canvas');
-        canvas.width = windowSize;
-        canvas.height = windowSize;
-        const ctx = canvas.getContext('2d');
-        
-        if (ctx) {
-          for (let y = 0; y < img.height; y += step) {
-            for (let x = 0; x < img.width; x += step) {
-              ctx.clearRect(0, 0, windowSize, windowSize);
-              // Draw image chunk
-              ctx.drawImage(img, x, y, windowSize, windowSize, 0, 0, windowSize, windowSize);
-              
-              const res = faceDetector.detect(canvas);
-              res.detections.forEach((d: any) => {
-                 const score = (d.categories && d.categories.length > 0) ? d.categories[0].score : 0.5;
-                 if (score < 0.5) return;
-                 const box = mapDetection(d, x, y);
-                 if (box) allBoxes.push(box);
-              });
-            }
+        const cellCanvas = document.createElement("canvas");
+        const cellCtx = cellCanvas.getContext("2d");
+        if (cellCtx) {
+          for (const cell of cells) {
+            cellCanvas.width = cell.width;
+            cellCanvas.height = cell.height;
+            cellCtx.clearRect(0, 0, cell.width, cell.height);
+            cellCtx.drawImage(img, cell.x, cell.y, cell.width, cell.height, 0, 0, cell.width, cell.height);
+            const res = faceDetector.detect(cellCanvas);
+            extractDetections(res.detections, 1, 1, cell.x, cell.y, 0.45);
           }
         }
       } else {
-        // Small image, process in one pass
-        const res = faceDetector.detect(img);
-        res.detections.forEach((d: any) => {
-          const score = (d.categories && d.categories.length > 0) ? d.categories[0].score : 0.5;
-          if (score < 0.5) return;
-          const box = mapDetection(d, 0, 0);
-          if (box) allBoxes.push(box);
-        });
+        // Branch 2: General Image — Multi-Scale Pyramid + Edge-Safe Tiling
+
+        // Pass A: Primary Global Scale (catches medium & large close-up faces)
+        const primaryMaxDim = 1024;
+        const primaryRatio = Math.min(1, primaryMaxDim / Math.max(img.width, img.height));
+        const canvasA = document.createElement("canvas");
+        canvasA.width = Math.round(img.width * primaryRatio);
+        canvasA.height = Math.round(img.height * primaryRatio);
+        const ctxA = canvasA.getContext("2d");
+        if (ctxA) {
+          ctxA.drawImage(img, 0, 0, canvasA.width, canvasA.height);
+          const resA = faceDetector.detect(canvasA);
+          extractDetections(resA.detections, 1 / primaryRatio, 1 / primaryRatio, 0, 0, 0.32);
+        }
+
+        // Pass B: High-Res Fine Scale (catches small-to-medium faces across the frame)
+        if (Math.max(img.width, img.height) > 1200) {
+          const fineMaxDim = 1600;
+          const fineRatio = Math.min(1, fineMaxDim / Math.max(img.width, img.height));
+          const canvasB = document.createElement("canvas");
+          canvasB.width = Math.round(img.width * fineRatio);
+          canvasB.height = Math.round(img.height * fineRatio);
+          const ctxB = canvasB.getContext("2d");
+          if (ctxB) {
+            ctxB.drawImage(img, 0, 0, canvasB.width, canvasB.height);
+            const resB = faceDetector.detect(canvasB);
+            extractDetections(resB.detections, 1 / fineRatio, 1 / fineRatio, 0, 0, 0.32);
+          }
+        }
+
+        // Pass C: Low-Res Boost (enhances small images < 700px)
+        if (Math.max(img.width, img.height) < 700) {
+          const boostRatio = 900 / Math.max(img.width, img.height);
+          const canvasC = document.createElement("canvas");
+          canvasC.width = Math.round(img.width * boostRatio);
+          canvasC.height = Math.round(img.height * boostRatio);
+          const ctxC = canvasC.getContext("2d");
+          if (ctxC) {
+            ctxC.drawImage(img, 0, 0, canvasC.width, canvasC.height);
+            const resC = faceDetector.detect(canvasC);
+            extractDetections(resC.detections, 1 / boostRatio, 1 / boostRatio, 0, 0, 0.3);
+          }
+        }
+
+        // Pass D: Edge-Safe Overlapping Tiling (for large crowd/group photos with small faces)
+        if (img.width > 900 || img.height > 900) {
+          const tileSize = Math.min(800, Math.max(480, Math.floor(Math.min(img.width, img.height) * 0.6)));
+          const step = Math.floor(tileSize * 0.55);
+
+          const xCoords: number[] = [];
+          for (let x = 0; x < img.width; x += step) {
+            const safeX = Math.min(x, Math.max(0, img.width - tileSize));
+            if (!xCoords.includes(safeX)) xCoords.push(safeX);
+            if (x + tileSize >= img.width) break;
+          }
+          const yCoords: number[] = [];
+          for (let y = 0; y < img.height; y += step) {
+            const safeY = Math.min(y, Math.max(0, img.height - tileSize));
+            if (!yCoords.includes(safeY)) yCoords.push(safeY);
+            if (y + tileSize >= img.height) break;
+          }
+
+          const tileCanvas = document.createElement("canvas");
+          tileCanvas.width = tileSize;
+          tileCanvas.height = tileSize;
+          const tileCtx = tileCanvas.getContext("2d");
+
+          if (tileCtx) {
+            for (const ty of yCoords) {
+              for (const tx of xCoords) {
+                const sW = Math.min(tileSize, img.width - tx);
+                const sH = Math.min(tileSize, img.height - ty);
+                tileCtx.clearRect(0, 0, tileSize, tileSize);
+                tileCtx.drawImage(img, tx, ty, sW, sH, 0, 0, sW, sH);
+
+                const resTile = faceDetector.detect(tileCanvas);
+                extractDetections(resTile.detections, 1, 1, tx, ty, 0.35);
+              }
+            }
+          }
+        }
       }
 
-      // Apply Strict Non-Maximum Suppression (NMS)
-      // 1. Sort by confidence score (highest first)
-      allBoxes.sort((a, b) => b.score - a.score);
-      
-      const finalBoxes: Box[] = [];
-      allBoxes.forEach(box => {
-        let isDuplicate = false;
-        for (let i = 0; i < finalBoxes.length; i++) {
-          const iou = calculateIoU(box, finalBoxes[i]);
-          if (iou > 0.3) {
-             isDuplicate = true;
-             break;
+      // 3. Robust Non-Maximum Suppression (NMS) & Cluster Fusion
+      // Sort by confidence score (highest first)
+      allRawBoxes.sort((a, b) => b.score - a.score);
+
+      const clusters: { x: number; y: number; w: number; h: number; score: number }[][] = [];
+
+      for (const box of allRawBoxes) {
+        // Discard impossible oversized boxes (> 92% of whole image)
+        if (box.w > img.width * 0.92 && box.h > img.height * 0.92) continue;
+
+        let matchedCluster: { x: number; y: number; w: number; h: number; score: number }[] | null = null;
+
+        for (const cluster of clusters) {
+          const primary = cluster[0];
+          const iou = calculateIoU(box, primary);
+
+          // Center distance check to merge matching detections with slight boundary variance
+          const boxCenterX = box.x + box.w / 2;
+          const boxCenterY = box.y + box.h / 2;
+          const primCenterX = primary.x + primary.w / 2;
+          const primCenterY = primary.y + primary.h / 2;
+
+          const centerDistX = Math.abs(boxCenterX - primCenterX);
+          const centerDistY = Math.abs(boxCenterY - primCenterY);
+          const avgW = (box.w + primary.w) / 2;
+          const avgH = (box.h + primary.h) / 2;
+          const isSameFaceCenter = centerDistX < avgW * 0.42 && centerDistY < avgH * 0.42;
+
+          if (iou > 0.38 || (iou > 0.22 && isSameFaceCenter)) {
+            matchedCluster = cluster;
+            break;
           }
         }
-        if (!isDuplicate && box.w > 10 && box.h > 10) {
-          // Filter out completely unreasonable false-positive huge boxes
-          const isHugeBox = box.w > (img.width * 0.8) && box.h > (img.height * 0.8);
-          if (!isHugeBox) {
-            // Strip the score property before saving to state
-            finalBoxes.push({ id: box.id, x: box.x, y: box.y, w: box.w, h: box.h });
-          }
+
+        if (matchedCluster) {
+          matchedCluster.push(box);
+        } else {
+          clusters.push([box]);
         }
+      }
+
+      // Compute final clean boxes from clusters
+      const finalBoxes: Box[] = clusters.map(cluster => {
+        if (cluster.length === 1) {
+          const b = cluster[0];
+          const rx = Math.round(Math.max(0, b.x));
+          const ry = Math.round(Math.max(0, b.y));
+          const rw = Math.round(Math.min(img.width - rx, b.w));
+          const rh = Math.round(Math.min(img.height - ry, b.h));
+          return {
+            id: Math.random().toString(36).substring(7),
+            x: rx,
+            y: ry,
+            w: rw,
+            h: rh
+          };
+        }
+
+        // Blend highest-confidence box with cluster union to prevent box bloating
+        const primary = cluster[0];
+        const minX = Math.min(...cluster.map(b => b.x));
+        const minY = Math.min(...cluster.map(b => b.y));
+        const maxX = Math.max(...cluster.map(b => b.x + b.w));
+        const maxY = Math.max(...cluster.map(b => b.y + b.h));
+
+        const blendX = primary.x * 0.4 + minX * 0.6;
+        const blendY = primary.y * 0.4 + minY * 0.6;
+        const blendR = (primary.x + primary.w) * 0.4 + maxX * 0.6;
+        const blendB = (primary.y + primary.h) * 0.4 + maxY * 0.6;
+
+        const finalX = Math.max(0, blendX);
+        const finalY = Math.max(0, blendY);
+        const finalW = Math.min(img.width - finalX, blendR - blendX);
+        const finalH = Math.min(img.height - finalY, blendB - blendY);
+
+        return {
+          id: Math.random().toString(36).substring(7),
+          x: Math.round(finalX),
+          y: Math.round(finalY),
+          w: Math.round(finalW),
+          h: Math.round(finalH)
+        };
       });
-      
+
       if (finalBoxes.length > 0) {
         setBoxes(prev => ({
           ...prev,

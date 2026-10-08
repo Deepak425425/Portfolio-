@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Rotate & Flip Image — Mirror Photos Online",
     description: "Rotate images by degrees, flip horizontally, or mirror vertically online. Quick and free browser-based image adjustment tool.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

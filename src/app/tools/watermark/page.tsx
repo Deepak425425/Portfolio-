@@ -173,11 +173,40 @@ export default function WatermarkPage() {
     if (!previewBefore) {
       await drawWatermark(ctx, canvas.width, canvas.height);
       
-      if (layerMode === "behind" && subjectCache[imgFile.id]) {
-        const subjImg = new Image();
-        subjImg.src = subjectCache[imgFile.id];
-        await new Promise(r => subjImg.onload = r);
-        ctx.drawImage(subjImg, 0, 0, canvas.width, canvas.height);
+      if (layerMode === "behind") {
+        let subjUrl = subjectCache[imgFile.id];
+        let isTemp = false;
+
+        if (!subjUrl && isExport) {
+          try {
+            const { removeBackground } = await import('@imgly/background-removal');
+            const config = {
+              publicPath: "https://staticimgly.com/@imgly/background-removal-data/1.7.0/dist/"
+            };
+            const imageBlob = await removeBackground(imgFile.url, config);
+            subjUrl = URL.createObjectURL(imageBlob);
+            isTemp = true;
+          } catch (err) {
+            console.error("Bulk segmentation failed for", imgFile.name, err);
+            throw new Error(`Failed to extract subject for ${imgFile.name}`);
+          }
+        }
+
+        if (subjUrl) {
+          try {
+            const subjImg = new Image();
+            subjImg.src = subjUrl;
+            await new Promise((resolve, reject) => {
+              subjImg.onload = resolve;
+              subjImg.onerror = reject;
+            });
+            ctx.drawImage(subjImg, 0, 0, canvas.width, canvas.height);
+          } finally {
+            if (isTemp) {
+              URL.revokeObjectURL(subjUrl);
+            }
+          }
+        }
       }
     }
 

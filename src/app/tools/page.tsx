@@ -2,39 +2,98 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Navigation from "@/components/Navigation";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { TOOL_REGISTRY } from "@/lib/registry/tools";
+import CmsText from "@/components/CmsText";
+import AskAIAssistant from "@/components/tools/AskAIAssistant";
+import ScrollMechanicalSound from "@/components/tools/ScrollMechanicalSound";
 
-const ToolCard = ({ tool }: { tool: any }) => (
+const ToolCard = ({ tool, isNightMode }: { tool: any, isNightMode: boolean }) => (
   <Link 
     href={tool.route || "#"} 
-    className="group bg-[#FCFCFB] border border-zinc-200 p-6 flex flex-col rounded-2xl hover:border-[#8B7CFF] hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden h-full min-h-[170px] w-full"
+    className={`group ${isNightMode ? 'bg-[#18181A] border-white/[0.04]' : 'bg-white border-[rgba(0,0,0,0.05)]'} p-8 flex flex-col rounded-[24px] hover:border-[#8B7CFF] shadow-[0_18px_40px_rgba(0,0,0,0.10)] hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] transition-all duration-500 relative overflow-hidden h-full min-h-[190px] w-full`}
   >
-    <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B7CFF] opacity-0 group-hover:opacity-5 blur-[50px] transition-opacity rounded-full pointer-events-none"></div>
+    <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B7CFF] opacity-0 group-hover:opacity-10 blur-[50px] transition-opacity rounded-full pointer-events-none"></div>
     
-    <div className="w-12 h-12 bg-white shadow-sm border border-zinc-100 rounded-xl flex items-center justify-center text-xl z-10 shrink-0 mb-5 text-[#8B7CFF]">
+    <div className={`w-12 h-12 ${isNightMode ? 'bg-[#222] border-white/5 shadow-none' : 'bg-[#F9F8F6] border-[rgba(0,0,0,0.02)] shadow-sm'} border rounded-[16px] flex items-center justify-center text-xl z-10 shrink-0 mb-6 text-[#8B7CFF] transition-transform duration-500 group-hover:-translate-y-1`}>
       {tool.visual || "🔧"}
     </div>
     
     <div className="flex flex-col gap-2 z-10 h-full">
       <div className="flex justify-between items-start">
-        <h3 className="font-bold text-sm tracking-tight text-[#111111] leading-none mt-1">{tool.name}</h3>
+        <h3 className={`font-sans font-bold text-base tracking-[-0.05em] leading-none mt-1 ${isNightMode ? 'text-white' : 'text-black'}`}>{tool.name}</h3>
       </div>
-      <p className="text-[11px] text-zinc-500 leading-relaxed max-w-[95%]">{tool.description}</p>
+      <p className={`text-xs ${isNightMode ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed max-w-[95%] mt-1`}>{tool.description}</p>
     </div>
   </Link>
 );
 
-import AskAIAssistant from "@/components/tools/AskAIAssistant";
+const SEARCH_PLACEHOLDER_PHRASES = [
+  "Search tools...",
+  "Search image tools...",
+  "Search background remover...",
+  "Search tools..."
+];
+const BASE_SEARCH_PREFIX = "Search";
 
-// FEATURE FLAG: Toggle this to true when Ask AI is ready to be restored
+function useSearchPlaceholderTypewriter(isPaused: boolean) {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [currentText, setCurrentText] = useState(SEARCH_PLACEHOLDER_PHRASES[0]);
+  const [phase, setPhase] = useState<'holding' | 'deleting' | 'pause_before_type' | 'typing'>('holding');
+
+  React.useEffect(() => {
+    if (isPaused) return;
+
+    let timeoutId: NodeJS.Timeout;
+
+    if (phase === 'holding') {
+      timeoutId = setTimeout(() => {
+        setPhase('deleting');
+      }, 2100);
+    } else if (phase === 'deleting') {
+      if (currentText.length > BASE_SEARCH_PREFIX.length) {
+        timeoutId = setTimeout(() => {
+          setCurrentText(prev => prev.slice(0, -1));
+        }, 55);
+      } else {
+        timeoutId = setTimeout(() => {
+          setPhase('pause_before_type');
+        }, 320);
+      }
+    } else if (phase === 'pause_before_type') {
+      timeoutId = setTimeout(() => {
+        setPhraseIndex(prev => (prev + 1) % SEARCH_PLACEHOLDER_PHRASES.length);
+        setPhase('typing');
+      }, 80);
+    } else if (phase === 'typing') {
+      const target = SEARCH_PLACEHOLDER_PHRASES[phraseIndex];
+      if (currentText.length < target.length) {
+        timeoutId = setTimeout(() => {
+          setCurrentText(target.slice(0, currentText.length + 1));
+        }, 85);
+      } else {
+        timeoutId = setTimeout(() => {
+          setPhase('holding');
+        }, 2100);
+      }
+    }
+
+    return () => clearTimeout(timeoutId);
+  }, [isPaused, phase, currentText, phraseIndex]);
+
+  return currentText;
+}
+
 const ASK_AI_ENABLED = false;
 
 export default function ToolsLandingPage() {
   const [search, setSearch] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
   const [isNightMode, setIsNightMode] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  const placeholderText = useSearchPlaceholderTypewriter(!mounted || isFocused || search.length > 0);
 
   React.useEffect(() => {
     setMounted(true);
@@ -52,75 +111,158 @@ export default function ToolsLandingPage() {
     });
   };
 
+  
   const searchActive = search.trim().length > 0;
   
-  // Filter out planned tools for the UI
   const AVAILABLE_TOOLS = TOOL_REGISTRY.filter(t => t.category !== 'planned');
   
   const filteredTools = searchActive ? AVAILABLE_TOOLS.filter(t => 
     t.name.toLowerCase().includes(search.toLowerCase()) || 
-    t.description.toLowerCase().includes(search.toLowerCase())
+    t.description.toLowerCase().includes(search.toLowerCase()) ||
+    (t.keywords && t.keywords.some(k => k.toLowerCase().includes(search.toLowerCase())))
   ) : [];
 
-  const FEATURED_TOOLS = AVAILABLE_TOOLS.filter(t => t.category === 'featured');
-  const UTILITY_TOOLS = AVAILABLE_TOOLS.filter(t => t.category === 'utility');
-  const SPECIALIZED_TOOLS = AVAILABLE_TOOLS.filter(t => t.category === 'specialized');
-  const OTHER_TOOLS = AVAILABLE_TOOLS.filter(t => t.category === 'other');
+  const SECTIONS = [
+    {
+      title: "Featured",
+      ids: ["image-compare", "collage", "background-remover"]
+    },
+    {
+      title: "Image Tools",
+      ids: [
+        "resize", "crop", "compressor", "convert", "rotate-flip", "rounded-image",
+        "canvas", "grid-cutter", "social-resizer", "passport-photo",
+        "filters", "blur", "pixelate", "color-palette", "color-picker", "hex-to-color", "watermark",
+        "favicon", "meme"
+      ]
+    },
+    {
+      title: "Video Tools",
+      ids: ["video-to-gif", "video-compress", "video-compare", "video-audio-swap", "shot-cuts"]
+    },
+    {
+      title: "Audio Tools",
+      ids: ["audio-splicer", "silence-remover"]
+    },
+    {
+      title: "PDF & Document Tools",
+      ids: ["pdf-contact-sheet"]
+    },
+    {
+      title: "File & Metadata",
+      ids: ["check-metadata", "metadata-remover", "image-quality-checker", "bulk-image-renamer"]
+    },
+    {
+      title: "Specialized / AI",
+      ids: ["image-upscaler", "image-cleanup", "background-remover", "watermark-remover", "face-blur", "cinematic-focus", "hard-cut-motion-prompt", "script-board"]
+    }
+  ];
 
-
-  const mainClasses = `min-h-screen flex flex-col font-sans relative overflow-x-hidden transition-colors duration-300 ${isNightMode ? 'tool-dark bg-[#121212] text-zinc-200' : 'bg-[#F7F6F2] text-[#111111]'}`;
+  const mainClasses = `min-h-screen flex flex-col font-sans relative overflow-x-hidden transition-colors duration-500 ${isNightMode ? 'bg-[#0A0A0A] text-zinc-200 selection:bg-[#8B7CFF] selection:text-white' : 'bg-[#F9F8F6] text-black selection:bg-[#8B7CFF] selection:text-white'}`;
 
   return (
     <main className={mainClasses} data-theme={isNightMode ? "dark" : "light"}>
+      {/* GRID */}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 -z-10 transition-opacity duration-500 ${isNightMode ? 'opacity-20' : 'opacity-100'}`}
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, ${isNightMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.035)'} 1px, transparent 1px),
+            linear-gradient(to bottom, ${isNightMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.035)'} 1px, transparent 1px)
+          `,
+          backgroundSize: "80px 80px",
+          maskImage: "linear-gradient(to bottom, black, transparent 90%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black, transparent 90%)",
+        }}
+      />
+
       {/* AMBIENT GRADIENTS */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#DCD7FF] opacity-30 blur-[120px] rounded-full transition-opacity duration-300"></div>
-         <div className="absolute top-[20%] right-[-10%] w-[40%] h-[60%] bg-[#E4E9FF] opacity-30 blur-[120px] rounded-full transition-opacity duration-300"></div>
-         <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[40%] bg-[#FFF4E6] opacity-30 blur-[120px] rounded-full transition-opacity duration-300"></div>
-         <div className="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] bg-[#F8DDEB] opacity-30 blur-[120px] rounded-full transition-opacity duration-300"></div>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 transition-opacity duration-700 opacity-30">
+         <div className={`absolute top-[-10%] left-[-10%] w-[50%] h-[50%] blur-[120px] rounded-full transition-colors duration-700 ${isNightMode ? 'bg-[#8B7CFF]/20' : 'bg-[#DCD7FF]'}`}></div>
+         <div className={`absolute top-[20%] right-[-10%] w-[40%] h-[60%] blur-[120px] rounded-full transition-colors duration-700 ${isNightMode ? 'bg-[#5B4CFF]/10' : 'bg-[#E4E9FF]'}`}></div>
       </div>
 
-      <Navigation />
+      <Header isNightMode={isNightMode} />
       
-      {/* SAME MASTER CONTAINER WIDTH */}
-      <div className="flex-1 w-full max-w-[1280px] mx-auto px-6 md:px-8 py-16 md:py-24 z-10">
+      <div className="flex-1 w-full max-w-[1440px] 2xl:max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16 xl:px-20 pt-32 sm:pt-40 md:pt-48 pb-16 md:pb-24 z-10">
         
-        {/* HEADER / HERO ALIGNMENT */}
-        <div className="w-full flex justify-end mb-4">
+        {/* TOP CONTROLS: SOUND TOGGLE & LIGHT/DARK TOGGLE */}
+        <div className="w-full flex justify-end items-center gap-2.5 mb-4">
            {mounted && (
-             <button 
-               onClick={toggleNightMode}
-               className="flex items-center gap-2 px-4 py-2 border border-zinc-200 bg-white rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors shadow-sm"
-               title="Toggle Night Mode"
-             >
-               {isNightMode ? '☀ LIGHT' : '☾ DARK'}
-             </button>
+             <>
+               <ScrollMechanicalSound isNightMode={isNightMode} />
+               <button 
+                 onClick={toggleNightMode}
+                 className={`flex items-center gap-2 px-4 py-2 border rounded-full text-[10px] uppercase tracking-widest font-bold transition-colors shadow-sm ${isNightMode ? 'bg-[#18181A] border-white/10 hover:bg-[#222] text-zinc-300' : 'border-[rgba(0,0,0,0.05)] bg-white hover:bg-zinc-50 text-black'}`}
+                 title="Toggle Night Mode"
+               >
+                 {isNightMode ? '☀ LIGHT' : '☾ DARK'}
+               </button>
+             </>
            )}
         </div>
         
         {/* HERO */}
-        <div className="flex flex-col items-center justify-center text-center gap-4 mb-24 w-full relative z-10">
-            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#8B7CFF]">GROTON AI / TOOLS</span>
-            <h1 className="text-4xl md:text-6xl font-serif tracking-tight leading-tight">Image tools, without the busywork.</h1>
-            <p className="text-base text-zinc-500 mt-2 font-light tracking-wide">Small tools. Serious image work.</p>
+        <div className="flex flex-col items-center justify-center text-center gap-4 mb-16 sm:mb-20 md:mb-24 w-full relative z-10">
+            <CmsText cmsId="tools.hero.label" as="span" className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#8B7CFF]" fallback="GROTON AI / TOOLS" />
+            <CmsText cmsId="tools.hero.heading" as="h1" className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[76px] font-sans font-bold tracking-[-0.05em] leading-tight max-w-4xl ${isNightMode ? 'text-white' : 'text-black'}`} fallback="Save the time. Keep the creativity." />
+            <CmsText cmsId="tools.hero.desc" as="p" className={`text-base md:text-lg mt-2 font-light tracking-wide max-w-2xl ${isNightMode ? 'text-zinc-400' : 'text-zinc-500'}`} fallback="Built to make your creative workflow faster." />
             
-            <div className="relative group mt-8 w-full max-w-md">
+            {/* Single Premium Search Bar */}
+            <div className={`relative group mt-8 sm:mt-10 w-full max-w-lg xl:max-w-xl mx-auto rounded-full overflow-hidden p-[1px] transition-shadow duration-700 hover:shadow-[0_8px_30px_rgba(139,124,255,0.15)] focus-within:shadow-[0_8px_30px_rgba(139,124,255,0.2)]`}>
+              
+              {/* Animated Gradient Border Layer */}
+              <div className="absolute inset-0 z-0 overflow-hidden rounded-full opacity-80 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-700">
+                <div 
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] motion-safe:animate-[spin_6s_linear_infinite]"
+                  style={{
+                    background: 'conic-gradient(from 0deg, transparent 0%, #8B7CFF 15%, #4C82FF 25%, transparent 40%, transparent 60%, #FF96C8 75%, #FFB47C 85%, transparent 100%)'
+                  }}
+                />
+                {/* Reduced motion fallback */}
+                <div className="absolute inset-0 hidden motion-reduce:block bg-gradient-to-r from-[rgba(139,124,255,0.4)] via-[rgba(76,130,255,0.3)] to-[rgba(139,124,255,0.4)]"></div>
+              </div>
+              
+              {/* Inner Input Area (Opaque to mask center) */}
               <input 
                 type="text" 
-                placeholder="Search tools..."
+                aria-label="Search tools"
+                placeholder={!mounted ? "Search tools..." : ""}
                 value={search}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
                 onChange={e => setSearch(e.target.value)}
-                className="bg-white/80 backdrop-blur-sm border border-zinc-200 px-6 py-4 text-sm w-full rounded-full focus:outline-none focus:border-[#8B7CFF] transition-all shadow-sm"
+                className={`relative z-10 w-full rounded-full outline-none px-8 py-5 text-sm transition-all ${
+                  isNightMode 
+                    ? 'bg-[#18181A] text-white placeholder:text-zinc-500' 
+                    : 'bg-white text-black placeholder:text-zinc-400'
+                }`}
               />
+
+              {/* Animated Typewriter Placeholder Layer */}
+              {mounted && !isFocused && !search && (
+                <div 
+                  className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 z-20 flex items-center text-sm font-sans select-none overflow-hidden max-w-[calc(100%-64px)] whitespace-nowrap transition-opacity duration-150 group-focus-within:opacity-0"
+                  aria-hidden="true"
+                >
+                  <span className={`transition-colors duration-500 ${isNightMode ? 'text-zinc-500' : 'text-zinc-400'}`}>
+                    {placeholderText}
+                  </span>
+                  <span 
+                    className="inline-block w-[1.5px] h-[14px] bg-[#8B7CFF] ml-[2px] rounded-[1px] animate-subtle-caret" 
+                  />
+                </div>
+              )}
             </div>
         </div>
 
         {searchActive ? (
           <div className="flex flex-col gap-6">
-            <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Search Results</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <h2 className={`text-[10px] uppercase tracking-[0.2em] font-bold ${isNightMode ? 'text-zinc-500' : 'text-zinc-400'}`}>Search Results</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                {filteredTools.map(tool => (
-                 <ToolCard key={tool.id} tool={tool} />
+                 <ToolCard key={tool.id} tool={tool} isNightMode={isNightMode} />
                ))}
                {filteredTools.length === 0 && (
                  <div className="col-span-full text-center py-12 text-zinc-400 text-xs uppercase tracking-widest">No tools found.</div>
@@ -128,72 +270,54 @@ export default function ToolsLandingPage() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col gap-20">
-            
-            <section className="flex flex-col gap-6">
-              <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Featured</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {FEATURED_TOOLS.map(tool => (
-                  <ToolCard key={tool.id} tool={tool} />
-                ))}
-              </div>
-            </section>
-
-            <section className="flex flex-col gap-6">
-              <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Utility</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {UTILITY_TOOLS.map(tool => (
-                  <ToolCard key={tool.id} tool={tool} />
-                ))}
-              </div>
-            </section>
-
-            <section className="flex flex-col gap-6">
-              <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Specialized</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {SPECIALIZED_TOOLS.map(tool => (
-                  <ToolCard key={tool.id} tool={tool} />
-                ))}
-              </div>
-            </section>
-
-            <section className="flex flex-col gap-6">
-              <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">All Tools</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {OTHER_TOOLS.map(tool => (
-                  <ToolCard key={tool.id} tool={tool} />
-                ))}
-                
-                {/* TESTING LAB CARD */}
-                <Link 
-                  href="/testing" 
-                  className="group bg-zinc-900 border border-zinc-800 p-6 flex flex-col rounded-2xl hover:border-zinc-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.1)] transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden h-full min-h-[170px] w-full"
+          <div className="flex flex-col gap-24">
+            {SECTIONS.map((section, idx) => {
+              const tools = section.ids.map(id => AVAILABLE_TOOLS.find(t => t.id === id)).filter(Boolean);
+              if (tools.length === 0) return null;
+              
+              return (
+                <section 
+                  key={idx} 
+                  id={section.title === "Image Tools" ? "image-tools" : undefined} 
+                  className="flex flex-col gap-8 scroll-mt-24 md:scroll-mt-32"
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-0 group-hover:opacity-10 blur-[50px] transition-opacity rounded-full pointer-events-none"></div>
-                  
-                  <div className="w-12 h-12 bg-zinc-800 shadow-sm border border-zinc-700 rounded-xl flex items-center justify-center text-xl z-10 shrink-0 mb-5 text-zinc-300">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                  </div>
-                  
-                  <div className="flex flex-col gap-2 z-10 h-full">
-                    <div className="flex justify-between items-start">
-                      <h3 className="font-bold text-sm tracking-tight text-white leading-none mt-1">TESTING LAB</h3>
-                      <span className="text-[8px] uppercase tracking-widest font-bold text-zinc-400 border border-zinc-700 px-2 py-0.5 rounded bg-zinc-800/50">PRIVATE / LOCKED</span>
-                    </div>
-                    <p className="text-[11px] text-zinc-400 leading-relaxed max-w-[95%] mb-4">Experimental tools and features in development.</p>
+                  <h2 className={`text-[10px] uppercase tracking-[0.2em] font-bold ${isNightMode ? 'text-zinc-500' : 'text-zinc-400'}`}>{section.title}</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {tools.map((tool: any) => (
+                      <ToolCard key={`${section.title}-${tool.id}`} tool={tool} isNightMode={isNightMode} />
+                    ))}
                     
-                    <div className="mt-auto text-[9px] uppercase tracking-widest font-bold text-zinc-300 group-hover:text-white transition-colors flex items-center gap-1">
-                      OPEN TESTING LAB <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                    </div>
+                    {/* Add Testing Lab card only in the very last section */}
+                    {idx === SECTIONS.length - 1 && (
+                      <Link 
+                        href="/testing" 
+                        className={`group ${
+                          isNightMode 
+                            ? 'bg-[#18181A] hover:bg-[#8B7CFF]/[0.04] border-[#8B7CFF]/10 hover:border-[#8B7CFF]/30' 
+                            : 'bg-[#F9F8FF] hover:bg-[#F0EEFF] border-[#8B7CFF]/15 hover:border-[#8B7CFF]/40'
+                        } p-8 flex flex-col rounded-[24px] shadow-[0_18px_40px_rgba(0,0,0,0.10)] hover:shadow-[0_25px_55px_rgba(139,124,255,0.08)] transition-all duration-500 relative overflow-hidden h-full min-h-[190px] w-full`}
+                      >
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B7CFF] opacity-10 group-hover:opacity-20 blur-[50px] transition-opacity rounded-full pointer-events-none"></div>
+                        
+                        <div className="flex flex-col gap-2 z-10 h-full">
+                          <div className="flex justify-between items-start">
+                            <h3 className={`font-sans font-bold text-base tracking-[-0.05em] leading-none mt-1 ${isNightMode ? 'text-white' : 'text-black'}`}>TESTING LAB</h3>
+                          </div>
+                          <p className={`text-xs ${isNightMode ? 'text-[#A39ED1]/70' : 'text-[#6A639A]/90'} leading-relaxed max-w-[95%] mt-1 mb-4`}>Experimental tools and features in development.</p>
+                          
+                          <div className={`mt-auto text-[10px] uppercase tracking-widest font-bold text-[#8B7CFF] transition-colors flex items-center gap-2`}>
+                            OPEN TESTING LAB <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                          </div>
+                        </div>
+                      </Link>
+                    )}
                   </div>
-                </Link>
-              </div>
-            </section>
-
+                </section>
+              );
+            })}
           </div>
         )}
         
-        {/* Floating ASK AI Assistant (Temporarily hidden via feature flag) */}
         {ASK_AI_ENABLED && <AskAIAssistant />}
       </div>
       <Footer />

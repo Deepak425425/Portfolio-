@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Image Grid Cutter — Slice Photos for Instagram",
     description: "Cut and slice a single image into multiple seamless grid tiles for Instagram and social media layouts. Free online image splitter.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 

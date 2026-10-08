@@ -25,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Favicon Generator — Create .ico & Web App Icons",
     description: "Convert any image into a web-ready favicon.ico and high-resolution app icons for modern websites. Free online utility by Groton AI.",
+    images: ["https://groton.in/og-tools.jpg"],
   }
 };
 
