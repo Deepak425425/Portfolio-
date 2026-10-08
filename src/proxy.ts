@@ -20,6 +20,7 @@ export default function proxy(request: NextRequest) {
     const isPublicCmsRead = request.method === 'GET' && (
       request.nextUrl.pathname === '/api/studio/cms' ||
       request.nextUrl.pathname === '/api/studio/cms-text' ||
+      request.nextUrl.pathname === '/api/studio/team' ||
       request.nextUrl.pathname === '/api/studio/preview'
     );
     if (isPublicCmsRead) return NextResponse.next();

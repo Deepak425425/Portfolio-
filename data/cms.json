@@ -186,6 +186,41 @@
     "section": "Contact Visual"
   },
   {
+    "id": "team_founder",
+    "name": "Founder Profile — Deepak Kumawat",
+    "src": "",
+    "page": "TEAM",
+    "section": "Founder Card"
+  },
+  {
+    "id": "team_bench_01",
+    "name": "Bench 01 — Generative Art & AI",
+    "src": "",
+    "page": "TEAM",
+    "section": "Team Cards"
+  },
+  {
+    "id": "team_bench_02",
+    "name": "Bench 02 — Creative & Art Direction",
+    "src": "",
+    "page": "TEAM",
+    "section": "Team Cards"
+  },
+  {
+    "id": "team_bench_03",
+    "name": "Bench 03 — Visual Research & 3D",
+    "src": "",
+    "page": "TEAM",
+    "section": "Team Cards"
+  },
+  {
+    "id": "team_bench_04",
+    "name": "Bench 04 — Retouching & Finishing",
+    "src": "",
+    "page": "TEAM",
+    "section": "Team Cards"
+  },
+  {
     "id": "blog_how-to-create-better-product-images-for-ecommerce",
     "name": "How to Create Better Product Images for E-commerce",
     "src": "/campaign-worlds/Change_shoe_image_background_color_2K_20260929162637.jpg",
