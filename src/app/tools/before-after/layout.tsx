@@ -1,34 +1,63 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Before & After Image Tool — Create Comparison Sliders Online",
-  description: "Generate interactive before and after image comparison sliders. Perfect for showcasing retouching, editing, and transformations. Free online image tool by Groton AI.",
+  title: {
+    absolute: "Free Before and After Image Comparison Slider | GROTON",
+  },
+  description: "Create interactive before and after image comparison sliders online. Compare retouching, edits, and visual transformations side by side with GROTON.",
   alternates: {
-    canonical: "/tools/before-after",
+    canonical: "https://groton.in/tools/before-after",
   },
   openGraph: {
-    title: "Before & After Image Tool — Create Comparison Sliders Online",
-    description: "Generate interactive before and after image comparison sliders. Perfect for showcasing retouching, editing, and transformations. Free online image tool by Groton AI.",
+    title: "Free Before and After Image Comparison Slider | GROTON",
+    description: "Create interactive before and after image comparison sliders online. Compare retouching, edits, and visual transformations side by side with GROTON.",
     url: "https://groton.in/tools/before-after",
     siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
     images: [
       {
         url: "https://groton.in/og-tools.jpg",
         width: 1200,
         height: 630,
-      }
+        alt: "Free Before and After Image Comparison Slider | GROTON",
+      },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Before & After Image Tool — Create Comparison Sliders Online",
-    description: "Generate interactive before and after image comparison sliders. Perfect for showcasing retouching, editing, and transformations. Free online image tool by Groton AI.",
+    title: "Free Before and After Image Comparison Slider | GROTON",
+    description: "Create interactive before and after image comparison sliders online. Compare retouching, edits, and visual transformations side by side with GROTON.",
     images: ["https://groton.in/og-tools.jpg"],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Before & After Comparison Slider",
+  "url": "https://groton.in/tools/before-after",
+  "description": "Create interactive before and after image comparison sliders online. Compare retouching, edits, and visual transformations side by side with GROTON.",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
   }
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
+      {children}
+    </>
+  );
 }

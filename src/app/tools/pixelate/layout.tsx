@@ -1,34 +1,63 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Image Pixelator — Censor Photos & Create 8-Bit Art",
-  description: "Pixelate faces, censor sensitive information, or create retro 8-bit aesthetic art online. A fast and free image editor by Groton AI.",
+  title: {
+    absolute: "Free Image Pixelator – Censor Photos & Pixel Art | GROTON",
+  },
+  description: "Pixelate sensitive details in photos or turn pictures into retro 8-bit pixel art with adjustable block sizes directly in your browser with GROTON.",
   alternates: {
-    canonical: "/tools/pixelate",
+    canonical: "https://groton.in/tools/pixelate",
   },
   openGraph: {
-    title: "Image Pixelator — Censor Photos & Create 8-Bit Art",
-    description: "Pixelate faces, censor sensitive information, or create retro 8-bit aesthetic art online. A fast and free image editor by Groton AI.",
+    title: "Free Image Pixelator – Censor Photos & Pixel Art | GROTON",
+    description: "Pixelate sensitive details in photos or turn pictures into retro 8-bit pixel art with adjustable block sizes directly in your browser with GROTON.",
     url: "https://groton.in/tools/pixelate",
     siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
     images: [
       {
         url: "https://groton.in/og-tools.jpg",
         width: 1200,
         height: 630,
-      }
+        alt: "Free Image Pixelator – Censor Photos & Pixel Art | GROTON",
+      },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Image Pixelator — Censor Photos & Create 8-Bit Art",
-    description: "Pixelate faces, censor sensitive information, or create retro 8-bit aesthetic art online. A fast and free image editor by Groton AI.",
+    title: "Free Image Pixelator – Censor Photos & Pixel Art | GROTON",
+    description: "Pixelate sensitive details in photos or turn pictures into retro 8-bit pixel art with adjustable block sizes directly in your browser with GROTON.",
     images: ["https://groton.in/og-tools.jpg"],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Image Pixelator",
+  "url": "https://groton.in/tools/pixelate",
+  "description": "Pixelate sensitive details in photos or turn images into retro 8-bit pixel art online directly in your browser with GROTON.",
+  "applicationCategory": "PhotoEditor",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
   }
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
+      {children}
+    </>
+  );
 }

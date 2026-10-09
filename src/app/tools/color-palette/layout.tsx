@@ -1,34 +1,63 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Color Palette Generator — Extract Colors from Image",
-  description: "Automatically generate a color palette from any image. Extract dominant HEX colors and create aesthetic mood boards with Groton AI's free tool.",
+  title: {
+    absolute: "Free Color Palette Generator – Extract Image Colors | GROTON",
+  },
+  description: "Extract dominant color palettes and HEX codes from any photo online. Generate cohesive color schemes and export custom swatches with GROTON.",
   alternates: {
-    canonical: "/tools/color-palette",
+    canonical: "https://groton.in/tools/color-palette",
   },
   openGraph: {
-    title: "Color Palette Generator — Extract Colors from Image",
-    description: "Automatically generate a color palette from any image. Extract dominant HEX colors and create aesthetic mood boards with Groton AI's free tool.",
+    title: "Free Color Palette Generator – Extract Image Colors | GROTON",
+    description: "Extract dominant color palettes and HEX codes from any photo online. Generate cohesive color schemes and export custom swatches with GROTON.",
     url: "https://groton.in/tools/color-palette",
     siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
     images: [
       {
         url: "https://groton.in/og-tools.jpg",
         width: 1200,
         height: 630,
-      }
+        alt: "Free Color Palette Generator – Extract Image Colors | GROTON",
+      },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Color Palette Generator — Extract Colors from Image",
-    description: "Automatically generate a color palette from any image. Extract dominant HEX colors and create aesthetic mood boards with Groton AI's free tool.",
+    title: "Free Color Palette Generator – Extract Image Colors | GROTON",
+    description: "Extract dominant color palettes and HEX codes from any photo online. Generate cohesive color schemes and export custom swatches with GROTON.",
     images: ["https://groton.in/og-tools.jpg"],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Color Palette Generator",
+  "url": "https://groton.in/tools/color-palette",
+  "description": "Extract dominant color palettes and HEX codes from any photo online. Generate aesthetic mood boards and export color swatches with GROTON.",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
   }
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
+      {children}
+    </>
+  );
 }

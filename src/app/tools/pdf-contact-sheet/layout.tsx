@@ -1,34 +1,63 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "PDF Contact Sheet Generator — Create Photo Galleries",
-  description: "Generate professional multi-image PDF contact sheets and galleries. Choose grid layouts, margins, and paper sizes online for free.",
+  title: {
+    absolute: "Free PDF Contact Sheet Generator – Photo Layouts | GROTON",
+  },
+  description: "Generate printable multi-image PDF contact sheets and photo proofs online. Customize grid rows, columns, margins, and paper sizes with GROTON.",
   alternates: {
-    canonical: "/tools/pdf-contact-sheet",
+    canonical: "https://groton.in/tools/pdf-contact-sheet",
   },
   openGraph: {
-    title: "PDF Contact Sheet Generator — Create Photo Galleries",
-    description: "Generate professional multi-image PDF contact sheets and galleries. Choose grid layouts, margins, and paper sizes online for free.",
+    title: "Free PDF Contact Sheet Generator – Photo Layouts | GROTON",
+    description: "Generate printable multi-image PDF contact sheets and photo proofs online. Customize grid rows, columns, margins, and paper sizes with GROTON.",
     url: "https://groton.in/tools/pdf-contact-sheet",
     siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
     images: [
       {
         url: "https://groton.in/og-tools.jpg",
         width: 1200,
         height: 630,
-      }
+        alt: "Free PDF Contact Sheet Generator – Photo Layouts | GROTON",
+      },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "PDF Contact Sheet Generator — Create Photo Galleries",
-    description: "Generate professional multi-image PDF contact sheets and galleries. Choose grid layouts, margins, and paper sizes online for free.",
+    title: "Free PDF Contact Sheet Generator – Photo Layouts | GROTON",
+    description: "Generate printable multi-image PDF contact sheets and photo proofs online. Customize grid rows, columns, margins, and paper sizes with GROTON.",
     images: ["https://groton.in/og-tools.jpg"],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PDF Contact Sheet Generator",
+  "url": "https://groton.in/tools/pdf-contact-sheet",
+  "description": "Generate printable multi-image PDF contact sheets and photo proofs online. Customize grid rows, columns, and margins easily with GROTON.",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
   }
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
+      {children}
+    </>
+  );
 }

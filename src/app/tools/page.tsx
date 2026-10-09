@@ -127,24 +127,38 @@ export default function ToolsLandingPage() {
     (t.keywords && t.keywords.some(k => k.toLowerCase().includes(search.toLowerCase())))
   ) : [];
 
+const toolsCollectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Free Online Image Tools – Resize, Crop, Compress & More",
+  "description": "Use online image tools to resize, crop, compress, convert and compare images, create collages, and remove backgrounds with GROTON.",
+  "url": "https://groton.in/tools",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "GROTON AI",
+    "url": "https://groton.in"
+  }
+};
+
   const SECTIONS = [
     {
       title: "Featured",
-      ids: ["image-compare", "background-remover", "bulk-image-renamer", "watermark"]
+      ids: ["image-compare", "video-metadata-remover", "bulk-image-renamer", "watermark"]
     },
     {
       title: "Image Tools",
       ids: [
+        "background-remover",
         "collage",
         "resize", "crop", "compressor", "convert", "rotate-flip", "rounded-image",
         "canvas", "grid-cutter", "social-resizer", "passport-photo",
         "filters", "blur", "pixelate", "color-palette", "color-picker", "hex-to-color", "watermark",
-        "favicon", "meme"
+        "favicon", "meme", "before-after"
       ]
     },
     {
       title: "Video Tools",
-      ids: ["video-to-gif", "video-compress", "video-compare", "video-audio-swap", "shot-cuts"]
+      ids: ["video-to-gif", "video-compress", "video-compare", "video-audio-swap", "shot-cuts", "video-metadata-remover"]
     },
     {
       title: "Audio Tools",
@@ -168,6 +182,13 @@ export default function ToolsLandingPage() {
 
   return (
     <main className={mainClasses} data-theme={isNightMode ? "dark" : "light"}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(toolsCollectionSchema),
+        }}
+      />
+
       {/* GRID */}
       <div
         aria-hidden="true"

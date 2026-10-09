@@ -110,9 +110,10 @@ export default function UpscalerPage() {
     return (
     <div className="flex flex-col gap-8">
       <div>
-        <h2 className="font-serif text-3xl text-black mb-2">Image Upscaler</h2>
+        <h1 className="font-serif text-3xl text-black mb-2">Image Upscaler</h1>
         <p className="text-xs text-zinc-500 font-bold tracking-widest uppercase">High-Quality Resolution Enhancement</p>
       </div>
+
 
       <div className="flex flex-col gap-4">
         <label className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-500">Scale Factor</label>

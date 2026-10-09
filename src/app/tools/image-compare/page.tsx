@@ -283,6 +283,7 @@ export default function ImageComparePage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-[1600px] mx-auto p-4 md:p-8 lg:p-12 mt-24">
+        <h1 className="sr-only">Image Comparison Tool</h1>
         <Link href="/tools" className="text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-black mb-8 block">
           ← Back to Tools
         </Link>

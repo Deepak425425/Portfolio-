@@ -742,6 +742,7 @@ This file is informational only.`;
       {/* NEW HEADER */}
       <header className="h-16 flex items-center justify-between px-6 border-b border-[rgba(0,0,0,0.05)] bg-white shrink-0 z-20 shadow-[0_18px_40px_rgba(0,0,0,0.05)]">
          <div className="flex items-center gap-6">
+           <h1 className="sr-only">Script Board</h1>
            <div className="font-bold tracking-[0.2em] text-xs md:text-sm uppercase text-black flex items-center gap-2">
              <div className="w-2 h-2 bg-[#8B7CFF] rounded-full"></div>
              GROTON

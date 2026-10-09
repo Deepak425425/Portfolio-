@@ -1,34 +1,63 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Watermark Creator — Protect Your Images Online",
-  description: "Add repeating text or logo watermarks to your photos to protect your intellectual property. A free and secure online watermark tool.",
+  title: {
+    absolute: "Free Watermark Creator – Add Text & Logo Watermarks | GROTON",
+  },
+  description: "Protect images with custom repeating text, tiled stamps, or logo watermarks online. Adjust opacity, angle, and density in batch mode with GROTON.",
   alternates: {
-    canonical: "/tools/watermark",
+    canonical: "https://groton.in/tools/watermark",
   },
   openGraph: {
-    title: "Watermark Creator — Protect Your Images Online",
-    description: "Add repeating text or logo watermarks to your photos to protect your intellectual property. A free and secure online watermark tool.",
+    title: "Free Watermark Creator – Add Text & Logo Watermarks | GROTON",
+    description: "Protect images with custom repeating text, tiled stamps, or logo watermarks online. Adjust opacity, angle, and density in batch mode with GROTON.",
     url: "https://groton.in/tools/watermark",
     siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
     images: [
       {
         url: "https://groton.in/og-tools.jpg",
         width: 1200,
         height: 630,
-      }
+        alt: "Free Watermark Creator – Add Text & Logo Watermarks | GROTON",
+      },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Watermark Creator — Protect Your Images Online",
-    description: "Add repeating text or logo watermarks to your photos to protect your intellectual property. A free and secure online watermark tool.",
+    title: "Free Watermark Creator – Add Text & Logo Watermarks | GROTON",
+    description: "Protect images with custom repeating text, tiled stamps, or logo watermarks online. Adjust opacity, angle, and density in batch mode with GROTON.",
     images: ["https://groton.in/og-tools.jpg"],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Watermark Creator",
+  "url": "https://groton.in/tools/watermark",
+  "description": "Protect images with custom repeating text or logo watermarks online. Adjust opacity, angle, and density in batch with GROTON.",
+  "applicationCategory": "PhotoEditor",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
   }
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
+      {children}
+    </>
+  );
 }
