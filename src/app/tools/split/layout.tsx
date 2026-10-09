@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://groton.in/og-tools.jpg",
+        url: "https://groton.in/og-tools-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Free Image Splitter Online – Cut Photos into Pieces | GROTON",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free Image Splitter Online – Cut Photos into Pieces | GROTON",
     description: "Split images into multiple equal vertical or horizontal slices for social media carousel posts, panoramas, and multi-part feeds with GROTON.",
-    images: ["https://groton.in/og-tools.jpg"],
+    images: ["https://groton.in/og-tools-v2.jpg"],
   },
 };
 

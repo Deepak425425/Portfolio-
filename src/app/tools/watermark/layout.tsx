@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://groton.in/og-tools.jpg",
+        url: "https://groton.in/og-tools-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Free Watermark Creator – Add Text & Logo Watermarks | GROTON",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free Watermark Creator – Add Text & Logo Watermarks | GROTON",
     description: "Protect images with custom repeating text, tiled stamps, or logo watermarks online. Adjust opacity, angle, and density in batch mode with GROTON.",
-    images: ["https://groton.in/og-tools.jpg"],
+    images: ["https://groton.in/og-tools-v2.jpg"],
   },
 };
 

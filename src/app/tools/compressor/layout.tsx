@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://groton.in/og-tools.jpg",
+        url: "https://groton.in/og-tools-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Free Image Compressor Online – Reduce File Size | GROTON",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free Image Compressor Online – Reduce File Size | GROTON",
     description: "Compress JPG, PNG, and WebP images online without losing visible quality. Shrink photo file sizes to custom target limits quickly with GROTON.",
-    images: ["https://groton.in/og-tools.jpg"],
+    images: ["https://groton.in/og-tools-v2.jpg"],
   },
 };
 

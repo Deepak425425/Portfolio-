@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://groton.in/og-tools.jpg",
+        url: "https://groton.in/og-tools-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Free PDF Contact Sheet Generator – Photo Layouts | GROTON",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free PDF Contact Sheet Generator – Photo Layouts | GROTON",
     description: "Generate printable multi-image PDF contact sheets and photo proofs online. Customize grid rows, columns, margins, and paper sizes with GROTON.",
-    images: ["https://groton.in/og-tools.jpg"],
+    images: ["https://groton.in/og-tools-v2.jpg"],
   },
 };
 

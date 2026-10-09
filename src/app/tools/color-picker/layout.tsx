@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://groton.in/og-tools.jpg",
+        url: "https://groton.in/og-tools-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Free Image Color Picker – Sample HEX & RGB Colors | GROTON",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free Image Color Picker – Sample HEX & RGB Colors | GROTON",
     description: "Sample exact pixel colors from any image with an interactive eyedropper tool. Inspect and copy HEX, RGB, and HSL values instantly with GROTON.",
-    images: ["https://groton.in/og-tools.jpg"],
+    images: ["https://groton.in/og-tools-v2.jpg"],
   },
 };
 

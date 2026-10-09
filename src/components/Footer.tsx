@@ -79,6 +79,12 @@ export default function Footer() {
                 About
               </Link>
               <Link 
+                href="/team" 
+                className="hover:text-black transition-colors py-0.5"
+              >
+                Team
+              </Link>
+              <Link 
                 href="/work" 
                 className="hover:text-black transition-colors py-0.5"
               >
