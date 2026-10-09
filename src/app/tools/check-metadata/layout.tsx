@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://groton.in/og-tools.jpg",
+        url: "https://groton.in/og-tools-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Free Image Metadata Viewer – Inspect EXIF Data | GROTON",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free Image Metadata Viewer – Inspect EXIF Data | GROTON",
     description: "Inspect hidden EXIF, IPTC, and XMP metadata, camera settings, and GPS location tags in photos directly in your browser. Free image inspector by GROTON.",
-    images: ["https://groton.in/og-tools.jpg"],
+    images: ["https://groton.in/og-tools-v2.jpg"],
   },
 };
 

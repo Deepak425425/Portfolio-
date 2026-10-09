@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://groton.in/og-tools.jpg",
+        url: "https://groton.in/og-tools-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Hard Cut Motion Prompt – Video Shot Sheet Generator | GROTON",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Hard Cut Motion Prompt – Video Shot Sheet Generator | GROTON",
     description: "Split video footage into scene cuts and export 6-frame motion reference contact sheets for video-to-video AI animation prompts with GROTON.",
-    images: ["https://groton.in/og-tools.jpg"],
+    images: ["https://groton.in/og-tools-v2.jpg"],
   },
 };
 

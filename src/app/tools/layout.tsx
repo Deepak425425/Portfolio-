@@ -17,13 +17,13 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://groton.in/og-tools.jpg",
+        url: "https://groton.in/og-tools-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Free Online Image Tools & Creative Utilities | GROTON",
       },
       {
-        url: "/og-tools.jpg",
+        url: "/og-tools-v2.jpg",
         width: 1200,
         height: 630,
         alt: "GROTON Image Tools",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free Online Image Tools & Creative Utilities | GROTON",
     description: "Explore free online image and media editing tools. Resize, compress, convert, crop, and enhance photos directly in your browser with GROTON.",
-    images: ["https://groton.in/og-tools.jpg"],
+    images: ["https://groton.in/og-tools-v2.jpg"],
   },
 };
 

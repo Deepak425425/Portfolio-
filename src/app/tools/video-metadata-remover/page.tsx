@@ -183,7 +183,7 @@ export default function VideoMetadataRemoverPage() {
   return (
     <ToolLayout
       title="Video Metadata Remover"
-      description="Inspect and strip EXIF, timestamps, GPS geotags, encoder signatures, and camera details from video files. Lossless, browser-based container cleaning with zero re-encoding."
+      description="Inspect and remove metadata, EXIF timestamps, GPS geotags, and camera information from video files. Lossless, browser-based container cleaning with zero re-encoding and no added watermarks."
       category="VIDEO PRIVACY"
     >
       <div className="w-full flex flex-col gap-8">

@@ -424,6 +424,28 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     category: "featured",
     visual: "🎬",
     description: "Inspect and strip EXIF timestamps, GPS, and device metadata from videos.",
-    keywords: ["video metadata remover", "free video metadata remover", "remove metadata from video", "remove video metadata online", "video exif metadata remover", "video exif remover", "remove gps location from video", "mp4 metadata remover", "clean video metadata", "clean video metadata before sharing", "video privacy", "strip video metadata", "video cleaner"] 
+    keywords: [
+      "video metadata remover",
+      "free video metadata remover",
+      "remove metadata from video",
+      "remove video metadata online",
+      "video tag remover online",
+      "remove tags from video",
+      "video tag remover",
+      "AI tag remover free",
+      "MP4 metadata remover",
+      "MOV metadata remover",
+      "video EXIF remover",
+      "video exif metadata remover",
+      "remove gps location from video",
+      "remove camera information from video",
+      "free online video metadata cleaner",
+      "clean video metadata",
+      "clean video metadata before sharing",
+      "video metadata remover without watermark",
+      "video privacy",
+      "strip video metadata",
+      "video cleaner"
+    ] 
   }
 ];

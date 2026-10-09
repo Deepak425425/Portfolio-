@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://groton.in/og-tools.jpg",
+        url: "https://groton.in/og-tools-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Free Audio Splicer Online – Cut, Trim & Mix Audio | GROTON",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Free Audio Splicer Online – Cut, Trim & Mix Audio | GROTON",
     description: "Cut, trim, splice, and combine audio clips directly in your browser. Fast, private multi-track audio editing with volume and crossfade controls by GROTON.",
-    images: ["https://groton.in/og-tools.jpg"],
+    images: ["https://groton.in/og-tools-v2.jpg"],
   },
 };
 
