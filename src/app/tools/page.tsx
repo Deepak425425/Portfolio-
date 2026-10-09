@@ -8,23 +8,28 @@ import { TOOL_REGISTRY } from "@/lib/registry/tools";
 import CmsText from "@/components/CmsText";
 import AskAIAssistant from "@/components/tools/AskAIAssistant";
 import ScrollMechanicalSound from "@/components/tools/ScrollMechanicalSound";
+import SearchMascotEasterEgg from "@/components/tools/SearchMascotEasterEgg";
 
 const ToolCard = ({ tool, isNightMode }: { tool: any, isNightMode: boolean }) => (
   <Link 
     href={tool.route || "#"} 
-    className={`group ${isNightMode ? 'bg-[#18181A] border-white/[0.04]' : 'bg-white border-[rgba(0,0,0,0.05)]'} p-8 flex flex-col rounded-[24px] hover:border-[#8B7CFF] shadow-[0_18px_40px_rgba(0,0,0,0.10)] hover:shadow-[0_25px_55px_rgba(0,0,0,0.12)] transition-all duration-500 relative overflow-hidden h-full min-h-[190px] w-full`}
+    className={`group border ${
+      isNightMode 
+        ? 'bg-[#18181A] border-white/[0.06]' 
+        : 'bg-white border-black/[0.06]'
+    } p-5 sm:p-5.5 xl:p-6 flex flex-col rounded-[24px] hover:border-[#8B7CFF] focus-visible:border-[#8B7CFF] focus-visible:ring-2 focus-visible:ring-[#8B7CFF]/30 focus-visible:outline-none shadow-[0_12px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_rgba(139,124,255,0.12)] transition-all duration-300 relative overflow-hidden h-full min-h-[148px] w-full`}
   >
     <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B7CFF] opacity-0 group-hover:opacity-10 blur-[50px] transition-opacity rounded-full pointer-events-none"></div>
     
-    <div className={`w-12 h-12 ${isNightMode ? 'bg-[#222] border-white/5 shadow-none' : 'bg-[#F9F8F6] border-[rgba(0,0,0,0.02)] shadow-sm'} border rounded-[16px] flex items-center justify-center text-xl z-10 shrink-0 mb-6 text-[#8B7CFF] transition-transform duration-500 group-hover:-translate-y-1`}>
+    <div className={`w-10 h-10 ${isNightMode ? 'bg-[#222] border-white/5 shadow-none' : 'bg-[#F9F8F6] border-[rgba(0,0,0,0.02)] shadow-sm'} border rounded-[13px] flex items-center justify-center text-lg z-10 shrink-0 mb-3.5 text-[#8B7CFF] transition-transform duration-300 group-hover:-translate-y-0.5`}>
       {tool.visual || "🔧"}
     </div>
     
-    <div className="flex flex-col gap-2 z-10 h-full">
+    <div className="flex flex-col gap-1.5 z-10 h-full">
       <div className="flex justify-between items-start">
-        <h3 className={`font-sans font-bold text-base tracking-[-0.05em] leading-none mt-1 ${isNightMode ? 'text-white' : 'text-black'}`}>{tool.name}</h3>
+        <h3 className={`font-sans font-bold text-base tracking-[-0.05em] leading-none ${isNightMode ? 'text-white' : 'text-black'}`}>{tool.name}</h3>
       </div>
-      <p className={`text-xs ${isNightMode ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed max-w-[95%] mt-1`}>{tool.description}</p>
+      <p className={`text-xs ${isNightMode ? 'text-zinc-400' : 'text-zinc-500'} leading-relaxed max-w-[96%]`}>{tool.description}</p>
     </div>
   </Link>
 );
@@ -125,11 +130,12 @@ export default function ToolsLandingPage() {
   const SECTIONS = [
     {
       title: "Featured",
-      ids: ["image-compare", "collage", "background-remover"]
+      ids: ["image-compare", "background-remover", "bulk-image-renamer", "watermark"]
     },
     {
       title: "Image Tools",
       ids: [
+        "collage",
         "resize", "crop", "compressor", "convert", "rotate-flip", "rounded-image",
         "canvas", "grid-cutter", "social-resizer", "passport-photo",
         "filters", "blur", "pixelate", "color-palette", "color-picker", "hex-to-color", "watermark",
@@ -185,7 +191,7 @@ export default function ToolsLandingPage() {
 
       <Header isNightMode={isNightMode} />
       
-      <div className="flex-1 w-full max-w-[1440px] 2xl:max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16 xl:px-20 pt-32 sm:pt-40 md:pt-48 pb-16 md:pb-24 z-10">
+      <div id="tools-container" className="flex-1 w-full max-w-[1440px] 2xl:max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16 xl:px-20 pt-20 sm:pt-24 md:pt-28 pb-16 md:pb-24 z-10 relative">
         
         {/* TOP CONTROLS: SOUND TOGGLE & LIGHT/DARK TOGGLE */}
         <div className="w-full flex justify-end items-center gap-2.5 mb-4">
@@ -209,58 +215,68 @@ export default function ToolsLandingPage() {
             <CmsText cmsId="tools.hero.heading" as="h1" className={`text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-[76px] font-sans font-bold tracking-[-0.05em] leading-tight max-w-4xl ${isNightMode ? 'text-white' : 'text-black'}`} fallback="Save the time. Keep the creativity." />
             <CmsText cmsId="tools.hero.desc" as="p" className={`text-base md:text-lg mt-2 font-light tracking-wide max-w-2xl ${isNightMode ? 'text-zinc-400' : 'text-zinc-500'}`} fallback="Built to make your creative workflow faster." />
             
-            {/* Single Premium Search Bar */}
-            <div className={`relative group mt-8 sm:mt-10 w-full max-w-lg xl:max-w-xl mx-auto rounded-full overflow-hidden p-[1px] transition-shadow duration-700 hover:shadow-[0_8px_30px_rgba(139,124,255,0.15)] focus-within:shadow-[0_8px_30px_rgba(139,124,255,0.2)]`}>
-              
-              {/* Animated Gradient Border Layer */}
-              <div className="absolute inset-0 z-0 overflow-hidden rounded-full opacity-80 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-700">
-                <div 
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] motion-safe:animate-[spin_6s_linear_infinite]"
-                  style={{
-                    background: 'conic-gradient(from 0deg, transparent 0%, #8B7CFF 15%, #4C82FF 25%, transparent 40%, transparent 60%, #FF96C8 75%, #FFB47C 85%, transparent 100%)'
-                  }}
-                />
-                {/* Reduced motion fallback */}
-                <div className="absolute inset-0 hidden motion-reduce:block bg-gradient-to-r from-[rgba(139,124,255,0.4)] via-[rgba(76,130,255,0.3)] to-[rgba(139,124,255,0.4)]"></div>
-              </div>
-              
-              {/* Inner Input Area (Opaque to mask center) */}
-              <input 
-                type="text" 
-                aria-label="Search tools"
-                placeholder={!mounted ? "Search tools..." : ""}
-                value={search}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                onChange={e => setSearch(e.target.value)}
-                className={`relative z-10 w-full rounded-full outline-none px-8 py-5 text-sm transition-all ${
-                  isNightMode 
-                    ? 'bg-[#18181A] text-white placeholder:text-zinc-500' 
-                    : 'bg-white text-black placeholder:text-zinc-400'
-                }`}
+            {/* Single Premium Search Bar with Mascot Hiding Behind */}
+            <div className="relative mt-8 sm:mt-10 w-full max-w-lg xl:max-w-xl mx-auto">
+              {/* GROTON AI Mascot living behind the search box */}
+              <SearchMascotEasterEgg 
+                isNightMode={isNightMode}
+                isSearchFocused={isFocused}
+                hasSearchQuery={search.trim().length > 0}
               />
 
-              {/* Animated Typewriter Placeholder Layer */}
-              {mounted && !isFocused && !search && (
-                <div 
-                  className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 z-20 flex items-center text-sm font-sans select-none overflow-hidden max-w-[calc(100%-64px)] whitespace-nowrap transition-opacity duration-150 group-focus-within:opacity-0"
-                  aria-hidden="true"
-                >
-                  <span className={`transition-colors duration-500 ${isNightMode ? 'text-zinc-500' : 'text-zinc-400'}`}>
-                    {placeholderText}
-                  </span>
-                  <span 
-                    className="inline-block w-[1.5px] h-[14px] bg-[#8B7CFF] ml-[2px] rounded-[1px] animate-subtle-caret" 
+              {/* Search Bar (z-10, physically in front of cat) */}
+              <div className={`relative z-10 group w-full rounded-full overflow-hidden p-[1px] transition-shadow duration-700 hover:shadow-[0_8px_30px_rgba(139,124,255,0.15)] focus-within:shadow-[0_8px_30px_rgba(139,124,255,0.2)]`}>
+                
+                {/* Animated Gradient Border Layer */}
+                <div className="absolute inset-0 z-0 overflow-hidden rounded-full opacity-80 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-700">
+                  <div 
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] motion-safe:animate-[spin_6s_linear_infinite]"
+                    style={{
+                      background: 'conic-gradient(from 0deg, transparent 0%, #8B7CFF 15%, #4C82FF 25%, transparent 40%, transparent 60%, #FF96C8 75%, #FFB47C 85%, transparent 100%)'
+                    }}
                   />
+                  {/* Reduced motion fallback */}
+                  <div className="absolute inset-0 hidden motion-reduce:block bg-gradient-to-r from-[rgba(139,124,255,0.4)] via-[rgba(76,130,255,0.3)] to-[rgba(139,124,255,0.4)]"></div>
                 </div>
-              )}
+                
+                {/* Inner Input Area (Opaque to mask center) */}
+                <input 
+                  type="text" 
+                  aria-label="Search tools"
+                  placeholder={!mounted ? "Search tools..." : ""}
+                  value={search}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  onChange={e => setSearch(e.target.value)}
+                  className={`relative z-10 w-full rounded-full outline-none px-8 py-5 text-sm transition-all ${
+                    isNightMode 
+                      ? 'bg-[#18181A] text-white placeholder:text-zinc-500' 
+                      : 'bg-white text-black placeholder:text-zinc-400'
+                  }`}
+                />
+
+                {/* Animated Typewriter Placeholder Layer */}
+                {mounted && !isFocused && !search && (
+                  <div 
+                    className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 z-20 flex items-center text-sm font-sans select-none overflow-hidden max-w-[calc(100%-64px)] whitespace-nowrap transition-opacity duration-150 group-focus-within:opacity-0"
+                    aria-hidden="true"
+                  >
+                    <span className={`transition-colors duration-500 ${isNightMode ? 'text-zinc-500' : 'text-zinc-400'}`}>
+                      {placeholderText}
+                    </span>
+                    <span 
+                      className="inline-block w-[1.5px] h-[14px] bg-[#8B7CFF] ml-[2px] rounded-[1px] animate-subtle-caret" 
+                    />
+                  </div>
+                )}
+              </div>
             </div>
         </div>
 
         {searchActive ? (
           <div className="flex flex-col gap-6">
             <h2 className={`text-[10px] uppercase tracking-[0.2em] font-bold ${isNightMode ? 'text-zinc-500' : 'text-zinc-400'}`}>Search Results</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
                {filteredTools.map(tool => (
                  <ToolCard key={tool.id} tool={tool} isNightMode={isNightMode} />
                ))}
@@ -270,19 +286,21 @@ export default function ToolsLandingPage() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col gap-24">
+          <div className="flex flex-col gap-14 md:gap-16">
             {SECTIONS.map((section, idx) => {
               const tools = section.ids.map(id => AVAILABLE_TOOLS.find(t => t.id === id)).filter(Boolean);
               if (tools.length === 0) return null;
               
+              const isFeatured = section.title === "Featured";
+
               return (
                 <section 
                   key={idx} 
                   id={section.title === "Image Tools" ? "image-tools" : undefined} 
-                  className="flex flex-col gap-8 scroll-mt-24 md:scroll-mt-32"
+                  className={`flex flex-col gap-5 md:gap-6 scroll-mt-24 md:scroll-mt-32 ${isFeatured ? 'pb-2' : ''}`}
                 >
                   <h2 className={`text-[10px] uppercase tracking-[0.2em] font-bold ${isNightMode ? 'text-zinc-500' : 'text-zinc-400'}`}>{section.title}</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8">
                     {tools.map((tool: any) => (
                       <ToolCard key={`${section.title}-${tool.id}`} tool={tool} isNightMode={isNightMode} />
                     ))}
@@ -291,19 +309,19 @@ export default function ToolsLandingPage() {
                     {idx === SECTIONS.length - 1 && (
                       <Link 
                         href="/testing" 
-                        className={`group ${
+                        className={`group border ${
                           isNightMode 
-                            ? 'bg-[#18181A] hover:bg-[#8B7CFF]/[0.04] border-[#8B7CFF]/10 hover:border-[#8B7CFF]/30' 
-                            : 'bg-[#F9F8FF] hover:bg-[#F0EEFF] border-[#8B7CFF]/15 hover:border-[#8B7CFF]/40'
-                        } p-8 flex flex-col rounded-[24px] shadow-[0_18px_40px_rgba(0,0,0,0.10)] hover:shadow-[0_25px_55px_rgba(139,124,255,0.08)] transition-all duration-500 relative overflow-hidden h-full min-h-[190px] w-full`}
+                            ? 'bg-[#18181A] border-white/[0.06] hover:bg-[#8B7CFF]/[0.04]' 
+                            : 'bg-[#F9F8FF] border-[#8B7CFF]/15 hover:bg-[#F0EEFF]'
+                        } p-5 sm:p-5.5 xl:p-6 flex flex-col rounded-[24px] hover:border-[#8B7CFF] focus-visible:border-[#8B7CFF] focus-visible:ring-2 focus-visible:ring-[#8B7CFF]/30 focus-visible:outline-none shadow-[0_12px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_18px_40px_rgba(139,124,255,0.12)] transition-all duration-300 relative overflow-hidden h-full min-h-[148px] w-full`}
                       >
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[#8B7CFF] opacity-10 group-hover:opacity-20 blur-[50px] transition-opacity rounded-full pointer-events-none"></div>
                         
-                        <div className="flex flex-col gap-2 z-10 h-full">
+                        <div className="flex flex-col gap-1.5 z-10 h-full">
                           <div className="flex justify-between items-start">
-                            <h3 className={`font-sans font-bold text-base tracking-[-0.05em] leading-none mt-1 ${isNightMode ? 'text-white' : 'text-black'}`}>TESTING LAB</h3>
+                            <h3 className={`font-sans font-bold text-base tracking-[-0.05em] leading-none ${isNightMode ? 'text-white' : 'text-black'}`}>TESTING LAB</h3>
                           </div>
-                          <p className={`text-xs ${isNightMode ? 'text-[#A39ED1]/70' : 'text-[#6A639A]/90'} leading-relaxed max-w-[95%] mt-1 mb-4`}>Experimental tools and features in development.</p>
+                          <p className={`text-xs ${isNightMode ? 'text-[#A39ED1]/70' : 'text-[#6A639A]/90'} leading-relaxed max-w-[95%] mb-2.5`}>Experimental tools and features in development.</p>
                           
                           <div className={`mt-auto text-[10px] uppercase tracking-widest font-bold text-[#8B7CFF] transition-colors flex items-center gap-2`}>
                             OPEN TESTING LAB <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
