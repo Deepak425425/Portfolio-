@@ -1,34 +1,63 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "EXIF Metadata Remover — Strip Image Data for Privacy",
-  description: "Remove EXIF data, GPS location, and camera metadata from photos online. Protect your privacy before sharing images with Groton's free tool.",
+  title: {
+    absolute: "Free EXIF Metadata Remover – Protect Photo Privacy | GROTON",
+  },
+  description: "Remove EXIF data, GPS location tags, camera metadata, and timestamps from photos to protect personal privacy before sharing online with GROTON.",
   alternates: {
-    canonical: "/tools/metadata-remover",
+    canonical: "https://groton.in/tools/metadata-remover",
   },
   openGraph: {
-    title: "EXIF Metadata Remover — Strip Image Data for Privacy",
-    description: "Remove EXIF data, GPS location, and camera metadata from photos online. Protect your privacy before sharing images with Groton's free tool.",
+    title: "Free EXIF Metadata Remover – Protect Photo Privacy | GROTON",
+    description: "Remove EXIF data, GPS location tags, camera metadata, and timestamps from photos to protect personal privacy before sharing online with GROTON.",
     url: "https://groton.in/tools/metadata-remover",
     siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
     images: [
       {
         url: "https://groton.in/og-tools.jpg",
         width: 1200,
         height: 630,
-      }
+        alt: "Free EXIF Metadata Remover – Protect Photo Privacy | GROTON",
+      },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "EXIF Metadata Remover — Strip Image Data for Privacy",
-    description: "Remove EXIF data, GPS location, and camera metadata from photos online. Protect your privacy before sharing images with Groton's free tool.",
+    title: "Free EXIF Metadata Remover – Protect Photo Privacy | GROTON",
+    description: "Remove EXIF data, GPS location tags, camera metadata, and timestamps from photos to protect personal privacy before sharing online with GROTON.",
     images: ["https://groton.in/og-tools.jpg"],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "EXIF Metadata Remover",
+  "url": "https://groton.in/tools/metadata-remover",
+  "description": "Remove EXIF data, GPS location tags, camera metadata, and timestamps from photos online to protect your privacy before sharing with GROTON.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
   }
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
+      {children}
+    </>
+  );
 }

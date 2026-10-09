@@ -1,34 +1,63 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Image Splitter — Divide Photos Online",
-  description: "Split an image into multiple equal pieces horizontally or vertically. Perfect for panoramas and grid posts on social media.",
+  title: {
+    absolute: "Free Image Splitter Online – Cut Photos into Pieces | GROTON",
+  },
+  description: "Split images into multiple equal vertical or horizontal slices for social media carousel posts, panoramas, and multi-part feeds with GROTON.",
   alternates: {
-    canonical: "/tools/split",
+    canonical: "https://groton.in/tools/split",
   },
   openGraph: {
-    title: "Image Splitter — Divide Photos Online",
-    description: "Split an image into multiple equal pieces horizontally or vertically. Perfect for panoramas and grid posts on social media.",
+    title: "Free Image Splitter Online – Cut Photos into Pieces | GROTON",
+    description: "Split images into multiple equal vertical or horizontal slices for social media carousel posts, panoramas, and multi-part feeds with GROTON.",
     url: "https://groton.in/tools/split",
     siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
     images: [
       {
         url: "https://groton.in/og-tools.jpg",
         width: 1200,
         height: 630,
-      }
+        alt: "Free Image Splitter Online – Cut Photos into Pieces | GROTON",
+      },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Image Splitter — Divide Photos Online",
-    description: "Split an image into multiple equal pieces horizontally or vertically. Perfect for panoramas and grid posts on social media.",
+    title: "Free Image Splitter Online – Cut Photos into Pieces | GROTON",
+    description: "Split images into multiple equal vertical or horizontal slices for social media carousel posts, panoramas, and multi-part feeds with GROTON.",
     images: ["https://groton.in/og-tools.jpg"],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Image Splitter",
+  "url": "https://groton.in/tools/split",
+  "description": "Split images into multiple equal vertical or horizontal parts online for carousel posts, panoramas, and social media with GROTON.",
+  "applicationCategory": "PhotoEditor",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
   }
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
+      {children}
+    </>
+  );
 }

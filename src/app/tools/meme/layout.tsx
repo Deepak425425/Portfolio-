@@ -1,34 +1,63 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Meme Generator — Add Text to Images Online",
-  description: "Create memes online quickly. Add classic impact font, custom text, and captions to any image. Free browser-based image editor.",
+  title: {
+    absolute: "Free Meme Generator Online – Add Top & Bottom Text | GROTON",
+  },
+  description: "Create custom memes online in seconds. Add classic impact captions, customizable typography, and graphic stickers to any photo with GROTON.",
   alternates: {
-    canonical: "/tools/meme",
+    canonical: "https://groton.in/tools/meme",
   },
   openGraph: {
-    title: "Meme Generator — Add Text to Images Online",
-    description: "Create memes online quickly. Add classic impact font, custom text, and captions to any image. Free browser-based image editor.",
+    title: "Free Meme Generator Online – Add Top & Bottom Text | GROTON",
+    description: "Create custom memes online in seconds. Add classic impact captions, customizable typography, and graphic stickers to any photo with GROTON.",
     url: "https://groton.in/tools/meme",
     siteName: "GROTON AI",
+    locale: "en_US",
+    type: "website",
     images: [
       {
         url: "https://groton.in/og-tools.jpg",
         width: 1200,
         height: 630,
-      }
+        alt: "Free Meme Generator Online – Add Top & Bottom Text | GROTON",
+      },
     ],
-    locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Meme Generator — Add Text to Images Online",
-    description: "Create memes online quickly. Add classic impact font, custom text, and captions to any image. Free browser-based image editor.",
+    title: "Free Meme Generator Online – Add Top & Bottom Text | GROTON",
+    description: "Create custom memes online in seconds. Add classic impact captions, customizable typography, and graphic stickers to any photo with GROTON.",
     images: ["https://groton.in/og-tools.jpg"],
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Meme Generator",
+  "url": "https://groton.in/tools/meme",
+  "description": "Create custom memes online in seconds. Add impact captions, custom text styling, and stickers to any image for free with GROTON.",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
   }
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
+      {children}
+    </>
+  );
 }

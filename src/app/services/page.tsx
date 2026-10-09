@@ -7,16 +7,18 @@ import CmsImage from "@/components/CmsImage";
 import CmsText from "@/components/CmsText";
 
 export const metadata: Metadata = {
-  title: "Services — GROTON AI STUDIO",
+  title: {
+    absolute: "AI Product Photography & E-commerce Visual Services | GROTON AI",
+  },
   description:
-    "E-commerce visual production studio: PDP imagery, product-on-model visuals, lifestyle scenes, and campaign creatives built for modern commerce brands.",
+    "GROTON AI produces commercial e-commerce visuals, high-end AI product photography, on-model fashion imagery, and advertising campaigns for modern brands.",
   alternates: {
-    canonical: "/services",
+    canonical: "https://groton.in/services",
   },
   openGraph: {
-    title: "Services — GROTON AI STUDIO",
+    title: "AI Product Photography & E-commerce Visual Services | GROTON AI",
     description:
-      "E-commerce visual production studio: PDP imagery, product-on-model visuals, lifestyle scenes, and campaign creatives built for modern commerce brands.",
+      "High-end AI product photography, product-on-model fashion imagery, lifestyle scenes, and commercial campaign visuals for modern brands.",
     url: "https://groton.in/services",
     siteName: "GROTON AI",
     locale: "en_US",
@@ -26,18 +28,19 @@ export const metadata: Metadata = {
         url: "https://groton.in/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "GROTON AI STUDIO Services",
+        alt: "GROTON AI Studio Services",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Services — GROTON AI STUDIO",
+    title: "AI Product Photography & E-commerce Visual Services | GROTON AI",
     description:
-      "E-commerce visual production studio: PDP imagery, product-on-model visuals, lifestyle scenes, and campaign creatives built for modern commerce brands.",
+      "GROTON AI produces commercial e-commerce visuals, high-end AI product photography, on-model fashion imagery, and advertising campaigns for modern brands.",
     images: ["https://groton.in/og-image.jpg"],
   },
 };
+
 
 const capabilities = [
   "Creative Direction",
@@ -127,9 +130,39 @@ const services = [
   },
 ];
 
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  name: "AI Product Photography & E-commerce Visual Services",
+  description:
+    "GROTON AI produces commercial e-commerce visuals, high-end AI product photography, on-model fashion imagery, and advertising campaigns for modern brands across fashion, apparel, jewellery, beauty, lifestyle, and D2C commerce.",
+  url: "https://groton.in/services",
+  provider: {
+    "@type": "Organization",
+    name: "GROTON AI",
+    url: "https://groton.in",
+    logo: "https://groton.in/logo.png",
+  },
+  serviceType: [
+    "E-commerce & PDP Visuals",
+    "Product-on-Model Imagery",
+    "Lifestyle & Editorial Imagery",
+    "Campaign & Advertising Visuals",
+  ],
+  serviceAudience: {
+    "@type": "Audience",
+    audienceType:
+      "Fashion, apparel, jewellery, beauty, lifestyle, D2C, and modern e-commerce brands",
+  },
+};
+
 export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-[#F9F8F6] flex flex-col font-sans text-black selection:bg-black selection:text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
       {/* HEADER */}
       <Header />
 

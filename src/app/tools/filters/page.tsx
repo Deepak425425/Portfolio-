@@ -276,9 +276,10 @@ export default function FiltersPage() {
                ←
             </Link>
             <div>
-               <h1 className="text-[12px] font-bold tracking-[0.2em] uppercase text-[#242631]">GROTON</h1>
-               <h2 className="text-[10px] uppercase tracking-widest text-[#7B7F89]">Image Filters & Grade</h2>
+               <div className="text-[12px] font-bold tracking-[0.2em] uppercase text-[#242631]">GROTON</div>
+               <h1 className="text-[10px] uppercase tracking-widest text-[#7B7F89]">Image Filters & Grade</h1>
             </div>
+
          </div>
       </header>
 

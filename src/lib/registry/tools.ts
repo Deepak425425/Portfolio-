@@ -59,6 +59,15 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
   // UTILITY TOOLS
   // ==========================================
   { 
+    id: "before-after", 
+    name: "Before & After", 
+    route: "/tools/before-after", 
+    category: "utility", 
+    visual: "⇄", 
+    description: "Interactive before and after comparison slider.", 
+    keywords: ["before after", "comparison slider", "compare images", "slider comparison", "photo before after", "dono image compare"] 
+  },
+  { 
     id: "resize", 
     name: "Resize", 
     route: "/tools/resize", 
@@ -407,5 +416,14 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     visual: "📋",
     description: "Create and organize visual scenes, motion prompts, reference images and notes in one storyboard.",
     keywords: ["Script Board", "storyboard", "storyboard tool", "visual storyboard", "scene planner", "scene board", "motion prompt", "visual scenes", "reference images", "creative storyboard"]
+  },
+  { 
+    id: "video-metadata-remover", 
+    name: "Video Metadata Remover", 
+    route: "/tools/video-metadata-remover", 
+    category: "featured",
+    visual: "🎬",
+    description: "Inspect and strip EXIF timestamps, GPS, and device metadata from videos.",
+    keywords: ["video metadata remover", "free video metadata remover", "remove metadata from video", "remove video metadata online", "video exif metadata remover", "video exif remover", "remove gps location from video", "mp4 metadata remover", "clean video metadata", "clean video metadata before sharing", "video privacy", "strip video metadata", "video cleaner"] 
   }
 ];

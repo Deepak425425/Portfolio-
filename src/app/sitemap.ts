@@ -28,8 +28,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }))
 
-  const toolRoutes = TOOL_REGISTRY.map((tool) => ({
-    url: `${baseUrl}${tool.route}`,
+  // Active tool routes from TOOL_REGISTRY with null routes filtered out
+  const registeredToolRoutes = TOOL_REGISTRY
+    .filter((tool) => Boolean(tool.route && tool.route.startsWith('/tools/')))
+    .map((tool) => tool.route as string)
+
+  // Additional active tool routes that exist in the codebase
+  const additionalToolRoutes = [
+    '/tools/before-after',
+  ]
+
+  const allToolRoutes = Array.from(new Set([...registeredToolRoutes, ...additionalToolRoutes]))
+
+  const toolRoutes = allToolRoutes.map((route) => ({
+    url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
