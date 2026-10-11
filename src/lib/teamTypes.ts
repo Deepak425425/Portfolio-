@@ -6,8 +6,11 @@ export interface TeamMember {
   role: string;
   ref?: string;
   department?: string;
+  discipline?: string;
   tag?: string;
+  status?: string;
   note?: string;
+  description?: string;
   image?: string;
   pinColor?: PinColor;
   hasPin?: boolean;

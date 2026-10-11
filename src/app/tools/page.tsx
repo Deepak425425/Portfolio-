@@ -162,7 +162,7 @@ const toolsCollectionSchema = {
     },
     {
       title: "Audio Tools",
-      ids: ["audio-splicer", "silence-remover"]
+      ids: ["audio-splicer", "silence-remover", "audio-speed-changer"]
     },
     {
       title: "PDF & Document Tools",
