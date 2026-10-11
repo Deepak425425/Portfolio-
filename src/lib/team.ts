@@ -23,15 +23,27 @@ function mergeWithDefaults(saved: any): TeamData {
         ? saved.founder.expertise
         : DEFAULT_TEAM_DATA.founder.expertise
     },
-    members: Array.isArray(saved.members) && saved.members.length > 0
-      ? saved.members.map((m: any, idx: number) => {
-          const defaultMember = DEFAULT_TEAM_DATA.members[idx] || {};
-          return {
-            ...defaultMember,
-            ...m,
-            id: m.id || String(idx + 2).padStart(2, '0')
-          };
-        })
+    members: Array.isArray(saved.members)
+      ? saved.members.map((m: any, idx: number) => ({
+          id: m.id || String(idx + 2).padStart(2, '0'),
+          name: m.name ?? '',
+          role: m.role ?? '',
+          ref: m.ref ?? `BENCH // ${String(idx + 1).padStart(2, '0')}`,
+          department: m.department ?? 'STUDIO POSITION',
+          discipline: m.discipline ?? m.department ?? 'STUDIO POSITION',
+          hasPin: m.hasPin !== false,
+          pinColor: m.pinColor || 'purple',
+          tag: m.tag ?? m.status ?? '',
+          status: m.status ?? m.tag ?? '',
+          bg: m.bg || '#F5F2FF',
+          textColor: m.textColor || '#6D28D9',
+          borderColor: m.borderColor || '#DDD6FE',
+          rotationClass: m.rotationClass || 'rotate-0 sm:rotate-[1.0deg] lg:translate-y-2 hover:rotate-0 hover:translate-y-0',
+          note: m.note ?? m.description ?? '',
+          description: m.description ?? m.note ?? '',
+          image: m.image ?? '',
+          ...m,
+        }))
       : DEFAULT_TEAM_DATA.members,
     join: {
       ...DEFAULT_TEAM_DATA.join,
@@ -41,22 +53,9 @@ function mergeWithDefaults(saved: any): TeamData {
 }
 
 export async function getTeamData(): Promise<TeamData> {
-  // 1. Try bundled data/team.json first if not using Blob (instant local updates)
-  const bundledPath = path.join(process.cwd(), 'data', 'team.json');
-  if (fs.existsSync(bundledPath)) {
-    try {
-      const saved = JSON.parse(fs.readFileSync(bundledPath, 'utf-8'));
-      if (saved && typeof saved === 'object') {
-        const merged = mergeWithDefaults(saved);
-        memoryCache = merged;
-        return merged;
-      }
-    } catch {}
-  }
-
   if (memoryCache) return memoryCache;
 
-  // 2. Try Vercel Blob if token is set
+  // 1. Try Vercel Blob if token is set
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     try {
       const { blobs } = await list({ prefix: 'studio/team.json' });
@@ -76,11 +75,24 @@ export async function getTeamData(): Promise<TeamData> {
     }
   }
 
-  // 3. Try /tmp/team.json on Vercel
+  // 2. Try /tmp/team.json on Vercel
   const tmpPath = path.join('/tmp', 'team.json');
   if (isVercel && fs.existsSync(tmpPath)) {
     try {
       const saved = JSON.parse(fs.readFileSync(tmpPath, 'utf-8'));
+      if (saved && typeof saved === 'object') {
+        const merged = mergeWithDefaults(saved);
+        memoryCache = merged;
+        return merged;
+      }
+    } catch {}
+  }
+
+  // 3. Try bundled data/team.json
+  const bundledPath = path.join(process.cwd(), 'data', 'team.json');
+  if (fs.existsSync(bundledPath)) {
+    try {
+      const saved = JSON.parse(fs.readFileSync(bundledPath, 'utf-8'));
       if (saved && typeof saved === 'object') {
         const merged = mergeWithDefaults(saved);
         memoryCache = merged;

@@ -1030,7 +1030,7 @@
     "section": "Tier 1",
     "type": "single-line",
     "label": "Price",
-    "defaultValue": "₹1,999"
+    "defaultValue": "₹2,500"
   },
   {
     "id": "pricing.t1.unit",
@@ -1038,7 +1038,7 @@
     "section": "Tier 1",
     "type": "single-line",
     "label": "Unit",
-    "defaultValue": "₹80 / Image"
+    "defaultValue": "₹100 / Image"
   },
   {
     "id": "pricing.t1.desc",
@@ -1078,7 +1078,7 @@
     "section": "Tier 2",
     "type": "single-line",
     "label": "Price",
-    "defaultValue": "₹3,499"
+    "defaultValue": "₹4,500"
   },
   {
     "id": "pricing.t2.unit",
@@ -1086,7 +1086,7 @@
     "section": "Tier 2",
     "type": "single-line",
     "label": "Unit",
-    "defaultValue": "₹70 / Image"
+    "defaultValue": "₹90 / Image"
   },
   {
     "id": "pricing.t2.desc",
@@ -1118,7 +1118,7 @@
     "section": "Tier 3",
     "type": "single-line",
     "label": "Price",
-    "defaultValue": "₹5,999"
+    "defaultValue": "₹8,000"
   },
   {
     "id": "pricing.t3.unit",
@@ -1126,7 +1126,7 @@
     "section": "Tier 3",
     "type": "single-line",
     "label": "Unit",
-    "defaultValue": "₹60 / Image"
+    "defaultValue": "₹80 / Image"
   },
   {
     "id": "pricing.t3.desc",

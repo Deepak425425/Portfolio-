@@ -409,6 +409,28 @@ export const TOOL_REGISTRY: RegisteredTool[] = [
     keywords: ["audio splicer", "edit audio", "merge audio", "crossfade audio", "trim audio"] 
   },
   { 
+    id: "audio-speed-changer", 
+    name: "Audio Speed Changer", 
+    route: "/tools/audio-speed-changer", 
+    category: "specialized",
+    visual: "⚡",
+    description: "Speed up or slow down audio or match custom duration without altering pitch in your browser.",
+    keywords: [
+      "audio speed changer",
+      "audio speed changer without changing pitch",
+      "change audio speed online",
+      "speed up audio without changing pitch",
+      "slow down audio without changing pitch",
+      "audio time stretcher",
+      "custom audio duration",
+      "adjust audio duration",
+      "free audio speed changer",
+      "speed audio",
+      "tempo changer",
+      "audio stretch"
+    ] 
+  },
+  { 
     id: "script-board", 
     name: "Script Board", 
     route: "/tools/script-board", 

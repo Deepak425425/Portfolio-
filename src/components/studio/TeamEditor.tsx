@@ -24,8 +24,11 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
 
   // Load team data
   useEffect(() => {
-    fetch('/api/studio/team', { cache: 'no-store' })
-      .then((r) => r.json())
+    fetch('/api/studio/team', { cache: 'no-store', credentials: 'same-origin' })
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP error ${r.status}`);
+        return r.json();
+      })
       .then((data) => {
         if (data && data.founder) {
           setTeamData(data);
@@ -41,16 +44,44 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
 
   // Save & Publish
   const handleSaveAndPublish = async () => {
+    // 1. Validation
+    if (!teamData.founder?.name?.trim()) {
+      setSaveStatus({
+        type: 'error',
+        message: 'Validation error: Founder name is required.',
+      });
+      return;
+    }
+    if (!teamData.intro?.heading?.trim()) {
+      setSaveStatus({
+        type: 'error',
+        message: 'Validation error: Board main heading is required.',
+      });
+      return;
+    }
+    if (!teamData.founder?.bio?.trim()) {
+      setSaveStatus({
+        type: 'error',
+        message: 'Validation error: Founder bio is required.',
+      });
+      return;
+    }
+
     setIsSaving(true);
     setSaveStatus(null);
     try {
       const res = await fetch('/api/studio/team', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
         body: JSON.stringify(teamData),
       });
 
       if (res.ok) {
+        const result = await res.json().catch(() => ({}));
+        if (result?.data) {
+          setTeamData(result.data);
+        }
         setSaveStatus({
           type: 'success',
           message: 'TEAM content successfully updated and published to the live site!',
@@ -86,12 +117,13 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
 
   // Founder Tag Management
   const handleAddExpertiseTag = () => {
-    if (!newTagInput.trim()) return;
+    const tag = newTagInput.trim();
+    if (!tag) return;
     setTeamData((prev) => ({
       ...prev,
       founder: {
         ...prev.founder,
-        expertise: [...prev.founder.expertise, newTagInput.trim()],
+        expertise: [...(prev.founder.expertise || []), tag],
       },
     }));
     setNewTagInput('');
@@ -102,14 +134,14 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
       ...prev,
       founder: {
         ...prev.founder,
-        expertise: prev.founder.expertise.filter((_, i) => i !== index),
+        expertise: (prev.founder.expertise || []).filter((_, i) => i !== index),
       },
     }));
   };
 
   // Team Member Management
   const handleAddMember = () => {
-    const nextIdx = teamData.members.length + 1;
+    const nextIdx = (teamData.members || []).length + 1;
     const nextId = String(nextIdx + 1).padStart(2, '0');
     const newMember: TeamMember = {
       id: nextId,
@@ -117,19 +149,22 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
       role: 'Creative Specialist',
       ref: `BENCH // ${String(nextIdx).padStart(2, '0')}`,
       department: 'Visual Studio',
+      discipline: 'Visual Studio',
       hasPin: true,
       pinColor: 'purple',
       tag: 'IN PROGRESS',
+      status: 'IN PROGRESS',
       bg: '#F5F2FF',
       textColor: '#6D28D9',
       borderColor: '#DDD6FE',
       rotationClass: 'rotate-0 sm:rotate-[1.0deg] lg:translate-y-2 hover:rotate-0 hover:translate-y-0',
       note: '✎ visual production',
+      description: '✎ visual production',
       image: '',
     };
     setTeamData((prev) => ({
       ...prev,
-      members: [...prev.members, newMember],
+      members: [...(prev.members || []), newMember],
     }));
   };
 
@@ -138,15 +173,15 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
     if (confirm(`Are you sure you want to remove ${member.name} (${member.role})?`)) {
       setTeamData((prev) => ({
         ...prev,
-        members: prev.members.filter((_, i) => i !== index),
+        members: (prev.members || []).filter((_, i) => i !== index),
       }));
     }
   };
 
   const handleMoveMember = (index: number, direction: 'up' | 'down') => {
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= teamData.members.length) return;
-    const newMembers = [...teamData.members];
+    if (targetIndex < 0 || targetIndex >= (teamData.members || []).length) return;
+    const newMembers = [...(teamData.members || [])];
     const temp = newMembers[index];
     newMembers[index] = newMembers[targetIndex];
     newMembers[targetIndex] = temp;
@@ -158,7 +193,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
 
   const handleUpdateMember = (index: number, updates: Partial<TeamMember>) => {
     setTeamData((prev) => {
-      const newMembers = [...prev.members];
+      const newMembers = [...(prev.members || [])];
       newMembers[index] = { ...newMembers[index], ...updates };
       return { ...prev, members: newMembers };
     });
@@ -258,7 +293,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             </label>
             <input
               type="text"
-              value={teamData.intro?.badge || 'THE COLLECTIVE'}
+              value={teamData.intro?.badge ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,
@@ -275,7 +310,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             </label>
             <input
               type="text"
-              value={teamData.intro?.heading || 'The people behind the visual system.'}
+              value={teamData.intro?.heading ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,
@@ -292,7 +327,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             </label>
             <textarea
               rows={2}
-              value={teamData.intro?.description || ''}
+              value={teamData.intro?.description ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,
@@ -333,6 +368,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                     alt={teamData.founder.name}
                     fill
                     className="object-cover"
+                    unoptimized
                   />
                   <div className="absolute top-2 left-2 text-[8px] font-mono bg-black/60 text-white px-1.5 py-0.5 rounded">
                     FOUNDER
@@ -407,7 +443,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                 </label>
                 <input
                   type="text"
-                  value={teamData.founder.name}
+                  value={teamData.founder.name ?? ''}
                   onChange={(e) =>
                     setTeamData((prev) => ({
                       ...prev,
@@ -424,7 +460,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                 </label>
                 <input
                   type="text"
-                  value={teamData.founder.position}
+                  value={teamData.founder.position ?? ''}
                   onChange={(e) =>
                     setTeamData((prev) => ({
                       ...prev,
@@ -441,7 +477,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                 </label>
                 <input
                   type="text"
-                  value={teamData.founder.tag || '✦ SELECTED DIRECTION'}
+                  value={teamData.founder.tag ?? ''}
                   onChange={(e) =>
                     setTeamData((prev) => ({
                       ...prev,
@@ -458,7 +494,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                 </label>
                 <input
                   type="email"
-                  value={teamData.founder.email}
+                  value={teamData.founder.email ?? ''}
                   onChange={(e) =>
                     setTeamData((prev) => ({
                       ...prev,
@@ -476,7 +512,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
               </label>
               <textarea
                 rows={4}
-                value={teamData.founder.bio}
+                value={teamData.founder.bio ?? ''}
                 onChange={(e) =>
                   setTeamData((prev) => ({
                     ...prev,
@@ -493,7 +529,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                 Directorial Focus / Expertise Tags
               </label>
               <div className="flex flex-wrap gap-2 mb-3">
-                {teamData.founder.expertise.map((tag, i) => (
+                {(teamData.founder.expertise || []).map((tag, i) => (
                   <span
                     key={i}
                     className="inline-flex items-center gap-1.5 px-3 py-1 bg-zinc-800/80 border border-zinc-700 text-zinc-200 text-xs rounded-full"
@@ -540,7 +576,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                 </label>
                 <input
                   type="text"
-                  value={teamData.founder.studioName || 'Grafly Studio / GROTON AI'}
+                  value={teamData.founder.studioName ?? ''}
                   onChange={(e) =>
                     setTeamData((prev) => ({
                       ...prev,
@@ -557,7 +593,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                 </label>
                 <input
                   type="text"
-                  value={teamData.founder.focusNote || '✎ core pipeline'}
+                  value={teamData.founder.focusNote ?? ''}
                   onChange={(e) =>
                     setTeamData((prev) => ({
                       ...prev,
@@ -665,6 +701,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                             alt={member.name}
                             fill
                             className="object-cover"
+                            unoptimized
                           />
                           <div className="absolute top-1.5 left-1.5 text-[7px] font-mono bg-black/60 text-white px-1 py-0.5 rounded">
                             {member.id}
@@ -717,7 +754,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                       </label>
                       <input
                         type="text"
-                        value={member.name}
+                        value={member.name ?? ''}
                         onChange={(e) => handleUpdateMember(index, { name: e.target.value })}
                         placeholder="e.g. Anonymous or Full Name"
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#8B7CFF]"
@@ -730,8 +767,8 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                       </label>
                       <input
                         type="text"
-                        value={member.role}
-                        onChange={(e) => handleUpdateMember(index, { role: e.target.value })}
+                        value={member.role ?? member.discipline ?? ''}
+                        onChange={(e) => handleUpdateMember(index, { role: e.target.value, discipline: e.target.value })}
                         placeholder="e.g. Generative Art & AI"
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#8B7CFF]"
                       />
@@ -743,7 +780,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                       </label>
                       <input
                         type="text"
-                        value={member.ref || ''}
+                        value={member.ref ?? ''}
                         onChange={(e) => handleUpdateMember(index, { ref: e.target.value })}
                         placeholder="e.g. BENCH // 01"
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#8B7CFF]"
@@ -756,8 +793,8 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                       </label>
                       <input
                         type="text"
-                        value={member.tag || ''}
-                        onChange={(e) => handleUpdateMember(index, { tag: e.target.value })}
+                        value={member.tag ?? member.status ?? ''}
+                        onChange={(e) => handleUpdateMember(index, { tag: e.target.value, status: e.target.value })}
                         placeholder="e.g. IN PROGRESS, DIRECTION, EXPLORE, FINISHING"
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#8B7CFF]"
                       />
@@ -769,8 +806,8 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
                       </label>
                       <input
                         type="text"
-                        value={member.note || ''}
-                        onChange={(e) => handleUpdateMember(index, { note: e.target.value })}
+                        value={member.note ?? member.description ?? ''}
+                        onChange={(e) => handleUpdateMember(index, { note: e.target.value, description: e.target.value })}
                         placeholder="e.g. ✎ diffusion models"
                         className="w-full bg-zinc-900 border border-zinc-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#8B7CFF]"
                       />
@@ -841,7 +878,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             </label>
             <input
               type="text"
-              value={teamData.join?.badge || 'CAREERS & COLLABORATIONS'}
+              value={teamData.join?.badge ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,
@@ -858,7 +895,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             </label>
             <input
               type="text"
-              value={teamData.join?.heading || 'Join Our Team'}
+              value={teamData.join?.heading ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,
@@ -875,7 +912,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             </label>
             <textarea
               rows={3}
-              value={teamData.join?.description || ''}
+              value={teamData.join?.description ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,
@@ -892,7 +929,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             </label>
             <input
               type="text"
-              value={teamData.join?.ctaText || 'Join Our Team'}
+              value={teamData.join?.ctaText ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,
@@ -909,7 +946,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             </label>
             <input
               type="text"
-              value={teamData.join?.whatsappNumber || '916378083205'}
+              value={teamData.join?.whatsappNumber ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,
@@ -926,7 +963,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             </label>
             <textarea
               rows={5}
-              value={teamData.join?.whatsappMessage || ''}
+              value={teamData.join?.whatsappMessage ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,
@@ -944,7 +981,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             <input
               type="text"
               placeholder="e.g. https://wa.me/... or /contact"
-              value={teamData.join?.ctaUrl || ''}
+              value={teamData.join?.ctaUrl ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,
@@ -961,7 +998,7 @@ export default function TeamEditor({ onOpenMediaPicker }: TeamEditorProps) {
             </label>
             <input
               type="text"
-              value={teamData.join?.subtext || 'Direct Inquiry via WhatsApp'}
+              value={teamData.join?.subtext ?? ''}
               onChange={(e) =>
                 setTeamData((prev) => ({
                   ...prev,

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -8,13 +9,32 @@ import Image from "next/image";
 import CmsImage from "@/components/CmsImage";
 import CmsText from "@/components/CmsText";
 
+function resolvePackage(param: string | null): string {
+  if (!param) return "";
+  const p = param.toLowerCase().trim();
+  if (p === "starter" || p.includes("starter") || p.includes("2500") || p.includes("2,500")) return "Starter";
+  if (p === "growth" || p.includes("growth") || p.includes("4500") || p.includes("4,500")) return "Growth";
+  if (p === "scale" || p.includes("scale") || p.includes("8000") || p.includes("8,000")) return "Scale";
+  if (p === "custom" || p.includes("custom")) return "Custom";
+  return "";
+}
 
-
-
-export default function ContactPage() {
+function ContactContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const searchParams = useSearchParams();
+  const rawPackageParam = searchParams.get("package") || searchParams.get("plan") || searchParams.get("tier") || searchParams.get("budget");
+
+  const [budget, setBudget] = useState(() => resolvePackage(rawPackageParam));
+
+  useEffect(() => {
+    const matched = resolvePackage(rawPackageParam);
+    if (matched) {
+      setBudget(matched);
+    }
+  }, [rawPackageParam]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -151,11 +171,18 @@ ${data.details}`;
                   <div className="flex flex-col gap-2">
                     <label htmlFor="budget" className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-600"><CmsText cmsId="contact.form.budget.label" fallback="Budget Range" /></label>
                     <div className="relative">
-                      <select required id="budget" name="budget" defaultValue="" className="w-full border-b border-zinc-300 py-2.5 sm:py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer">
+                      <select 
+                        required 
+                        id="budget" 
+                        name="budget" 
+                        value={budget} 
+                        onChange={(e) => setBudget(e.target.value)} 
+                        className="w-full border-b border-zinc-300 py-2.5 sm:py-3 bg-transparent focus:outline-none focus:border-black transition-colors font-light text-sm appearance-none rounded-none cursor-pointer"
+                      >
                         <option value="" disabled>Select a range...</option>
-                        <option value="Starter">Starter — 25 Images — ₹1,999+</option>
-                        <option value="Growth">Growth — 50 Images — ₹3,499+</option>
-                        <option value="Scale">Scale — 100 Images — ₹5,999+</option>
+                        <option value="Starter">Starter — 25 Images — ₹2,500</option>
+                        <option value="Growth">Growth — 50 Images — ₹4,500</option>
+                        <option value="Scale">Scale — 100 Images — ₹8,000</option>
                         <option value="Custom">Custom / Not Sure</option>
                       </select>
                       <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400">
@@ -204,5 +231,13 @@ ${data.details}`;
       {/* FOOTER */}
       <Footer />
     </div>
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={null}>
+      <ContactContent />
+    </Suspense>
   );
 }

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import TeamConnectorWires from '@/components/TeamConnectorWires';
-import { TeamData, PinColor } from '@/lib/teamTypes';
+import { TeamData, PinColor, DEFAULT_TEAM_DATA } from '@/lib/teamTypes';
 
 /* ─────────────────────────────────────────────────────────────
    1. COLORFUL TACTILE 3D PUSH-PIN BEADS
@@ -516,6 +516,7 @@ export default function TeamPageClient({ initialData }: { initialData: TeamData 
                           fill
                           className="object-cover"
                           sizes="(max-width: 768px) 280px, 320px"
+                          unoptimized
                         />
                         {/* Editorial crop marks */}
                         <span aria-hidden="true" className="absolute top-2 left-2 text-[8px] font-mono text-white/80 drop-shadow select-none">┌</span>
@@ -555,8 +556,8 @@ export default function TeamPageClient({ initialData }: { initialData: TeamData 
                       {teamData.founder.name}
                     </h2>
 
-                    <p className="font-sans text-sm sm:text-base text-zinc-600 font-light leading-relaxed mb-6">
-                      {teamData.founder.bio.includes('GROTON AI Studio and Grafly Studio') ? (
+                    <p className="font-sans text-sm sm:text-base text-zinc-600 font-light leading-relaxed mb-6 whitespace-pre-line">
+                      {teamData.founder.bio === DEFAULT_TEAM_DATA.founder.bio ? (
                         <>
                           Deepak founded{' '}
                           <HighlighterMark color="pink">GROTON AI Studio and Grafly Studio</HighlighterMark>{' '}
@@ -581,7 +582,7 @@ export default function TeamPageClient({ initialData }: { initialData: TeamData 
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-2">
-                        {teamData.founder.expertise.map((focus) => (
+                        {(teamData.founder.expertise || []).map((focus) => (
                           <span
                             key={focus}
                             className="px-3 py-1 rounded-full text-xs font-medium bg-[#F5F2EB] text-zinc-800 border border-black/[0.04] shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
@@ -664,6 +665,7 @@ export default function TeamPageClient({ initialData }: { initialData: TeamData 
                           fill
                           className="object-cover"
                           sizes="(max-width: 768px) 240px, 280px"
+                          unoptimized
                         />
                         <span aria-hidden="true" className="absolute top-2 left-2 text-[8px] font-mono text-white/80 drop-shadow select-none">┌</span>
                         <span aria-hidden="true" className="absolute top-2 right-2 text-[8px] font-mono text-white/80 drop-shadow select-none">┐</span>
@@ -693,7 +695,7 @@ export default function TeamPageClient({ initialData }: { initialData: TeamData 
                       <span className="font-mono text-[8px] tracking-[0.16em] font-bold text-zinc-400 uppercase whitespace-nowrap">
                         [ {bench.id} // BENCH ]
                       </span>
-                      {bench.tag && (
+                      {(bench.tag || bench.status) && (
                         <span
                           className="font-mono text-[7px] tracking-wider uppercase font-bold px-1.5 py-0.5 rounded border select-none whitespace-nowrap shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
                           style={{
@@ -702,7 +704,7 @@ export default function TeamPageClient({ initialData }: { initialData: TeamData 
                             borderColor: bench.borderColor || '#DDD6FE',
                           }}
                         >
-                          {bench.tag}
+                          {bench.tag || bench.status}
                         </span>
                       )}
                     </div>
@@ -717,13 +719,13 @@ export default function TeamPageClient({ initialData }: { initialData: TeamData 
                           Creative & Art Direction
                         </HighlighterMark>
                       ) : (
-                        bench.role
+                        bench.role || bench.discipline
                       )}
                     </p>
 
-                    {bench.note && (
+                    {(bench.note || bench.description) && (
                       <span className="font-mono text-[7.5px] text-zinc-400 italic">
-                        {bench.note}
+                        {bench.note || bench.description}
                       </span>
                     )}
                   </div>
