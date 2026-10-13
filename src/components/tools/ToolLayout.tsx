@@ -9,18 +9,24 @@ interface ToolLayoutProps {
   title: string;
   description: string;
   category?: string;
+  compactHeader?: boolean;
   children: React.ReactNode;
 }
 
-export default function ToolLayout({ title, description, category = "TOOL", children }: ToolLayoutProps) {
+export default function ToolLayout({ title, description, category = "TOOL", compactHeader = false, children }: ToolLayoutProps) {
   const [isNightMode, setIsNightMode] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    const urlTheme = params ? params.get("theme") : null;
     const saved = localStorage.getItem("groton_tool_theme");
-    if (saved === "dark") {
+    if (urlTheme === "dark" || saved === "dark") {
       setIsNightMode(true);
+      if (urlTheme === "dark") {
+        localStorage.setItem("groton_tool_theme", "dark");
+      }
     }
   }, []);
 
@@ -49,35 +55,62 @@ export default function ToolLayout({ title, description, category = "TOOL", chil
       <div className="z-10 flex flex-col min-h-screen">
         <Navigation />
         
-        <div className="flex-1 w-full max-w-[1600px] mx-auto px-4 md:px-8 py-8 md:py-12 flex flex-col">
+        <div className={`flex-1 w-full max-w-[1600px] mx-auto px-4 md:px-8 ${compactHeader ? "py-1.5 md:py-2" : "py-8 md:py-12"} flex flex-col`}>
           
           {/* Header Section */}
-          <div className="mb-8 md:mb-12 flex flex-col items-start gap-4 w-full">
-            <div className="flex justify-between items-center w-full">
-              <Link 
-                href="/tools" 
-                className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-500 hover:text-[#8B7CFF] transition-colors flex items-center gap-2"
-              >
-                <span className="text-[14px]">←</span> Back to Tools
-              </Link>
+          {compactHeader ? (
+            <div className="mb-2 md:mb-3 flex items-center justify-between w-full flex-wrap gap-2">
+              <div className="flex items-center gap-3">
+                <Link 
+                  href="/tools" 
+                  className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-500 hover:text-[#8B7CFF] transition-colors flex items-center gap-1.5"
+                >
+                  <span className="text-[14px]">←</span> Back to Tools
+                </Link>
+                <span className="text-zinc-300 dark:text-zinc-700">|</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold text-[#8B7CFF]">{category}</span>
+                <h1 className="text-lg md:text-xl font-serif text-[#111111] dark:text-zinc-100 tracking-tight transition-colors duration-300">{title}</h1>
+                <span className="hidden lg:inline text-xs text-zinc-500 max-w-md truncate">· {description}</span>
+              </div>
               
               {mounted && (
                 <button 
                   onClick={toggleNightMode}
-                  className="flex items-center gap-2 px-4 py-2 border border-zinc-200 bg-white rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors shadow-sm"
+                  className="flex items-center gap-2 px-3 py-1.5 border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-800 rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors shadow-sm"
                   title="Toggle Night Mode"
                 >
                   {isNightMode ? '☀ LIGHT' : '☾ DARK'}
                 </button>
               )}
             </div>
-            
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] uppercase tracking-widest font-bold text-[#8B7CFF]">{category}</span>
-              <h1 className="text-3xl md:text-5xl font-serif text-[#111111] tracking-tight transition-colors duration-300">{title}</h1>
-              <p className="text-sm md:text-base text-zinc-500 max-w-2xl mt-2 leading-relaxed transition-colors duration-300">{description}</p>
+          ) : (
+            <div className="mb-8 md:mb-12 flex flex-col items-start gap-4 w-full">
+              <div className="flex justify-between items-center w-full">
+                <Link 
+                  href="/tools" 
+                  className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-500 hover:text-[#8B7CFF] transition-colors flex items-center gap-2"
+                >
+                  <span className="text-[14px]">←</span> Back to Tools
+                </Link>
+                
+                {mounted && (
+                  <button 
+                    onClick={toggleNightMode}
+                    className="flex items-center gap-2 px-4 py-2 border border-zinc-200 bg-white rounded-full text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-50 transition-colors shadow-sm"
+                    title="Toggle Night Mode"
+                  >
+                    {isNightMode ? '☀ LIGHT' : '☾ DARK'}
+                  </button>
+                )}
+              </div>
+              
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] uppercase tracking-widest font-bold text-[#8B7CFF]">{category}</span>
+                <h1 className="text-3xl md:text-5xl font-serif text-[#111111] tracking-tight transition-colors duration-300">{title}</h1>
+                <p className="text-sm md:text-base text-zinc-500 max-w-2xl mt-2 leading-relaxed transition-colors duration-300">{description}</p>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Workspace */}
           <div className="flex-1 flex flex-col relative z-20">
@@ -86,7 +119,7 @@ export default function ToolLayout({ title, description, category = "TOOL", chil
           
         </div>
         
-        <Footer />
+        <Footer isNightMode={isNightMode} />
       </div>
     </main>
   );
